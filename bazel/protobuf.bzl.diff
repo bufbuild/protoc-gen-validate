@@ -1,0 +1,100 @@
+diff --git a/usr/local/google/home/htuch/src/protobuf/protobuf.bzl b/protobuf.bzl
+index 23380ba..00d047a 100644
+--- a/usr/local/google/home/htuch/src/protobuf/protobuf.bzl
++++ b/protobuf.bzl
+@@ -30,13 +30,15 @@ def _SourceDir(ctx):
+     return _GetPath(ctx, ctx.attr.includes[0])
+   return _GetPath(ctx, ctx.label.package + '/' + ctx.attr.includes[0])
+ 
+-def _CcHdrs(srcs, use_grpc_plugin=False):
++def _CcHdrs(srcs, use_grpc_plugin=False, validate=False):
+   ret = [s[:-len(".proto")] + ".pb.h" for s in srcs]
+   if use_grpc_plugin:
+     ret += [s[:-len(".proto")] + ".grpc.pb.h" for s in srcs]
++  if validate:
++    ret += [s[:-len(".proto")] + ".pb.validate.h" for s in srcs]
+   return ret
+ 
+-def _CcSrcs(srcs, use_grpc_plugin=False):
++def _CcSrcs(srcs, use_grpc_plugin=False, validate=False):
+   ret = [s[:-len(".proto")] + ".pb.cc" for s in srcs]
+   if use_grpc_plugin:
+     ret += [s[:-len(".proto")] + ".grpc.pb.cc" for s in srcs]
+@@ -101,6 +103,11 @@ def _proto_gen_impl(ctx):
+     args += ["--%s_out=%s" % (lang, outdir)]
+     inputs += [plugin]
+ 
++  if ctx.attr.validate:
++    args += ["--plugin=protoc-gen-validate=%s" % ctx.files.protoc_gen_validate[0].path] 
++    args += ["--validate_out=lang=cc:" + gen_dir]
++    inputs += ctx.files.protoc_gen_validate
++
+   if args:
+     ctx.action(
+         inputs=inputs,
+@@ -124,12 +131,17 @@ proto_gen = rule(
+         "srcs": attr.label_list(allow_files = True),
+         "deps": attr.label_list(providers = ["proto"]),
+         "includes": attr.string_list(),
++        "validate": attr.bool(),
+         "protoc": attr.label(
+             cfg = "host",
+             executable = True,
+             single_file = True,
+             mandatory = True,
+         ),
++        "protoc_gen_validate": attr.label(
++            allow_files = True,
++            cfg = "host",
++        ),
+         "plugin": attr.label(
+             cfg = "host",
+             allow_files = True,
+@@ -155,6 +167,7 @@ Args:
+     against.
+   deps: a list of dependency labels; must be other proto libraries.
+   includes: a list of include paths to .proto files.
++  validate: if True, generate validation code with protoc-gen-validate.
+   protoc: the label of the protocol compiler to generate the sources.
+   plugin: the label of the protocol compiler plugin to be passed to the protocol
+     compiler.
+@@ -171,7 +184,9 @@ def cc_proto_library(
+         deps=[],
+         cc_libs=[],
+         include=None,
++        validate=False,
+         protoc="//:protoc",
++        protoc_gen_validate = "//:protoc-gen-validate",
+         internal_bootstrap_hack=False,
+         use_grpc_plugin=False,
+         default_runtime="//:protobuf",
+@@ -190,6 +205,8 @@ def cc_proto_library(
+         cc_library.
+     include: a string indicating the include path of the .proto files.
+     protoc: the label of the protocol compiler to generate the sources.
++    protoc_gen_validate: override the default version of protoc_gen_validate.
++                   Most users won't need this.
+     internal_bootstrap_hack: a flag indicate the cc_proto_library is used only
+         for bootstraping. When it is set to True, no files will be generated.
+         The rule will simply be a provider for .proto files, so that other
+@@ -227,8 +244,8 @@ def cc_proto_library(
+   if use_grpc_plugin:
+     grpc_cpp_plugin = "//external:grpc_cpp_plugin"
+ 
+-  gen_srcs = _CcSrcs(srcs, use_grpc_plugin)
+-  gen_hdrs = _CcHdrs(srcs, use_grpc_plugin)
++  gen_srcs = _CcSrcs(srcs, use_grpc_plugin, validate)
++  gen_hdrs = _CcHdrs(srcs, use_grpc_plugin, validate)
+   outs = gen_srcs + gen_hdrs
+ 
+   proto_gen(
+@@ -236,7 +253,9 @@ def cc_proto_library(
+       srcs=srcs,
+       deps=[s + "_genproto" for s in deps],
+       includes=includes,
++      validate=validate,
+       protoc=protoc,
++      protoc_gen_validate=protoc_gen_validate,
+       plugin=grpc_cpp_plugin,
+       plugin_language="grpc",
+       gen_cc=1,

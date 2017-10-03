@@ -1,0 +1,35 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "any.go",
+        "bytes.go",
+        "const.go",
+        "duration.go",
+        "enum.go",
+        "file.go",
+        "in.go",
+        "known.go",
+        "ltgt.go",
+        "map.go",
+        "message.go",
+        "msg.go",
+        "none.go",
+        "num.go",
+        "register.go",
+        "repeated.go",
+        "string.go",
+        "timestamp.go",
+        "wrapper.go",
+    ],
+    importpath = "github.com/lyft/protoc-gen-validate/templates/go",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//templates/shared:go_default_library",
+        "//vendor/github.com/golang/protobuf/ptypes:go_default_library",
+        "//vendor/github.com/golang/protobuf/ptypes/duration:go_default_library",
+        "//vendor/github.com/golang/protobuf/ptypes/timestamp:go_default_library",
+        "//vendor/github.com/lyft/protoc-gen-star:go_default_library",
+    ],
+)

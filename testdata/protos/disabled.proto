@@ -1,0 +1,10 @@
+syntax = "proto3";
+package testdata;
+
+import "validate/validate.proto";
+
+message Disabled {
+    option (validate.disabled) = true;
+
+    uint64 id = 1 [(validate.rules).uint64.gt = 123];
+}

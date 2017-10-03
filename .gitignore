@@ -1,0 +1,5 @@
+testdata/generated/
+bazel-*
+
+!vendor/*
+validate/validate.pb.go
