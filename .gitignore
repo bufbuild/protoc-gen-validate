@@ -6,3 +6,5 @@ validate/validate.pb.go
 
 harness/cases/go/*
 harness/harness.pb.go
+
+harness/go/go-harness
