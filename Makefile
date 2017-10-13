@@ -82,3 +82,6 @@ generate-testcases: # generate the test harness cases
 
 harness/go/go-harness:
 	go build -o ./harness/go/go-harness ./harness/go
+
+.PHONY: ci
+ci: build generate-kitchensink generate-harness generate-testcases tests harness
