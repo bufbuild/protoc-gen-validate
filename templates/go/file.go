@@ -25,6 +25,7 @@ import (
 var (
 	_ = bytes.MinRead
 	_ = errors.New("")
+	_ = fmt.Print
 	_ = utf8.UTFMax
 	_ = (*regexp.Regexp)(nil)
 	_ = (*strings.Reader)(nil)
