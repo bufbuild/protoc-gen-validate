@@ -37,7 +37,7 @@ cover: # runs all tests against the package, generating a coverage report and op
 	open cover.html
 
 .PHONY: harness
-harness: harness/go/go-harness # runs the test harness, validating a series of test cases in all supported languages
+harness: harness/harness.pb.go harness/go/go-harness # runs the test harness, validating a series of test cases in all supported languages
 	go run ./harness/executor/*.go
 
 .PHONY: generate-annotations
@@ -60,13 +60,8 @@ generate-kitchensink: # generates the kitchensink test protos
 		--validate_out="lang=go:../generated/go" \
 		`find . -name "*.proto"`
 
-.PHONY: generate-harness
-generate-harness: # generates the test harness protos
-	cd harness && \
-	protoc \
-		-I . \
-		--go_out=. \
-		harness.proto
+harness/harness.pb.go: # generates the test harness protos
+	cd harness && protoc -I . --go_out=. harness.proto
 
 .PHONY: generate-testcases
 generate-testcases: # generate the test harness cases
@@ -84,4 +79,4 @@ harness/go/go-harness:
 	go build -o ./harness/go/go-harness ./harness/go
 
 .PHONY: ci
-ci: build generate-kitchensink generate-harness generate-testcases tests harness
+ci: build generate-kitchensink generate-testcases tests harness
