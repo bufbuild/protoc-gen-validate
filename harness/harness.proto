@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package testdata.harness;
+option go_package = "harness";
+
+import "google/protobuf/any.proto";
+
+message TestCase {
+    google.protobuf.Any message = 1;
+}
+
+message TestResult {
+    bool   Valid  = 1;
+    bool   Error  = 2;
+    string Reason = 3;
+}

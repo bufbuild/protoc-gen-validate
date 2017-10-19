@@ -13,17 +13,17 @@ const hostTpl = `
 				return errors.New("hostname part must be non-empty and cannot exceed 63 characters")
 			}
 
-			if s[0] == '-' {
+			if part[0] == '-' {
 				return errors.New("hostname parts cannot begin with hyphens")
 			}
 
-			if s[len(s)-1] == '-' {
+			if part[len(part)-1] == '-' {
 				return errors.New("hostname parts cannot end with hyphens")
 			}
 
-			for _, r := range s {
+			for _, r := range part {
 				if (r < 'a' || r > 'z') && (r < '0' || r > '9') && r != '-' {
-					return errors.New("hostname parts can only contain alphanumeric characters or hyphens")
+					return fmt.Errorf("hostname parts can only contain alphanumeric characters or hyphens, got %q", string(r))
 				}
 			}
 		}
@@ -34,15 +34,15 @@ const hostTpl = `
 
 const emailTpl = `
 	func (m {{ .TypeName.Pointer }}) _validateEmail(addr string) error {
-		if len(addr) > 254 {
-			return errors.New("email addresses cannot exceed 254 characters")
-		}
-
 		a, err := mail.ParseAddress(addr)
 		if err != nil {
 			return err
 		}
 		addr = a.Address
+
+		if len(addr) > 254 {
+			return errors.New("email addresses cannot exceed 254 characters")
+		}
 
 		parts := strings.SplitN(addr, "@", 2)
 

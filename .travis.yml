@@ -6,4 +6,4 @@ services:
   - docker
 
 install: docker build -t protoc-gen-validate .
-script:  docker run --rm protoc-gen-validate build generate-testdata tests bazel
+script:  docker run --rm protoc-gen-validate ci
