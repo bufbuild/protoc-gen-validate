@@ -647,7 +647,7 @@ All PGV dependencies are currently checked into the project. To test PGV, `proto
 
 ### Make Targets
 
-- **`make build`**: generates the contraints proto and compiles PGV into `$GOPATH/bin`
+- **`make build`**: generates the constraints proto and compiles PGV into `$GOPATH/bin`
 
 - **`make lint`**: runs static-analysis rules against the PGV codebase, including `golint`, `go vet`, and `gofmt -s`
 
@@ -657,7 +657,11 @@ All PGV dependencies are currently checked into the project. To test PGV, `proto
 
 - **`make cover`**: runs all tests with race detection, generating a coverage report and opening it in a browser
 
-- **`make generate-testdata`**: generates the proto files in [`/testdata`](/testdata). This includes the officially generated code, as well as the validations.
+- **`make kitchensink`**: generates the proto files in [`/tests/kitchensink`](/tests/kitchensink). This includes the officially generated code, as well as the validations.
+
+- **`make testcases`**: generates the proto files in [`/tests/harness/cases`](/tests/harness/cases). These are used by the test harness to verify the validation rules generated for each language.
+
+- **`make harness`**: executes the test-cases against each language's test harness.
 
 ### Docker
 

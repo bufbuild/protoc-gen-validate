@@ -192,10 +192,16 @@ func byteStr(x []byte) string {
 }
 
 func oneofTypeName(f pgs.Field) pgs.TypeName {
-	return pgs.TypeName(fmt.Sprintf("%s_%s",
+	name := pgs.TypeName(fmt.Sprintf("%s_%s",
 		f.Message().TypeName().Value().String(),
 		f.Name().PGGUpperCamelCase(),
-	)).Pointer()
+	))
+
+	if name == f.Type().Name() {
+		name += "_"
+	}
+
+	return name.Pointer()
 }
 
 func inType(f pgs.Field, x interface{}) string {
