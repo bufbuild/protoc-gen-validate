@@ -266,7 +266,7 @@ func tsGt(a, b *timestamp.Timestamp) bool {
 	at, _ := ptypes.Timestamp(a)
 	bt, _ := ptypes.Timestamp(b)
 
-	return !bt.Before(at)
+	return bt.Before(at)
 }
 
 func tsStr(ts *timestamp.Timestamp) string {

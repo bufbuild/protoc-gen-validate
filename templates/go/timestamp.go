@@ -3,10 +3,16 @@ package tpl
 const timestampTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 	{{ template "required" . }}
 
-	{{ if or $r.Lt $r.Lte $r.Gt $r.Gte $r.LtNow $r.GtNow $r.Within }}
+	{{ if or $r.Lt $r.Lte $r.Gt $r.Gte $r.LtNow $r.GtNow $r.Within $r.Const }}
 		if t := {{ accessor . }}; t != nil {
 			ts, err := ptypes.Timestamp(t)
 			if err != nil { return {{ errCause . "err" "value is not a valid timestamp" }} }
+
+			{{  if $r.Const }}
+				if !ts.Equal({{ tsLit $r.Const }}) {
+					return {{ err . "value must equal " (tsStr $r.Const) }}
+				}
+			{{ end }}
 
 			{{ if or $r.LtNow $r.GtNow $r.Within }} now := time.Now(); {{ end }}
 			{{- if $r.Lt }}  lt  := {{ tsLit $r.Lt }};  {{ end }}
