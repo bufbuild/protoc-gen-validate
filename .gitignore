@@ -1,10 +1,10 @@
-testdata/kitchensink/generated/
 bazel-*
 
 !vendor/*
 validate/validate.pb.go
 
-harness/cases/go/*
-harness/harness.pb.go
+/tests/harness/cases/go/
+/tests/harness/harness.pb.go
+/tests/harness/go/go-harness
 
-harness/go/go-harness
+/tests/kitchensink/go/

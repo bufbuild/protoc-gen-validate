@@ -1,3 +1,5 @@
+# gazelle:exclude validate.pb.go
+
 load("//bazel:go_proto_library.bzl", "go_proto_library")
 load("//bazel:protobuf.bzl", "cc_proto_library")
 
