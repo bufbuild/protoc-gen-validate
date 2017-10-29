@@ -25,7 +25,7 @@ const mapTpl = `
 
 	{{ if or $r.GetNoSparse (ne (.Elem "" "").Typ "none") (ne (.Key "" "").Typ "none") }}
 		for key, val := range {{ accessor . }} {
-			_ = key
+			_ = val
 
 			{{ if $r.GetNoSparse }}
 				if val == nil {

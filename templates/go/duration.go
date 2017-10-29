@@ -3,10 +3,17 @@ package tpl
 const durationTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 	{{ template "required" . }}
 
-	{{ if or $r.In $r.NotIn $r.Lt $r.Lte $r.Gt $r.Gte }}
+	{{ if or $r.In $r.NotIn $r.Lt $r.Lte $r.Gt $r.Gte $r.Const }}
 		if d := {{ accessor . }}; d != nil {
 			dur, err := ptypes.Duration(d)
 			if err != nil { return {{ errCause . "err" "value is not a valid duration" }} }
+
+			{{  if $r.Const }}
+				if dur != {{ durLit $r.Const }} {
+					return {{ err . "value must equal " (durStr $r.Const) }}
+				}
+			{{ end }}
+
 
 			{{  if $r.Lt }}  lt  := {{ durLit $r.Lt }};  {{ end }}
 			{{- if $r.Lte }} lte := {{ durLit $r.Lte }}; {{ end }}

@@ -1,7 +1,16 @@
 package main
 
 import (
+	"math"
+
+	"time"
+
 	"github.com/golang/protobuf/proto"
+	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/any"
+	"github.com/golang/protobuf/ptypes/duration"
+	"github.com/golang/protobuf/ptypes/timestamp"
+	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/lyft/protoc-gen-validate/tests/harness/cases/go"
 )
 
@@ -29,6 +38,16 @@ func init() {
 		sfixed64Cases,
 		boolCases,
 		stringCases,
+		bytesCases,
+		enumCases,
+		messageCases,
+		repeatedCases,
+		mapCases,
+		oneofCases,
+		wrapperCases,
+		durationCases,
+		timestampCases,
+		anyCases,
 	}
 
 	for _, set := range sets {
@@ -770,5 +789,390 @@ var stringCases = []TestCase{
 	{"string - IPv6 - valid (collapsed)", &cases.StringIPv6{"2001:db8:85a3::8a2e:370:7334"}, true},
 	{"string - IPv6 - invalid", &cases.StringIPv6{"foobar"}, false},
 	{"string - IPv6 - invalid (v4)", &cases.StringIPv6{"192.168.0.1"}, false},
-	{"string - IPv6 - invalid (erroneous)", &cases.StringIPv6{"efgh::0b"}, false},
+	{"string - IPv6 - invalid (erroneous)", &cases.StringIPv6{"ff::fff::0b"}, false},
+
+	{"string - URI - valid", &cases.StringURI{"http://example.com/foo/bar?baz=quux"}, true},
+	{"string - URI - invalid", &cases.StringURI{"!@#$%^&*%$#"}, false},
+	{"string - URI - invalid (relative)", &cases.StringURI{"/foo/bar?baz=quux"}, false},
+
+	{"string - URI - valid", &cases.StringURIRef{"http://example.com/foo/bar?baz=quux"}, true},
+	{"string - URI - valid (relative)", &cases.StringURIRef{"/foo/bar?baz=quux"}, true},
+	{"string - URI - invalid", &cases.StringURIRef{"!@#$%^&*%$#"}, false},
+}
+
+var bytesCases = []TestCase{
+	{"bytes - none - valid", &cases.BytesNone{Val: []byte("quux")}, true},
+
+	{"bytes - const - valid", &cases.BytesConst{Val: []byte("foo")}, true},
+	{"bytes - const - invalid", &cases.BytesConst{Val: []byte("bar")}, false},
+
+	{"bytes - in - valid", &cases.BytesIn{Val: []byte("bar")}, true},
+	{"bytes - in - invalid", &cases.BytesIn{Val: []byte("quux")}, false},
+	{"bytes - not in - valid", &cases.BytesNotIn{Val: []byte("quux")}, true},
+	{"bytes - not in - invalid", &cases.BytesNotIn{[]byte("fizz")}, false},
+
+	{"bytes - min len - valid", &cases.BytesMinLen{Val: []byte("fizz")}, true},
+	{"bytes - min len - valid (min)", &cases.BytesMinLen{Val: []byte("baz")}, true},
+	{"bytes - min len - invalid", &cases.BytesMinLen{Val: []byte("go")}, false},
+
+	{"bytes - max len - valid", &cases.BytesMaxLen{Val: []byte("foo")}, true},
+	{"bytes - max len - valid (max)", &cases.BytesMaxLen{Val: []byte("proto")}, true},
+	{"bytes - max len - invalid", &cases.BytesMaxLen{Val: []byte("1234567890")}, false},
+
+	{"bytes - min/max len - valid", &cases.BytesMinMaxLen{Val: []byte("quux")}, true},
+	{"bytes - min/max len - valid (min)", &cases.BytesMinMaxLen{Val: []byte("foo")}, true},
+	{"bytes - min/max len - valid (max)", &cases.BytesMinMaxLen{Val: []byte("proto")}, true},
+	{"bytes - min/max len - invalid (below)", &cases.BytesMinMaxLen{Val: []byte("go")}, false},
+	{"bytes - min/max len - invalid (above)", &cases.BytesMinMaxLen{Val: []byte("validate")}, false},
+
+	{"bytes - pattern - valid", &cases.BytesPattern{Val: []byte("Foo123")}, true},
+	{"bytes - pattern - invalid", &cases.BytesPattern{Val: []byte("你好你好")}, false},
+	{"bytes - pattern - invalid (empty)", &cases.BytesPattern{Val: []byte("")}, false},
+
+	{"bytes - prefix - valid", &cases.BytesPrefix{Val: []byte{0x99, 0x9f, 0x08}}, true},
+	{"bytes - prefix - valid (only)", &cases.BytesPrefix{Val: []byte{0x99}}, true},
+	{"bytes - prefix - invalid", &cases.BytesPrefix{Val: []byte("bar")}, false},
+
+	{"bytes - contains - valid", &cases.BytesContains{Val: []byte("candy bars")}, true},
+	{"bytes - contains - valid (only)", &cases.BytesContains{Val: []byte("bar")}, true},
+	{"bytes - contains - invalid", &cases.BytesContains{Val: []byte("candy bazs")}, false},
+
+	{"bytes - suffix - valid", &cases.BytesSuffix{Val: []byte{0x62, 0x75, 0x7A, 0x7A}}, true},
+	{"bytes - suffix - valid (only)", &cases.BytesSuffix{Val: []byte("\x62\x75\x7A\x7A")}, true},
+	{"bytes - suffix - invalid", &cases.BytesSuffix{Val: []byte("foobar")}, false},
+	{"bytes - suffix - invalid (case-sensitive)", &cases.BytesSuffix{Val: []byte("FooBaz")}, false},
+
+	{"bytes - IP - valid (v4)", &cases.BytesIP{Val: []byte{0xC0, 0xA8, 0x00, 0x01}}, true},
+	{"bytes - IP - valid (v6)", &cases.BytesIP{Val: []byte("\x20\x01\x0D\xB8\x85\xA3\x00\x00\x00\x00\x8A\x2E\x03\x70\x73\x34")}, true},
+	{"bytes - IP - invalid", &cases.BytesIP{Val: []byte("foobar")}, false},
+
+	{"bytes - IPv4 - valid", &cases.BytesIPv4{Val: []byte{0xC0, 0xA8, 0x00, 0x01}}, true},
+	{"bytes - IPv4 - invalid", &cases.BytesIPv4{Val: []byte("foobar")}, false},
+	{"bytes - IPv4 - invalid (v6)", &cases.BytesIPv4{Val: []byte("\x20\x01\x0D\xB8\x85\xA3\x00\x00\x00\x00\x8A\x2E\x03\x70\x73\x34")}, false},
+
+	{"bytes - IPv6 - valid", &cases.BytesIPv6{[]byte("\x20\x01\x0D\xB8\x85\xA3\x00\x00\x00\x00\x8A\x2E\x03\x70\x73\x34")}, true},
+	{"bytes - IPv6 - invalid", &cases.BytesIPv6{[]byte("fooar")}, false},
+	{"bytes - IPv6 - invalid (v4)", &cases.BytesIPv6{[]byte{0xC0, 0xA8, 0x00, 0x01}}, false},
+}
+
+var enumCases = []TestCase{
+	{"enum - none - valid", &cases.EnumNone{cases.TestEnum_ONE}, true},
+
+	{"enum - const - valid", &cases.EnumConst{cases.TestEnum_TWO}, true},
+	{"enum - const - invalid", &cases.EnumConst{cases.TestEnum_ONE}, false},
+	{"enum alias - const - valid", &cases.EnumAliasConst{cases.TestEnumAlias_C}, true},
+	{"enum alias - const - valid (alias)", &cases.EnumAliasConst{cases.TestEnumAlias_GAMMA}, true},
+	{"enum alias - const - invalid", &cases.EnumAliasConst{cases.TestEnumAlias_ALPHA}, false},
+
+	{"enum - defined_only - valid", &cases.EnumDefined{0}, true},
+	{"enum - defined_only - invalid", &cases.EnumDefined{math.MaxInt32}, false},
+	{"enum alias - defined_only - valid", &cases.EnumAliasDefined{1}, true},
+	{"enum alias - defined_only - invalid", &cases.EnumAliasDefined{math.MaxInt32}, false},
+
+	{"enum - in - valid", &cases.EnumIn{cases.TestEnum_TWO}, true},
+	{"enum - in - invalid", &cases.EnumIn{cases.TestEnum_ONE}, false},
+	{"enum alias - in - valid", &cases.EnumAliasIn{cases.TestEnumAlias_A}, true},
+	{"enum alias - in - valid (alias)", &cases.EnumAliasIn{cases.TestEnumAlias_ALPHA}, true},
+	{"enum alias - in - invalid", &cases.EnumAliasIn{cases.TestEnumAlias_BETA}, false},
+
+	{"enum - not in - valid", &cases.EnumNotIn{cases.TestEnum_ZERO}, true},
+	{"enum - not in - valid (undefined)", &cases.EnumNotIn{math.MaxInt32}, true},
+	{"enum - not in - invalid", &cases.EnumNotIn{cases.TestEnum_ONE}, false},
+	{"enum alias - not in - valid", &cases.EnumAliasNotIn{cases.TestEnumAlias_ALPHA}, true},
+	{"enum alias - not in - invalid", &cases.EnumAliasNotIn{cases.TestEnumAlias_B}, false},
+	{"enum alias - not in - invalid (alias)", &cases.EnumAliasNotIn{cases.TestEnumAlias_BETA}, false},
+}
+
+var messageCases = []TestCase{
+	{"message - none - valid", &cases.MessageNone{&cases.MessageNone_NoneMsg{}}, true},
+	{"message - none - valid (unset)", &cases.MessageNone{}, true},
+
+	{"message - disabled - valid", &cases.MessageDisabled{456}, true},
+	{"message - disabled - valid (invalid field)", &cases.MessageDisabled{0}, true},
+
+	{"message - field - valid", &cases.Message{&cases.TestMsg{Const: "foo"}}, true},
+	{"message - field - valid (unset)", &cases.Message{}, true},
+	{"message - field - invalid", &cases.Message{&cases.TestMsg{}}, false},
+	{"message - field - invalid (transitive)", &cases.Message{&cases.TestMsg{"foo", &cases.TestMsg{}}}, false},
+
+	{"message - skip - valid", &cases.MessageSkip{&cases.TestMsg{}}, true},
+
+	{"message - required - valid", &cases.MessageRequired{&cases.TestMsg{Const: "foo"}}, true},
+	{"message - required - invalid", &cases.MessageRequired{}, false},
+}
+
+var repeatedCases = []TestCase{
+	{"repeated - none - valid", &cases.RepeatedNone{[]int64{1, 2, 3}}, true},
+
+	{"repeated - min - valid", &cases.RepeatedMin{[]float32{1, 2, 3}}, true},
+	{"repeated - min - valid (equal)", &cases.RepeatedMin{[]float32{1, 2}}, true},
+	{"repeated - min - invalid", &cases.RepeatedMin{[]float32{1}}, false},
+
+	{"repeated - max - valid", &cases.RepeatedMax{[]float64{1, 2}}, true},
+	{"repeated - max - valid (equal)", &cases.RepeatedMax{[]float64{1, 2, 3}}, true},
+	{"repeated - max - invalid", &cases.RepeatedMax{[]float64{1, 2, 3, 4}}, false},
+
+	{"repeated - min/max - valid", &cases.RepeatedMinMax{[]int32{1, 2, 3}}, true},
+	{"repeated - min/max - valid (min)", &cases.RepeatedMinMax{[]int32{1, 2}}, true},
+	{"repeated - min/max - valid (max)", &cases.RepeatedMinMax{[]int32{1, 2, 3, 4}}, true},
+	{"repeated - min/max - invalid (below)", &cases.RepeatedMinMax{[]int32{}}, false},
+	{"repeated - min/max - invalid (above)", &cases.RepeatedMinMax{[]int32{1, 2, 3, 4, 5}}, false},
+
+	{"repeated - exact - valid", &cases.RepeatedExact{[]uint32{1, 2, 3}}, true},
+	{"repeated - exact - invalid (below)", &cases.RepeatedExact{[]uint32{1, 2}}, false},
+	{"repeated - exact - invalid (above)", &cases.RepeatedExact{[]uint32{1, 2, 3, 4}}, false},
+
+	{"repeated - unique - valid", &cases.RepeatedUnique{[]string{"foo", "bar", "baz"}}, true},
+	{"repeated - unique - valid (empty)", &cases.RepeatedUnique{}, true},
+	{"repeated - unique - valid (case sensitivity)", &cases.RepeatedUnique{[]string{"foo", "Foo"}}, true},
+	{"repeated - unique - invalid", &cases.RepeatedUnique{[]string{"foo", "bar", "foo", "baz"}}, false},
+
+	{"repeated - items - valid", &cases.RepeatedItemRule{[]float32{1, 2, 3}}, true},
+	{"repeated - items - valid (empty)", &cases.RepeatedItemRule{[]float32{}}, true},
+	{"repeated - items - invalid", &cases.RepeatedItemRule{[]float32{1, -2, 3}}, false},
+}
+
+var mapCases = []TestCase{
+	{"map - none - valid", &cases.MapNone{map[uint32]bool{123: true, 456: false}}, true},
+
+	{"map - min pairs - valid", &cases.MapMin{map[int32]float32{1: 2, 3: 4, 5: 6}}, true},
+	{"map - min pairs - valid (equal)", &cases.MapMin{map[int32]float32{1: 2, 3: 4}}, true},
+	{"map - min pairs - invalid", &cases.MapMin{map[int32]float32{1: 2}}, false},
+
+	{"map - max pairs - valid", &cases.MapMax{map[int64]float64{1: 2, 3: 4}}, true},
+	{"map - max pairs - valid (equal)", &cases.MapMax{map[int64]float64{1: 2, 3: 4, 5: 6}}, true},
+	{"map - max pairs - invalid", &cases.MapMax{map[int64]float64{1: 2, 3: 4, 5: 6, 7: 8}}, false},
+
+	{"map - min/max - valid", &cases.MapMinMax{map[string]bool{"a": true, "b": false, "c": true}}, true},
+	{"map - min/max - valid (min)", &cases.MapMinMax{map[string]bool{"a": true, "b": false}}, true},
+	{"map - min/max - valid (max)", &cases.MapMinMax{map[string]bool{"a": true, "b": false, "c": true, "d": false}}, true},
+	{"map - min/max - invalid (below)", &cases.MapMinMax{map[string]bool{}}, false},
+	{"map - min/max - invalid (above)", &cases.MapMinMax{map[string]bool{"a": true, "b": false, "c": true, "d": false, "e": true}}, false},
+
+	{"map - exact - valid", &cases.MapExact{map[uint64]string{1: "a", 2: "b", 3: "c"}}, true},
+	{"map - exact - invalid (below)", &cases.MapExact{map[uint64]string{1: "a", 2: "b"}}, false},
+	{"map - exact - invalid (above)", &cases.MapExact{map[uint64]string{1: "a", 2: "b", 3: "c", 4: "d"}}, false},
+
+	{"map - no sparse - valid", &cases.MapNoSparse{map[uint32]*cases.MapNoSparse_Msg{1: {}, 2: {}}}, true},
+	{"map - no sparse - valid (empty)", &cases.MapNoSparse{map[uint32]*cases.MapNoSparse_Msg{}}, true},
+	{"map - no sparse - invalid", &cases.MapNoSparse{map[uint32]*cases.MapNoSparse_Msg{1: {}, 2: nil}}, false},
+
+	{"map - keys - valid", &cases.MapKeys{map[int32]string{-1: "a", -2: "b"}}, true},
+	{"map - keys - valid (empty)", &cases.MapKeys{map[int32]string{}}, true},
+	{"map - keys - invalid", &cases.MapKeys{map[int32]string{1: "a"}}, false},
+
+	{"map - values - valid", &cases.MapValues{map[string]string{"a": "Alpha", "b": "Beta"}}, true},
+	{"map - values - valid (empty)", &cases.MapValues{map[string]string{}}, true},
+	{"map - values - invalid", &cases.MapValues{map[string]string{"a": "A", "b": "B"}}, false},
+}
+
+var oneofCases = []TestCase{
+	{"oneof - none - valid", &cases.OneOfNone{O: &cases.OneOfNone_X{X: "foo"}}, true},
+	{"oneof - none - valid (empty)", &cases.OneOfNone{}, true},
+
+	{"oneof - field - valid (X)", &cases.OneOf{O: &cases.OneOf_X{X: "foobar"}}, true},
+	{"oneof - field - valid (Y)", &cases.OneOf{O: &cases.OneOf_Y{Y: 123}}, true},
+	{"oneof - field - valid (Z)", &cases.OneOf{O: &cases.OneOf_Z{Z: &cases.TestOneOfMsg{Val: true}}}, true},
+	{"oneof - field - valid (empty)", &cases.OneOf{}, true},
+	{"oneof - field - invalid (X)", &cases.OneOf{O: &cases.OneOf_X{X: "fizzbuzz"}}, false},
+	{"oneof - field - invalid (Y)", &cases.OneOf{O: &cases.OneOf_Y{-1}}, false},
+	{"oneof - filed - invalid (Z)", &cases.OneOf{O: &cases.OneOf_Z{&cases.TestOneOfMsg{}}}, false},
+
+	{"oneof - required - valid", &cases.OneOfRequired{&cases.OneOfRequired_X{""}}, true},
+	{"oneof - require - invalid", &cases.OneOfRequired{}, false},
+}
+
+var wrapperCases = []TestCase{
+	{"wrapper - none - valid", &cases.WrapperNone{&wrappers.Int32Value{123}}, true},
+	{"wrapper - none - valid (empty)", &cases.WrapperNone{nil}, true},
+
+	{"wrapper - float - valid", &cases.WrapperFloat{&wrappers.FloatValue{1}}, true},
+	{"wrapper - float - valid (empty)", &cases.WrapperFloat{nil}, true},
+	{"wrapper - float - invalid", &cases.WrapperFloat{&wrappers.FloatValue{0}}, false},
+
+	{"wrapper - double - valid", &cases.WrapperDouble{&wrappers.DoubleValue{1}}, true},
+	{"wrapper - double - valid (empty)", &cases.WrapperDouble{nil}, true},
+	{"wrapper - double - invalid", &cases.WrapperDouble{&wrappers.DoubleValue{0}}, false},
+
+	{"wrapper - int64 - valid", &cases.WrapperInt64{&wrappers.Int64Value{1}}, true},
+	{"wrapper - int64 - valid (empty)", &cases.WrapperInt64{nil}, true},
+	{"wrapper - int64 - invalid", &cases.WrapperInt64{&wrappers.Int64Value{0}}, false},
+
+	{"wrapper - int32 - valid", &cases.WrapperInt32{&wrappers.Int32Value{1}}, true},
+	{"wrapper - int32 - valid (empty)", &cases.WrapperInt32{nil}, true},
+	{"wrapper - int32 - invalid", &cases.WrapperInt32{&wrappers.Int32Value{0}}, false},
+
+	{"wrapper - uint64 - valid", &cases.WrapperUInt64{&wrappers.UInt64Value{1}}, true},
+	{"wrapper - uint64 - valid (empty)", &cases.WrapperUInt64{nil}, true},
+	{"wrapper - uint64 - invalid", &cases.WrapperUInt64{&wrappers.UInt64Value{0}}, false},
+
+	{"wrapper - uint32 - valid", &cases.WrapperUInt32{&wrappers.UInt32Value{1}}, true},
+	{"wrapper - uint32 - valid (empty)", &cases.WrapperUInt32{nil}, true},
+	{"wrapper - uint32 - invalid", &cases.WrapperUInt32{&wrappers.UInt32Value{0}}, false},
+
+	{"wrapper - bool - valid", &cases.WrapperBool{&wrappers.BoolValue{true}}, true},
+	{"wrapper - bool - valid (empty)", &cases.WrapperBool{nil}, true},
+	{"wrapper - bool - invalid", &cases.WrapperBool{&wrappers.BoolValue{false}}, false},
+
+	{"wrapper - string - valid", &cases.WrapperString{&wrappers.StringValue{"foobar"}}, true},
+	{"wrapper - string - valid (empty)", &cases.WrapperString{nil}, true},
+	{"wrapper - string - invalid", &cases.WrapperString{&wrappers.StringValue{"fizzbuzz"}}, false},
+
+	{"wrapper - bytes - valid", &cases.WrapperBytes{&wrappers.BytesValue{[]byte("foo")}}, true},
+	{"wrapper - bytes - valid (empty)", &cases.WrapperBytes{nil}, true},
+	{"wrapper - bytes - invalid", &cases.WrapperBytes{&wrappers.BytesValue{[]byte("x")}}, false},
+}
+
+var durationCases = []TestCase{
+	{"duration - none - valid", &cases.DurationNone{&duration.Duration{Seconds: 123}}, true},
+
+	{"duration - required - valid", &cases.DurationRequired{&duration.Duration{}}, true},
+	{"duration - required - invalid", &cases.DurationRequired{nil}, false},
+
+	{"duration - const - valid", &cases.DurationConst{&duration.Duration{Seconds: 3}}, true},
+	{"duration - const - valid (empty)", &cases.DurationConst{}, true},
+	{"duration - const - invalid", &cases.DurationConst{&duration.Duration{Nanos: 3}}, false},
+
+	{"duration - in - valid", &cases.DurationIn{&duration.Duration{Seconds: 1}}, true},
+	{"duration - in - valid (empty)", &cases.DurationIn{}, true},
+	{"duration - in - invalid", &cases.DurationIn{&duration.Duration{}}, false},
+
+	{"duration - not in - valid", &cases.DurationNotIn{&duration.Duration{Nanos: 1}}, true},
+	{"duration - not in - valid (empty)", &cases.DurationNotIn{}, true},
+	{"duration - not in - invalid", &cases.DurationNotIn{&duration.Duration{}}, false},
+
+	{"duration - lt - valid", &cases.DurationLT{&duration.Duration{Nanos: -1}}, true},
+	{"duration - lt - valid (empty)", &cases.DurationLT{}, true},
+	{"duration - lt - invalid (equal)", &cases.DurationLT{&duration.Duration{}}, false},
+	{"duration - lt - invalid", &cases.DurationLT{&duration.Duration{Seconds: 1}}, false},
+
+	{"duration - lte - valid", &cases.DurationLTE{&duration.Duration{}}, true},
+	{"duration - lte - valid (empty)", &cases.DurationLTE{}, true},
+	{"duration - lte - valid (equal)", &cases.DurationLTE{&duration.Duration{Seconds: 1}}, true},
+	{"duration - lte - invalid", &cases.DurationLTE{&duration.Duration{Seconds: 1, Nanos: 1}}, false},
+
+	{"duration - gt - valid", &cases.DurationGT{&duration.Duration{Seconds: 1}}, true},
+	{"duration - gt - valid (empty)", &cases.DurationGT{}, true},
+	{"duration - gt - invalid (equal)", &cases.DurationGT{&duration.Duration{Nanos: 1000}}, false},
+	{"duration - gt - invalid", &cases.DurationGT{&duration.Duration{}}, false},
+
+	{"duration - gte - valid", &cases.DurationGTE{&duration.Duration{Seconds: 3}}, true},
+	{"duration - gte - valid (empty)", &cases.DurationGTE{}, true},
+	{"duration - gte - valid (equal)", &cases.DurationGTE{&duration.Duration{Nanos: 1000000}}, true},
+	{"duration - gte - invalid", &cases.DurationGTE{&duration.Duration{Seconds: -1}}, false},
+
+	{"duration - gt & lt - valid", &cases.DurationGTLT{&duration.Duration{Nanos: 1000}}, true},
+	{"duration - gt & lt - valid (empty)", &cases.DurationGTLT{}, true},
+	{"duration - gt & lt - invalid (above)", &cases.DurationGTLT{&duration.Duration{Seconds: 1000}}, false},
+	{"duration - gt & lt - invalid (below)", &cases.DurationGTLT{&duration.Duration{Nanos: -1000}}, false},
+	{"duration - gt & lt - invalid (max)", &cases.DurationGTLT{Val: &duration.Duration{Seconds: 1}}, false},
+	{"duration - gt & lt - invalid (min)", &cases.DurationGTLT{Val: &duration.Duration{}}, false},
+
+	{"duration - exclusive gt & lt - valid (empty)", &cases.DurationExLTGT{}, true},
+	{"duration - exclusive gt & lt - valid (above)", &cases.DurationExLTGT{&duration.Duration{Seconds: 2}}, true},
+	{"duration - exclusive gt & lt - valid (below)", &cases.DurationExLTGT{&duration.Duration{Nanos: -1}}, true},
+	{"duration - exclusive gt & lt - invalid", &cases.DurationExLTGT{&duration.Duration{Nanos: 1000}}, false},
+	{"duration - exclusive gt & lt - invalid (max)", &cases.DurationExLTGT{&duration.Duration{Seconds: 1}}, false},
+	{"duration - exclusive gt & lt - invalid (min)", &cases.DurationExLTGT{&duration.Duration{}}, false},
+
+	{"duration - gte & lte - valid", &cases.DurationGTELTE{&duration.Duration{Seconds: 60, Nanos: 1}}, true},
+	{"duration - gte & lte - valid (empty)", &cases.DurationGTELTE{}, true},
+	{"duration - gte & lte - valid (max)", &cases.DurationGTELTE{&duration.Duration{Seconds: 3600}}, true},
+	{"duration - gte & lte - valid (min)", &cases.DurationGTELTE{&duration.Duration{Seconds: 60}}, true},
+	{"duration - gte & lte - invalid (above)", &cases.DurationGTELTE{&duration.Duration{3600, 1}}, false},
+	{"duration - gte & lte - invalid (below)", &cases.DurationGTELTE{&duration.Duration{Seconds: 59}}, false},
+
+	{"duration - gte & lte - valid (empty)", &cases.DurationExGTELTE{}, true},
+	{"duration - exclusive gte & lte - valid (above)", &cases.DurationExGTELTE{&duration.Duration{Seconds: 3601}}, true},
+	{"duration - exclusive gte & lte - valid (below)", &cases.DurationExGTELTE{&duration.Duration{}}, true},
+	{"duration - exclusive gte & lte - valid (max)", &cases.DurationExGTELTE{&duration.Duration{Seconds: 3600}}, true},
+	{"duration - exclusive gte & lte - valid (min)", &cases.DurationExGTELTE{&duration.Duration{Seconds: 60}}, true},
+	{"duration - exclusive gte & lte - invalid", &cases.DurationExGTELTE{&duration.Duration{Seconds: 61}}, false},
+}
+
+var timestampCases = []TestCase{
+	{"timestamp - none - valid", &cases.TimestampNone{&timestamp.Timestamp{Seconds: 123}}, true},
+
+	{"timestamp - required - valid", &cases.TimestampRequired{&timestamp.Timestamp{}}, true},
+	{"timestamp - required - invalid", &cases.TimestampRequired{nil}, false},
+
+	{"timestamp - const - valid", &cases.TimestampConst{&timestamp.Timestamp{Seconds: 3}}, true},
+	{"timestamp - const - valid (empty)", &cases.TimestampConst{}, true},
+	{"timestamp - const - invalid", &cases.TimestampConst{&timestamp.Timestamp{Nanos: 3}}, false},
+
+	{"timestamp - lt - valid", &cases.TimestampLT{&timestamp.Timestamp{Seconds: -1}}, true},
+	{"timestamp - lt - valid (empty)", &cases.TimestampLT{}, true},
+	{"timestamp - lt - invalid (equal)", &cases.TimestampLT{&timestamp.Timestamp{}}, false},
+	{"timestamp - lt - invalid", &cases.TimestampLT{&timestamp.Timestamp{Seconds: 1}}, false},
+
+	{"timestamp - lte - valid", &cases.TimestampLTE{&timestamp.Timestamp{}}, true},
+	{"timestamp - lte - valid (empty)", &cases.TimestampLTE{}, true},
+	{"timestamp - lte - valid (equal)", &cases.TimestampLTE{&timestamp.Timestamp{Seconds: 1}}, true},
+	{"timestamp - lte - invalid", &cases.TimestampLTE{&timestamp.Timestamp{Seconds: 1, Nanos: 1}}, false},
+
+	{"timestamp - gt - valid", &cases.TimestampGT{&timestamp.Timestamp{Seconds: 1}}, true},
+	{"timestamp - gt - valid (empty)", &cases.TimestampGT{}, true},
+	{"timestamp - gt - invalid (equal)", &cases.TimestampGT{&timestamp.Timestamp{Nanos: 1000}}, false},
+	{"timestamp - gt - invalid", &cases.TimestampGT{&timestamp.Timestamp{}}, false},
+
+	{"timestamp - gte - valid", &cases.TimestampGTE{&timestamp.Timestamp{Seconds: 3}}, true},
+	{"timestamp - gte - valid (empty)", &cases.TimestampGTE{}, true},
+	{"timestamp - gte - valid (equal)", &cases.TimestampGTE{&timestamp.Timestamp{Nanos: 1000000}}, true},
+	{"timestamp - gte - invalid", &cases.TimestampGTE{&timestamp.Timestamp{Seconds: -1}}, false},
+
+	{"timestamp - gt & lt - valid", &cases.TimestampGTLT{&timestamp.Timestamp{Nanos: 1000}}, true},
+	{"timestamp - gt & lt - valid (empty)", &cases.TimestampGTLT{}, true},
+	{"timestamp - gt & lt - invalid (above)", &cases.TimestampGTLT{&timestamp.Timestamp{Seconds: 1000}}, false},
+	{"timestamp - gt & lt - invalid (below)", &cases.TimestampGTLT{&timestamp.Timestamp{Seconds: -1000}}, false},
+	{"timestamp - gt & lt - invalid (max)", &cases.TimestampGTLT{Val: &timestamp.Timestamp{Seconds: 1}}, false},
+	{"timestamp - gt & lt - invalid (min)", &cases.TimestampGTLT{Val: &timestamp.Timestamp{}}, false},
+
+	{"timestamp - exclusive gt & lt - valid (empty)", &cases.TimestampExLTGT{}, true},
+	{"timestamp - exclusive gt & lt - valid (above)", &cases.TimestampExLTGT{&timestamp.Timestamp{Seconds: 2}}, true},
+	{"timestamp - exclusive gt & lt - valid (below)", &cases.TimestampExLTGT{&timestamp.Timestamp{Seconds: -1}}, true},
+	{"timestamp - exclusive gt & lt - invalid", &cases.TimestampExLTGT{&timestamp.Timestamp{Nanos: 1000}}, false},
+	{"timestamp - exclusive gt & lt - invalid (max)", &cases.TimestampExLTGT{&timestamp.Timestamp{Seconds: 1}}, false},
+	{"timestamp - exclusive gt & lt - invalid (min)", &cases.TimestampExLTGT{&timestamp.Timestamp{}}, false},
+
+	{"timestamp - gte & lte - valid", &cases.TimestampGTELTE{&timestamp.Timestamp{Seconds: 60, Nanos: 1}}, true},
+	{"timestamp - gte & lte - valid (empty)", &cases.TimestampGTELTE{}, true},
+	{"timestamp - gte & lte - valid (max)", &cases.TimestampGTELTE{&timestamp.Timestamp{Seconds: 3600}}, true},
+	{"timestamp - gte & lte - valid (min)", &cases.TimestampGTELTE{&timestamp.Timestamp{Seconds: 60}}, true},
+	{"timestamp - gte & lte - invalid (above)", &cases.TimestampGTELTE{&timestamp.Timestamp{3600, 1}}, false},
+	{"timestamp - gte & lte - invalid (below)", &cases.TimestampGTELTE{&timestamp.Timestamp{Seconds: 59}}, false},
+
+	{"timestamp - gte & lte - valid (empty)", &cases.TimestampExGTELTE{}, true},
+	{"timestamp - exclusive gte & lte - valid (above)", &cases.TimestampExGTELTE{&timestamp.Timestamp{Seconds: 3601}}, true},
+	{"timestamp - exclusive gte & lte - valid (below)", &cases.TimestampExGTELTE{&timestamp.Timestamp{}}, true},
+	{"timestamp - exclusive gte & lte - valid (max)", &cases.TimestampExGTELTE{&timestamp.Timestamp{Seconds: 3600}}, true},
+	{"timestamp - exclusive gte & lte - valid (min)", &cases.TimestampExGTELTE{&timestamp.Timestamp{Seconds: 60}}, true},
+	{"timestamp - exclusive gte & lte - invalid", &cases.TimestampExGTELTE{&timestamp.Timestamp{Seconds: 61}}, false},
+
+	{"timestamp - lt now - valid", &cases.TimestampLTNow{&timestamp.Timestamp{}}, true},
+	{"timestamp - lt now - valid (empty)", &cases.TimestampLTNow{}, true},
+	{"timestamp - lt - now - invalid", &cases.TimestampLTNow{&timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, false},
+
+	{"timestamp - gt now - valid", &cases.TimestampGTNow{&timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, true},
+	{"timestamp - gt now - valid (empty)", &cases.TimestampGTNow{}, true},
+	{"timestamp - gt now - invalid", &cases.TimestampGTNow{&timestamp.Timestamp{}}, false},
+
+	{"timestamp - within - valid", &cases.TimestampWithin{ptypes.TimestampNow()}, true},
+	{"timestamp - within - valid (empty)", &cases.TimestampWithin{}, true},
+	{"timestamp - within - invalid (below)", &cases.TimestampWithin{&timestamp.Timestamp{}}, false},
+	{"timestamp - within - invalid (above)", &cases.TimestampWithin{&timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, false},
+}
+
+var anyCases = []TestCase{
+	{"any - none - valid", &cases.AnyNone{&any.Any{}}, true},
+
+	{"any - required - valid", &cases.AnyRequired{&any.Any{}}, true},
+	{"any - required - invalid", &cases.AnyRequired{nil}, false},
+
+	{"any - in - valid", &cases.AnyIn{&any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}}, true},
+	{"any - in - valid (empty)", &cases.AnyIn{}, true},
+	{"any - in - invalid", &cases.AnyIn{&any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Timestamp"}}, false},
+
+	{"any - not in - valid", &cases.AnyNotIn{&any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}}, true},
+	{"any - not in - valid (empty)", &cases.AnyNotIn{}, true},
+	{"any - not in - invalid", &cases.AnyNotIn{&any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Timestamp"}}, false},
 }
