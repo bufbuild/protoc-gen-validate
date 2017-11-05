@@ -6,6 +6,7 @@ import (
 	"runtime"
 	"sync"
 	"sync/atomic"
+	"testing"
 	"time"
 )
 
@@ -52,4 +53,8 @@ func main() {
 	if failures > 0 {
 		os.Exit(1)
 	}
+}
+
+func TestEverything(test *testing.T) {
+	main()
 }
