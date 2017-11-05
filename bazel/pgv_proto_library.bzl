@@ -5,7 +5,7 @@ def pgv_go_proto_library(name, srcs = None, deps = [], **kwargs):
     go_proto_library(name,
                      srcs,
                      deps = ["//validate:go_default_library"] + deps,
-                     protoc = "@protobuf_bzl//:protoc",
+                     protoc = "@com_google_protobuf//:protoc",
                      visibility = ["//visibility:public"],
                      validate = 1,
                      **kwargs)
@@ -13,8 +13,8 @@ def pgv_go_proto_library(name, srcs = None, deps = [], **kwargs):
 def pgv_cc_proto_library(name, srcs = None, deps = [], **kwargs):
     cc_proto_library(name,
                      srcs,
-                     protoc = "@protobuf_bzl//:protoc",
-                     default_runtime = "@protobuf_bzl//:protobuf",
+                     protoc = "@com_google_protobuf//:protoc",
+                     default_runtime = "@com_google_protobuf//:protobuf",
                      deps = ["//validate:validate_cc"] + deps,
                      visibility = ["//visibility:public"],
                      validate = 1,

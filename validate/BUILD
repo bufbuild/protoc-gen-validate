@@ -3,19 +3,30 @@
 load("//bazel:go_proto_library.bzl", "go_proto_library")
 load("//bazel:protobuf.bzl", "cc_proto_library")
 
+proto_library(
+    name = "validate",
+    srcs = ["validate.proto"],
+    deps = [
+        "@com_google_protobuf//:descriptor_proto",
+        "@com_google_protobuf//:duration_proto",
+        "@com_google_protobuf//:timestamp_proto",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 cc_proto_library(
-  name = "validate_cc",
-  srcs = ["validate.proto"],
-  protoc = "@protobuf_bzl//:protoc",
-  default_runtime = "@protobuf_bzl//:protobuf",
-  deps = ["@protobuf_bzl//:cc_wkt_protos"],
-  visibility = ["//visibility:public"],
+    name = "validate_cc",
+    srcs = ["validate.proto"],
+    protoc = "@com_google_protobuf//:protoc",
+    default_runtime = "@com_google_protobuf//:protobuf",
+    deps = ["@com_google_protobuf//:cc_wkt_protos"],
+    visibility = ["//visibility:public"],
 )
 
 go_proto_library(
     name = "go_default_library",
     srcs = ["validate.proto"],
-    protoc = "@protobuf_bzl//:protoc",
+    protoc = "@com_google_protobuf//:protoc",
     rules_go_repo_only_for_internal_use = "",
     deps = [
         "@com_github_golang_protobuf//ptypes/duration:go_default_library",

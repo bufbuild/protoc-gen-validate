@@ -7,7 +7,7 @@ go_proto_library(
     name = "go_default_library",
     srcs = ["harness.proto"],
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness",
-    protoc = "@protobuf_bzl//:protoc",
+    protoc = "@com_google_protobuf//:protoc",
     rules_go_repo_only_for_internal_use = "",
     visibility = ["//visibility:public"],
     deps = [
