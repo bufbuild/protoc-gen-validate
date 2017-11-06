@@ -60,6 +60,8 @@ _GO_GOOGLE_PROTOBUF = "go_google_protobuf"
 _PROTOBUF_REPO = "@com_github_golang_protobuf"
 _WELL_KNOWN_REPO = _PROTOBUF_REPO + "//ptypes/"
 
+_WELL_KNOWN_PTYPES = _PROTOBUF_REPO + "//ptypes:" + _DEFAULT_LIB
+
 def _collect_protos_import(ctx):
   """Collect the list of transitive protos and m_import_path.
 
@@ -303,6 +305,8 @@ def go_proto_library(name, srcs = None, deps = None,
 
   if not validate:
     protoc_gen_validate = None
+  else:
+    outs = outs + [s[:-len(".proto")] + ".pb.validate.go" for s in outs]
 
   _go_proto_library_gen(
       name = name + _PROTOS_SUFFIX,
@@ -326,7 +330,7 @@ def go_proto_library(name, srcs = None, deps = None,
   go_library(
       name = name,
       srcs = [":" + name + _PROTOS_SUFFIX],
-      deps = deps + grpc_deps + [golang_protobuf],
+      deps = deps + grpc_deps + [golang_protobuf, _WELL_KNOWN_PTYPES],
       testonly = testonly,
       visibility = visibility,
       **kwargs
