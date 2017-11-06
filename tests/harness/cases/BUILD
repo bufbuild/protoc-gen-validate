@@ -22,6 +22,7 @@ pgv_go_proto_library(
         "wkt_timestamp.proto",
         "wkt_wrappers.proto",
     ],
+    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/go",
     rules_go_repo_only_for_internal_use = "",
     deps = [
         "@com_github_golang_protobuf//ptypes/any:go_default_library",
