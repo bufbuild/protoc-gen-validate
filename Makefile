@@ -90,4 +90,4 @@ tests/harness/go/go-harness:
 	go build -o ./tests/harness/go/go-harness ./tests/harness/go
 
 .PHONY: ci
-ci: build tests kitchensink testcases harness
+ci: build tests kitchensink testcases harness bazel-harness
