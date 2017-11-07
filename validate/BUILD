@@ -4,7 +4,7 @@ load("//bazel:go_proto_library.bzl", "go_proto_library")
 load("//bazel:protobuf.bzl", "cc_proto_library")
 
 proto_library(
-    name = "validate",
+    name = "validate_proto",
     srcs = ["validate.proto"],
     deps = [
         "@com_google_protobuf//:descriptor_proto",
@@ -28,6 +28,7 @@ go_proto_library(
     srcs = ["validate.proto"],
     protoc = "@com_google_protobuf//:protoc",
     rules_go_repo_only_for_internal_use = "",
+    ignore_go_package_option = 1,  # https://github.com/bazelbuild/rules_go/issues/323
     deps = [
         "@com_github_golang_protobuf//ptypes/duration:go_default_library",
         "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
