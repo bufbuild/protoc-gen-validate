@@ -1,7 +1,7 @@
 # gazelle:exclude validate.pb.go
 
 load("//bazel:go_proto_library.bzl", "go_proto_library")
-load("//bazel:protobuf.bzl", "cc_proto_library")
+load("//bazel:protobuf.bzl", "cc_proto_library", "py_proto_library")
 
 proto_library(
     name = "validate_proto",
@@ -20,6 +20,15 @@ cc_proto_library(
     protoc = "@com_google_protobuf//:protoc",
     default_runtime = "@com_google_protobuf//:protobuf",
     deps = ["@com_google_protobuf//:cc_wkt_protos"],
+    visibility = ["//visibility:public"],
+)
+
+py_proto_library(
+    name = "validate_py",
+    srcs = ["validate.proto"],
+    protoc = "@com_google_protobuf//:protoc",
+    default_runtime = "@com_google_protobuf//:protobuf_python",
+    deps = ["@com_google_protobuf//:protobuf_python"],
     visibility = ["//visibility:public"],
 )
 
