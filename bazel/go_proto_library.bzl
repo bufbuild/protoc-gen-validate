@@ -306,7 +306,7 @@ def go_proto_library(name, srcs = None, deps = None,
   if not validate:
     protoc_gen_validate = None
   else:
-    outs = outs + [s[:-len(".proto")] + ".pb.validate.go" for s in outs]
+    outs += [s[:-len(".proto")] + ".pb.validate.go" for s in outs]
 
   _go_proto_library_gen(
       name = name + _PROTOS_SUFFIX,
