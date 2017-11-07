@@ -324,13 +324,15 @@ def go_proto_library(name, srcs = None, deps = None,
       protoc_gen_go = protoc_gen_go,
       protoc_gen_validate = protoc_gen_validate,
   )
-  grpc_deps = []
+  go_lib_deps = []
   if has_services:
-    grpc_deps += [x_net_context, google_grpc]
+    go_lib_deps += [x_net_context, google_grpc]
+  if validate:
+    go_lib_deps += [_WELL_KNOWN_PTYPES]
   go_library(
       name = name,
       srcs = [":" + name + _PROTOS_SUFFIX],
-      deps = deps + grpc_deps + [golang_protobuf, _WELL_KNOWN_PTYPES],
+      deps = deps + go_lib_deps + [golang_protobuf],
       testonly = testonly,
       visibility = visibility,
       **kwargs
