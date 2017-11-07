@@ -21,13 +21,11 @@ func main() {
 	da := new(ptypes.DynamicAny)
 	checkErr(ptypes.UnmarshalAny(tc.Message, da))
 
-	if msg, ok := da.Message.(interface {
+	msg := da.Message.(interface {
 		Validate() error
-	}); ok {
-		checkValid(msg.Validate())
-	} else {
-		checkValid(nil)
-	}
+	})
+	checkValid(msg.Validate())
+
 }
 
 func checkValid(err error) {

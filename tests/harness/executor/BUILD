@@ -30,4 +30,8 @@ go_test(
     library = ":go_default_library",
     rundir = ".",
     visibility = ["//visibility:public"],
+    deps = [
+        "//tests/harness/cases:go",
+        "//tests/harness/go:go-harness",
+    ],
 )
