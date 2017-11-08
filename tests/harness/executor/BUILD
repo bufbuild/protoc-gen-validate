@@ -26,12 +26,14 @@ go_library(
 
 go_test(
     name = "executor",
+    data = [
+        "//tests/harness/go:go-harness",
+    ],
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/executor",
     library = ":go_default_library",
     rundir = ".",
     visibility = ["//visibility:public"],
     deps = [
         "//tests/harness/cases:go",
-        "//tests/harness/go:go-harness",
     ],
 )
