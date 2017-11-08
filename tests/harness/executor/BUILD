@@ -27,6 +27,7 @@ go_library(
 go_test(
     name = "executor",
     data = [
+        "//tests/harness/cc:cc-harness",
         "//tests/harness/go:go-harness",
     ],
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/executor",

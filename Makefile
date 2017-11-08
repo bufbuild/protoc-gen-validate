@@ -42,7 +42,7 @@ cover:
 	open cover.html
 
 .PHONY: harness
-harness: tests/harness/harness.pb.go tests/harness/go/go-harness
+harness: tests/harness/harness.pb.go tests/harness/go/go-harness tests/harness/cc/cc-harness
  	# runs the test harness, validating a series of test cases in all supported languages
 	go run ./tests/harness/executor/*.go
 
@@ -89,6 +89,12 @@ tests/harness/harness.pb.go:
 tests/harness/go/go-harness:
 	# generates the go-specific test harness
 	go build -o ./tests/harness/go/go-harness ./tests/harness/go
+
+tests/harness/cc/cc-harness: tests/harness/cc/harness.cc
+	# generates the C++-specific test harness
+	# use bazel which knows how to pull in the C++ common proto libraries
+	bazel build //tests/harness/cc:cc-harness
+	cp bazel-bin/tests/harness/cc/cc-harness $@
 
 .PHONY: ci
 ci: build tests kitchensink testcases harness bazel-harness

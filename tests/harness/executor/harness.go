@@ -16,6 +16,7 @@ import (
 
 var Harnesses = []Harness{
 	InitHarness("tests/harness/go/go-harness"),
+	InitLaxHarness("tests/harness/cc/cc-harness"),
 }
 
 type Harness struct {
