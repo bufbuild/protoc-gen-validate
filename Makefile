@@ -79,7 +79,7 @@ testcases:
 
 validate/validate.pb.go:
 	# generates the proto extension in Go
-	cd validate && protoc -I . --go_out=. validate.proto && cp github.com/lyft/protoc-gen-validate/validate/validate.pb.go .
+	cd validate && protoc -I . --go_out=. validate.proto && diff validate.pb.go github.com/lyft/protoc-gen-validate/validate/validate.pb.go
 
 tests/harness/harness.pb.go:
 	# generates the test harness protos
