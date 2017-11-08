@@ -77,7 +77,7 @@ testcases:
 		--validate_out="lang=go:./go" \
 		`find . -name "*.proto"`
 
-validate/validate.pb.go:
+test-validate:
 	# generates the proto extension in Go
 	cd validate && protoc -I . --go_out=. validate.proto && diff validate.pb.go github.com/lyft/protoc-gen-validate/validate/validate.pb.go
 
@@ -90,4 +90,4 @@ tests/harness/go/go-harness:
 	go build -o ./tests/harness/go/go-harness ./tests/harness/go
 
 .PHONY: ci
-ci: build tests kitchensink testcases harness bazel-harness
+ci: build tests test-validate kitchensink testcases harness bazel-harness
