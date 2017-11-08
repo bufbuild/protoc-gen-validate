@@ -73,6 +73,7 @@ testcases:
 	protoc \
 		-I . \
 		-I ../../.. \
+		--cpp_out="./" \
 		--go_out="${VALIDATE_IMPORT}:./go" \
 		--validate_out="lang=go:./go" \
 		`find . -name "*.proto"`
