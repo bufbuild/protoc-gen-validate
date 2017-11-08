@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"sync"
@@ -41,25 +40,28 @@ func execTestCase(tc TestCase) (ok bool) {
 	wg.Add(len(Harnesses))
 
 	errs := make(chan error, len(Harnesses))
+	output := make(chan string, len(Harnesses))
 
 	for _, h := range Harnesses {
-		fn := h
+		h := h
 		go func() {
 			defer wg.Done()
 
-			res, err := fn(ctx, bytes.NewReader(b))
+			res, err := h.Exec(ctx, bytes.NewReader(b))
 			if err != nil {
 				errs <- err
 				return
 			}
 
 			if res.Error {
-				errs <- fmt.Errorf("internal harness error: %s", res.Reason)
+				errs <- fmt.Errorf("%s: internal harness error: %s", h.Name, res.Reason)
 			} else if res.Valid != tc.Valid {
-				if tc.Valid {
-					errs <- fmt.Errorf("expected valid, got: %s", res.Reason)
+				if h.IgnoreErrors {
+					output <- fmt.Sprintf("%s: ignoring test failure: %s", h.Name, res.Reason)
+				} else if tc.Valid {
+					errs <- fmt.Errorf("%s: expected valid, got: %s", h.Name, res.Reason)
 				} else {
-					errs <- errors.New("expected invalid, but got valid")
+					errs <- fmt.Errorf("%s: expected invalid, but got valid", h.Name)
 				}
 			}
 		}()
@@ -67,12 +69,16 @@ func execTestCase(tc TestCase) (ok bool) {
 
 	wg.Wait()
 	close(errs)
+	close(output)
 
 	ok = true
 
 	for err := range errs {
 		log.Printf("[%s] %v", tc.Name, err)
 		ok = false
+	}
+	for out := range output {
+		log.Printf("[%s] %v", tc.Name, out)
 	}
 
 	return ok
