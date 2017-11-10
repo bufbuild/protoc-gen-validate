@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 	"github.com/lyft/protoc-gen-validate/templates"
 )
 
@@ -21,7 +21,7 @@ func (m Module) Name() string { return validatorName }
 func (m Module) Execute(target pgs.Package, packages map[string]pgs.Package) []pgs.Artifact {
 	lang := m.Parameters().Str(langParam)
 	m.Assert(lang != "", "`lang` parameter must be set")
-	tpl := templates.Template().Lookup(lang)
+	tpl := templates.Template()[lang]
 	m.Assert(tpl != nil, "could not find template for `lang`: ", lang)
 	ext := map[string]string {
 		"go": "go",
