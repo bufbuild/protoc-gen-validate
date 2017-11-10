@@ -1,7 +1,6 @@
 bazel-*
 
 !vendor/*
-validate/validate.pb.go
 
 /tests/harness/cases/go/
 /tests/harness/harness.pb.go
