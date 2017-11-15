@@ -16,6 +16,8 @@
 
 #include "tests/harness/harness.pb.h"
 
+namespace {
+
 using tests::harness::TestCase;
 using tests::harness::TestResult;
 using google::protobuf::Any;
@@ -27,16 +29,16 @@ std::ostream& operator<<(std::ostream& out, const TestResult& result) {
   return out;
 }
 
-void resp(const TestResult& result) {
+void WriteTestResultAndExit(const TestResult& result) {
   if (!result.SerializeToOstream(&std::cout)) {
     std::cerr << "could not martial response: ";
     std::cerr << result << std::endl;
-    exit(1);
+    exit(EXIT_FAILURE);
   }
-  exit(0);
+  exit(EXIT_SUCCESS);
 }
 
-void check_err(bool succeeded, const std::string& err_msg) {
+void ExitIfFailed(bool succeeded, const std::string& err_msg) {
   if (succeeded) {
     return;
   }
@@ -44,19 +46,19 @@ void check_err(bool succeeded, const std::string& err_msg) {
   TestResult result;
   result.set_error(true);
   result.set_reason(err_msg);
-  resp(result);
+  WriteTestResultAndExit(result);
 }
 
-void check_valid(const std::function<bool(std::string*)>& validate_fn) {
+void ValidateOrExit(const std::function<bool(std::string*)>& validate_fn) {
   std::string error_msg;
   TestResult result;
 
   result.set_valid(validate_fn(&error_msg));
   result.set_reason(std::move(error_msg));
-  resp(result);
+  WriteTestResultAndExit(result);
 }
 
-std::pair<std::unique_ptr<Message>, std::function<bool(std::string*)>> get_validate(const Any& msg) {
+std::pair<std::unique_ptr<Message>, std::function<bool(std::string*)>> GetValidationCheck(const Any& msg) {
   // TODO(akonradi) remove this once all C++ validation code is done
   auto default_validate = [](std::string*) { return true; };
 
@@ -64,15 +66,17 @@ std::pair<std::unique_ptr<Message>, std::function<bool(std::string*)>> get_valid
   return {nullptr, default_validate};
 }
 
+}  // namespace
+
 int main() {
   TestCase test_case;
-  check_err(test_case.ParseFromIstream(&std::cin), "failed to parse TestCase");
+  ExitIfFailed(test_case.ParseFromIstream(&std::cin), "failed to parse TestCase");
 
-  auto validate_pair = get_validate(test_case.message());
+  auto validate_pair = GetValidationCheck(test_case.message());
   auto message = std::move(validate_pair.first);
   auto validate_fn = std::move(validate_pair.second);
 
-  check_valid(validate_fn);
+  ValidateOrExit(validate_fn);
 
   return 0;
 }
