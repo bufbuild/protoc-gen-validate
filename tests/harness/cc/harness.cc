@@ -58,12 +58,12 @@ void ValidateOrExit(const std::function<bool(std::string*)>& validate_fn) {
   WriteTestResultAndExit(result);
 }
 
-std::pair<std::unique_ptr<Message>, std::function<bool(std::string*)>> GetValidationCheck(const Any& msg) {
+std::function<bool(std::string*)> GetValidationCheck(const Any& msg) {
   // TODO(akonradi) remove this once all C++ validation code is done
   auto default_validate = [](std::string*) { return true; };
 
   // TODO(akonradi) use Any::UnpackTo to unpack messages
-  return {nullptr, default_validate};
+  return default_validate;
 }
 
 }  // namespace
@@ -72,9 +72,7 @@ int main() {
   TestCase test_case;
   ExitIfFailed(test_case.ParseFromIstream(&std::cin), "failed to parse TestCase");
 
-  auto validate_pair = GetValidationCheck(test_case.message());
-  auto message = std::move(validate_pair.first);
-  auto validate_fn = std::move(validate_pair.second);
+  auto validate_fn = GetValidationCheck(test_case.message());
 
   ValidateOrExit(validate_fn);
 
