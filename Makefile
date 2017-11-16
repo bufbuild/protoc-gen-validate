@@ -65,6 +65,7 @@ kitchensink:
 		--go_out="${VALIDATE_IMPORT}:./go" \
 		--validate_out="lang=go:./go" \
 		`find . -name "*.proto"`
+	cd tests/kitchensink/go && go build .
 
 .PHONY: testcases
 testcases:
