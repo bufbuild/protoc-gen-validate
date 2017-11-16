@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "tests/harness/cases/bool.pb.h"
+#include "tests/harness/cases/bool.pb.validate.h"
 #include "tests/harness/cases/bytes.pb.h"
 #include "tests/harness/cases/enums.pb.h"
 #include "tests/harness/cases/maps.pb.h"
@@ -59,11 +60,19 @@ void ValidateOrExit(const std::function<bool(std::string*)>& validate_fn) {
 }
 
 std::function<bool(std::string*)> GetValidationCheck(const Any& msg) {
-  // TODO(akonradi) remove this once all C++ validation code is done
-  auto default_validate = [](std::string*) { return true; };
+#define TRY_RETURN_VALIDATE_CALLABLE(cls) \
+  if (msg.Is<cls>()) { \
+    return [msg] (std::string* err) { \
+      cls unpacked; \
+      msg.UnpackTo(&unpacked); \
+      return Validate(unpacked, err); \
+    }; \
+  }
 
-  // TODO(akonradi) use Any::UnpackTo to unpack messages
-  return default_validate;
+  X_TESTS_HARNESS_CASES_BOOL(TRY_RETURN_VALIDATE_CALLABLE)
+
+  // TODO(akonradi) remove this once all C++ validation code is done
+  return [](std::string*) { return true; };
 }
 
 }  // namespace
