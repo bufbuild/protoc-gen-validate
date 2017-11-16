@@ -19,6 +19,10 @@ type FieldType interface {
 	Embed() pgs.Message
 }
 
+type Repeatable interface {
+	IsRepeated() bool
+}
+
 func (m Module) CheckRules(msg pgs.Message) {
 	m.Push("msg: " + msg.Name().String())
 	defer m.Pop()
@@ -120,6 +124,11 @@ func (m Module) MustType(typ FieldType, pt pgs.ProtoType, wrapper bool) {
 	if emb := typ.Embed(); wrapper && emb != nil && len(emb.Fields()) == 1 {
 		m.MustType(emb.Fields()[0].Type(), pt, false)
 		return
+	}
+
+	if typ, ok := typ.(Repeatable); ok {
+		m.Assert(!typ.IsRepeated(),
+			"repeated rule should be used for repeated fields")
 	}
 
 	m.Assert(typ.ProtoType() == pt,
