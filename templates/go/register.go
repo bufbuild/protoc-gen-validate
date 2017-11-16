@@ -197,8 +197,18 @@ func oneofTypeName(f pgs.Field) pgs.TypeName {
 		f.Name().PGGUpperCamelCase(),
 	))
 
-	if name == f.Type().Name() {
-		name += "_"
+	for _, enum := range f.Message().Enums() {
+		if name == enum.TypeName() {
+			name += "_"
+			break
+		}
+	}
+
+	for _, msg := range f.Message().Messages() {
+		if name == msg.TypeName() {
+			name += "_"
+			break
+		}
 	}
 
 	return name.Pointer()
