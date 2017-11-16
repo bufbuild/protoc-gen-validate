@@ -9,7 +9,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 	"github.com/lyft/protoc-gen-validate/templates/shared"
 )
 
@@ -35,6 +35,7 @@ func Register(tpl *template.Template) {
 		"tsLit":       tsLit,
 		"tsGt":        tsGt,
 		"tsStr":       tsStr,
+		"unwrap":      unwrap,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
@@ -73,6 +74,8 @@ func Register(tpl *template.Template) {
 	template.Must(tpl.New("any").Parse(anyTpl))
 	template.Must(tpl.New("duration").Parse(durationTpl))
 	template.Must(tpl.New("timestamp").Parse(timestampTpl))
+
+	template.Must(tpl.New("wrapper").Parse(wrapperTpl))
 }
 
 func accessor(ctx shared.RuleContext) string {
@@ -265,4 +268,16 @@ func tsGt(a, b *timestamp.Timestamp) bool {
 func tsStr(ts *timestamp.Timestamp) string {
 	t, _ := ptypes.Timestamp(ts)
 	return t.String()
+}
+
+func unwrap(ctx shared.RuleContext, name string) (shared.RuleContext, error) {
+	ctx, err := ctx.Unwrap("wrapper")
+	if err != nil {
+		return ctx, err
+	}
+
+	ctx.AccessorOverride = fmt.Sprintf("%s.Get%s()", name,
+		ctx.Field.Type().Embed().Fields()[0].Name().PGGUpperCamelCase())
+
+	return ctx, nil
 }
