@@ -50,29 +50,30 @@ void ExitIfFailed(bool succeeded, const std::string& err_msg) {
   WriteTestResultAndExit(result);
 }
 
-void ValidateOrExit(const std::function<bool(std::string*)>& validate_fn) {
-  std::string error_msg;
-  TestResult result;
-
-  result.set_valid(validate_fn(&error_msg));
-  result.set_reason(std::move(error_msg));
-  WriteTestResultAndExit(result);
-}
-
-std::function<bool(std::string*)> GetValidationCheck(const Any& msg) {
+std::function<TestResult()> GetValidationCheck(const Any& msg) {
 #define TRY_RETURN_VALIDATE_CALLABLE(cls) \
   if (msg.Is<cls>()) { \
-    return [msg] (std::string* err) { \
-      cls unpacked; \
-      msg.UnpackTo(&unpacked); \
-      return Validate(unpacked, err); \
-    }; \
+    return [msg] () {                                      \
+      std::string err_msg;                                 \
+      TestResult result;                                   \
+      cls unpacked;                                        \
+      msg.UnpackTo(&unpacked);                             \
+      result.set_valid(Validate(unpacked, &err_msg));      \
+      result.set_reason(std::move(err_msg));               \
+      return result;                                       \
+    };                                                     \
   }
 
   X_TESTS_HARNESS_CASES_BOOL(TRY_RETURN_VALIDATE_CALLABLE)
 
   // TODO(akonradi) remove this once all C++ validation code is done
-  return [](std::string*) { return true; };
+  return []() {
+    TestResult result;
+    result.set_valid(false);
+    result.set_allowfailure(true);
+    result.set_reason("not implemented");
+    return result;
+  };
 }
 
 }  // namespace
@@ -82,8 +83,7 @@ int main() {
   ExitIfFailed(test_case.ParseFromIstream(&std::cin), "failed to parse TestCase");
 
   auto validate_fn = GetValidationCheck(test_case.message());
-
-  ValidateOrExit(validate_fn);
+  WriteTestResultAndExit(validate_fn());
 
   return 0;
 }
