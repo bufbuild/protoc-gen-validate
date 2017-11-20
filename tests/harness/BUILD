@@ -17,3 +17,12 @@ go_proto_library(
         "@com_github_golang_protobuf//ptypes/wrappers:go_default_library",
     ],
 )
+
+cc_proto_library(
+    name = "harness_proto",
+    srcs = ["harness.proto"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_google_protobuf//:cc_wkt_protos",
+    ],
+)

@@ -185,11 +185,11 @@ def cc_proto_library(
         cc_libs=[],
         include=None,
         validate=False,
-        protoc="//:protoc",
+        protoc="@com_google_protobuf//:protoc",
         protoc_gen_validate = "//:protoc-gen-validate",
         internal_bootstrap_hack=False,
         use_grpc_plugin=False,
-        default_runtime="//:protobuf",
+        default_runtime="@com_google_protobuf//:protobuf",
         **kargs):
   """Bazel rule to create a C++ protobuf library from proto source files
 

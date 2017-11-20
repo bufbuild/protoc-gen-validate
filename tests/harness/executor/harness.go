@@ -16,11 +16,31 @@ import (
 
 var Harnesses = []Harness{
 	InitHarness("tests/harness/go/go-harness"),
+	InitLaxHarness("tests/harness/cc/cc-harness"),
 }
 
-type Harness func(context.Context, io.Reader) (*harness.TestResult, error)
+type Harness struct {
+	Name         string
+	Exec         func(context.Context, io.Reader) (*harness.TestResult, error)
+	IgnoreErrors bool
+}
 
 func InitHarness(cmd string, args ...string) Harness {
+	return Harness{
+		Name:         cmd,
+		Exec:         initHarness(cmd, args...),
+		IgnoreErrors: false,
+	}
+}
+
+func InitLaxHarness(cmd string, args ...string) Harness {
+	return Harness{
+		Exec:         initHarness(cmd, args...),
+		IgnoreErrors: true,
+	}
+}
+
+func initHarness(cmd string, args ...string) func(context.Context, io.Reader) (*harness.TestResult, error) {
 	return func(ctx context.Context, r io.Reader) (*harness.TestResult, error) {
 		out, errs := getBuf(), getBuf()
 		defer relBuf(out)

@@ -3,6 +3,7 @@
 load(
     "//bazel:pgv_proto_library.bzl",
     "pgv_go_proto_library",
+    "pgv_cc_proto_library",
 )
 
 pgv_go_proto_library(
@@ -29,5 +30,24 @@ pgv_go_proto_library(
         "@com_github_golang_protobuf//ptypes/duration:go_default_library",
         "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
         "@com_github_golang_protobuf//ptypes/wrappers:go_default_library",
+    ],
+)
+
+pgv_cc_proto_library(
+    name = "cc",
+    srcs = [
+        "bool.proto",
+        "bytes.proto",
+        "enums.proto",
+        "maps.proto",
+        "messages.proto",
+        "numbers.proto",
+        "oneofs.proto",
+        "repeated.proto",
+        "strings.proto",
+        "wkt_any.proto",
+        "wkt_duration.proto",
+        "wkt_timestamp.proto",
+        "wkt_wrappers.proto",
     ],
 )
