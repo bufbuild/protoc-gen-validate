@@ -3,32 +3,43 @@ package tpl
 const strTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 	{{ template "const" . }}
-	{{ template "in" . }}
-
+	{{/* template "in" . */}}
+{{/* // TODO(akonradi) implement regular expression constraints.
 	{{ if $r.Pattern }}
 		if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
 			return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
 		}
 	{{ end }}
-
+*/}}
 	{{ if $r.Prefix }}
-		if !strings.HasPrefix({{ accessor . }}, {{ lit $r.GetPrefix }}) {
-			return {{ err . "value does not have prefix " (lit $r.GetPrefix) }}
+	{
+		const std::string prefix = {{ lit $r.GetPrefix }};
+		if ({{ accessor . }}.compare(0, prefix.size(), prefix) != 0) {
+			{{ err . "value does not have prefix " (lit $r.GetPrefix) }}
 		}
+	}
 	{{ end }}
 
 	{{ if $r.Suffix }}
-		if !strings.HasSuffix({{ accessor . }}, {{ lit $r.GetSuffix }}) {
-			return {{ err . "value does not have suffix " (lit $r.GetSuffix) }}
+	{
+		const std::string suffix = {{ lit $r.GetSuffix }};
+		const std::string& value = {{ accessor . }};
+		if ((value.size() < suffix.size()) ||
+			(value.compare(value.size() - suffix.size(), suffix.size(), suffix) != 0)) {
+			{{ err . "value does not have suffix " (lit $r.GetSuffix) }}
 		}
+	}
 	{{ end }}
 
 	{{ if $r.Contains }}
-		if !strings.Contains({{ accessor . }}, {{ lit $r.GetContains }}) {
-			return {{ err . "value does not contain substring " (lit $r.GetContains) }}
+	{
+		if ({{ accessor . }}.find({{ lit $r.GetContains }}) == std::string::npos) {
+			{{ err . "value does not contain substring " (lit $r.GetContains) }}
 		}
+	}
 	{{ end }}
 
+{{/* // TODO(akonradi) implement the below constraints
 	{{ if $r.GetIp }}
 		if ip := net.ParseIP({{ accessor . }}); ip == nil {
 			return {{ err . "value must be a valid IP address" }}
@@ -82,26 +93,30 @@ const strTpl = `
 			return {{ err . "value length must be at most " $r.GetMaxLen " runes" }}
 		}
 	{{ end }}
+*/}}
 
 	{{ if $r.MinBytes }}
+	{
+		const auto length = {{ accessor . }}.size();
 		{{ if $r.MaxBytes }}
 			{{ if eq $r.GetMinBytes $r.GetMaxBytes }}
-				if len({{ accessor . }}) != {{ $r.GetMinBytes }} {
-					return {{ err . "value length must be " $r.GetMinBytes " bytes" }}
+				if (length != {{ $r.GetMinBytes }}) {
+					{{ err . "value length must be " $r.GetMinBytes " bytes" }}
 				}
 			{{ else }}
-				if l := len({{ accessor . }}); l < {{ $r.GetMinBytes }} || l > {{ $r.GetMaxBytes }} {
-					return {{ err . "value length must be between " $r.GetMinBytes " and " $r.GetMaxBytes " bytes, inclusive" }}
+				if (length < {{ $r.GetMinBytes }} || length > {{ $r.GetMaxBytes }}) {
+					{{ err . "value length must be between " $r.GetMinBytes " and " $r.GetMaxBytes " bytes, inclusive" }}
 				}
 			{{ end }}
 		{{ else }}
-			if len({{ accessor . }}) < {{ $r.GetMinBytes }} {
-				return {{ err . "value length must be at least " $r.GetMinBytes " bytes" }}
+			if (length < {{ $r.GetMinBytes }}) {
+				{{ err . "value length must be at least " $r.GetMinBytes " bytes" }}
 			}
 		{{ end }}
+	}
 	{{ else if $r.MaxBytes }}
-		if len({{ accessor . }}) > {{ $r.GetMaxBytes }} {
-			return {{ err . "value length must be at most " $r.GetMaxBytes " bytes" }}
+		if ({{ accessor . }}.size() > {{ $r.GetMaxBytes }}) {
+			{{ err . "value length must be at most " $r.GetMaxBytes " bytes" }}
 		}
 	{{ end }}
 `

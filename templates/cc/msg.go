@@ -24,9 +24,11 @@ const msgTpl = `
 		};
 	{{ end }}{{ end }}
 
+{{/*    TODO(akonradi) deal with regex flags
 	{{ if has .Rules "Pattern"}}{{ if .Rules.Pattern }}
-		var {{ lookup .Field "Pattern" }} = regexp.MustCompile({{ lit .Rules.GetPattern }})
+		std::regex {{ lookup .Field "Pattern" }}({{ lit .Rules.GetPattern }});
 	{{ end }}{{ end }}
+*/}}
 
 {{ end }}{{ end }}
 
@@ -56,8 +58,10 @@ bool Validate(const {{ class . }}& m, string* err) {
 {{ end -}}
 }
 
+{{/* TODO(akonradi) implement hostname matching
 {{ if needs . "hostname" }}{{ template "hostname" . }}{{ end }}
 
 {{ if needs . "email" }}{{ template "email" . }}{{ end }}
+*/}}
 
 `
