@@ -177,6 +177,8 @@ func lit(x interface{}) string {
 			els[i] = lit(val.Index(i).Interface())
 		}
 		return fmt.Sprintf("%T{%s}", val.Interface(), strings.Join(els, ", "))
+	case reflect.Float32:
+		return fmt.Sprintf("%fF", x)
 	default:
 		return fmt.Sprint(x)
 	}

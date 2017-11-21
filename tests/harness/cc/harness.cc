@@ -7,6 +7,7 @@
 #include "tests/harness/cases/maps.pb.h"
 #include "tests/harness/cases/messages.pb.h"
 #include "tests/harness/cases/numbers.pb.h"
+#include "tests/harness/cases/numbers.pb.validate.h"
 #include "tests/harness/cases/oneofs.pb.h"
 #include "tests/harness/cases/repeated.pb.h"
 #include "tests/harness/cases/strings.pb.h"
@@ -65,6 +66,7 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
   }
 
   X_TESTS_HARNESS_CASES_BOOL(TRY_RETURN_VALIDATE_CALLABLE)
+  X_TESTS_HARNESS_CASES_NUMBERS(TRY_RETURN_VALIDATE_CALLABLE)
 
   // TODO(akonradi) remove this once all C++ validation code is done
   return []() {
