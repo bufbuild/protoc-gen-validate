@@ -52,12 +52,19 @@ void ExitIfFailed(bool succeeded, const std::string& err_msg) {
 }
 
 std::function<TestResult()> GetValidationCheck(const Any& msg) {
-#define TRY_RETURN_VALIDATE_CALLABLE(cls) \
-  if (msg.Is<cls>()) { \
+  // This macro is intended to be called once for each message type with the
+  // fully-qualified class name passed in as the only argument CLS. It checks
+  // whether the msg argument above can be unpacked as a CLS. If so, it returns
+  // a lambda that, when called, unpacks the message and validates it as a CLS.
+  // This is here to work around the lack of duck-typing in C++, and because the
+  // validation function can't be specified as a virtual method on the
+  // google::protobuf::Message class.
+#define TRY_RETURN_VALIDATE_CALLABLE(CLS) \
+  if (msg.Is<CLS>()) { \
     return [msg] () {                                      \
       std::string err_msg;                                 \
       TestResult result;                                   \
-      cls unpacked;                                        \
+      CLS unpacked;                                        \
       msg.UnpackTo(&unpacked);                             \
       result.set_valid(Validate(unpacked, &err_msg));      \
       result.set_reason(std::move(err_msg));               \
@@ -65,8 +72,14 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
     };                                                     \
   }
 
+  // These macros are defined in the various validation headers and call the
+  // above macro once for each message class in the header.
   X_TESTS_HARNESS_CASES_BOOL(TRY_RETURN_VALIDATE_CALLABLE)
   X_TESTS_HARNESS_CASES_NUMBERS(TRY_RETURN_VALIDATE_CALLABLE)
+  // TODO(akonradi) add macros as the C++ validation code gets fleshed out for
+  // more field types.
+
+#undef TRY_RETURN_VALIDATE_CALLABLE
 
   // TODO(akonradi) remove this once all C++ validation code is done
   return []() {
