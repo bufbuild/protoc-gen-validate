@@ -1,5 +1,5 @@
 load(":go_proto_library.bzl", "go_proto_library")
-load(":protobuf.bzl", "cc_proto_library")
+load("@com_google_protobuf//:protobuf.bzl", "proto_gen", "cc_proto_library")
 
 def pgv_go_proto_library(name, srcs = None, deps = [], **kwargs):
     go_proto_library(name,
@@ -10,12 +10,78 @@ def pgv_go_proto_library(name, srcs = None, deps = [], **kwargs):
                      validate = 1,
                      **kwargs)
 
-def pgv_cc_proto_library(name, srcs = None, deps = [], **kwargs):
-    cc_proto_library(name,
-                     srcs,
-                     protoc = "@com_google_protobuf//:protoc",
-                     default_runtime = "@com_google_protobuf//:protobuf",
-                     deps = ["//validate:validate_cc"] + deps,
-                     visibility = ["//visibility:public"],
-                     validate = 1,
-                     **kwargs)
+def _CcValidateHdrs(srcs):
+  ret = [s[:-len(".proto")] + ".pb.validate.h" for s in srcs]
+  return ret
+
+def pgv_cc_proto_library(
+        name,
+        srcs=[],
+        deps=[],
+        cc_libs=[],
+        include=None,
+        protoc="@com_google_protobuf//:protoc",
+        protoc_gen_validate = "//:protoc-gen-validate",
+        internal_bootstrap_hack=False,
+        use_grpc_plugin=False,
+        default_runtime="@com_google_protobuf//:protobuf",
+        **kargs):
+  """Bazel rule to create a C++ protobuf validation library from proto source files
+
+  Args:
+    name: the name of the pgv_cc_proto_library.
+    srcs: the .proto files of the pgv_cc_proto_library.
+    deps: a list of dependency labels; must be cc_proto_library.
+    include: a string indicating the include path of the .proto files.
+    protoc: the label of the protocol compiler to generate the sources.
+    protoc_gen_validate: override the default version of protoc_gen_validate.
+                   Most users won't need this.
+    default_runtime: the implicitly default runtime which will be depended on by
+        the generated cc_library target.
+    **kargs: other keyword arguments that are passed to cc_library.
+
+  """
+
+  # Generate the C++ protos
+  cc_proto_library(
+      name=name + "_proto",
+      srcs=srcs,
+      deps=deps + ["//validate:validate_cc"],
+      cc_libs=cc_libs,
+      incude=include,
+      protoc=protoc,
+      internal_bootstrap_hack=internal_bootstrap_hack,
+      use_grpc_plugin=use_grpc_plugin,
+      default_runtime=default_runtime,
+      **kargs)
+
+  includes = []
+  if include != None:
+    includes = [include]
+
+  gen_hdrs = _CcValidateHdrs(srcs)
+
+  proto_gen(
+      name=name + "_validate",
+      srcs=srcs,
+      # This is a hack to work around the fact that all the deps must have an
+      # import_flags field, which is only set on the proto_gen rules, so depend
+      # on the cc rule
+      deps=deps + ["//validate:validate_cc_genproto"],
+      includes=includes,
+      protoc=protoc,
+      plugin=protoc_gen_validate,
+      plugin_options=["lang=cc"],
+      outs=gen_hdrs,
+      visibility=["//visibility:public"],
+  )
+
+  if default_runtime and not default_runtime in cc_libs:
+    cc_libs = cc_libs + [default_runtime]
+
+  native.cc_library(
+      name=name,
+      hdrs=gen_hdrs,
+      deps=cc_libs + deps + [":" + name + "_proto"],
+      includes=includes,
+      **kargs)

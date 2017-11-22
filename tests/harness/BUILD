@@ -1,7 +1,7 @@
 # gazelle:exclude harness.pb.go
 
 load("//bazel:go_proto_library.bzl", "go_proto_library")
-load("//bazel:protobuf.bzl", "cc_proto_library")
+load("@com_google_protobuf//:protobuf.bzl", "cc_proto_library")
 
 go_proto_library(
     name = "go_default_library",
@@ -21,6 +21,8 @@ go_proto_library(
 cc_proto_library(
     name = "harness_proto",
     srcs = ["harness.proto"],
+    default_runtime = "@com_google_protobuf//:protobuf",
+    protoc = "@com_google_protobuf//:protoc",
     visibility = ["//visibility:public"],
     deps = [
         "@com_google_protobuf//:cc_wkt_protos",
