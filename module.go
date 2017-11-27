@@ -23,7 +23,7 @@ func (m Module) Execute(target pgs.Package, packages map[string]pgs.Package) []p
 	m.Assert(lang != "", "`lang` parameter must be set")
 	tpl := templates.Template()[lang]
 	m.Assert(tpl != nil, "could not find template for `lang`: ", lang)
-	ext := map[string]string {
+	ext := map[string]string{
 		"go": "go",
 		"cc": "h",
 	}[lang]
@@ -36,7 +36,7 @@ func (m Module) Execute(target pgs.Package, packages map[string]pgs.Package) []p
 		}
 
 		m.AddGeneratorTemplateFile(
-			f.OutputPath().SetExt(".validate." + ext).String(),
+			f.OutputPath().SetExt(".validate."+ext).String(),
 			tpl,
 			f,
 		)

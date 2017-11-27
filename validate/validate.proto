@@ -9,7 +9,7 @@ import "google/protobuf/timestamp.proto";
 
 // Validation rules applied at the message level
 extend google.protobuf.MessageOptions {
-    // Disabled nullifies any validation rules for this message, including any 
+    // Disabled nullifies any validation rules for this message, including any
     // message fields associated with it that do support validation.
     optional bool disabled = 919191;
 }
@@ -527,7 +527,7 @@ message StringRules {
         // by RFC 3986
         bool uri      = 17;
 
-        // UriRef specifies that the field must be a valid URI as defined by RFC 
+        // UriRef specifies that the field must be a valid URI as defined by RFC
         // 3986 and may be relative or absolute.
         bool uri_ref  = 18;
     }
