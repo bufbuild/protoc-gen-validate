@@ -40,7 +40,7 @@ func (m Module) CheckRules(msg pgs.Message) {
 		m.Push(f.Name().String())
 
 		var rules validate.FieldRules
-		_, err := f.Extension(validate.E_Rules, &rules)
+		_, err = f.Extension(validate.E_Rules, &rules)
 		m.CheckErr(err, "unable to read validation rules from field")
 
 		m.CheckFieldRules(f.Type(), &rules)
@@ -121,7 +121,7 @@ func (m Module) CheckFieldRules(typ FieldType, rules *validate.FieldRules) {
 }
 
 func (m Module) MustType(typ FieldType, pt pgs.ProtoType, wrapper bool) {
-	if emb := typ.Embed(); wrapper && emb != nil && len(emb.Fields()) == 1 {
+	if emb := typ.Embed(); wrapper && m.isWKTWrapper(emb) {
 		m.MustType(emb.Fields()[0].Type(), pt, false)
 		return
 	}
@@ -245,7 +245,7 @@ func (m Module) CheckEnum(ft FieldType, r *validate.EnumRules) {
 		}
 
 		for _, in := range r.In {
-			if _, ok := vals[in]; !ok {
+			if _, ok = vals[in]; !ok {
 				m.Failf("undefined `in` value (%d) conflicts with `defined_only` rule")
 			}
 		}
@@ -446,4 +446,37 @@ func (m Module) checkTS(ts *timestamp.Timestamp) *int64 {
 	t, err := ptypes.Timestamp(ts)
 	m.CheckErr(err, "could not resolve timestamp")
 	return proto.Int64(t.UnixNano())
+}
+
+func (m Module) isWKTWrapper(emb pgs.Message) bool {
+	// not an embedded message
+	if emb == nil {
+		return false
+	}
+
+	// must be in the correct package
+	if emb.Package().ProtoName().String() != wktPackage {
+		return false
+	}
+
+	// lookup message name
+	if _, ok := wktWrappers[emb.TypeName().String()]; !ok {
+		return false
+	}
+
+	return true
+}
+
+const wktPackage = "google.protobuf"
+
+var wktWrappers = map[string]struct{}{
+	"DoubleValue": {},
+	"FloatValue":  {},
+	"Int64Value":  {},
+	"UInt64Value": {},
+	"Int32Value":  {},
+	"UInt32Value": {},
+	"BoolValue":   {},
+	"StringValue": {},
+	"BytesValue":  {},
 }
