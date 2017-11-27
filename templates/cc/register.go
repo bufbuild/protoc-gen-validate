@@ -256,6 +256,8 @@ func inKey(f pgs.Field, x interface{}) string {
 		default:
 			return lit(x)
 		}
+	case pgs.EnumT:
+		return fmt.Sprintf("%s(%d)", cType(f.Type()), x.(int32))
 	default:
 		return lit(x)
 	}

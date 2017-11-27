@@ -6,8 +6,8 @@ const enumTpl = `
 		{{ template "in" . }}
 
 		{{ if $r.GetDefinedOnly }}
-			if _, ok := {{ $f.Type.Name.Element }}_name[int32({{ accessor . }})]; !ok {
-				return {{ err . "value must be one of the defined enum values" }}
+			if (!{{ $f.Type.Name.Element }}_IsValid({{ accessor . }})) {
+				{{ err . "value must be one of the defined enum values" }}
 			}
 		{{ end }}
 `
