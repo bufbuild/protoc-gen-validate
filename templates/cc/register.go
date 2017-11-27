@@ -3,21 +3,23 @@ package tpl
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 	"text/template"
 
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 	"github.com/lyft/protoc-gen-validate/templates/shared"
 )
 
 func Register(tpl *template.Template) {
 	tpl.Funcs(map[string]interface{}{
 		"cmt":         pgs.C80,
+		"class":       className,
 		"accessor":    accessor,
-		"errname":     errName,
+		"ctype":       cType,
 		"err":         err,
 		"errCause":    errCause,
 		"errIdx":      errIdx,
@@ -25,8 +27,10 @@ func Register(tpl *template.Template) {
 		"lookup":      lookup,
 		"lit":         lit,
 		"isBytes":     isBytes,
+		"upper":       strings.ToUpper,
 		"byteStr":     byteStr,
 		"oneof":       oneofTypeName,
+		"quote":       quote,
 		"inType":      inType,
 		"inKey":       inKey,
 		"durLit":      durLit,
@@ -35,6 +39,7 @@ func Register(tpl *template.Template) {
 		"tsLit":       tsLit,
 		"tsGt":        tsGt,
 		"tsStr":       tsStr,
+		"unwrap":      unwrap,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
@@ -73,6 +78,8 @@ func Register(tpl *template.Template) {
 	template.Must(tpl.New("any").Parse(anyTpl))
 	template.Must(tpl.New("duration").Parse(durationTpl))
 	template.Must(tpl.New("timestamp").Parse(timestampTpl))
+
+	template.Must(tpl.New("wrapper").Parse(wrapperTpl))
 }
 
 func accessor(ctx shared.RuleContext) string {
@@ -81,14 +88,18 @@ func accessor(ctx shared.RuleContext) string {
 	}
 
 	return fmt.Sprintf(
-		"m.Get%s()",
-		ctx.Field.Name().PGGUpperCamelCase())
+		"m.%s()",
+		ctx.Field.Name())
 }
 
-func errName(m pgs.Message) pgs.Name {
-	return pgs.Name(fmt.Sprintf(
-		"%sValidationError",
-		m.TypeName()))
+func className(msg pgs.Message) pgs.TypeName {
+	return msg.TypeName()
+}
+
+func quote(s interface {
+	String() string
+}) string {
+	return strconv.Quote(s.String())
 }
 
 func err(ctx shared.RuleContext, reason ...interface{}) string {
@@ -115,26 +126,24 @@ func errIdxCause(ctx shared.RuleContext, idx, cause string, reason ...interface{
 		fld = fmt.Sprintf("%q", f.Name().PGGUpperCamelCase().String())
 	}
 
-	causeFld := ""
-	if cause != "nil" && cause != "" {
-		causeFld = fmt.Sprintf("Cause: %s,", cause)
-	}
+	/*
+		causeFld := ""
+		if cause != "nil" && cause != "" {
+			causeFld = fmt.Sprintf("Cause: %s,", cause)
+		}
 
-	keyFld := ""
-	if ctx.OnKey {
-		keyFld = "Key: true,"
-	}
+		keyFld := ""
+		if ctx.OnKey {
+			keyFld = "Key: true,"
+		}
+	*/
 
-	return fmt.Sprintf(`%s{
-		Field: %s,
-		Reason: %q,
-		%s%s
+	return fmt.Sprintf(`{
+		*err = "field: " %s ", reason: " %s;
+		return false;
 	}`,
-		errName(f.Message()),
-		fld,
-		fmt.Sprint(reason...),
-		causeFld,
-		keyFld)
+		strconv.Quote(fld),
+		strconv.Quote(fmt.Sprint(reason...)))
 }
 
 func lookup(f pgs.Field, name string) string {
@@ -168,6 +177,8 @@ func lit(x interface{}) string {
 			els[i] = lit(val.Index(i).Interface())
 		}
 		return fmt.Sprintf("%T{%s}", val.Interface(), strings.Join(els, ", "))
+	case reflect.Float32:
+		return fmt.Sprintf("%fF", x)
 	default:
 		return fmt.Sprint(x)
 	}
@@ -189,10 +200,11 @@ func byteStr(x []byte) string {
 }
 
 func oneofTypeName(f pgs.Field) pgs.TypeName {
-	return pgs.TypeName(fmt.Sprintf("%s_%s",
-		f.Message().TypeName().Value().String(),
+	return pgs.TypeName(fmt.Sprintf("%s::%sCase::k%s",
+		className(f.Message()),
+		f.OneOf().Name().PGGUpperCamelCase(),
 		f.Name().PGGUpperCamelCase(),
-	)).Pointer()
+	))
 }
 
 func inType(f pgs.Field, x interface{}) string {
@@ -209,7 +221,26 @@ func inType(f pgs.Field, x interface{}) string {
 			return "UNKNOWN"
 		}
 	default:
-		return f.Type().Name().String()
+		return cType(f.Type())
+	}
+}
+
+func cType(t pgs.FieldType) string {
+	switch t.Name().String() {
+	case "float32":
+		return "float"
+	case "float64":
+		return "double"
+	case "int32":
+		return "int32_t"
+	case "int64":
+		return "int64_t"
+	case "uint32":
+		return "uint32_t"
+	case "uint64":
+		return "uint64_t"
+	default:
+		return t.Name().String()
 	}
 }
 
@@ -225,6 +256,8 @@ func inKey(f pgs.Field, x interface{}) string {
 		default:
 			return lit(x)
 		}
+	case pgs.EnumT:
+		return fmt.Sprintf("%s(%d)", cType(f.Type()), x.(int32))
 	default:
 		return lit(x)
 	}
@@ -265,4 +298,16 @@ func tsGt(a, b *timestamp.Timestamp) bool {
 func tsStr(ts *timestamp.Timestamp) string {
 	t, _ := ptypes.Timestamp(ts)
 	return t.String()
+}
+
+func unwrap(ctx shared.RuleContext, name string) (shared.RuleContext, error) {
+	ctx, err := ctx.Unwrap("wrapper")
+	if err != nil {
+		return ctx, err
+	}
+
+	ctx.AccessorOverride = fmt.Sprintf("%s.Get%s()", name,
+		ctx.Field.Type().Embed().Fields()[0].Name().PGGUpperCamelCase())
+
+	return ctx, nil
 }

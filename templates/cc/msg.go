@@ -2,89 +2,26 @@ package tpl
 
 const msgTpl = `
 {{ if disabled . -}}
-	{{ cmt "Validate is disabled for " .TypeName.Value ". This method will always return nil." }}
+	{{ cmt "Validate is disabled for " (class .) ". This method will always return true." }}
 {{- else -}}
-	{{ cmt "Validate checks the field values on " .TypeName.Value " with the rules defined in the proto definition for this message. If any rules are violated, an error is returned." }}
+	{{ cmt "Validate checks the field values on " (class .) " with the rules defined in the proto definition for this message. If any rules are violated, the return value is false and an error message is written to the input string argument." }}
 {{- end -}}
-func (m {{ .TypeName.Pointer }}) Validate() error {
-	{{ if disabled . -}}
-		return nil
-	{{ else -}}
-		if m == nil { return nil }
-
-		{{ range .NonOneOfFields }}
-			{{ render (context .) }}
-		{{ end }}
-
-		{{ range .OneOfs }}
-			switch m.{{ .Name.PGGUpperCamelCase }}.(type) {
-				{{ range .Fields }}
-					case {{ oneof . }}:
-						{{ render (context .) }}
-				{{ end }}
-				{{ if required . }}
-					default:
-						return {{ errname .Message }}{
-							Field: "{{ .Name.PGGUpperCamelCase }}",
-							Reason: "value is required",
-						}
-				{{ end }}
-			}
-		{{ end }}
-
-		return nil
-	{{ end -}}
-}
-
-{{ if needs . "hostname" }}{{ template "hostname" . }}{{ end }}
-
-{{ if needs . "email" }}{{ template "email" . }}{{ end }}
-
-{{ cmt (errname .) " is the validation error returned by " .TypeName.Value ".Validate if the designated constraints aren't met." -}}
-type {{ errname . }} struct {
-	Field  string
-	Reason string
-	Cause  error
-	Key    bool
-}
-
-// Error satisfies the builtin error interface
-func (e {{ errname . }}) Error() string {
-	cause := ""
-	if e.Cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.Cause)
-	}
-
-	key := ""
-	if e.Key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %s{{ .TypeName }}.%s: %s%s",
-		key,
-		e.Field,
-		e.Reason,
-		cause)
-}
-
-var _ error = {{ errname . }}{}
 
 {{ range .Fields }}{{ with (context .) }}{{ $f := .Field }}
 	{{ if has .Rules "In" }}{{ if .Rules.In }}
-		var {{ lookup .Field "InLookup" }} = map[{{ inType .Field .Rules.In }}]struct{}{
+	const std::set<{{ inType .Field .Rules.In }}> {{ lookup .Field "InLookup" }} = {
 			{{- range .Rules.In }}
-				{{ inKey $f . }}: {},
+				{{ inKey $f . }},
 			{{- end }}
-		}
+		};
 	{{ end }}{{ end }}
 
 	{{ if has .Rules "NotIn" }}{{ if .Rules.NotIn }}
-		var {{ lookup .Field "NotInLookup" }} = map[{{ inType .Field .Rules.In }}]struct{}{
+	const std::set<{{ inType .Field .Rules.NotIn }}> {{ lookup .Field "NotInLookup" }} = {
 			{{- range .Rules.NotIn }}
-				{{ inKey $f . }}: {},
+				{{ inKey $f . }},
 			{{- end }}
-		}
+		};
 	{{ end }}{{ end }}
 
 	{{ if has .Rules "Pattern"}}{{ if .Rules.Pattern }}
@@ -92,4 +29,35 @@ var _ error = {{ errname . }}{}
 	{{ end }}{{ end }}
 
 {{ end }}{{ end }}
+
+bool Validate(const {{ class . }}& m, string* err) {
+{{- if disabled . }}
+	return true;
+{{ else -}}
+		{{ range .NonOneOfFields }}
+			{{- render (context .) -}}
+		{{ end -}}
+		{{ range .OneOfs }}
+			switch (m.{{ .Name }}_case()) {
+				{{ range .Fields -}}
+					case {{ oneof . }}:
+						{{ render (context .) }}
+						break;
+				{{ end -}}
+					default:
+				{{- if required . }}
+						*err = "field: " {{ .Name | quote | lit }} ", reason: is required";
+						return false;
+				{{ end }}
+					break;
+			}
+		{{ end }}
+	return true;
+{{ end -}}
+}
+
+{{ if needs . "hostname" }}{{ template "hostname" . }}{{ end }}
+
+{{ if needs . "email" }}{{ template "email" . }}{{ end }}
+
 `

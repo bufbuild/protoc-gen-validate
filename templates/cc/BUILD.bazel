@@ -21,6 +21,7 @@ go_library(
         "repeated.go",
         "string.go",
         "timestamp.go",
+        "wrapper.go",
     ],
     importpath = "github.com/lyft/protoc-gen-validate/templates/cc",
     visibility = ["//visibility:public"],

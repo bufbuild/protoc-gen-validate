@@ -13,4 +13,5 @@ message TestResult {
     bool   Valid  = 1;
     bool   Error  = 2;
     string Reason = 3;
+    bool   AllowFailure = 4;
 }
