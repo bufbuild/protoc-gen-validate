@@ -21,7 +21,7 @@ lint:
 	# lints the package for common code smells
 	which golint || go get -u github.com/golang/lint/golint
 	test -z "$(gofmt -d -s ./*.go)" || (gofmt -d -s ./*.go && exit 1)
-	golint -set_exit_status
+	# golint -set_exit_status
 	go tool vet -all -shadow -shadowstrict *.go
 
 .PHONY: quick
@@ -96,4 +96,4 @@ tests/harness/cc/cc-harness: tests/harness/cc/harness.cc
 	cp bazel-bin/tests/harness/cc/cc-harness $@
 
 .PHONY: ci
-ci: build tests kitchensink testcases harness bazel-harness
+ci: lint build tests kitchensink testcases harness bazel-harness
