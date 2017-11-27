@@ -56,7 +56,7 @@ func execTestCase(tc TestCase) (ok bool) {
 			if res.Error {
 				errs <- fmt.Errorf("%s: internal harness error: %s", h.Name, res.Reason)
 			} else if res.Valid != tc.Valid {
-				if h.IgnoreErrors {
+				if res.AllowFailure {
 					output <- fmt.Sprintf("%s: ignoring test failure: %s", h.Name, res.Reason)
 				} else if tc.Valid {
 					errs <- fmt.Errorf("%s: expected valid, got: %s", h.Name, res.Reason)

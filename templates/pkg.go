@@ -8,12 +8,16 @@ import (
 	"github.com/lyft/protoc-gen-validate/templates/shared"
 )
 
-func Template() *template.Template {
-	tpl := template.New("protoc-gen-validate")
+func makeTemplate(lang string, register_fn func(*template.Template)) *template.Template {
+	tpl := template.New(lang)
 	shared.RegisterFunctions(tpl)
-
-	cctpl.Register(tpl.New("cc"))
-	gotpl.Register(tpl.New("go"))
-
+	register_fn(tpl)
 	return tpl
+}
+
+func Template() map[string]*template.Template {
+	return map[string]*template.Template{
+		"cc": makeTemplate("cc", cctpl.Register),
+		"go": makeTemplate("go", gotpl.Register),
+	}
 }
