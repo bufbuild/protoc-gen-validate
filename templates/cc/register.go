@@ -16,30 +16,31 @@ import (
 
 func Register(tpl *template.Template) {
 	tpl.Funcs(map[string]interface{}{
-		"cmt":         pgs.C80,
-		"class":       className,
-		"accessor":    accessor,
-		"ctype":       cType,
-		"err":         err,
-		"errCause":    errCause,
-		"errIdx":      errIdx,
-		"errIdxCause": errIdxCause,
-		"lookup":      lookup,
-		"lit":         lit,
-		"isBytes":     isBytes,
-		"upper":       strings.ToUpper,
-		"byteStr":     byteStr,
-		"oneof":       oneofTypeName,
-		"quote":       quote,
-		"inType":      inType,
-		"inKey":       inKey,
-		"durLit":      durLit,
-		"durStr":      durStr,
-		"durGt":       durGt,
-		"tsLit":       tsLit,
-		"tsGt":        tsGt,
-		"tsStr":       tsStr,
-		"unwrap":      unwrap,
+		"cmt":           pgs.C80,
+		"class":         className,
+		"accessor":      accessor,
+		"ctype":         cType,
+		"err":           err,
+		"errCause":      errCause,
+		"errIdx":        errIdx,
+		"errIdxCause":   errIdxCause,
+		"lookup":        lookup,
+		"lit":           lit,
+		"isBytes":       isBytes,
+		"upper":         strings.ToUpper,
+		"byteStr":       byteStr,
+		"oneof":         oneofTypeName,
+		"quote":         quote,
+		"inType":        inType,
+		"inKey":         inKey,
+		"durLit":        durLit,
+		"durStr":        durStr,
+		"durGt":         durGt,
+		"tsLit":         tsLit,
+		"tsGt":          tsGt,
+		"tsStr":         tsStr,
+		"unwrap":        unwrap,
+		"unimplemented": failUnimplemented,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
@@ -310,4 +311,8 @@ func unwrap(ctx shared.RuleContext, name string) (shared.RuleContext, error) {
 		ctx.Field.Type().Embed().Fields()[0].Name().PGGUpperCamelCase())
 
 	return ctx, nil
+}
+
+func failUnimplemented() string {
+	return "throw std::string(\"not yet implemented\");"
 }

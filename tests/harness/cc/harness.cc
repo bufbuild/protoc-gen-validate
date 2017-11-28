@@ -67,8 +67,15 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
       TestResult result;                                   \
       CLS unpacked;                                        \
       msg.UnpackTo(&unpacked);                             \
-      result.set_valid(Validate(unpacked, &err_msg));      \
-      result.set_reason(std::move(err_msg));               \
+      try {                                                \
+        result.set_valid(Validate(unpacked, &err_msg));    \
+        result.set_reason(std::move(err_msg));             \
+      } catch (std::string& e) {                           \
+        /* don't fail for unimplemented validations */     \
+        result.set_valid(false);                           \
+        result.set_allowfailure(true);                     \
+        result.set_reason(e);                              \
+      }                                                    \
       return result;                                       \
     };                                                     \
   }
