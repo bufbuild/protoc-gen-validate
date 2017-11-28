@@ -45,6 +45,7 @@ func Register(tpl *template.Template) {
 	})
 
 	template.Must(tpl.Parse(fileTpl))
+	template.Must(tpl.New("decl").Parse(declTpl))
 	template.Must(tpl.New("msg").Parse(msgTpl))
 	template.Must(tpl.New("const").Parse(constTpl))
 	template.Must(tpl.New("ltgt").Parse(ltgtTpl))

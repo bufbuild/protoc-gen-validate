@@ -15,6 +15,10 @@ namespace {{ . }} {
 using std::string;
 
 {{ range .AllMessages }}
+	{{- template "decl" . }}
+{{ end }}
+
+{{ range .AllMessages }}
 	{{- template "msg" . }}
 {{ end }}
 
