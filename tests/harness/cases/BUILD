@@ -5,6 +5,10 @@ load(
     "pgv_go_proto_library",
     "pgv_cc_proto_library",
 )
+load(
+    "@com_google_protobuf//:protobuf.bzl",
+    "cc_proto_library",
+)
 
 pgv_go_proto_library(
     name = "go",
@@ -50,4 +54,5 @@ pgv_cc_proto_library(
         "wkt_timestamp.proto",
         "wkt_wrappers.proto",
     ],
+    visibility = ["//tests:__subpackages__"],
 )
