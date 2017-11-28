@@ -25,7 +25,9 @@ const msgTpl = `
 	{{ end }}{{ end }}
 
 	{{ if has .Rules "Pattern"}}{{ if .Rules.Pattern }}
+	{{/* TODO(akonradi) implement pattern matching
 		var {{ lookup .Field "Pattern" }} = regexp.MustCompile({{ lit .Rules.GetPattern }})
+	*/}}
 	{{ end }}{{ end }}
 
 {{ end }}{{ end }}

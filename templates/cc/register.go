@@ -174,10 +174,15 @@ func lit(x interface{}) string {
 		return fmt.Sprintf("0x%X", x)
 	case reflect.Slice:
 		els := make([]string, val.Len())
-		for i, l := 0, val.Len(); i < l; i++ {
-			els[i] = lit(val.Index(i).Interface())
+		switch reflect.TypeOf(x).Elem().Kind() {
+		case reflect.Uint8:
+			for i, l := 0, val.Len(); i < l; i++ {
+				els[i] = fmt.Sprintf("\\x%x", val.Index(i).Interface())
+			}
+			return fmt.Sprintf("\"%s\"", strings.Join(els, ""))
+		default:
+			panic(fmt.Sprintf("don't know how to format literals of type %v", val.Kind()))
 		}
-		return fmt.Sprintf("%T{%s}", val.Interface(), strings.Join(els, ", "))
 	case reflect.Float32:
 		return fmt.Sprintf("%fF", x)
 	default:
