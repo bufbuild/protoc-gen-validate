@@ -128,34 +128,36 @@ func errIdx(ctx shared.RuleContext, idx string, reason ...interface{}) string {
 
 func errIdxCause(ctx shared.RuleContext, idx, cause string, reason ...interface{}) string {
 	f := ctx.Field
+	errName := pgs.Name(fmt.Sprintf("%sValidationError", f.Message()))
 
-	var fld string
-	if idx != "" {
-		fld = fmt.Sprintf(`fmt.Sprintf("%s[%%v]", %s)`, f.Name().PGGUpperCamelCase().String(), idx)
-	} else if ctx.Index != "" {
-		fld = fmt.Sprintf(`fmt.Sprintf("%s[%%v]", %s)`, f.Name().PGGUpperCamelCase().String(), ctx.Index)
-	} else {
-		fld = fmt.Sprintf("%q", f.Name().PGGUpperCamelCase().String())
+	output := []string{
+		"{",
+		`std::ostringstream msg("invalid ");`,
 	}
 
-	/*
-		causeFld := ""
-		if cause != "nil" && cause != "" {
-			causeFld = fmt.Sprintf("Cause: %s,", cause)
-		}
+	if ctx.OnKey {
+		output = append(output, `msg << "key for ";`)
+	}
+	output = append(output,
+		fmt.Sprintf(`msg << %s << "." << %s;`,
+			quote(errName), lit(f.Name().PGGUpperCamelCase().String())))
 
-		keyFld := ""
-		if ctx.OnKey {
-			keyFld = "Key: true,"
-		}
-	*/
+	if idx != "" {
+		output = append(output, fmt.Sprintf(`msg << "[" << %s << "]";`, lit(idx)))
+	} else if ctx.Index != "" {
+		output = append(output, fmt.Sprintf(`msg << "[" << %s << "]";`, lit(ctx.Index)))
+	}
 
-	return fmt.Sprintf(`{
-		*err = "field: " %s ", reason: " %s;
-		return false;
-	}`,
-		strconv.Quote(fld),
-		strconv.Quote(fmt.Sprint(reason...)))
+	output = append(output, fmt.Sprintf(`msg << ": " << %s;`, lit(fmt.Sprintf("%q", reason))))
+
+	if cause != "nil" && cause != "" {
+		output = append(output, fmt.Sprintf(`msg << " | caused by " << %s;`, cause))
+	}
+
+	output = append(output, "*err = msg.str();",
+		"return false;",
+		"}")
+	return strings.Join(output, "\n")
 }
 
 func lookup(f pgs.Field, name string) string {
