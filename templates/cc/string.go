@@ -3,14 +3,15 @@ package tpl
 const strTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 	{{ template "const" . }}
-	{{/* template "in" . */}}
-{{/* // TODO(akonradi) implement regular expression constraints.
+	{{ template "in" . }}
 	{{ if $r.Pattern }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement regular expression constraints.
 		if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
 			return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
 		}
+		*/}}
 	{{ end }}
-*/}}
 	{{ if $r.Prefix }}
 	{
 		const std::string prefix = {{ lit $r.GetPrefix }};
@@ -39,40 +40,62 @@ const strTpl = `
 	}
 	{{ end }}
 
-{{/* // TODO(akonradi) implement the below constraints
 	{{ if $r.GetIp }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement IP address constraints
 		if ip := net.ParseIP({{ accessor . }}); ip == nil {
 			return {{ err . "value must be a valid IP address" }}
 		}
+		*/}}
 	{{ else if $r.GetIpv4 }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement IP address constraints
 		if ip := net.ParseIP({{ accessor . }}); ip == nil || ip.To4() == nil {
 			return {{ err . "value must be a valid IPv4 address" }}
 		}
+		*/}}
 	{{ else if $r.GetIpv6 }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement IP address constraints
 		if ip := net.ParseIP({{ accessor . }}); ip == nil || ip.To4() != nil {
 			return {{ err . "value must be a valid IPv6 address" }}
 		}
+		*/}}
 	{{ else if $r.GetEmail }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement email address constraints
 		if err := m._validateEmail({{ accessor . }}); err != nil {
 			return {{ errCause . "err" "value must be a valid email address" }}
 		}
+		*/}}
 	{{ else if $r.GetHostname }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement hostname constraints
 		if err := m._validateHostname({{ accessor . }}); err != nil {
 			return {{ errCause . "err" "value must be a valid hostname" }}
 		}
+		*/}}
 	{{ else if $r.GetUri }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement URI constraints
 		if uri, err := url.Parse({{ accessor . }}); err != nil {
 			return {{ errCause . "err" "value must be a valid URI" }}
 		} else if !uri.IsAbs() {
 			return {{ err . "value must be absolute" }}
 		}
+		*/}}
 	{{ else if $r.GetUriRef }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement URI constraints
 		if _, err := url.Parse({{ accessor . }}); err != nil {
 			return {{ errCause . "err" "value must be a valid URI" }}
 		}
+		*/}}
 	{{ end }}
 
 	{{ if $r.MinLen }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement UTF-8 length constraints
 		{{ if $r.MaxLen }}
 			{{ if eq $r.GetMinLen $r.GetMaxLen }}
 				if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetMinLen }} {
@@ -88,12 +111,15 @@ const strTpl = `
 				return {{ err . "value length must be at least " $r.GetMinLen " runes" }}
 			}
 		{{ end }}
+		*/}}
 	{{ else if $r.MaxLen }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement UTF-8 length constraints
 		if utf8.RuneCountInString({{ accessor . }}) > {{ $r.GetMaxLen }} {
 			return {{ err . "value length must be at most " $r.GetMaxLen " runes" }}
 		}
+		*/}}
 	{{ end }}
-*/}}
 
 	{{ if $r.MinBytes }}
 	{
