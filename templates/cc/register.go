@@ -84,6 +84,16 @@ func Register(tpl *template.Template) {
 	template.Must(tpl.New("wrapper").Parse(wrapperTpl))
 }
 
+func methodName(name interface{}) string {
+	nameStr := fmt.Sprintf("%s", name)
+	switch nameStr {
+	case "const":
+		return "const_"
+	default:
+		return nameStr
+	}
+}
+
 func accessor(ctx shared.RuleContext) string {
 	if ctx.AccessorOverride != "" {
 		return ctx.AccessorOverride
@@ -91,17 +101,13 @@ func accessor(ctx shared.RuleContext) string {
 
 	return fmt.Sprintf(
 		"m.%s()",
-		ctx.Field.Name())
+		methodName(ctx.Field.Name()))
 }
 
 func hasAccessor(ctx shared.RuleContext) string {
-	if ctx.AccessorOverride != "" {
-		return ctx.AccessorOverride
-	}
-
 	return fmt.Sprintf(
 		"m.has_%s()",
-		ctx.Field.Name())
+		methodName(ctx.Field.Name()))
 }
 
 func className(msg pgs.Message) pgs.TypeName {
