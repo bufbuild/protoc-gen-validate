@@ -2,81 +2,92 @@ package tpl
 
 const bytesTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
+	{{ template "const" . }}
+	{{ template "in" . }}
 
 	{{ if $r.Pattern }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement regular expression matching
 		if !{{ lookup $f "Pattern" }}.Match({{ accessor . }}) {
 			return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
 		}
+		*/}}
 	{{ end }}
 
 
 	{{ if $r.Prefix }}
-		if !bytes.HasPrefix({{ accessor . }}, {{ lit $r.GetPrefix }}) {
-			return {{ err . "value does not have prefix " (byteStr $r.GetPrefix) }}
+	{
+		const std::string prefix = {{ lit $r.GetPrefix }};
+		if ({{ accessor . }}.compare(0, prefix.size(), prefix) != 0) {
+			{{ err . "value does not have prefix " (lit $r.GetPrefix) }}
 		}
+	}
 	{{ end }}
 
 	{{ if $r.Suffix }}
-		if !bytes.HasSuffix({{ accessor . }}, {{ lit $r.GetSuffix }}) {
-			return {{ err . "value does not have suffix " (byteStr $r.GetSuffix) }}
+	{
+		const std::string suffix = {{ lit $r.GetSuffix }};
+		const std::string& value = {{ accessor . }};
+		if ((value.size() < suffix.size()) ||
+			(value.compare(value.size() - suffix.size(), suffix.size(), suffix) != 0)) {
+			{{ err . "value does not have suffix " (lit $r.GetSuffix) }}
 		}
+	}
 	{{ end }}
 
 	{{ if $r.Contains }}
-		if !bytes.Contains({{ accessor . }}, {{ lit $r.GetContains }}) {
-			return {{ err . "value does not contain " (byteStr $r.GetContains) }}
+	{
+		if ({{ accessor . }}.find({{ lit $r.GetContains }}) == std::string::npos) {
+			{{ err . "value does not contain substring " (lit $r.GetContains) }}
 		}
+	}
 	{{ end }}
 
 	{{ if $r.MinLen }}
+	{
+		const auto length = {{ accessor . }}.size();
 		{{ if $r.MaxLen }}
 			{{ if eq $r.GetMinLen $r.GetMaxLen }}
-				if len({{ accessor . }}) != {{ $r.GetMinLen }} {
-					return {{ err . "value length must be " $r.GetMinLen " bytes" }}
+				if (length != {{ $r.GetMinLen }}) {
+					{{ err . "value length must be " $r.GetMinLen " bytes" }}
 				}
 			{{ else }}
-				if l := len({{ accessor . }}); l < {{ $r.GetMinLen }} || l > {{ $r.GetMaxLen }} {
-					return {{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " bytes, inclusive" }}
+				if (length < {{ $r.GetMinLen }} || length > {{ $r.GetMaxLen }}) {
+					{{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " bytes, inclusive" }}
 				}
 			{{ end }}
 		{{ else }}
-			if len({{ accessor . }}) < {{ $r.GetMinLen }} {
-				return {{ err . "value length must be at least " $r.GetMinLen " bytes" }}
+			if (length < {{ $r.GetMinLen }}) {
+				{{ err . "value length must be at least " $r.GetMinLen " bytes" }}
 			}
 		{{ end }}
+	}
 	{{ else if $r.MaxLen }}
-		if len({{ accessor . }}) > {{ $r.GetMaxLen }} {
-			return {{ err . "value length must be at most " $r.GetMaxLen " bytes" }}
-		}
-	{{ end }}
-
-	{{ if $r.In }}
-		if _, ok := {{ lookup $f "InLookup" }}[string({{ accessor . }})]; !ok {
-			return {{ err . "value must be in list " $r.In }}
-		}
-	{{ else if $r.NotIn }}
-		if _, ok := {{ lookup $f "NotInLookup" }}[string({{ accessor . }})]; ok {
-			return {{ err . "value must not be in list " $r.NotIn }}
-		}
-	{{ end }}
-
-	{{ if $r.Const }}
-		if !bytes.Equal({{ accessor . }}, {{ lit $r.Const }}) {
-			return {{ err . "value must equal " $r.Const }}
+		if ({{ accessor . }}.size() > {{ $r.GetMaxLen }}) {
+			{{ err . "value length must be at most " $r.GetMaxLen " bytes" }}
 		}
 	{{ end }}
 
 	{{ if $r.GetIp }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement all of this
 		if ip := net.IP({{ accessor . }}); ip.To16() == nil {
 			return {{ err . "value must be a valid IP address" }}
 		}
+		*/}}
 	{{ else if $r.GetIpv4 }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement all of this
 		if ip := net.IP({{ accessor . }}); ip.To4() == nil {
 			return {{ err . "value must be a valid IPv4 address" }}
 		}
+		*/}}
 	{{ else if $r.GetIpv6 }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement all of this
 		if ip := net.IP({{ accessor . }}); ip.To16() == nil || ip.To4() != nil {
 			return {{ err . "value must be a valid IPv6 address" }}
 		}
+		*/}}
 	{{ end }}
 `
