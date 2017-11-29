@@ -134,7 +134,7 @@ func errIdx(ctx shared.RuleContext, idx string, reason ...interface{}) string {
 
 func errIdxCause(ctx shared.RuleContext, idx, cause string, reason ...interface{}) string {
 	f := ctx.Field
-	errName := pgs.Name(fmt.Sprintf("%sValidationError", f.Message()))
+	errName := fmt.Sprintf("%sValidationError", f.Message().Name())
 
 	output := []string{
 		"{",
@@ -145,8 +145,8 @@ func errIdxCause(ctx shared.RuleContext, idx, cause string, reason ...interface{
 		output = append(output, `msg << "key for ";`)
 	}
 	output = append(output,
-		fmt.Sprintf(`msg << %s << "." << %s;`,
-			quote(errName), lit(f.Name().PGGUpperCamelCase().String())))
+		fmt.Sprintf(`msg << %q << "." << %s;`,
+			errName, lit(f.Name().PGGUpperCamelCase().String())))
 
 	if idx != "" {
 		output = append(output, fmt.Sprintf(`msg << "[" << %s << "]";`, lit(idx)))
