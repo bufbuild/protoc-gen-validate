@@ -1,3 +1,5 @@
+workspace(name = "com_lyft_protoc_gen_validate")
+
 git_repository(
     name = "io_bazel_rules_go",
     remote = "https://github.com/bazelbuild/rules_go.git",
