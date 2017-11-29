@@ -18,6 +18,7 @@ func Register(tpl *template.Template) {
 	tpl.Funcs(map[string]interface{}{
 		"cmt":           pgs.C80,
 		"class":         className,
+		"package":       packageName,
 		"accessor":      accessor,
 		"hasAccessor":   hasAccessor,
 		"ctype":         cType,
@@ -111,8 +112,12 @@ func hasAccessor(ctx shared.RuleContext) string {
 		methodName(ctx.Field.Name()))
 }
 
-func className(msg pgs.Message) pgs.TypeName {
-	return msg.TypeName()
+func className(msg pgs.Message) string {
+	return packageName(msg) + "::" + string(msg.TypeName())
+}
+
+func packageName(msg pgs.Message) string {
+	return strings.Join(msg.Package().ProtoName().Split(), "::")
 }
 
 func quote(s interface {
@@ -252,6 +257,10 @@ func inType(f pgs.Field, x interface{}) string {
 }
 
 func cType(t pgs.FieldType) string {
+	if t.IsEmbed() {
+		return className(t.Embed())
+	}
+
 	switch t.Name().String() {
 	case "float32":
 		return "float"

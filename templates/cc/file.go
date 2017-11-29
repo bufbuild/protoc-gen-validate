@@ -28,6 +28,6 @@ using std::string;
 
 #define X_{{ .Package.ProtoName.ScreamingSnakeCase }}_{{ .File.InputPath.BaseName | upper }}(X) \
 {{ range .AllMessages -}}
-	X({{ range .Package.ProtoName.Split }}::{{ . }}{{ end }}::{{class . }}) \
+	X({{class . }}) \
 {{ end }}
 `
