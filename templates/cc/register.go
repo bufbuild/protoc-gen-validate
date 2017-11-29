@@ -19,6 +19,7 @@ func Register(tpl *template.Template) {
 		"cmt":           pgs.C80,
 		"class":         className,
 		"accessor":      accessor,
+		"hasAccessor":   hasAccessor,
 		"ctype":         cType,
 		"err":           err,
 		"errCause":      errCause,
@@ -90,6 +91,16 @@ func accessor(ctx shared.RuleContext) string {
 
 	return fmt.Sprintf(
 		"m.%s()",
+		ctx.Field.Name())
+}
+
+func hasAccessor(ctx shared.RuleContext) string {
+	if ctx.AccessorOverride != "" {
+		return ctx.AccessorOverride
+	}
+
+	return fmt.Sprintf(
+		"m.has_%s()",
 		ctx.Field.Name())
 }
 
