@@ -8,6 +8,7 @@
 #include "tests/harness/cases/enums.pb.validate.h"
 #include "tests/harness/cases/maps.pb.h"
 #include "tests/harness/cases/messages.pb.h"
+#include "tests/harness/cases/messages.pb.validate.h"
 #include "tests/harness/cases/numbers.pb.h"
 #include "tests/harness/cases/numbers.pb.validate.h"
 #include "tests/harness/cases/oneofs.pb.h"
@@ -87,6 +88,7 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
   X_TESTS_HARNESS_CASES_BOOL(TRY_RETURN_VALIDATE_CALLABLE)
   X_TESTS_HARNESS_CASES_BYTES(TRY_RETURN_VALIDATE_CALLABLE)
   X_TESTS_HARNESS_CASES_ENUMS(TRY_RETURN_VALIDATE_CALLABLE)
+  X_TESTS_HARNESS_CASES_MESSAGES(TRY_RETURN_VALIDATE_CALLABLE)
   X_TESTS_HARNESS_CASES_NUMBERS(TRY_RETURN_VALIDATE_CALLABLE)
   X_TESTS_HARNESS_CASES_WKT_ANY(TRY_RETURN_VALIDATE_CALLABLE)
   // TODO(akonradi) add macros as the C++ validation code gets fleshed out for

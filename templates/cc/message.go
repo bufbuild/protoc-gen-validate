@@ -7,13 +7,12 @@ const messageTpl = `
 	{{ if $r.GetSkip }}
 		// skipping validation for {{ $f.Name }}
 	{{ else }}
-		{{/* TODO(akonradi) implement nested validation
-		if v, ok := interface{}({{ accessor . }}).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return {{ errCause . "err" "embedded message failed validation" }}
-			}
+	{
+		string inner_err;
+		if ({{ hasAccessor .}} && !pgv::validate::MessageValidator<{{ ctype $f.Type }}>::Check({{ accessor . }}, &inner_err)) {
+			{{ errCause . "inner_err" "embedded message failed validation" }}
 		}
-		*/}}
+	}
 	{{ end }}
 `
 
