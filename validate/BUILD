@@ -46,3 +46,9 @@ go_proto_library(
     importpath = "github.com/lyft/protoc-gen-validate/validate",
     visibility = ["//visibility:public"],
 )
+
+cc_library(
+    name = "cc_validate",
+    hdrs = ["validate.h"],
+    visibility = ["//visibility:public"],
+)
