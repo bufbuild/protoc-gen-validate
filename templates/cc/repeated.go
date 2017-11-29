@@ -1,7 +1,7 @@
 package tpl
 
 const repTpl = `
-	{{ $f := .Field }}{{ $r := .Rules }}{{ $typ := $f.Type | ctype }}
+	{{ $f := .Field }}{{ $r := .Rules }}{{ $typ := inType $f nil }}
 
 	{{ if $r.GetMinItems }}
 		{{ if eq $r.GetMinItems $r.GetMaxItems }}
@@ -24,7 +24,15 @@ const repTpl = `
 	{{ end }}
 
 	{{ if $r.GetUnique }}
-	std::set<std::reference_wrapper<const {{ $typ }}>> {{ lookup $f "Unique" }};
+	// Implement comparison for wrapped reference types
+	struct cmp {
+		bool operator() (const std::reference_wrapper<{{ $typ }}> lhs, const std::reference_wrapper<{{ $typ }}> rhs) const {
+			return lhs.get() < rhs.get();
+		}
+	};
+
+	// Save a set of references to avoid copying overhead
+	std::set<std::reference_wrapper<{{ $typ }}>,cmp> {{ lookup $f "Unique" }};
 	{{ end }}
 
 	{{ if or $r.GetUnique (ne (.Elem "" "").Typ "none") }}
@@ -32,7 +40,7 @@ const repTpl = `
 			const {{ $typ }}& item = {{ accessor . }}.Get(i);
 
 			{{ if $r.GetUnique }}
-				auto p = {{ lookup $f "Unique" }}.emplace(item);
+				auto p = {{ lookup $f "Unique" }}.emplace(const_cast<{{ $typ }}&>(item));
 				if (p.second == false) {
 					{{ errIdx . "idx" "repeated value must contain unique items" }}
 				}
