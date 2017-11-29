@@ -7,18 +7,20 @@ const messageTpl = `
 	{{ if $r.GetSkip }}
 		// skipping validation for {{ $f.Name }}
 	{{ else }}
+		{{/* TODO(akonradi) implement nested validation
 		if v, ok := interface{}({{ accessor . }}).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return {{ errCause . "err" "embedded message failed validation" }}
 			}
 		}
+		*/}}
 	{{ end }}
 `
 
 const requiredTpl = `
 	{{ if .Rules.GetRequired }}
-		if {{ accessor . }} == nil {
-			return {{ err . "value is required" }}
+		if (!{{ hasAccessor . }}) {
+			{{ err . "value is required" }}
 		}
 	{{ end }}
 `
