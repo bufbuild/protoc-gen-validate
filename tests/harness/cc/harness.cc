@@ -20,6 +20,7 @@
 #include "tests/harness/cases/wkt_any.pb.h"
 #include "tests/harness/cases/wkt_any.pb.validate.h"
 #include "tests/harness/cases/wkt_duration.pb.h"
+#include "tests/harness/cases/wkt_duration.pb.validate.h"
 #include "tests/harness/cases/wkt_timestamp.pb.h"
 #include "tests/harness/cases/wkt_wrappers.pb.h"
 
@@ -97,6 +98,7 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
   X_TESTS_HARNESS_CASES_REPEATED(TRY_RETURN_VALIDATE_CALLABLE)
   X_TESTS_HARNESS_CASES_STRINGS(TRY_RETURN_VALIDATE_CALLABLE)
   X_TESTS_HARNESS_CASES_WKT_ANY(TRY_RETURN_VALIDATE_CALLABLE)
+  X_TESTS_HARNESS_CASES_WKT_DURATION(TRY_RETURN_VALIDATE_CALLABLE)
   // TODO(akonradi) add macros as the C++ validation code gets fleshed out for
   // more field types.
 

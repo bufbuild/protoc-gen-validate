@@ -247,7 +247,7 @@ func inType(f pgs.Field, x interface{}) string {
 		case []string:
 			return "string"
 		case []*duration.Duration:
-			return "time.Duration"
+			return "pgv::protobuf_wkt::Duration"
 		default:
 			return "UNKNOWN"
 		}
@@ -293,8 +293,7 @@ func inKey(f pgs.Field, x interface{}) string {
 	case pgs.MessageT:
 		switch x := x.(type) {
 		case *duration.Duration:
-			dur, _ := ptypes.Duration(x)
-			return lit(int64(dur))
+			return durLit(x)
 		default:
 			return lit(x)
 		}
@@ -307,7 +306,7 @@ func inKey(f pgs.Field, x interface{}) string {
 
 func durLit(dur *duration.Duration) string {
 	return fmt.Sprintf(
-		"time.Duration(%d * time.Second + %d * time.Nanosecond)",
+		"pgv::protobuf::util::TimeUtil::SecondsToDuration(%d) + pgv::protobuf::util::TimeUtil::NanosecondsToDuration(%d)",
 		dur.GetSeconds(), dur.GetNanos())
 }
 
