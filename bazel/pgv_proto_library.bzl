@@ -88,6 +88,9 @@ def pgv_cc_proto_library(
   native.cc_library(
       name=name,
       hdrs=gen_hdrs,
-      deps=cc_libs + deps + [":" + name + "_proto", "//validate:cc_validate"],
+      deps=cc_libs + deps + [
+          ":" + name + "_proto",
+          "@com_lyft_protoc_gen_validate//validate:cc_validate",
+      ],
       includes=includes,
       **kargs)
