@@ -27,12 +27,20 @@ const repTpl = `
 	// Implement comparison for wrapped reference types
 	struct cmp {
 		bool operator() (const std::reference_wrapper<{{ $typ }}> lhs, const std::reference_wrapper<{{ $typ }}> rhs) const {
-			return lhs.get() < rhs.get();
+			return lhs.get() == rhs.get();
+		}
+	};
+
+	// Implement hashing for wrapped reference types
+	struct hash {
+		std::hash<{{ $typ }}> hash;
+		bool operator() (const std::reference_wrapper<{{ $typ }}> ref) const {
+			return hash(ref.get());
 		}
 	};
 
 	// Save a set of references to avoid copying overhead
-	std::set<std::reference_wrapper<{{ $typ }}>,cmp> {{ lookup $f "Unique" }};
+	std::unordered_set<std::reference_wrapper<{{ $typ }}>, hash, cmp> {{ lookup $f "Unique" }};
 	{{ end }}
 
 	{{ if or $r.GetUnique (ne (.Elem "" "").Typ "none") }}
