@@ -18,10 +18,11 @@ def pgv_cc_proto_library(
         name,
         srcs=[],
         deps=[],
+        external_deps=[],
         cc_libs=[],
         include=None,
         protoc="@com_google_protobuf//:protoc",
-        protoc_gen_validate = "//:protoc-gen-validate",
+        protoc_gen_validate = "@com_lyft_protoc_gen_validate//:protoc-gen-validate",
         internal_bootstrap_hack=False,
         use_grpc_plugin=False,
         default_runtime="@com_google_protobuf//:protobuf",
@@ -31,7 +32,8 @@ def pgv_cc_proto_library(
   Args:
     name: the name of the pgv_cc_proto_library.
     srcs: the .proto files of the pgv_cc_proto_library.
-    deps: a list of dependency labels; must be cc_proto_library.
+    deps: a list of PGV dependency labels; must be pgv_cc_proto_library.
+    external_deps: a list of dependency labels; must be cc_proto_library.
     include: a string indicating the include path of the .proto files.
     protoc: the label of the protocol compiler to generate the sources.
     protoc_gen_validate: override the default version of protoc_gen_validate.
@@ -46,7 +48,9 @@ def pgv_cc_proto_library(
   cc_proto_library(
       name=name + "_proto",
       srcs=srcs,
-      deps=deps + ["//validate:validate_cc"],
+      deps=[d + "_proto" for d in deps] + [
+          "@com_lyft_protoc_gen_validate//validate:validate_cc",
+      ] + external_deps,
       cc_libs=cc_libs,
       incude=include,
       protoc=protoc,
@@ -67,7 +71,9 @@ def pgv_cc_proto_library(
       # This is a hack to work around the fact that all the deps must have an
       # import_flags field, which is only set on the proto_gen rules, so depend
       # on the cc rule
-      deps=deps + ["//validate:validate_cc_genproto"],
+      deps=[d + "_validate" for d in deps] + [
+          "@com_lyft_protoc_gen_validate//validate:validate_cc_genproto"
+      ] + [d + "_genproto" for d in external_deps],
       includes=includes,
       protoc=protoc,
       plugin=protoc_gen_validate,
@@ -82,6 +88,6 @@ def pgv_cc_proto_library(
   native.cc_library(
       name=name,
       hdrs=gen_hdrs,
-      deps=cc_libs + deps + [":" + name + "_proto"],
+      deps=cc_libs + deps + [":" + name + "_proto", "//validate:cc_validate"],
       includes=includes,
       **kargs)

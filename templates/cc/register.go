@@ -18,6 +18,7 @@ func Register(tpl *template.Template) {
 	tpl.Funcs(map[string]interface{}{
 		"cmt":           pgs.C80,
 		"class":         className,
+		"package":       packageName,
 		"accessor":      accessor,
 		"hasAccessor":   hasAccessor,
 		"ctype":         cType,
@@ -45,6 +46,7 @@ func Register(tpl *template.Template) {
 	})
 
 	template.Must(tpl.Parse(fileTpl))
+	template.Must(tpl.New("decl").Parse(declTpl))
 	template.Must(tpl.New("msg").Parse(msgTpl))
 	template.Must(tpl.New("const").Parse(constTpl))
 	template.Must(tpl.New("ltgt").Parse(ltgtTpl))
@@ -84,6 +86,16 @@ func Register(tpl *template.Template) {
 	template.Must(tpl.New("wrapper").Parse(wrapperTpl))
 }
 
+func methodName(name interface{}) string {
+	nameStr := fmt.Sprintf("%s", name)
+	switch nameStr {
+	case "const":
+		return "const_"
+	default:
+		return nameStr
+	}
+}
+
 func accessor(ctx shared.RuleContext) string {
 	if ctx.AccessorOverride != "" {
 		return ctx.AccessorOverride
@@ -91,21 +103,21 @@ func accessor(ctx shared.RuleContext) string {
 
 	return fmt.Sprintf(
 		"m.%s()",
-		ctx.Field.Name())
+		methodName(ctx.Field.Name()))
 }
 
 func hasAccessor(ctx shared.RuleContext) string {
-	if ctx.AccessorOverride != "" {
-		return ctx.AccessorOverride
-	}
-
 	return fmt.Sprintf(
 		"m.has_%s()",
-		ctx.Field.Name())
+		methodName(ctx.Field.Name()))
 }
 
-func className(msg pgs.Message) pgs.TypeName {
-	return msg.TypeName()
+func className(msg pgs.Message) string {
+	return packageName(msg) + "::" + string(msg.TypeName())
+}
+
+func packageName(msg pgs.Message) string {
+	return strings.Join(msg.Package().ProtoName().Split(), "::")
 }
 
 func quote(s interface {
@@ -128,34 +140,36 @@ func errIdx(ctx shared.RuleContext, idx string, reason ...interface{}) string {
 
 func errIdxCause(ctx shared.RuleContext, idx, cause string, reason ...interface{}) string {
 	f := ctx.Field
+	errName := fmt.Sprintf("%sValidationError", f.Message().Name())
 
-	var fld string
-	if idx != "" {
-		fld = fmt.Sprintf(`fmt.Sprintf("%s[%%v]", %s)`, f.Name().PGGUpperCamelCase().String(), idx)
-	} else if ctx.Index != "" {
-		fld = fmt.Sprintf(`fmt.Sprintf("%s[%%v]", %s)`, f.Name().PGGUpperCamelCase().String(), ctx.Index)
-	} else {
-		fld = fmt.Sprintf("%q", f.Name().PGGUpperCamelCase().String())
+	output := []string{
+		"{",
+		`std::ostringstream msg("invalid ");`,
 	}
 
-	/*
-		causeFld := ""
-		if cause != "nil" && cause != "" {
-			causeFld = fmt.Sprintf("Cause: %s,", cause)
-		}
+	if ctx.OnKey {
+		output = append(output, `msg << "key for ";`)
+	}
+	output = append(output,
+		fmt.Sprintf(`msg << %q << "." << %s;`,
+			errName, lit(f.Name().PGGUpperCamelCase().String())))
 
-		keyFld := ""
-		if ctx.OnKey {
-			keyFld = "Key: true,"
-		}
-	*/
+	if idx != "" {
+		output = append(output, fmt.Sprintf(`msg << "[" << %s << "]";`, lit(idx)))
+	} else if ctx.Index != "" {
+		output = append(output, fmt.Sprintf(`msg << "[" << %s << "]";`, lit(ctx.Index)))
+	}
 
-	return fmt.Sprintf(`{
-		*err = "field: " %s ", reason: " %s;
-		return false;
-	}`,
-		strconv.Quote(fld),
-		strconv.Quote(fmt.Sprint(reason...)))
+	output = append(output, fmt.Sprintf(`msg << ": " << %s;`, lit(fmt.Sprintf("%q", reason))))
+
+	if cause != "nil" && cause != "" {
+		output = append(output, fmt.Sprintf(`msg << " | caused by " << %s;`, cause))
+	}
+
+	output = append(output, "*err = msg.str();",
+		"return false;",
+		"}")
+	return strings.Join(output, "\n")
 }
 
 func lookup(f pgs.Field, name string) string {
@@ -185,10 +199,15 @@ func lit(x interface{}) string {
 		return fmt.Sprintf("0x%X", x)
 	case reflect.Slice:
 		els := make([]string, val.Len())
-		for i, l := 0, val.Len(); i < l; i++ {
-			els[i] = lit(val.Index(i).Interface())
+		switch reflect.TypeOf(x).Elem().Kind() {
+		case reflect.Uint8:
+			for i, l := 0, val.Len(); i < l; i++ {
+				els[i] = fmt.Sprintf("\\x%x", val.Index(i).Interface())
+			}
+			return fmt.Sprintf("\"%s\"", strings.Join(els, ""))
+		default:
+			panic(fmt.Sprintf("don't know how to format literals of type %v", val.Kind()))
 		}
-		return fmt.Sprintf("%T{%s}", val.Interface(), strings.Join(els, ", "))
 	case reflect.Float32:
 		return fmt.Sprintf("%fF", x)
 	default:
@@ -238,6 +257,10 @@ func inType(f pgs.Field, x interface{}) string {
 }
 
 func cType(t pgs.FieldType) string {
+	if t.IsEmbed() {
+		return className(t.Embed())
+	}
+
 	switch t.Name().String() {
 	case "float32":
 		return "float"

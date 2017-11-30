@@ -3,10 +3,12 @@
 #include "tests/harness/cases/bool.pb.h"
 #include "tests/harness/cases/bool.pb.validate.h"
 #include "tests/harness/cases/bytes.pb.h"
+#include "tests/harness/cases/bytes.pb.validate.h"
 #include "tests/harness/cases/enums.pb.h"
 #include "tests/harness/cases/enums.pb.validate.h"
 #include "tests/harness/cases/maps.pb.h"
 #include "tests/harness/cases/messages.pb.h"
+#include "tests/harness/cases/messages.pb.validate.h"
 #include "tests/harness/cases/numbers.pb.h"
 #include "tests/harness/cases/numbers.pb.validate.h"
 #include "tests/harness/cases/oneofs.pb.h"
@@ -85,7 +87,9 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
   // These macros are defined in the various validation headers and call the
   // above macro once for each message class in the header.
   X_TESTS_HARNESS_CASES_BOOL(TRY_RETURN_VALIDATE_CALLABLE)
+  X_TESTS_HARNESS_CASES_BYTES(TRY_RETURN_VALIDATE_CALLABLE)
   X_TESTS_HARNESS_CASES_ENUMS(TRY_RETURN_VALIDATE_CALLABLE)
+  X_TESTS_HARNESS_CASES_MESSAGES(TRY_RETURN_VALIDATE_CALLABLE)
   X_TESTS_HARNESS_CASES_NUMBERS(TRY_RETURN_VALIDATE_CALLABLE)
   X_TESTS_HARNESS_CASES_STRINGS(TRY_RETURN_VALIDATE_CALLABLE)
   X_TESTS_HARNESS_CASES_WKT_ANY(TRY_RETURN_VALIDATE_CALLABLE)

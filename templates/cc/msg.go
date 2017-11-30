@@ -1,5 +1,11 @@
 package tpl
 
+const declTpl = `
+{{- if not (disabled .) -}}
+bool Validate(const {{ class . }}& m, string* err);
+{{- end }}
+`
+
 const msgTpl = `
 {{ if disabled . -}}
 	{{ cmt "Validate is disabled for " (class .) ". This method will always return true." }}
@@ -24,11 +30,11 @@ const msgTpl = `
 		};
 	{{ end }}{{ end }}
 
-{{/*    TODO(akonradi) deal with regex flags
 	{{ if has .Rules "Pattern"}}{{ if .Rules.Pattern }}
-		std::regex {{ lookup .Field "Pattern" }}({{ lit .Rules.GetPattern }});
+	{{/* TODO(akonradi) implement pattern matching
+		var {{ lookup .Field "Pattern" }} = regexp.MustCompile({{ lit .Rules.GetPattern }})
+	*/}}
 	{{ end }}{{ end }}
-*/}}
 
 {{ end }}{{ end }}
 
