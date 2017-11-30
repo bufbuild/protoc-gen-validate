@@ -64,8 +64,10 @@ bool Validate(const {{ class . }}& m, string* err) {
 {{ end -}}
 }
 
+{{/* TODO(akonradi) implement hostname matching
 {{ if needs . "hostname" }}{{ template "hostname" . }}{{ end }}
 
 {{ if needs . "email" }}{{ template "email" . }}{{ end }}
+*/}}
 
 `
