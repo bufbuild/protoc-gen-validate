@@ -247,7 +247,7 @@ func inType(f pgs.Field, x interface{}) string {
 		case []string:
 			return "string"
 		case []*duration.Duration:
-			return "time.Duration"
+			return "uint64_t"
 		default:
 			return "UNKNOWN"
 		}
@@ -300,7 +300,7 @@ func inKey(f pgs.Field, x interface{}) string {
 
 func durLit(dur *duration.Duration) string {
 	return fmt.Sprintf(
-		"time.Duration(%d * time.Second + %d * time.Nanosecond)",
+		"%d * 1000000000LL + %d",
 		dur.GetSeconds(), dur.GetNanos())
 }
 

@@ -2,8 +2,12 @@
 #define _VALIDATE_H
 
 #include <google/protobuf/message.h>
+#include <google/protobuf/util/time_util.h>
 
 namespace pgv {
+
+namespace protobuf = google::protobuf;
+
 namespace validate {
 
 template<class T>
