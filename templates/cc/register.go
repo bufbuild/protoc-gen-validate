@@ -252,6 +252,9 @@ func inType(f pgs.Field, x interface{}) string {
 			return "UNKNOWN"
 		}
 	default:
+		if f.Type().IsRepeated() {
+			return cTypeOfString(f.Type().Element().Name().String())
+		}
 		return cType(f.Type())
 	}
 }
@@ -261,7 +264,11 @@ func cType(t pgs.FieldType) string {
 		return className(t.Embed())
 	}
 
-	switch t.Name().String() {
+	return cTypeOfString(t.Name().String())
+}
+
+func cTypeOfString(s string) string {
+	switch s {
 	case "float32":
 		return "float"
 	case "float64":
@@ -275,7 +282,7 @@ func cType(t pgs.FieldType) string {
 	case "uint64":
 		return "uint64_t"
 	default:
-		return t.Name().String()
+		return s
 	}
 }
 
