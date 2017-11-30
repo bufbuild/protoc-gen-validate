@@ -347,8 +347,8 @@ func unwrap(ctx shared.RuleContext, name string) (shared.RuleContext, error) {
 		return ctx, err
 	}
 
-	ctx.AccessorOverride = fmt.Sprintf("%s.Get%s()", name,
-		ctx.Field.Type().Embed().Fields()[0].Name().PGGUpperCamelCase())
+	ctx.AccessorOverride = fmt.Sprintf("%s.%s()", name,
+		ctx.Field.Type().Embed().Fields()[0].Name())
 
 	return ctx, nil
 }
