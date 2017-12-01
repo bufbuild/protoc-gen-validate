@@ -39,6 +39,8 @@ const msgTpl = `
 {{ end }}{{ end }}
 
 bool Validate(const {{ class . }}& m, string* err) {
+	(void)m;
+	(void)err;
 {{- if disabled . }}
 	return true;
 {{ else -}}

@@ -4,6 +4,7 @@ const durationTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 	{{ template "required" . }}
 
 	{{ if or $r.In $r.NotIn $r.Lt $r.Lte $r.Gt $r.Gte $r.Const }}
+	    {
 	        if (!{{ hasAccessor . }}) {
 			return true;
 	        }
@@ -84,5 +85,6 @@ const durationTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 			if ({{ lookup $f "NotInLookup" }}.find(dur) != {{ lookup $f "NotInLookup" }}.end())
 				{{ err . "value must not be in list " $r.NotIn }}
 		{{ end }}
+	    }
 	{{ end }}
 `

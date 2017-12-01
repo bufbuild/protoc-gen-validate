@@ -13,7 +13,7 @@ namespace validate {
 
 template<class T>
 struct MessageValidator {
-  static bool Check(const T& m, std::string* err) {
+  static bool Check(const T&, std::string*) {
     // do nothing by default
     return true;
   }
