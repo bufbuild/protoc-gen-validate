@@ -9,6 +9,8 @@ import "google/protobuf/duration.proto";
 message DurationNone { google.protobuf.Duration val = 1; }
 
 message DurationRequired { google.protobuf.Duration val = 1 [(validate.rules).duration.required = true]; }
+// TODO(htuch): Add a very large duration, e.g. {seconds: 315576000000}, once
+// #34 is resolved.
 message DurationConst    { google.protobuf.Duration val = 1 [(validate.rules).duration.const = {seconds: 3}]; }
 
 message DurationIn { google.protobuf.Duration val = 1 [(validate.rules).duration = {in: [{seconds:1}, {nanos:1000}]}]; }
