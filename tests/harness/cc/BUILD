@@ -23,18 +23,18 @@ cc_binary(
 # Ensure that if the headers are included in multiple libraries, those libraries
 # can be linked without conflicts.
 cc_test(
-    name = "cc-diamond-test",
+    name = "cc_diamond_test",
     srcs = ["diamond_test.cc"],
     copts = C_OPTS,
     linkstatic = 1,  # Forces both libraries to be linked in. DO NOT REMOVE THIS
     deps = [
-        "cc-diamond-0",
-        "cc-diamond-1",
+        "cc_diamond_0",
+        "cc_diamond_1",
     ],
 )
 
 cc_library(
-    name = "cc-diamond-0",
+    name = "cc_diamond_0",
     srcs = ["diamond_lib.cc"],
     copts = C_OPTS,
     deps = ["//tests/harness/cases:cc"],
@@ -42,7 +42,7 @@ cc_library(
 )
 
 cc_library(
-    name = "cc-diamond-1",
+    name = "cc_diamond_1",
     srcs = ["diamond_lib.cc"],
     copts = C_OPTS,
     deps = ["//tests/harness/cases:cc"],
