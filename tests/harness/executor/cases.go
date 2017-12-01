@@ -904,9 +904,9 @@ var messageCases = []TestCase{
 var repeatedCases = []TestCase{
 	{"repeated - none - valid", &cases.RepeatedNone{[]int64{1, 2, 3}}, true},
 
-	{"repeated - min - valid", &cases.RepeatedMin{[]float32{1, 2, 3}}, true},
-	{"repeated - min - valid (equal)", &cases.RepeatedMin{[]float32{1, 2}}, true},
-	{"repeated - min - invalid", &cases.RepeatedMin{[]float32{1}}, false},
+	{"repeated - min - valid", &cases.RepeatedMin{[]*cases.Embed{&cases.Embed{1}, &cases.Embed{2}, &cases.Embed{3}}}, true},
+	{"repeated - min - valid (equal)", &cases.RepeatedMin{[]*cases.Embed{&cases.Embed{1}, &cases.Embed{2}}}, true},
+	{"repeated - min - invalid", &cases.RepeatedMin{[]*cases.Embed{&cases.Embed{1}}}, false},
 
 	{"repeated - max - valid", &cases.RepeatedMax{[]float64{1, 2}}, true},
 	{"repeated - max - valid (equal)", &cases.RepeatedMax{[]float64{1, 2, 3}}, true},

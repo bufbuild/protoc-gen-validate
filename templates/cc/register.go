@@ -107,6 +107,10 @@ func accessor(ctx shared.RuleContext) string {
 }
 
 func hasAccessor(ctx shared.RuleContext) string {
+	if ctx.AccessorOverride != "" {
+		return "true"
+	}
+
 	return fmt.Sprintf(
 		"m.has_%s()",
 		methodName(ctx.Field.Name()))
@@ -249,7 +253,7 @@ func inType(f pgs.Field, x interface{}) string {
 		case []*duration.Duration:
 			return "pgv::protobuf_wkt::Duration"
 		default:
-			return "UNKNOWN"
+			return cTypeOfString(f.Type().Element().Name().String())
 		}
 	default:
 		if f.Type().IsRepeated() {
@@ -282,6 +286,12 @@ func cTypeOfString(s string) string {
 	case "uint64":
 		return "uint64_t"
 	default:
+		if strings.HasPrefix(s, "*") {
+			return s[1:]
+		}
+		if strings.HasPrefix(s, "[]*") {
+			return s[3:]
+		}
 		return s
 	}
 }
