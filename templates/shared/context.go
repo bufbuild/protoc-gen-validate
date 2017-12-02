@@ -166,12 +166,12 @@ func resolveRules(typ ruleTarget, rules *validate.FieldRules) (string, proto.Mes
 	case *validate.FieldRules_Timestamp:
 		return "timestamp", r.Timestamp, false
 	case nil:
-		switch {
-		case typ.IsEmbed():
+		if ft, ok := typ.(pgs.FieldType); ok && ft.IsRepeated() {
+			return "repeated", &validate.RepeatedRules{}, false
+		} else if typ.IsEmbed() {
 			return "message", &validate.MessageRules{}, false
-		default:
-			return "none", nil, false
 		}
+		return "none", nil, false
 	default:
 		return "error", nil, false
 	}

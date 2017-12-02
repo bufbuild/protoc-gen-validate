@@ -20,6 +20,10 @@ type TestCase struct {
 	Valid   bool
 }
 
+type TestResult struct {
+	OK, Skipped bool
+}
+
 var TestCases []TestCase
 
 func init() {
@@ -904,9 +908,15 @@ var messageCases = []TestCase{
 var repeatedCases = []TestCase{
 	{"repeated - none - valid", &cases.RepeatedNone{[]int64{1, 2, 3}}, true},
 
-	{"repeated - min - valid", &cases.RepeatedMin{[]*cases.Embed{&cases.Embed{1}, &cases.Embed{2}, &cases.Embed{3}}}, true},
-	{"repeated - min - valid (equal)", &cases.RepeatedMin{[]*cases.Embed{&cases.Embed{1}, &cases.Embed{2}}}, true},
-	{"repeated - min - invalid", &cases.RepeatedMin{[]*cases.Embed{&cases.Embed{1}}}, false},
+	{"repeated - embed none - valid", &cases.RepeatedEmbedNone{[]*cases.Embed{{1}}}, true},
+	{"repeated - embed none - valid (nil)", &cases.RepeatedEmbedNone{}, true},
+	{"repeated - embed none - valid (empty)", &cases.RepeatedEmbedNone{[]*cases.Embed{}}, true},
+	{"repeated - embed none - invalid", &cases.RepeatedEmbedNone{[]*cases.Embed{{-1}}}, false},
+
+	{"repeated - min - valid", &cases.RepeatedMin{[]*cases.Embed{{1}, {2}, {3}}}, true},
+	{"repeated - min - valid (equal)", &cases.RepeatedMin{[]*cases.Embed{{1}, {2}}}, true},
+	{"repeated - min - invalid", &cases.RepeatedMin{[]*cases.Embed{{1}}}, false},
+	{"repeated - min - invalid (element)", &cases.RepeatedMin{[]*cases.Embed{{1}, {-1}}}, false},
 
 	{"repeated - max - valid", &cases.RepeatedMax{[]float64{1, 2}}, true},
 	{"repeated - max - valid (equal)", &cases.RepeatedMax{[]float64{1, 2, 3}}, true},
@@ -930,6 +940,9 @@ var repeatedCases = []TestCase{
 	{"repeated - items - valid", &cases.RepeatedItemRule{[]float32{1, 2, 3}}, true},
 	{"repeated - items - valid (empty)", &cases.RepeatedItemRule{[]float32{}}, true},
 	{"repeated - items - invalid", &cases.RepeatedItemRule{[]float32{1, -2, 3}}, false},
+
+	{"repeated - embed skip - valid", &cases.RepeatedEmbedSkip{[]*cases.Embed{{1}}}, true},
+	{"repeated - embed skip - valid (invalid element)", &cases.RepeatedEmbedSkip{[]*cases.Embed{{-1}}}, true},
 }
 
 var mapCases = []TestCase{

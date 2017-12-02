@@ -13,24 +13,25 @@ import (
 	"github.com/lyft/protoc-gen-validate/tests/harness"
 )
 
-func Work(wg *sync.WaitGroup, in <-chan TestCase, out chan<- bool) {
+func Work(wg *sync.WaitGroup, in <-chan TestCase, out chan<- TestResult) {
 	for tc := range in {
-		out <- execTestCase(tc)
+		ok, skip := execTestCase(tc)
+		out <- TestResult{ok, skip}
 	}
 	wg.Done()
 }
 
-func execTestCase(tc TestCase) (ok bool) {
+func execTestCase(tc TestCase) (ok, skip bool) {
 	any, err := ptypes.MarshalAny(tc.Message)
 	if err != nil {
 		log.Printf("unable to convert test case %q to Any - %v", tc.Name, err)
-		return false
+		return false, false
 	}
 
 	b, err := proto.Marshal(&harness.TestCase{Message: any})
 	if err != nil {
 		log.Printf("unable to marshal test case %q - %v", tc.Name, err)
-		return false
+		return false, false
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
@@ -40,7 +41,7 @@ func execTestCase(tc TestCase) (ok bool) {
 	wg.Add(len(Harnesses))
 
 	errs := make(chan error, len(Harnesses))
-	output := make(chan string, len(Harnesses))
+	skips := make(chan string, len(Harnesses))
 
 	for _, h := range Harnesses {
 		h := h
@@ -57,7 +58,7 @@ func execTestCase(tc TestCase) (ok bool) {
 				errs <- fmt.Errorf("%s: internal harness error: %s", h.Name, res.Reason)
 			} else if res.Valid != tc.Valid {
 				if res.AllowFailure {
-					output <- fmt.Sprintf("%s: ignoring test failure: %s", h.Name, res.Reason)
+					skips <- fmt.Sprintf("%s: ignoring test failure: %s", h.Name, res.Reason)
 				} else if tc.Valid {
 					errs <- fmt.Errorf("%s: expected valid, got: %s", h.Name, res.Reason)
 				} else {
@@ -69,7 +70,7 @@ func execTestCase(tc TestCase) (ok bool) {
 
 	wg.Wait()
 	close(errs)
-	close(output)
+	close(skips)
 
 	ok = true
 
@@ -77,9 +78,10 @@ func execTestCase(tc TestCase) (ok bool) {
 		log.Printf("[%s] %v", tc.Name, err)
 		ok = false
 	}
-	for out := range output {
+	for out := range skips {
 		log.Printf("[%s] %v", tc.Name, out)
+		skip = true
 	}
 
-	return ok
+	return
 }
