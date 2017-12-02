@@ -14,7 +14,7 @@ import (
 	"github.com/lyft/protoc-gen-validate/templates/shared"
 )
 
-func Register(tpl *template.Template) {
+func RegisterModule(tpl *template.Template) {
 	tpl.Funcs(map[string]interface{}{
 		"cmt":           pgs.C80,
 		"class":         className,
@@ -22,6 +22,7 @@ func Register(tpl *template.Template) {
 		"accessor":      accessor,
 		"hasAccessor":   hasAccessor,
 		"ctype":         cType,
+		"weakCheckMsgs": weakCheckMsgs,
 		"err":           err,
 		"errCause":      errCause,
 		"errIdx":        errIdx,
@@ -29,7 +30,6 @@ func Register(tpl *template.Template) {
 		"lookup":        lookup,
 		"lit":           lit,
 		"isBytes":       isBytes,
-		"upper":         strings.ToUpper,
 		"byteStr":       byteStr,
 		"oneof":         oneofTypeName,
 		"quote":         quote,
@@ -44,9 +44,7 @@ func Register(tpl *template.Template) {
 		"unwrap":        unwrap,
 		"unimplemented": failUnimplemented,
 	})
-
-	template.Must(tpl.Parse(fileTpl))
-	template.Must(tpl.New("decl").Parse(declTpl))
+	template.Must(tpl.Parse(moduleFileTpl))
 	template.Must(tpl.New("msg").Parse(msgTpl))
 	template.Must(tpl.New("const").Parse(constTpl))
 	template.Must(tpl.New("ltgt").Parse(ltgtTpl))
@@ -84,6 +82,16 @@ func Register(tpl *template.Template) {
 	template.Must(tpl.New("timestamp").Parse(timestampTpl))
 
 	template.Must(tpl.New("wrapper").Parse(wrapperTpl))
+}
+
+func RegisterHeader(tpl *template.Template) {
+	tpl.Funcs(map[string]interface{}{
+		"class":         className,
+		"upper":         strings.ToUpper,
+	})
+
+	template.Must(tpl.Parse(headerFileTpl))
+	template.Must(tpl.New("decl").Parse(declTpl))
 }
 
 func methodName(name interface{}) string {
@@ -253,13 +261,9 @@ func inType(f pgs.Field, x interface{}) string {
 		case []*duration.Duration:
 			return "pgv::protobuf_wkt::Duration"
 		default:
-			// Strip the leading *
-			return cTypeOfString(f.Type().Element().Name().String())[1:]
+			return className(f.Type().Element().Embed())
 		}
 	default:
-		if f.Type().IsRepeated() {
-			return cTypeOfString(f.Type().Element().Name().String())
-		}
 		return cType(f.Type())
 	}
 }
@@ -268,12 +272,51 @@ func cType(t pgs.FieldType) string {
 	if t.IsEmbed() {
 		return className(t.Embed())
 	}
-	if t.IsRepeated() {
-		// Strip the leading []*
-		return cTypeOfString(t.Name().String())[3:]
+	if t.IsRepeated(){
+		if t.ProtoType() == pgs.MessageT {
+			return className(t.Element().Embed())
+		}
+		// Strip the leading []
+		return cTypeOfString(t.Name().String()[2:])
 	}
 
 	return cTypeOfString(t.Name().String())
+}
+
+// Compute unique C++ types that correspond to all message fields in a
+// compilation unit that need to be weak (i.e. not already defined). Used to
+// generate weak default definitions for CheckMessage.
+func weakCheckMsgs(msgs []pgs.Message) []string {
+	already_defined := map[string]bool{}
+	// First compute the C++ type names for things we're going to provide an explicit
+	// CheckMessage() with Validate(..) body in this file. We can't define the
+	// same CheckMessage() signature twice in a compilation unit, even if one of
+	// them is weak.
+	for _, msg := range msgs {
+		already_defined[className(msg)] = true
+	}
+	// Compute the set of C++ type names we need weak definitions for.
+	ctype_map := map[string]bool{}
+	for _, msg := range msgs {
+		if disabled, _ := shared.Disabled(msg); disabled {
+			continue
+		}
+		for _, f := range msg.Fields() {
+			ctype := cType(f.Type())
+			if already_defined[ctype] {
+				continue
+			}
+			if f.Type().IsEmbed() || (f.Type().IsRepeated() && f.Type().Element().IsEmbed()) {
+				ctype_map[ctype] = true
+			}
+		}
+	}
+	// Convert to array.
+	ctypes := []string{}
+	for ctype := range ctype_map {
+		ctypes = append(ctypes, ctype)
+	}
+	return ctypes
 }
 
 func cTypeOfString(s string) string {
@@ -290,6 +333,8 @@ func cTypeOfString(s string) string {
 		return "uint32_t"
 	case "uint64":
 		return "uint64_t"
+	case "[]byte":
+		return "string"
 	default:
 		return s
 	}

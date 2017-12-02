@@ -5,10 +5,6 @@ load(
     "pgv_go_proto_library",
     "pgv_cc_proto_library",
 )
-load(
-    "@com_google_protobuf//:protobuf.bzl",
-    "cc_proto_library",
-)
 
 pgv_go_proto_library(
     name = "go",
@@ -30,6 +26,7 @@ pgv_go_proto_library(
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/go",
     rules_go_repo_only_for_internal_use = "",
     deps = [
+        "//tests/harness/cases/other_package:go",
         "@com_github_golang_protobuf//ptypes/any:go_default_library",
         "@com_github_golang_protobuf//ptypes/duration:go_default_library",
         "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
@@ -53,6 +50,9 @@ pgv_cc_proto_library(
         "wkt_duration.proto",
         "wkt_timestamp.proto",
         "wkt_wrappers.proto",
+    ],
+    deps = [
+        "//tests/harness/cases/other_package:cc",
     ],
     visibility = ["//tests:__subpackages__"],
 )

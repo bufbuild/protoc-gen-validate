@@ -9,17 +9,6 @@ namespace pgv {
 namespace protobuf = google::protobuf;
 namespace protobuf_wkt = google::protobuf;
 
-namespace validate {
-
-template<class T>
-struct MessageValidator {
-  static bool Check(const T&, std::string*) {
-    // do nothing by default
-    return true;
-  }
-};
-
-} // namespace validate
 } // namespace pgv
 
 #endif // _VALIDATE_H

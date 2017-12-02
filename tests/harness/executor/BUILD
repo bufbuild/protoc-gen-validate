@@ -13,6 +13,7 @@ go_library(
     deps = [
         "//tests/harness:go_default_library",
         "//tests/harness/cases:go",
+        "//tests/harness/cases/other_package:go",
         "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/golang/protobuf/ptypes:go_default_library",
         "//vendor/golang.org/x/net/context:go_default_library",

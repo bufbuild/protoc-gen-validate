@@ -15,9 +15,9 @@ func makeTemplate(lang string, register_fn func(*template.Template)) *template.T
 	return tpl
 }
 
-func Template() map[string]*template.Template {
-	return map[string]*template.Template{
-		"cc": makeTemplate("cc", cctpl.Register),
-		"go": makeTemplate("go", gotpl.Register),
+func Template() map[string][]*template.Template {
+	return map[string][]*template.Template{
+		"cc": {makeTemplate("h", cctpl.RegisterHeader), makeTemplate("cc", cctpl.RegisterModule)},
+		"go": {makeTemplate("go", gotpl.Register)},
 	}
 }

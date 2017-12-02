@@ -3,12 +3,15 @@ syntax = "proto3";
 package tests.harness.cases;
 option go_package = "cases";
 
+import "tests/harness/cases/other_package/embed.proto";
+
 import "validate/validate.proto";
 
 message Embed { int64 val = 1 [(validate.rules).int64.gt = 0]; }
 
 message RepeatedNone      { repeated int64  val = 1; }
 message RepeatedEmbedNone { repeated Embed val = 1; }
+message RepeatedEmbedCrossPackageNone { repeated tests.harness.cases.other_package.Embed val = 1; }
 message RepeatedMin       { repeated Embed val = 1 [(validate.rules).repeated.min_items = 2]; }
 message RepeatedMax       { repeated double val = 1 [(validate.rules).repeated.max_items = 3]; }
 message RepeatedMinMax    { repeated sfixed32 val = 1 [(validate.rules).repeated = {min_items: 2, max_items: 4}]; }
