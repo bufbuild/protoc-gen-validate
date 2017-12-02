@@ -25,6 +25,7 @@ type Harness struct {
 }
 
 func InitHarness(cmd string, args ...string) Harness {
+
 	return Harness{
 		Name: cmd,
 		Exec: initHarness(cmd, args...),

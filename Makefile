@@ -34,7 +34,8 @@ tests:
 	# runs all tests against the package with race detection and coverage percentage
 	go test -race -cover
 	# tests validate proto generation
-	bazel build //validate:go_default_library && diff $$(bazel info bazel-genfiles)/validate/validate.pb.go validate/validate.pb.go
+	bazel build //validate:go_default_library \
+		&& diff $$(bazel info bazel-genfiles)/validate/validate.pb.go validate/validate.pb.go
 
 .PHONY: cover
 cover:
@@ -51,7 +52,7 @@ harness: tests/harness/harness.pb.go tests/harness/go/go-harness tests/harness/c
 .PHONY: bazel-harness
 bazel-harness:
 	# runs the test harness via bazel
-	bazel run //tests/harness/executor
+	bazel run //tests/harness/executor:executor
 
 .PHONY: kitchensink
 kitchensink:
@@ -94,6 +95,7 @@ tests/harness/cc/cc-harness: tests/harness/cc/harness.cc
 	# use bazel which knows how to pull in the C++ common proto libraries
 	bazel build //tests/harness/cc:cc-harness
 	cp bazel-bin/tests/harness/cc/cc-harness $@
+	chmod 0755 $@
 
 .PHONY: ci
 ci: lint build tests kitchensink testcases harness bazel-harness

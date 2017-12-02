@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
 go_library(
     name = "go_default_library",
@@ -13,7 +13,6 @@ go_library(
     deps = [
         "//tests/harness:go_default_library",
         "//tests/harness/cases:go",
-        "//tests/harness/go:go-harness",
         "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/golang/protobuf/ptypes:go_default_library",
         "//vendor/golang.org/x/net/context:go_default_library",
@@ -24,17 +23,13 @@ go_library(
     ],
 )
 
-go_test(
+go_binary(
     name = "executor",
-    data = [
-        "//tests/harness/cc:cc-harness",
-        "//tests/harness/go:go-harness",
-    ],
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/executor",
     library = ":go_default_library",
-    rundir = ".",
-    visibility = ["//visibility:public"],
-    deps = [
-        "//tests/harness/cases:go",
-    ],
+    visibility = ["//visibility:private"],
+    data = [
+        "//tests/harness/go:go-harness",
+        "//tests/harness/cc:cc-harness",
+    ]
 )
