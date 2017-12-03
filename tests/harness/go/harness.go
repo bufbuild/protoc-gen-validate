@@ -9,6 +9,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/lyft/protoc-gen-validate/tests/harness"
 	_ "github.com/lyft/protoc-gen-validate/tests/harness/cases/go"
+	_ "github.com/lyft/protoc-gen-validate/tests/harness/cases/other_package/go"
 )
 
 func main() {

@@ -72,15 +72,24 @@ kitchensink:
 testcases:
 	# generate the test harness case protos
 	rm -r tests/harness/cases/go || true
-	mkdir -p tests/harness/cases/go
+	mkdir tests/harness/cases/go
+	rm -r tests/harness/cases/other_package/go || true
+	mkdir tests/harness/cases/other_package/go
+	# protoc-gen-go makes us go a package at a time
+	cd tests/harness/cases/other_package && \
+	protoc \
+		-I . \
+		-I ../../../.. \
+		--go_out="${VALIDATE_IMPORT}:./go" \
+		--validate_out="lang=go:./go" \
+		./*.proto
 	cd tests/harness/cases && \
 	protoc \
 		-I . \
 		-I ../../.. \
-		--cpp_out="./" \
-		--go_out="${VALIDATE_IMPORT}:./go" \
+		--go_out="Mtests/harness/cases/other_package/embed.proto=github.com/lyft/protoc-gen-validate/tests/harness/cases/other_package/go,${VALIDATE_IMPORT}:./go" \
 		--validate_out="lang=go:./go" \
-		`find . -name "*.proto"`
+		./*.proto
 
 tests/harness/harness.pb.go:
 	# generates the test harness protos
