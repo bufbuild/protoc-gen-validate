@@ -12,6 +12,7 @@ import (
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/lyft/protoc-gen-validate/tests/harness/cases/go"
+	"github.com/lyft/protoc-gen-validate/tests/harness/cases/other_package/go"
 )
 
 type TestCase struct {
@@ -903,6 +904,11 @@ var messageCases = []TestCase{
 
 	{"message - required - valid", &cases.MessageRequired{&cases.TestMsg{Const: "foo"}}, true},
 	{"message - required - invalid", &cases.MessageRequired{}, false},
+
+	{"message - cross-package embed none - valid", &cases.MessageCrossPackage{&other_package.Embed{1}}, true},
+	{"message - cross-package embed none - valid (nil)", &cases.MessageCrossPackage{}, true},
+	{"message - cross-package embed none - valid (empty)", &cases.MessageCrossPackage{&other_package.Embed{}}, false},
+	{"message - cross-package embed none - invalid", &cases.MessageCrossPackage{&other_package.Embed{-1}}, false},
 }
 
 var repeatedCases = []TestCase{
@@ -912,6 +918,11 @@ var repeatedCases = []TestCase{
 	{"repeated - embed none - valid (nil)", &cases.RepeatedEmbedNone{}, true},
 	{"repeated - embed none - valid (empty)", &cases.RepeatedEmbedNone{[]*cases.Embed{}}, true},
 	{"repeated - embed none - invalid", &cases.RepeatedEmbedNone{[]*cases.Embed{{-1}}}, false},
+
+	{"repeated - cross-package embed none - valid", &cases.RepeatedEmbedCrossPackageNone{[]*other_package.Embed{{1}}}, true},
+	{"repeated - cross-package embed none - valid (nil)", &cases.RepeatedEmbedCrossPackageNone{}, true},
+	{"repeated - cross-package embed none - valid (empty)", &cases.RepeatedEmbedCrossPackageNone{[]*other_package.Embed{}}, true},
+	{"repeated - cross-package embed none - invalid", &cases.RepeatedEmbedCrossPackageNone{[]*other_package.Embed{{-1}}}, false},
 
 	{"repeated - min - valid", &cases.RepeatedMin{[]*cases.Embed{{1}, {2}, {3}}}, true},
 	{"repeated - min - valid (equal)", &cases.RepeatedMin{[]*cases.Embed{{1}, {2}}}, true},

@@ -9,7 +9,7 @@ const messageTpl = `
 	{{ else }}
 	{
 		string inner_err;
-		if ({{ hasAccessor .}} && !pgv::validate::MessageValidator<{{ ctype $f.Type }}>::Check({{ accessor . }}, &inner_err)) {
+		if ({{ hasAccessor .}} && !pgv::validate::CheckMessage({{ accessor . }}, &inner_err)) {
 			{{ errCause . "inner_err" "embedded message failed validation" }}
 		}
 	}

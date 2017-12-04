@@ -11,8 +11,12 @@ def pgv_go_proto_library(name, srcs = None, deps = [], **kwargs):
                      **kwargs)
 
 def _CcValidateHdrs(srcs):
-  ret = [s[:-len(".proto")] + ".pb.validate.h" for s in srcs]
-  return ret
+    ret = [s[:-len(".proto")] + ".pb.validate.h" for s in srcs]
+    return ret
+
+def _CcValidateSrcs(srcs):
+    ret = [s[:-len(".proto")] + ".pb.validate.cc" for s in srcs]
+    return ret
 
 def pgv_cc_proto_library(
         name,
@@ -64,6 +68,7 @@ def pgv_cc_proto_library(
     includes = [include]
 
   gen_hdrs = _CcValidateHdrs(srcs)
+  gen_srcs = _CcValidateSrcs(srcs)
 
   proto_gen(
       name=name + "_validate",
@@ -78,7 +83,7 @@ def pgv_cc_proto_library(
       protoc=protoc,
       plugin=protoc_gen_validate,
       plugin_options=["lang=cc"],
-      outs=gen_hdrs,
+      outs=gen_hdrs + gen_srcs,
       visibility=["//visibility:public"],
   )
 
@@ -88,9 +93,11 @@ def pgv_cc_proto_library(
   native.cc_library(
       name=name,
       hdrs=gen_hdrs,
+      srcs=gen_srcs,
       deps=cc_libs + deps + [
           ":" + name + "_proto",
           "@com_lyft_protoc_gen_validate//validate:cc_validate",
       ],
       includes=includes,
+      alwayslink=1,
       **kargs)

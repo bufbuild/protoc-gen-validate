@@ -1,9 +1,7 @@
 package tpl
 
 const declTpl = `
-{{- if not (disabled .) -}}
-static inline bool Validate(const {{ class . }}& m, string* err);
-{{- end }}
+extern bool Validate(const {{ class . }}& m, string* err);
 `
 
 const msgTpl = `
@@ -38,7 +36,7 @@ const msgTpl = `
 
 {{ end }}{{ end }}
 
-static inline bool Validate(const {{ class . }}& m, string* err) {
+bool Validate(const {{ class . }}& m, string* err) {
 	(void)m;
 	(void)err;
 {{- if disabled . }}

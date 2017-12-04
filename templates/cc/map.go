@@ -4,6 +4,8 @@ const mapTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 
 	{{ if $r.GetMinPairs }}
+		{{ unimplemented }}
+		{{/*
 		{{ if eq $r.GetMinPairs $r.GetMaxPairs }}
 			if len({{ accessor . }}) != {{ $r.GetMinPairs }} {
 				return {{ err . "value must contain exactly " $r.GetMinPairs " pair(s)" }}
@@ -37,5 +39,6 @@ const mapTpl = `
 
 			{{ render (.Elem "val" "key") }}
 		}
+		*/}}
 	{{ end }}
 `
