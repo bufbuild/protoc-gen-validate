@@ -3,7 +3,7 @@ bazel-*
 !vendor/*
 
 /tests/harness/cases/go
-/tests/harness/cases/other_pacage/go
+/tests/harness/cases/other_package/go
 /tests/harness/harness.pb.go
 /tests/harness/go/go-harness
 /tests/harness/cc/cc-harness

@@ -312,7 +312,7 @@ func weakCheckMsgs(msgs []pgs.Message) []string {
 		}
 	}
 	// Convert to array.
-	ctypes := []string{}
+	ctypes := make([]string, 0, len(ctype_map))
 	for ctype := range ctype_map {
 		ctypes = append(ctypes, ctype)
 	}
