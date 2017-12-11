@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "validate/validate.h"
+
 #include "tests/harness/cases/bool.pb.h"
 #include "tests/harness/cases/bool.pb.validate.h"
 #include "tests/harness/cases/bytes.pb.h"
@@ -49,14 +51,14 @@ void WriteTestResultAndExit(const TestResult& result) {
   exit(EXIT_SUCCESS);
 }
 
-void ExitIfFailed(bool succeeded, const std::string& err_msg) {
+void ExitIfFailed(bool succeeded, const pgv::ValidationMsg& err_msg) {
   if (succeeded) {
     return;
   }
 
   TestResult result;
   result.set_error(true);
-  result.set_reason(err_msg);
+  result.set_reason(pgv::String(err_msg));
   WriteTestResultAndExit(result);
 }
 
@@ -71,18 +73,18 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
 #define TRY_RETURN_VALIDATE_CALLABLE(CLS) \
   if (msg.Is<CLS>()) { \
     return [msg] () {                                      \
-      std::string err_msg;                                 \
+      pgv::ValidationMsg err_msg;                          \
       TestResult result;                                   \
       CLS unpacked;                                        \
       msg.UnpackTo(&unpacked);                             \
       try {                                                \
         result.set_valid(Validate(unpacked, &err_msg));    \
         result.set_reason(std::move(err_msg));             \
-      } catch (std::string& e) {                           \
+      } catch (pgv::UnimplementedException& e) {           \
         /* don't fail for unimplemented validations */     \
         result.set_valid(false);                           \
         result.set_allowfailure(true);                     \
-        result.set_reason(e);                              \
+        result.set_reason(pgv::String(e));                 \
       }                                                    \
       return result;                                       \
     };                                                     \
