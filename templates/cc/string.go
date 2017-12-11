@@ -15,7 +15,7 @@ const strTpl = `
 	{{ if $r.Prefix }}
 	{
 		const std::string prefix = {{ lit $r.GetPrefix }};
-		if (!pgv::IsPrefix({{ accessor . }}, prefix)) {
+		if (!pgv::IsPrefix(prefix, {{ accessor . }})) {
 			{{ err . "value does not have prefix " (lit $r.GetPrefix) }}
 		}
 	}
@@ -25,7 +25,7 @@ const strTpl = `
 	{
 		const std::string suffix = {{ lit $r.GetSuffix }};
 		const std::string& value = {{ accessor . }};
-		if (!pgv::IsSuffix(value, suffix)) {
+		if (!pgv::IsSuffix(suffix, value)) {
 			{{ err . "value does not have suffix " (lit $r.GetSuffix) }}
 		}
 	}

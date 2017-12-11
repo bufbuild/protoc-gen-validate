@@ -12,11 +12,11 @@ using std::string;
 namespace protobuf = google::protobuf;
 namespace protobuf_wkt = google::protobuf;
 
-static inline bool IsPrefix(const string& haystack, const string& needle) {
+static inline bool IsPrefix(const string& needle, const string& haystack) {
   return haystack.compare(0, needle.size(), needle) == 0;
 }
 
-static inline bool IsSuffix(const string& haystack, const string& needle) {
+static inline bool IsSuffix(const string& needle, const string& haystack) {
   return (needle.size() <= haystack.size()) &&
     (haystack.compare(haystack.size() - needle.size(), needle.size(), needle) == 0);
 }
