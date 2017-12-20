@@ -84,7 +84,7 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
         /* don't fail for unimplemented validations */     \
         result.set_valid(false);                           \
         result.set_allowfailure(true);                     \
-        result.set_reason(pgv::String(e));                 \
+        result.set_reason(e.what());                       \
       }                                                    \
       return result;                                       \
     };                                                     \
