@@ -99,6 +99,8 @@ func methodName(name interface{}) string {
 	switch nameStr {
 	case "const":
 		return "const_"
+	case "inline":
+		return "inline_"
 	default:
 		return nameStr
 	}
