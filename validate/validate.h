@@ -19,9 +19,9 @@ static inline bool IsPrefix(const string& maybe_prefix,
 
 static inline bool IsSuffix(const string& maybe_suffix,
                             const string& search_in) {
-  return (maybe_suffix.size() <= search_in.size()) &&
-    (search_in.compare(search_in.size() - maybe_suffix.size(),
-                       maybe_suffix.size(), maybe_suffix) == 0);
+  return maybe_suffix.size() <= search_in.size() &&
+    search_in.compare(search_in.size() - maybe_suffix.size(),
+                       maybe_suffix.size(), maybe_suffix) == 0;
 }
 
 static inline bool Contains(const string& search_in, const string& to_find) {
