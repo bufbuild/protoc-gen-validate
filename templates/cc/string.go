@@ -15,7 +15,7 @@ const strTpl = `
 	{{ if $r.Prefix }}
 	{
 		const std::string prefix = {{ lit $r.GetPrefix }};
-		if ({{ accessor . }}.compare(0, prefix.size(), prefix) != 0) {
+		if (!pgv::IsPrefix(prefix, {{ accessor . }})) {
 			{{ err . "value does not have prefix " (lit $r.GetPrefix) }}
 		}
 	}
@@ -25,8 +25,7 @@ const strTpl = `
 	{
 		const std::string suffix = {{ lit $r.GetSuffix }};
 		const std::string& value = {{ accessor . }};
-		if ((value.size() < suffix.size()) ||
-			(value.compare(value.size() - suffix.size(), suffix.size(), suffix) != 0)) {
+		if (!pgv::IsSuffix(suffix, value)) {
 			{{ err . "value does not have suffix " (lit $r.GetSuffix) }}
 		}
 	}
@@ -34,7 +33,7 @@ const strTpl = `
 
 	{{ if $r.Contains }}
 	{
-		if ({{ accessor . }}.find({{ lit $r.GetContains }}) == std::string::npos) {
+		if (!pgv::Contains({{ accessor . }}, {{ lit $r.GetContains }})) {
 			{{ err . "value does not contain substring " (lit $r.GetContains) }}
 		}
 	}
