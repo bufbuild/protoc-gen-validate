@@ -410,5 +410,5 @@ func unwrap(ctx shared.RuleContext, name string) (shared.RuleContext, error) {
 }
 
 func failUnimplemented() string {
-	return "throw std::string(\"not yet implemented\");"
+	return "throw pgv::UnimplementedException();"
 }
