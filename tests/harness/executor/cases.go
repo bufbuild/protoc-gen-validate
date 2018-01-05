@@ -11,8 +11,8 @@ import (
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/golang/protobuf/ptypes/wrappers"
-	"github.com/lyft/protoc-gen-validate/tests/harness/cases/go"
-	"github.com/lyft/protoc-gen-validate/tests/harness/cases/other_package/go"
+	cases "github.com/lyft/protoc-gen-validate/tests/harness/cases/go"
+	other_package "github.com/lyft/protoc-gen-validate/tests/harness/cases/other_package/go"
 )
 
 type TestCase struct {
