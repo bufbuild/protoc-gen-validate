@@ -8,7 +8,7 @@ const messageTpl = `
 		// skipping validation for {{ $f.Name }}
 	{{ else }}
 	{
-		string inner_err;
+		pgv::ValidationMsg inner_err;
 		if ({{ hasAccessor .}} && !pgv::validate::CheckMessage({{ accessor . }}, &inner_err)) {
 			{{ errCause . "inner_err" "embedded message failed validation" }}
 		}

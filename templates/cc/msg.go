@@ -1,7 +1,7 @@
 package tpl
 
 const declTpl = `
-extern bool Validate(const {{ class . }}& m, string* err);
+extern bool Validate(const {{ class . }}& m, pgv::ValidationMsg* err);
 `
 
 const msgTpl = `
@@ -36,7 +36,7 @@ const msgTpl = `
 
 {{ end }}{{ end }}
 
-bool Validate(const {{ class . }}& m, string* err) {
+bool Validate(const {{ class . }}& m, pgv::ValidationMsg* err) {
 	(void)m;
 	(void)err;
 {{- if disabled . }}
