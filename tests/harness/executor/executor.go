@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 	"runtime"
@@ -14,8 +15,11 @@ func init() {
 }
 
 func main() {
+	parallelism := flag.Int("parallelism", runtime.NumCPU(), "Number of test cases to run in parallel")
+	flag.Parse()
+
 	start := time.Now()
-	successes, failures, skips := run()
+	successes, failures, skips := run(*parallelism)
 
 	log.Printf("Successes: %d | Failures: %d | Skips: %d (%v)",
 		successes, failures, skips, time.Since(start))
@@ -25,15 +29,18 @@ func main() {
 	}
 }
 
-func run() (successes, failures, skips uint64) {
+func run(parallelism int) (successes, failures, skips uint64) {
 	wg := new(sync.WaitGroup)
-	wg.Add(runtime.NumCPU())
+	if parallelism <= 0 {
+		panic("Parallelism must be > 0")
+	}
+	wg.Add(parallelism)
 
 	in := make(chan TestCase)
 	out := make(chan TestResult)
 	done := make(chan struct{})
 
-	for i := 0; i < runtime.NumCPU(); i++ {
+	for i := 0; i < parallelism; i++ {
 		go Work(wg, in, out)
 	}
 
