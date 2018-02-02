@@ -91,5 +91,11 @@ var _ error = {{ errname . }}{}
 		var {{ lookup .Field "Pattern" }} = regexp.MustCompile({{ lit .Rules.GetPattern }})
 	{{ end }}{{ end }}
 
+	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
+	  {{ if .Rules.Items.GetString_ }}{{ if .Rules.Items.GetString_.Pattern }}
+		var {{ lookup .Field "Pattern" }} = regexp.MustCompile({{ lit .Rules.Items.GetString_.GetPattern }})
+	  {{ end }}{{ end }}
+	{{ end }}{{ end }}
+
 {{ end }}{{ end }}
 `
