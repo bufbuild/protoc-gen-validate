@@ -18,4 +18,5 @@ message RepeatedMinMax    { repeated sfixed32 val = 1 [(validate.rules).repeated
 message RepeatedExact     { repeated uint32 val = 1 [(validate.rules).repeated = {min_items: 3, max_items: 3}]; }
 message RepeatedUnique    { repeated string val = 1 [(validate.rules).repeated.unique = true]; }
 message RepeatedItemRule  { repeated float val = 1 [(validate.rules).repeated.items.float.gt = 0]; }
+message RepeatedItemPattern  { repeated string val = 1 [(validate.rules).repeated.items.string.pattern = "(?i)^[a-z0-9]+$"]; }
 message RepeatedEmbedSkip { repeated Embed val = 1 [(validate.rules).repeated.items.message.skip = true]; }
