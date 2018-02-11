@@ -15,8 +15,20 @@ go_library(
 )
 
 go_binary(
-    name = "go-harness",
+    name = "go-harness-binary",
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/go",
     library = ":go_default_library",
+    visibility = ["//visibility:public"],
+)
+
+# todo: pass binary location to executor
+# locations of binaries should not be depended on
+# (see https://github.com/bazelbuild/rules_go#how-do-i-access-go-binary-executables-from-go-test)
+# this is a temporary workaround to allow the tests to pass on rules_go 0.9.0
+genrule(
+    name = "go-harness",
+    srcs = [":go-harness-binary"],
+    outs = ['go-harness'],
+    cmd = "cp $(location :go-harness-binary) $@",
     visibility = ["//visibility:public"],
 )
