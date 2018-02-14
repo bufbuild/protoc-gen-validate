@@ -27,6 +27,8 @@ type oneof struct {
 	desc *descriptor.OneofDescriptorProto
 	msg  Message
 	flds []Field
+
+	comments string
 }
 
 func (o *oneof) accept(v Visitor) (err error) {
@@ -43,6 +45,7 @@ func (o *oneof) Syntax() Syntax                               { return o.msg.Syn
 func (o *oneof) Package() Package                             { return o.msg.Package() }
 func (o *oneof) File() File                                   { return o.msg.File() }
 func (o *oneof) BuildTarget() bool                            { return o.msg.BuildTarget() }
+func (o *oneof) Comments() string                             { return o.comments }
 func (o *oneof) lookupName() string                           { return lookupName(o.msg, o) }
 func (o *oneof) Descriptor() *descriptor.OneofDescriptorProto { return o.desc }
 func (o *oneof) Message() Message                             { return o.msg }

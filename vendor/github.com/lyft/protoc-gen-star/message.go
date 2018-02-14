@@ -63,6 +63,8 @@ type msg struct {
 
 	rawDesc *descriptor.DescriptorProto
 	genDesc *generator.Descriptor
+
+	comments string
 }
 
 func (m *msg) Name() Name                        { return Name(m.rawDesc.GetName()) }
@@ -70,6 +72,7 @@ func (m *msg) Syntax() Syntax                    { return m.parent.Syntax() }
 func (m *msg) Package() Package                  { return m.parent.Package() }
 func (m *msg) File() File                        { return m.parent.File() }
 func (m *msg) BuildTarget() bool                 { return m.parent.BuildTarget() }
+func (m *msg) Comments() string                  { return m.comments }
 func (m *msg) Descriptor() *generator.Descriptor { return m.genDesc }
 func (m *msg) Parent() ParentEntity              { return m.parent }
 func (m *msg) IsMapEntry() bool                  { return m.rawDesc.GetOptions().GetMapEntry() }

@@ -7,8 +7,8 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//tests/harness:go_default_library",
-        "//tests/harness/cases:go",
-        "//tests/harness/cases/other_package:go",
+        "//tests/harness/cases/go:go_default_library",
+        "//tests/harness/cases/other_package/go:go_default_library",
         "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/golang/protobuf/ptypes:go_default_library",
     ],
@@ -16,15 +16,22 @@ go_library(
 
 go_binary(
     name = "go-harness-binary",
+    embed = [":go_default_library"],
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/go",
-    library = ":go_default_library",
     visibility = ["//visibility:public"],
 )
 
 genrule(
     name = "go-harness",
     srcs = [":go-harness-binary"],
-    outs = ['go-harness'],
+    outs = ["go-harness"],
     cmd = "cp $(SRCS) $@",
+    visibility = ["//visibility:public"],
+)
+
+go_binary(
+    name = "go",
+    embed = [":go_default_library"],
+    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/go",
     visibility = ["//visibility:public"],
 )

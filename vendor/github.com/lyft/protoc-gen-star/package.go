@@ -7,6 +7,7 @@ package pgs
 // this is typically a mistake or bad practice.
 type Package interface {
 	Node
+	Commenter
 
 	// The name of the proto package. This may or may not be the same as the Go
 	// package name.
@@ -22,6 +23,8 @@ type Package interface {
 	Files() []File
 
 	addFile(f File)
+
+	setComments(c string)
 }
 
 type pkg struct {
@@ -29,11 +32,14 @@ type pkg struct {
 	importPath string
 	name       string
 	files      []File
+
+	comments string
 }
 
 func (p *pkg) ProtoName() Name    { return Name(p.fd.GetPackage()) }
 func (p *pkg) GoName() Name       { return Name(p.name) }
 func (p *pkg) ImportPath() string { return p.importPath }
+func (p *pkg) Comments() string   { return p.comments }
 
 func (p *pkg) Files() []File {
 	fs := make([]File, len(p.files))
@@ -62,6 +68,10 @@ func (p *pkg) accept(v Visitor) (err error) {
 func (p *pkg) addFile(f File) {
 	f.setPackage(p)
 	p.files = append(p.files, f)
+}
+
+func (p *pkg) setComments(comments string) {
+	p.comments = comments
 }
 
 // packageFD stands in for a *generator.FileDescriptor. The FileDescriptor

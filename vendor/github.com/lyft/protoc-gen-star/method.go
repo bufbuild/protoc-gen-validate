@@ -31,12 +31,15 @@ type Method interface {
 }
 
 type method struct {
+	comments string
+
 	desc    *descriptor.MethodDescriptorProto
 	service Service
 
 	in, out Message
 }
 
+func (m *method) Comments() string                              { return m.comments }
 func (m *method) Name() Name                                    { return Name(m.desc.GetName()) }
 func (m *method) Syntax() Syntax                                { return m.service.Syntax() }
 func (m *method) Package() Package                              { return m.service.Package() }

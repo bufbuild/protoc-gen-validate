@@ -25,6 +25,8 @@ type File interface {
 	setPackage(p Package)
 
 	addService(s Service)
+
+	lookupComments(name string) string
 }
 
 type file struct {
@@ -35,6 +37,7 @@ type file struct {
 	msgs        []Message
 	srvs        []Service
 	buildTarget bool
+	comments    map[string]string
 }
 
 func (f *file) Name() Name                            { return Name(f.desc.GetName()) }
@@ -42,6 +45,7 @@ func (f *file) Syntax() Syntax                        { return Syntax(f.desc.Get
 func (f *file) Package() Package                      { return f.pkg }
 func (f *file) File() File                            { return f }
 func (f *file) BuildTarget() bool                     { return f.buildTarget }
+func (f *file) Comments() string                      { return "" }
 func (f *file) Descriptor() *generator.FileDescriptor { return f.desc }
 func (f *file) InputPath() FilePath                   { return FilePath(f.Name().String()) }
 func (f *file) OutputPath() FilePath                  { return f.outputPath }
@@ -145,3 +149,5 @@ func (f *file) addService(s Service) {
 }
 
 func (f *file) addMapEntry(m Message) { panic("cannot add map entry directly to file") }
+
+func (f *file) lookupComments(name string) string { return f.comments[name] }
