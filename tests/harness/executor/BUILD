@@ -12,8 +12,8 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//tests/harness:go_default_library",
-        "//tests/harness/cases/go:go_default_library",
-        "//tests/harness/cases/other_package/go:go_default_library",
+        "//tests/harness/cases:go",
+        "//tests/harness/cases/other_package:go",
         "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/golang/protobuf/ptypes:go_default_library",
         "//vendor/github.com/golang/protobuf/ptypes/any:go_default_library",
