@@ -24,6 +24,8 @@ type EnumValue interface {
 type enumVal struct {
 	desc *descriptor.EnumValueDescriptorProto
 	enum Enum
+
+	comments string
 }
 
 func (ev *enumVal) Name() Name                                       { return Name(ev.desc.GetName()) }
@@ -31,6 +33,7 @@ func (ev *enumVal) Syntax() Syntax                                   { return ev
 func (ev *enumVal) Package() Package                                 { return ev.enum.Package() }
 func (ev *enumVal) File() File                                       { return ev.enum.File() }
 func (ev *enumVal) BuildTarget() bool                                { return ev.enum.BuildTarget() }
+func (ev *enumVal) Comments() string                                 { return ev.comments }
 func (ev *enumVal) Descriptor() *descriptor.EnumValueDescriptorProto { return ev.desc }
 func (ev *enumVal) Enum() Enum                                       { return ev.enum }
 func (ev *enumVal) Value() int32                                     { return ev.desc.GetNumber() }

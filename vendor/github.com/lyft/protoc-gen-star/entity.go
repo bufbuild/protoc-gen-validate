@@ -6,6 +6,7 @@ import "github.com/golang/protobuf/proto"
 // options. All nodes file and below are considered entities.
 type Entity interface {
 	Node
+	Commenter
 
 	// The Name of the entity
 	Name() Name

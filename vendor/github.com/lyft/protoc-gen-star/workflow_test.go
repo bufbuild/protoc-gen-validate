@@ -23,7 +23,7 @@ func TestStandardWorkflow_Init(t *testing.T) {
 	g := Init(ProtocInput(bytes.NewReader(b)), MutateParams(func(p Parameters) { mutated = true }))
 	g.workflow.Init(g)
 
-	assert.Equal(t, req, g.pgg.request())
+	assert.True(t, proto.Equal(req, g.pgg.request()))
 	assert.True(t, mutated)
 }
 

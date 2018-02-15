@@ -86,8 +86,8 @@ go_test(
         "workflow_multipackage_test.go",
         "workflow_test.go",
     ],
+    embed = [":go_default_library"],
     importpath = "github.com/lyft/protoc-gen-star",
-    library = ":go_default_library",
     deps = [
         "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/golang/protobuf/protoc-gen-go/descriptor:go_default_library",

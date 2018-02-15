@@ -1,6 +1,7 @@
 package pgs
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -29,17 +30,46 @@ func (g *gatherer) Init(gen *generator.Generator) {
 }
 
 func (g *gatherer) Generate(f *generator.FileDescriptor) {
-	pkg := g.hydratePackage(f)
-	pkg.addFile(g.hydrateFile(pkg, f))
+	comments := make(map[string]string)
+	for _, loc := range f.GetSourceCodeInfo().GetLocation() {
+		if loc.LeadingComments == nil {
+			continue
+		}
+
+		name, err := g.nameByPath(f.FileDescriptorProto, loc.Path)
+		if err != nil {
+			g.Debug("unable to convert path to name:", err.Error())
+		}
+
+		comments[name] = strings.TrimSuffix(loc.GetLeadingComments(), "\n")
+	}
+
+	pkg := g.hydratePackage(f, comments)
+	pkg.addFile(g.hydrateFile(pkg, f, comments))
 }
 
-func (g *gatherer) hydratePackage(f *generator.FileDescriptor) Package {
+func (g *gatherer) hydratePackage(f *generator.FileDescriptor, comments map[string]string) Package {
 	name := g.Generator.packageName(f)
 	g.push("package:" + name)
 	defer g.pop()
 
-	// have we already hydrated this package
+	// have we already hydrated this package. In case we already did, and if
+	// current file contains comments in the package statement, concatenate it
+	// so that we don't give any precedence to whatsever file.
+	pcomments := comments[fmt.Sprintf(".%s", name)]
 	if p, ok := g.pkgs[name]; ok {
+		c := make([]string, 0, 2)
+
+		ccomments := p.Comments()
+		if ccomments != "" {
+			c = append(c, ccomments)
+		}
+
+		if pcomments != "" {
+			c = append(c, pcomments)
+		}
+
+		p.setComments(strings.Join(c, "\n"))
 		return p
 	}
 
@@ -47,13 +77,14 @@ func (g *gatherer) hydratePackage(f *generator.FileDescriptor) Package {
 		fd:         f,
 		name:       name,
 		importPath: goImportPath(g.Generator.Unwrap(), f),
+		comments:   pcomments,
 	}
 
 	g.pkgs[name] = p
 	return p
 }
 
-func (g *gatherer) hydrateFile(pkg Package, f *generator.FileDescriptor) File {
+func (g *gatherer) hydrateFile(pkg Package, f *generator.FileDescriptor, comments map[string]string) File {
 	fl := &file{
 		pkg:        pkg,
 		desc:       f,
@@ -73,6 +104,7 @@ func (g *gatherer) hydrateFile(pkg Package, f *generator.FileDescriptor) File {
 		pkg.ProtoName().String(), ", ", f.GetPackage(), ")")
 
 	fl.buildTarget = g.BuildTarget(f.GetName())
+	fl.comments = comments
 
 	if _, seen := g.targets[fl.pkg.GoName().String()]; fl.buildTarget && !seen {
 		g.Debug("adding target package:", fl.pkg.GoName())
@@ -131,7 +163,9 @@ func (g *gatherer) hydrateMessage(parent ParentEntity, md *descriptor.Descriptor
 	g.push("msg:" + m.Name().String())
 	defer g.pop()
 
-	m.genDesc = g.Generator.ObjectNamed(m.lookupName()).(*generator.Descriptor)
+	name := m.lookupName()
+	m.genDesc = g.Generator.ObjectNamed(name).(*generator.Descriptor)
+	m.comments = m.File().lookupComments(name)
 
 	// populate all nested enums
 	for _, ed := range md.GetEnumType() {
@@ -171,6 +205,8 @@ func (g *gatherer) hydrateField(msg Message, fd *descriptor.FieldDescriptorProto
 		return out.(*field)
 	}
 	g.add(f)
+
+	f.comments = f.File().lookupComments(f.lookupName())
 
 	return f
 }
@@ -300,6 +336,8 @@ func (g *gatherer) hydrateOneOf(msg Message, idx int32, od *descriptor.OneofDesc
 	g.push("oneof:" + o.Name().String())
 	defer g.pop()
 
+	o.comments = o.File().lookupComments(o.lookupName())
+
 	for _, f := range msg.Fields() {
 		if i := f.Descriptor().OneofIndex; i != nil && idx == *i {
 			o.addField(f)
@@ -323,7 +361,9 @@ func (g *gatherer) hydrateEnum(parent ParentEntity, ed *descriptor.EnumDescripto
 	g.push("enum:" + e.Name().String())
 	defer g.pop()
 
-	e.genDesc = g.Generator.ObjectNamed(e.lookupName()).(*generator.EnumDescriptor)
+	name := e.lookupName()
+	e.genDesc = g.Generator.ObjectNamed(name).(*generator.EnumDescriptor)
+	e.comments = e.File().lookupComments(name)
 
 	for _, vd := range ed.GetValue() {
 		e.addValue(g.hydrateEnumValue(e, vd))
@@ -343,6 +383,8 @@ func (g *gatherer) hydrateEnumValue(parent Enum, vd *descriptor.EnumValueDescrip
 	}
 	g.add(ev)
 
+	ev.comments = ev.File().lookupComments(ev.lookupName())
+
 	return ev
 }
 
@@ -359,6 +401,8 @@ func (g *gatherer) hydrateService(parent File, sd *descriptor.ServiceDescriptorP
 
 	g.push("service:" + s.Name().String())
 	defer g.pop()
+
+	s.comments = s.File().lookupComments(s.lookupName())
 
 	for _, md := range sd.GetMethod() {
 		s.addMethod(g.hydrateMethod(s, md))
@@ -380,6 +424,8 @@ func (g *gatherer) hydrateMethod(parent Service, md *descriptor.MethodDescriptor
 
 	g.push("method:" + m.Name().String())
 	defer g.pop()
+
+	m.comments = m.File().lookupComments(m.lookupName())
 
 	in, ok := g.seenName(md.GetInputType())
 	g.Assert(ok, "input type", md.GetInputType(), "not hydrated")
@@ -419,6 +465,94 @@ func (g *gatherer) resolveLookupName(e Entity) string {
 	}
 
 	return e.lookupName()
+}
+
+func (g *gatherer) nameByPath(f *descriptor.FileDescriptorProto, path []int32) (string, error) {
+	const (
+		packagePath     = 2 // FileDescriptorProto.Package
+		messageTypePath = 4 // FileDescriptorProto.MessageType
+		enumTypePath    = 5 // FileDescriptorProto.EnumType
+		servicePath     = 6 // FileDescriptorProto.Service
+
+		messageTypeFieldPath      = 2 // DescriptorProto.Field
+		messageTypeNestedTypePath = 3 // DescriptorProto.NestedType
+		messageTypeEnumTypePath   = 4 // DescriptorProto.EnumType
+		messageTypeOneofDeclPath  = 8 // DescriptorProto.OneofDecl
+	)
+
+	// return fast in case it's the package leading comment
+	packageName := f.GetPackage()
+	if path[0] == packagePath {
+		return fmt.Sprintf(".%s", packageName), nil
+	}
+
+	// as we're refering to concrete entities, entity type should be followed by
+	// an index number thus always leading to even paths.
+	if len(path)%2 != 0 {
+		return "", errors.New("path must have even elements")
+	}
+
+	// tail-call recursive path to name conversion functor
+	var fn func(interface {
+		GetName() string
+	}, []int32, *[]string) error
+	fn = func(parent interface {
+		GetName() string
+	}, path []int32, names *[]string) error {
+		if len(path) == 0 {
+			return nil
+		}
+
+		t := path[0]
+		n := path[1]
+		switch td := parent.(type) {
+		case *descriptor.FileDescriptorProto:
+			switch t {
+			case messageTypePath:
+				parent = td.MessageType[n]
+			case enumTypePath:
+				parent = td.EnumType[n]
+			case servicePath:
+				parent = td.Service[n]
+			}
+		case *descriptor.ServiceDescriptorProto:
+			parent = td.Method[n]
+		case *descriptor.EnumDescriptorProto:
+			parent = td.Value[n]
+		case *descriptor.DescriptorProto:
+			switch t {
+			case messageTypeFieldPath:
+				parent = td.Field[n]
+			case messageTypeNestedTypePath:
+				parent = td.NestedType[n]
+			case messageTypeEnumTypePath:
+				parent = td.EnumType[n]
+			case messageTypeOneofDeclPath:
+				parent = td.OneofDecl[n]
+			}
+		}
+
+		*names = append(*names, parent.GetName())
+		return fn(parent, path[2:], names)
+	}
+
+	// reserve exactly the required capacity
+	var names []string
+	namesLen := uint(len(path) / 2)
+	if packageName != "" {
+		names = make([]string, 0, namesLen+1)
+		names = append(names, packageName)
+	} else {
+		names = make([]string, 0, namesLen)
+	}
+
+	// start the conversion
+	err := fn(f, path, &names)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf(".%s", strings.Join(names, ".")), nil
 }
 
 var _ generator.Plugin = (*gatherer)(nil)
