@@ -950,7 +950,9 @@ var repeatedCases = []TestCase{
 
 	{"repeated - items - valid", &cases.RepeatedItemRule{Val: []float32{1, 2, 3}}, true},
 	{"repeated - items - valid (empty)", &cases.RepeatedItemRule{Val: []float32{}}, true},
+	{"repeated - items - valid (pattern)", &cases.RepeatedItemPattern{Val: []string{"Alpha", "Beta123"}}, true},
 	{"repeated - items - invalid", &cases.RepeatedItemRule{Val: []float32{1, -2, 3}}, false},
+	{"repeated - items - invalid (pattern)", &cases.RepeatedItemPattern{Val: []string{"Alpha", "!@#$%^&*()"}}, false},
 
 	{"repeated - embed skip - valid", &cases.RepeatedEmbedSkip{Val: []*cases.Embed{{Val: 1}}}, true},
 	{"repeated - embed skip - valid (invalid element)", &cases.RepeatedEmbedSkip{Val: []*cases.Embed{{Val: -1}}}, true},
@@ -983,11 +985,15 @@ var mapCases = []TestCase{
 
 	{"map - keys - valid", &cases.MapKeys{Val: map[int32]string{-1: "a", -2: "b"}}, true},
 	{"map - keys - valid (empty)", &cases.MapKeys{Val: map[int32]string{}}, true},
+	{"map - keys - valid (pattern)", &cases.MapKeysPattern{Val: map[string]string{"A": "a"}}, true},
 	{"map - keys - invalid", &cases.MapKeys{Val: map[int32]string{1: "a"}}, false},
+	{"map - keys - invalid (pattern)", &cases.MapKeysPattern{Val: map[string]string{"A": "a", "!@#$%^&*()": "b"}}, false},
 
 	{"map - values - valid", &cases.MapValues{Val: map[string]string{"a": "Alpha", "b": "Beta"}}, true},
 	{"map - values - valid (empty)", &cases.MapValues{Val: map[string]string{}}, true},
+	{"map - values - valid (pattern)", &cases.MapValuesPattern{Val: map[string]string{"a": "A"}}, true},
 	{"map - values - invalid", &cases.MapValues{Val: map[string]string{"a": "A", "b": "B"}}, false},
+	{"map - values - invalid (pattern)", &cases.MapValuesPattern{Val: map[string]string{"a": "A", "b": "!@#$%^&*()"}}, false},
 }
 
 var oneofCases = []TestCase{
