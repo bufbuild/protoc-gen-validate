@@ -43,7 +43,7 @@ While this README seeks to describe many of the nuances of `protoc` plugin devel
 - [x] Configurable post-processing (eg, gofmt/goimports) of generated files
 - [x] Support processing proto files from multiple packages (normally disallowed by `protoc-gen-go`)
 - [ ] Load plugins/modules at runtime using Go shared libraries
-- [ ] Load comments from proto files into gathered AST for easy access
+- [x] Load comments from proto files into gathered AST for easy access
 - [ ] More intelligent Go import path resolution
 
 ### Examples

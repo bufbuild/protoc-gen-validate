@@ -91,6 +91,12 @@ testcases:
 		--validate_out="lang=go:./go" \
 		./*.proto
 
+.PHONY: update-vendor
+update-vendor:
+	# updates the vendored dependencies using the Go Dep tool
+	dep ensure -update
+	$(MAKE) gazelle
+
 tests/harness/harness.pb.go:
 	# generates the test harness protos
 	cd tests/harness && protoc -I . --go_out=. harness.proto

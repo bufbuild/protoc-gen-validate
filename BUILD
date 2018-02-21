@@ -8,6 +8,15 @@ gazelle(
     external = "vendored",
 )
 
+go_binary(
+    name = "protoc-gen-validate",
+    embed = [":go_default_library"],
+    importpath = "github.com/lyft/protoc-gen-validate",
+    visibility = ["//visibility:public"],
+)
+
+go_google_protobuf()
+
 go_library(
     name = "go_default_library",
     srcs = [
@@ -27,12 +36,3 @@ go_library(
         "//vendor/github.com/lyft/protoc-gen-star:go_default_library",
     ],
 )
-
-go_binary(
-    name = "protoc-gen-validate",
-    importpath = "github.com/lyft/protoc-gen-validate",
-    library = ":go_default_library",
-    visibility = ["//visibility:public"],
-)
-
-go_google_protobuf()

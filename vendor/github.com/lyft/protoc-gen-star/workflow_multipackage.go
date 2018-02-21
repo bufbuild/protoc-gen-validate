@@ -260,7 +260,6 @@ func (wf *multiPackageWorkflow) handleProcess(
 	wg.Add(3)
 
 	var b []byte
-	var outErr error
 
 	go func() {
 		in, _ := proto.Marshal(req)
@@ -270,7 +269,7 @@ func (wf *multiPackageWorkflow) handleProcess(
 	}()
 
 	go func() {
-		b, outErr = ioutil.ReadAll(stdout)
+		b, _ = ioutil.ReadAll(stdout)
 		wg.Done()
 	}()
 

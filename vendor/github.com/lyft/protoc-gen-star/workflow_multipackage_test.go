@@ -234,7 +234,7 @@ func TestMultiPackageWorkflow_HandleProcess_Success(t *testing.T) {
 
 	out := new(protoc.CodeGeneratorResponse)
 	assert.NoError(t, wf.handleProcess(sp, req, out))
-	assert.Equal(t, res, out)
+	assert.True(t, proto.Equal(res, out))
 
 	b, _ = proto.Marshal(req)
 	assert.Equal(t, b, sp.in.Bytes())

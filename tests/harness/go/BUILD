@@ -14,9 +14,17 @@ go_library(
     ],
 )
 
-go_binary(
+genrule(
     name = "go-harness",
+    srcs = [":go"],
+    outs = ["go-harness"],
+    cmd = "cp $(SRCS) $@",
+    visibility = ["//visibility:public"],
+)
+
+go_binary(
+    name = "go",
+    embed = [":go_default_library"],
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/go",
-    library = ":go_default_library",
     visibility = ["//visibility:public"],
 )

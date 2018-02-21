@@ -382,7 +382,7 @@ def go_proto_repositories(shared = 1):
         name = "com_github_google_protobuf",
         url = "https://github.com/google/protobuf/archive/v3.4.0.tar.gz",
         strip_prefix = "protobuf-3.4.0",
-        sha256 = "cd55ee08e64a86cf12aaadd4672961813f592c194ed0c9ad94da0ec75acf219f",
+        sha256 = "f6600abeee3babfa18591961a0ff21e7db6a6d9ef82418a261ec4fee44ee6d44",
     )
 
   # Needed for gRPC, only loaded by bazel if used

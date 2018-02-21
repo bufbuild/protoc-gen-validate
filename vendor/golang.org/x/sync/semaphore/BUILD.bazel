@@ -9,14 +9,15 @@ go_library(
 )
 
 go_test(
-    name = "go_default_test",
+    name = "go_default_xtest",
     srcs = [
         "semaphore_bench_test.go",
+        "semaphore_example_test.go",
         "semaphore_test.go",
     ],
-    importpath = "golang.org/x/sync/semaphore",
-    library = ":go_default_library",
+    importpath = "golang.org/x/sync/semaphore_test",
     deps = [
+        ":go_default_library",
         "//vendor/golang.org/x/net/context:go_default_library",
         "//vendor/golang.org/x/sync/errgroup:go_default_library",
     ],

@@ -112,7 +112,7 @@ func TestGenerator_Render(t *testing.T) {
 
 	var res plugin_go.CodeGeneratorResponse
 	assert.NoError(t, proto.Unmarshal(buf.Bytes(), &res))
-	assert.Equal(t, *(g.pgg.response()), res)
+	assert.True(t, proto.Equal(g.pgg.response(), &res))
 }
 
 func TestGenerator_PushPop(t *testing.T) {

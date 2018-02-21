@@ -11,6 +11,12 @@ import (
 
 const commentPrefix = "//"
 
+// Commenter is a interface used by any node or entity which could have
+// comments.
+type Commenter interface {
+	Comments() string
+}
+
 // C returns a comment block, wrapping when the line's length will exceed wrap.
 func C(wrap int, args ...interface{}) string {
 	s := commentScanner(wrap, args...)

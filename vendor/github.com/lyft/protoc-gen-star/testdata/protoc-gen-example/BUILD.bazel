@@ -18,7 +18,7 @@ go_library(
 
 go_binary(
     name = "protoc-gen-example",
+    embed = [":go_default_library"],
     importpath = "github.com/lyft/protoc-gen-star/testdata/protoc-gen-example",
-    library = ":go_default_library",
     visibility = ["//visibility:public"],
 )
