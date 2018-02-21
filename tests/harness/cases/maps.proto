@@ -19,3 +19,6 @@ message MapNoSparse {
 
 message MapKeys   { map<sint32, string> val = 1 [(validate.rules).map.keys.sint32.lt = 0]; }
 message MapValues { map<string, string> val = 1 [(validate.rules).map.values.string.min_len = 3]; }
+
+message MapKeysPattern   { map<string, string> val = 1 [(validate.rules).map.keys.string.pattern = "(?i)^[a-z0-9]+$"]; }
+message MapValuesPattern { map<string, string> val = 1 [(validate.rules).map.values.string.pattern = "(?i)^[a-z0-9]+$"]; }
