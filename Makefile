@@ -3,7 +3,7 @@ VALIDATE_IMPORT="Mvalidate/validate.proto=github.com/lyft/protoc-gen-validate/va
 
 .PHONY: build
 build: validate/validate.pb.go
-	# generates the PGV binary and installs it into $GOPATH/bin
+	# generates the PGV binary and installs it into $$GOPATH/bin
 	go install .
 
 .PHONY: bazel
