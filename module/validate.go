@@ -1,4 +1,4 @@
-package main
+package module
 
 import (
 	pgs "github.com/lyft/protoc-gen-star"
@@ -33,7 +33,7 @@ func (m Module) Execute(target pgs.Package, packages map[string]pgs.Package) []p
 
 		for _, tpl := range tpls {
 			m.AddGeneratorTemplateFile(
-				f.OutputPath().SetExt(".validate." + tpl.Name()).String(),
+				f.OutputPath().SetExt(".validate."+tpl.Name()).String(),
 				tpl,
 				f,
 			)
