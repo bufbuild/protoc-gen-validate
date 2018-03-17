@@ -9,6 +9,8 @@ import fmt "fmt"
 import math "math"
 import _ "github.com/lyft/protoc-gen-validate/validate"
 
+import io "io"
+
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
 var _ = fmt.Errorf
@@ -117,42 +119,1407 @@ func init() {
 	proto.RegisterType((*Map_Embed)(nil), "tests.kitchensink.Map.Embed")
 	proto.RegisterEnum("tests.kitchensink.Map_Enum", Map_Enum_name, Map_Enum_value)
 }
+func (m *Map) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Map) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.None) > 0 {
+		for k, _ := range m.None {
+			dAtA[i] = 0xa
+			i++
+			v := m.None[k]
+			mapSize := 1 + len(k) + sovMap(uint64(len(k))) + 1 + sovMap(uint64(v))
+			i = encodeVarintMap(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0xa
+			i++
+			i = encodeVarintMap(dAtA, i, uint64(len(k)))
+			i += copy(dAtA[i:], k)
+			dAtA[i] = 0x10
+			i++
+			i = encodeVarintMap(dAtA, i, uint64(v))
+		}
+	}
+	if len(m.MinPairs) > 0 {
+		for k, _ := range m.MinPairs {
+			dAtA[i] = 0x12
+			i++
+			v := m.MinPairs[k]
+			byteSize := 0
+			if len(v) > 0 {
+				byteSize = 1 + len(v) + sovMap(uint64(len(v)))
+			}
+			mapSize := 1 + sovMap(uint64(k)) + byteSize
+			i = encodeVarintMap(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0x8
+			i++
+			i = encodeVarintMap(dAtA, i, uint64(k))
+			if len(v) > 0 {
+				dAtA[i] = 0x12
+				i++
+				i = encodeVarintMap(dAtA, i, uint64(len(v)))
+				i += copy(dAtA[i:], v)
+			}
+		}
+	}
+	if len(m.MaxPairs) > 0 {
+		for k, _ := range m.MaxPairs {
+			dAtA[i] = 0x1a
+			i++
+			v := m.MaxPairs[k]
+			mapSize := 1 + len(k) + sovMap(uint64(len(k))) + 1 + 8
+			i = encodeVarintMap(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0xa
+			i++
+			i = encodeVarintMap(dAtA, i, uint64(len(k)))
+			i += copy(dAtA[i:], k)
+			dAtA[i] = 0x11
+			i++
+			i = encodeFixed64Map(dAtA, i, uint64(math.Float64bits(float64(v))))
+		}
+	}
+	if len(m.MinMaxPairs) > 0 {
+		for k, _ := range m.MinMaxPairs {
+			dAtA[i] = 0x22
+			i++
+			v := m.MinMaxPairs[k]
+			mapSize := 1 + len(k) + sovMap(uint64(len(k))) + 1 + 4
+			i = encodeVarintMap(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0xa
+			i++
+			i = encodeVarintMap(dAtA, i, uint64(len(k)))
+			i += copy(dAtA[i:], k)
+			dAtA[i] = 0x15
+			i++
+			i = encodeFixed32Map(dAtA, i, uint32(math.Float32bits(float32(v))))
+		}
+	}
+	if len(m.EqPairs) > 0 {
+		for k, _ := range m.EqPairs {
+			dAtA[i] = 0x2a
+			i++
+			v := m.EqPairs[k]
+			mapSize := 1 + sozMap(uint64(k)) + 1 + sovMap(uint64(v))
+			i = encodeVarintMap(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0x8
+			i++
+			i = encodeVarintMap(dAtA, i, uint64((uint32(k)<<1)^uint32((k>>31))))
+			dAtA[i] = 0x10
+			i++
+			i = encodeVarintMap(dAtA, i, uint64(v))
+		}
+	}
+	if len(m.NoSparse) > 0 {
+		for k, _ := range m.NoSparse {
+			dAtA[i] = 0x32
+			i++
+			v := m.NoSparse[k]
+			msgSize := 0
+			if v != nil {
+				msgSize = v.Size()
+				msgSize += 1 + sovMap(uint64(msgSize))
+			}
+			mapSize := 1 + sovMap(uint64(k)) + msgSize
+			i = encodeVarintMap(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0x8
+			i++
+			i = encodeVarintMap(dAtA, i, uint64(k))
+			if v != nil {
+				dAtA[i] = 0x12
+				i++
+				i = encodeVarintMap(dAtA, i, uint64(v.Size()))
+				n1, err := v.MarshalTo(dAtA[i:])
+				if err != nil {
+					return 0, err
+				}
+				i += n1
+			}
+		}
+	}
+	if len(m.ValueRules) > 0 {
+		for k, _ := range m.ValueRules {
+			dAtA[i] = 0x3a
+			i++
+			v := m.ValueRules[k]
+			mapSize := 1 + len(k) + sovMap(uint64(len(k))) + 1 + sovMap(uint64(v))
+			i = encodeVarintMap(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0xa
+			i++
+			i = encodeVarintMap(dAtA, i, uint64(len(k)))
+			i += copy(dAtA[i:], k)
+			dAtA[i] = 0x10
+			i++
+			i = encodeVarintMap(dAtA, i, uint64(v))
+		}
+	}
+	if len(m.KeyRules) > 0 {
+		for k, _ := range m.KeyRules {
+			dAtA[i] = 0x42
+			i++
+			v := m.KeyRules[k]
+			msgSize := 0
+			if v != nil {
+				msgSize = v.Size()
+				msgSize += 1 + sovMap(uint64(msgSize))
+			}
+			mapSize := 1 + 4 + msgSize
+			i = encodeVarintMap(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0xd
+			i++
+			i = encodeFixed32Map(dAtA, i, uint32(k))
+			if v != nil {
+				dAtA[i] = 0x12
+				i++
+				i = encodeVarintMap(dAtA, i, uint64(v.Size()))
+				n2, err := v.MarshalTo(dAtA[i:])
+				if err != nil {
+					return 0, err
+				}
+				i += n2
+			}
+		}
+	}
+	return i, nil
+}
+
+func (m *Map_Embed) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Map_Embed) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	return i, nil
+}
+
+func encodeFixed64Map(dAtA []byte, offset int, v uint64) int {
+	dAtA[offset] = uint8(v)
+	dAtA[offset+1] = uint8(v >> 8)
+	dAtA[offset+2] = uint8(v >> 16)
+	dAtA[offset+3] = uint8(v >> 24)
+	dAtA[offset+4] = uint8(v >> 32)
+	dAtA[offset+5] = uint8(v >> 40)
+	dAtA[offset+6] = uint8(v >> 48)
+	dAtA[offset+7] = uint8(v >> 56)
+	return offset + 8
+}
+func encodeFixed32Map(dAtA []byte, offset int, v uint32) int {
+	dAtA[offset] = uint8(v)
+	dAtA[offset+1] = uint8(v >> 8)
+	dAtA[offset+2] = uint8(v >> 16)
+	dAtA[offset+3] = uint8(v >> 24)
+	return offset + 4
+}
+func encodeVarintMap(dAtA []byte, offset int, v uint64) int {
+	for v >= 1<<7 {
+		dAtA[offset] = uint8(v&0x7f | 0x80)
+		v >>= 7
+		offset++
+	}
+	dAtA[offset] = uint8(v)
+	return offset + 1
+}
+func (m *Map) Size() (n int) {
+	var l int
+	_ = l
+	if len(m.None) > 0 {
+		for k, v := range m.None {
+			_ = k
+			_ = v
+			mapEntrySize := 1 + len(k) + sovMap(uint64(len(k))) + 1 + sovMap(uint64(v))
+			n += mapEntrySize + 1 + sovMap(uint64(mapEntrySize))
+		}
+	}
+	if len(m.MinPairs) > 0 {
+		for k, v := range m.MinPairs {
+			_ = k
+			_ = v
+			l = 0
+			if len(v) > 0 {
+				l = 1 + len(v) + sovMap(uint64(len(v)))
+			}
+			mapEntrySize := 1 + sovMap(uint64(k)) + l
+			n += mapEntrySize + 1 + sovMap(uint64(mapEntrySize))
+		}
+	}
+	if len(m.MaxPairs) > 0 {
+		for k, v := range m.MaxPairs {
+			_ = k
+			_ = v
+			mapEntrySize := 1 + len(k) + sovMap(uint64(len(k))) + 1 + 8
+			n += mapEntrySize + 1 + sovMap(uint64(mapEntrySize))
+		}
+	}
+	if len(m.MinMaxPairs) > 0 {
+		for k, v := range m.MinMaxPairs {
+			_ = k
+			_ = v
+			mapEntrySize := 1 + len(k) + sovMap(uint64(len(k))) + 1 + 4
+			n += mapEntrySize + 1 + sovMap(uint64(mapEntrySize))
+		}
+	}
+	if len(m.EqPairs) > 0 {
+		for k, v := range m.EqPairs {
+			_ = k
+			_ = v
+			mapEntrySize := 1 + sozMap(uint64(k)) + 1 + sovMap(uint64(v))
+			n += mapEntrySize + 1 + sovMap(uint64(mapEntrySize))
+		}
+	}
+	if len(m.NoSparse) > 0 {
+		for k, v := range m.NoSparse {
+			_ = k
+			_ = v
+			l = 0
+			if v != nil {
+				l = v.Size()
+				l += 1 + sovMap(uint64(l))
+			}
+			mapEntrySize := 1 + sovMap(uint64(k)) + l
+			n += mapEntrySize + 1 + sovMap(uint64(mapEntrySize))
+		}
+	}
+	if len(m.ValueRules) > 0 {
+		for k, v := range m.ValueRules {
+			_ = k
+			_ = v
+			mapEntrySize := 1 + len(k) + sovMap(uint64(len(k))) + 1 + sovMap(uint64(v))
+			n += mapEntrySize + 1 + sovMap(uint64(mapEntrySize))
+		}
+	}
+	if len(m.KeyRules) > 0 {
+		for k, v := range m.KeyRules {
+			_ = k
+			_ = v
+			l = 0
+			if v != nil {
+				l = v.Size()
+				l += 1 + sovMap(uint64(l))
+			}
+			mapEntrySize := 1 + 4 + l
+			n += mapEntrySize + 1 + sovMap(uint64(mapEntrySize))
+		}
+	}
+	return n
+}
+
+func (m *Map_Embed) Size() (n int) {
+	var l int
+	_ = l
+	return n
+}
+
+func sovMap(x uint64) (n int) {
+	for {
+		n++
+		x >>= 7
+		if x == 0 {
+			break
+		}
+	}
+	return n
+}
+func sozMap(x uint64) (n int) {
+	return sovMap(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *Map) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowMap
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Map: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Map: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field None", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMap
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var keykey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				keykey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			var stringLenmapkey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLenmapkey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLenmapkey := int(stringLenmapkey)
+			if intStringLenmapkey < 0 {
+				return ErrInvalidLengthMap
+			}
+			postStringIndexmapkey := iNdEx + intStringLenmapkey
+			if postStringIndexmapkey > l {
+				return io.ErrUnexpectedEOF
+			}
+			mapkey := string(dAtA[iNdEx:postStringIndexmapkey])
+			iNdEx = postStringIndexmapkey
+			if m.None == nil {
+				m.None = make(map[string]int64)
+			}
+			if iNdEx < postIndex {
+				var valuekey uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					valuekey |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				var mapvalue int64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					mapvalue |= (int64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				m.None[mapkey] = mapvalue
+			} else {
+				var mapvalue int64
+				m.None[mapkey] = mapvalue
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MinPairs", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMap
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var keykey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				keykey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			var mapkey int64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				mapkey |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if m.MinPairs == nil {
+				m.MinPairs = make(map[int64][]byte)
+			}
+			if iNdEx < postIndex {
+				var valuekey uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					valuekey |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				var mapbyteLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					mapbyteLen |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intMapbyteLen := int(mapbyteLen)
+				if intMapbyteLen < 0 {
+					return ErrInvalidLengthMap
+				}
+				postbytesIndex := iNdEx + intMapbyteLen
+				if postbytesIndex > l {
+					return io.ErrUnexpectedEOF
+				}
+				mapvalue := make([]byte, mapbyteLen)
+				copy(mapvalue, dAtA[iNdEx:postbytesIndex])
+				iNdEx = postbytesIndex
+				m.MinPairs[mapkey] = mapvalue
+			} else {
+				var mapvalue []byte
+				m.MinPairs[mapkey] = mapvalue
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MaxPairs", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMap
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var keykey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				keykey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			var stringLenmapkey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLenmapkey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLenmapkey := int(stringLenmapkey)
+			if intStringLenmapkey < 0 {
+				return ErrInvalidLengthMap
+			}
+			postStringIndexmapkey := iNdEx + intStringLenmapkey
+			if postStringIndexmapkey > l {
+				return io.ErrUnexpectedEOF
+			}
+			mapkey := string(dAtA[iNdEx:postStringIndexmapkey])
+			iNdEx = postStringIndexmapkey
+			if m.MaxPairs == nil {
+				m.MaxPairs = make(map[string]float64)
+			}
+			if iNdEx < postIndex {
+				var valuekey uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					valuekey |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				var mapvaluetemp uint64
+				if (iNdEx + 8) > l {
+					return io.ErrUnexpectedEOF
+				}
+				iNdEx += 8
+				mapvaluetemp = uint64(dAtA[iNdEx-8])
+				mapvaluetemp |= uint64(dAtA[iNdEx-7]) << 8
+				mapvaluetemp |= uint64(dAtA[iNdEx-6]) << 16
+				mapvaluetemp |= uint64(dAtA[iNdEx-5]) << 24
+				mapvaluetemp |= uint64(dAtA[iNdEx-4]) << 32
+				mapvaluetemp |= uint64(dAtA[iNdEx-3]) << 40
+				mapvaluetemp |= uint64(dAtA[iNdEx-2]) << 48
+				mapvaluetemp |= uint64(dAtA[iNdEx-1]) << 56
+				mapvalue := math.Float64frombits(mapvaluetemp)
+				m.MaxPairs[mapkey] = mapvalue
+			} else {
+				var mapvalue float64
+				m.MaxPairs[mapkey] = mapvalue
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MinMaxPairs", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMap
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var keykey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				keykey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			var stringLenmapkey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLenmapkey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLenmapkey := int(stringLenmapkey)
+			if intStringLenmapkey < 0 {
+				return ErrInvalidLengthMap
+			}
+			postStringIndexmapkey := iNdEx + intStringLenmapkey
+			if postStringIndexmapkey > l {
+				return io.ErrUnexpectedEOF
+			}
+			mapkey := string(dAtA[iNdEx:postStringIndexmapkey])
+			iNdEx = postStringIndexmapkey
+			if m.MinMaxPairs == nil {
+				m.MinMaxPairs = make(map[string]float32)
+			}
+			if iNdEx < postIndex {
+				var valuekey uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					valuekey |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				var mapvaluetemp uint32
+				if (iNdEx + 4) > l {
+					return io.ErrUnexpectedEOF
+				}
+				iNdEx += 4
+				mapvaluetemp = uint32(dAtA[iNdEx-4])
+				mapvaluetemp |= uint32(dAtA[iNdEx-3]) << 8
+				mapvaluetemp |= uint32(dAtA[iNdEx-2]) << 16
+				mapvaluetemp |= uint32(dAtA[iNdEx-1]) << 24
+				mapvalue := math.Float32frombits(mapvaluetemp)
+				m.MinMaxPairs[mapkey] = mapvalue
+			} else {
+				var mapvalue float32
+				m.MinMaxPairs[mapkey] = mapvalue
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field EqPairs", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMap
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var keykey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				keykey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			var mapkeytemp int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				mapkeytemp |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			mapkeytemp = int32((uint32(mapkeytemp) >> 1) ^ uint32(((mapkeytemp&1)<<31)>>31))
+			mapkey := int32(mapkeytemp)
+			if m.EqPairs == nil {
+				m.EqPairs = make(map[int32]Map_Enum)
+			}
+			if iNdEx < postIndex {
+				var valuekey uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					valuekey |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				var mapvalue Map_Enum
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					mapvalue |= (Map_Enum(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				m.EqPairs[mapkey] = mapvalue
+			} else {
+				var mapvalue Map_Enum
+				m.EqPairs[mapkey] = mapvalue
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NoSparse", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMap
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var keykey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				keykey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			var mapkey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				mapkey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if m.NoSparse == nil {
+				m.NoSparse = make(map[uint64]*Map_Embed)
+			}
+			if iNdEx < postIndex {
+				var valuekey uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					valuekey |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				var mapmsglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					mapmsglen |= (int(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if mapmsglen < 0 {
+					return ErrInvalidLengthMap
+				}
+				postmsgIndex := iNdEx + mapmsglen
+				if mapmsglen < 0 {
+					return ErrInvalidLengthMap
+				}
+				if postmsgIndex > l {
+					return io.ErrUnexpectedEOF
+				}
+				mapvalue := &Map_Embed{}
+				if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
+					return err
+				}
+				iNdEx = postmsgIndex
+				m.NoSparse[mapkey] = mapvalue
+			} else {
+				var mapvalue *Map_Embed
+				m.NoSparse[mapkey] = mapvalue
+			}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ValueRules", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMap
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var keykey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				keykey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			var stringLenmapkey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLenmapkey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLenmapkey := int(stringLenmapkey)
+			if intStringLenmapkey < 0 {
+				return ErrInvalidLengthMap
+			}
+			postStringIndexmapkey := iNdEx + intStringLenmapkey
+			if postStringIndexmapkey > l {
+				return io.ErrUnexpectedEOF
+			}
+			mapkey := string(dAtA[iNdEx:postStringIndexmapkey])
+			iNdEx = postStringIndexmapkey
+			if m.ValueRules == nil {
+				m.ValueRules = make(map[string]Map_Enum)
+			}
+			if iNdEx < postIndex {
+				var valuekey uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					valuekey |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				var mapvalue Map_Enum
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					mapvalue |= (Map_Enum(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				m.ValueRules[mapkey] = mapvalue
+			} else {
+				var mapvalue Map_Enum
+				m.ValueRules[mapkey] = mapvalue
+			}
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field KeyRules", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMap
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			var keykey uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				keykey |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			var mapkey uint32
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			mapkey = uint32(dAtA[iNdEx-4])
+			mapkey |= uint32(dAtA[iNdEx-3]) << 8
+			mapkey |= uint32(dAtA[iNdEx-2]) << 16
+			mapkey |= uint32(dAtA[iNdEx-1]) << 24
+			if m.KeyRules == nil {
+				m.KeyRules = make(map[uint32]*Map_Embed)
+			}
+			if iNdEx < postIndex {
+				var valuekey uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					valuekey |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				var mapmsglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					mapmsglen |= (int(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if mapmsglen < 0 {
+					return ErrInvalidLengthMap
+				}
+				postmsgIndex := iNdEx + mapmsglen
+				if mapmsglen < 0 {
+					return ErrInvalidLengthMap
+				}
+				if postmsgIndex > l {
+					return io.ErrUnexpectedEOF
+				}
+				mapvalue := &Map_Embed{}
+				if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
+					return err
+				}
+				iNdEx = postmsgIndex
+				m.KeyRules[mapkey] = mapvalue
+			} else {
+				var mapvalue *Map_Embed
+				m.KeyRules[mapkey] = mapvalue
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipMap(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthMap
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Map_Embed) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowMap
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Embed: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Embed: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipMap(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthMap
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func skipMap(dAtA []byte) (n int, err error) {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return 0, ErrIntOverflowMap
+			}
+			if iNdEx >= l {
+				return 0, io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		wireType := int(wire & 0x7)
+		switch wireType {
+		case 0:
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				iNdEx++
+				if dAtA[iNdEx-1] < 0x80 {
+					break
+				}
+			}
+			return iNdEx, nil
+		case 1:
+			iNdEx += 8
+			return iNdEx, nil
+		case 2:
+			var length int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowMap
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				length |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			iNdEx += length
+			if length < 0 {
+				return 0, ErrInvalidLengthMap
+			}
+			return iNdEx, nil
+		case 3:
+			for {
+				var innerWire uint64
+				var start int = iNdEx
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return 0, ErrIntOverflowMap
+					}
+					if iNdEx >= l {
+						return 0, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					innerWire |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				innerWireType := int(innerWire & 0x7)
+				if innerWireType == 4 {
+					break
+				}
+				next, err := skipMap(dAtA[start:])
+				if err != nil {
+					return 0, err
+				}
+				iNdEx = start + next
+			}
+			return iNdEx, nil
+		case 4:
+			return iNdEx, nil
+		case 5:
+			iNdEx += 4
+			return iNdEx, nil
+		default:
+			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
+		}
+	}
+	panic("unreachable")
+}
+
+var (
+	ErrInvalidLengthMap = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowMap   = fmt.Errorf("proto: integer overflow")
+)
 
 func init() { proto.RegisterFile("map.proto", fileDescriptorMap) }
 
 var fileDescriptorMap = []byte{
-	// 513 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x94, 0xdd, 0x8a, 0xd3, 0x40,
-	0x1c, 0xc5, 0x33, 0xf9, 0xd8, 0x24, 0xff, 0x74, 0x77, 0xd3, 0xf1, 0x2b, 0x54, 0x2f, 0x4a, 0x15,
-	0x2d, 0x82, 0x11, 0xab, 0xa0, 0x28, 0x08, 0x8a, 0xf5, 0x42, 0xb7, 0x8b, 0x8c, 0x5f, 0x5b, 0x6f,
-	0xca, 0xac, 0x3b, 0x60, 0x48, 0x33, 0x49, 0x93, 0xb4, 0x6c, 0x6f, 0xf7, 0x31, 0xfa, 0x28, 0x5e,
-	0x79, 0xe9, 0xab, 0xf8, 0x16, 0x92, 0x49, 0xec, 0x4e, 0x6b, 0xd3, 0x05, 0xbd, 0x9b, 0xe4, 0x7f,
-	0xce, 0x6f, 0xce, 0x9f, 0x1c, 0x02, 0x76, 0x44, 0x13, 0x3f, 0x49, 0xe3, 0x3c, 0xc6, 0xcd, 0x9c,
-	0x65, 0x79, 0xe6, 0x87, 0x41, 0xfe, 0xf5, 0x1b, 0xe3, 0x59, 0xc0, 0xc3, 0xd6, 0xb5, 0x19, 0x1d,
-	0x07, 0x27, 0x34, 0x67, 0xf7, 0xff, 0x1c, 0x4a, 0x6d, 0xe7, 0x0c, 0x40, 0x1b, 0xd0, 0x04, 0x3f,
-	0x02, 0x9d, 0xc7, 0x9c, 0x79, 0xa8, 0xad, 0x75, 0x9d, 0x5e, 0xdb, 0xff, 0x0b, 0xe1, 0x0f, 0x68,
-	0xe2, 0x1f, 0xc6, 0x9c, 0xf5, 0x79, 0x9e, 0xce, 0x89, 0x50, 0xe3, 0x01, 0xd8, 0x51, 0xc0, 0x47,
-	0x09, 0x0d, 0xd2, 0xcc, 0x53, 0x85, 0xf5, 0x56, 0x8d, 0x75, 0x10, 0xf0, 0x77, 0x85, 0x4c, 0xd8,
-	0x5f, 0xc2, 0xf7, 0x5f, 0x3f, 0x34, 0x63, 0x81, 0x54, 0x0b, 0x11, 0x2b, 0xaa, 0x46, 0x02, 0x47,
-	0x4f, 0x2b, 0x9c, 0xb6, 0x1d, 0x47, 0x4f, 0x37, 0xe1, 0x5c, 0x95, 0x58, 0x51, 0x35, 0xc2, 0x43,
-	0xd8, 0x2d, 0xd2, 0x9d, 0x23, 0x75, 0x81, 0xbc, 0x53, 0x9f, 0x70, 0x95, 0xda, 0x28, 0xa8, 0xe6,
-	0x02, 0xe9, 0x96, 0xe6, 0xea, 0xc4, 0x89, 0xce, 0xe7, 0xf8, 0x00, 0x2c, 0x36, 0xa9, 0xa8, 0x86,
-	0xa0, 0xde, 0xac, 0xa1, 0xf6, 0x27, 0x1b, 0x89, 0x86, 0x6b, 0x10, 0x93, 0x4d, 0x96, 0x7b, 0xf3,
-	0x78, 0x94, 0x25, 0x34, 0xcd, 0x98, 0xb7, 0xb3, 0x75, 0xef, 0xc3, 0xf8, 0xbd, 0x90, 0xad, 0xed,
-	0xed, 0x21, 0x62, 0xf1, 0x6a, 0x84, 0x8f, 0xc0, 0x99, 0xd1, 0xf1, 0x94, 0x8d, 0xd2, 0xe9, 0x98,
-	0x65, 0x9e, 0x29, 0x80, 0xb7, 0x6b, 0x80, 0x9f, 0x0a, 0x25, 0x29, 0x84, 0x25, 0x72, 0xbf, 0x40,
-	0xc2, 0x02, 0x99, 0x77, 0x8d, 0x33, 0xa4, 0xba, 0x88, 0xc0, 0x6c, 0xa9, 0xc0, 0x43, 0xb0, 0x43,
-	0x36, 0xaf, 0xb8, 0xd6, 0xd6, 0xa0, 0x6f, 0xd9, 0x5c, 0xa2, 0x5e, 0x2d, 0xa8, 0xcd, 0x05, 0xda,
-	0xeb, 0x34, 0xde, 0xc0, 0x95, 0x23, 0x55, 0x51, 0xee, 0xfd, 0x54, 0x14, 0x85, 0x58, 0x61, 0x25,
-	0x6b, 0x3d, 0x06, 0x7b, 0xd9, 0x2e, 0xec, 0x82, 0x16, 0xb2, 0xb9, 0x87, 0xda, 0xa8, 0x6b, 0x93,
-	0xe2, 0x88, 0x2f, 0x83, 0x21, 0x72, 0x78, 0x6a, 0x1b, 0x75, 0x35, 0x52, 0x3e, 0x3c, 0x55, 0x9f,
-	0xa0, 0xd6, 0x33, 0xd8, 0x5d, 0xe9, 0x96, 0x6c, 0xd6, 0x36, 0x98, 0x1b, 0xeb, 0x66, 0xf9, 0x9b,
-	0x5f, 0x74, 0x33, 0x92, 0xcd, 0xcf, 0xc1, 0x5d, 0xef, 0xcc, 0x45, 0x7e, 0x55, 0xf6, 0x7f, 0x86,
-	0x86, 0xdc, 0x0e, 0xd9, 0xdb, 0x2c, 0xbd, 0x0f, 0x64, 0xef, 0x5e, 0xef, 0x7a, 0x5d, 0xc7, 0xf8,
-	0x34, 0x92, 0xc1, 0x43, 0xd8, 0x5d, 0xe9, 0x89, 0x4c, 0xd6, 0x4b, 0x72, 0x4f, 0x26, 0x3b, 0xbd,
-	0x1b, 0x75, 0xe4, 0xe8, 0x98, 0x9d, 0xc8, 0xe8, 0x2f, 0xb0, 0xbf, 0xd6, 0x98, 0x0d, 0x2b, 0xff,
-	0x7b, 0xec, 0x95, 0xd6, 0xc8, 0x64, 0xf3, 0xff, 0x62, 0x9b, 0x60, 0x88, 0x77, 0x9d, 0x4b, 0xa0,
-	0x17, 0xd7, 0x62, 0x07, 0xcc, 0x57, 0xfd, 0xd7, 0x2f, 0x3e, 0x1e, 0x7c, 0x70, 0x95, 0xe3, 0x1d,
-	0xf1, 0x2f, 0x7c, 0xf8, 0x3b, 0x00, 0x00, 0xff, 0xff, 0x8e, 0x83, 0xfe, 0x5f, 0x44, 0x05, 0x00,
-	0x00,
+	// 531 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x94, 0x4d, 0x8b, 0xd3, 0x40,
+	0x1c, 0xc6, 0x33, 0x79, 0xd9, 0xa4, 0xff, 0x76, 0x77, 0xd3, 0xf1, 0x2d, 0x54, 0x29, 0xa5, 0x8a,
+	0x16, 0xc1, 0x8a, 0x55, 0x50, 0x14, 0x04, 0x17, 0xeb, 0x41, 0xb7, 0x8b, 0x8c, 0x6f, 0x5b, 0x2f,
+	0x65, 0xd6, 0x1d, 0x30, 0xa4, 0x99, 0xa4, 0x49, 0x5a, 0xb6, 0xd7, 0xfd, 0x18, 0xfd, 0x28, 0x9e,
+	0x3c, 0xee, 0xd1, 0x8f, 0x20, 0xbd, 0xf9, 0x2d, 0x24, 0x93, 0xd8, 0x9d, 0xd6, 0xa6, 0x0b, 0x7a,
+	0x9b, 0xe4, 0xff, 0x3c, 0xbf, 0x79, 0xfe, 0xe4, 0x21, 0x50, 0xf2, 0x69, 0xd8, 0x0e, 0xa3, 0x20,
+	0x09, 0x70, 0x35, 0x61, 0x71, 0x12, 0xb7, 0x3d, 0x37, 0xf9, 0xf2, 0x95, 0xf1, 0xd8, 0xe5, 0x5e,
+	0xed, 0xda, 0x84, 0x0e, 0xdd, 0x63, 0x9a, 0xb0, 0xfb, 0x7f, 0x0e, 0x99, 0xb6, 0x79, 0x0a, 0xa0,
+	0xf5, 0x68, 0x88, 0x1f, 0x81, 0xce, 0x03, 0xce, 0x1c, 0xd4, 0xd0, 0x5a, 0xe5, 0x4e, 0xa3, 0xfd,
+	0x17, 0xa2, 0xdd, 0xa3, 0x61, 0xfb, 0x20, 0xe0, 0xac, 0xcb, 0x93, 0x68, 0x4a, 0x84, 0x1a, 0xf7,
+	0xa0, 0xe4, 0xbb, 0x7c, 0x10, 0x52, 0x37, 0x8a, 0x1d, 0x55, 0x58, 0x6f, 0x15, 0x58, 0x7b, 0x2e,
+	0x7f, 0x9b, 0xca, 0x84, 0x7d, 0x0f, 0xbe, 0xfd, 0xfa, 0xae, 0x19, 0x33, 0xa4, 0x5a, 0x88, 0x58,
+	0x7e, 0x3e, 0x12, 0x38, 0x7a, 0x92, 0xe3, 0xb4, 0xcd, 0x38, 0x7a, 0xb2, 0x0e, 0x67, 0xab, 0xc4,
+	0xf2, 0xf3, 0x11, 0xee, 0xc3, 0x76, 0x9a, 0xee, 0x1c, 0xa9, 0x0b, 0xe4, 0x9d, 0xe2, 0x84, 0xcb,
+	0xd4, 0x4a, 0x4a, 0x35, 0x67, 0x48, 0xb7, 0x34, 0x5b, 0x27, 0x65, 0xff, 0x7c, 0x8e, 0xf7, 0xc1,
+	0x62, 0xa3, 0x9c, 0x6a, 0x08, 0xea, 0xcd, 0x02, 0x6a, 0x77, 0xb4, 0x96, 0x68, 0xd8, 0x06, 0x31,
+	0xd9, 0x68, 0xb1, 0x37, 0x0f, 0x06, 0x71, 0x48, 0xa3, 0x98, 0x39, 0x5b, 0x1b, 0xf7, 0x3e, 0x08,
+	0xde, 0x09, 0xd9, 0xca, 0xde, 0x0e, 0x22, 0x16, 0xcf, 0x47, 0xf8, 0x10, 0xca, 0x13, 0x3a, 0x1c,
+	0xb3, 0x41, 0x34, 0x1e, 0xb2, 0xd8, 0x31, 0x05, 0xf0, 0x76, 0x01, 0xf0, 0x63, 0xaa, 0x24, 0xa9,
+	0x30, 0x43, 0xee, 0xa6, 0x48, 0x98, 0x21, 0xf3, 0xae, 0x71, 0x8a, 0x54, 0x1b, 0x11, 0x98, 0x2c,
+	0x14, 0xb8, 0x0f, 0x25, 0x8f, 0x4d, 0x73, 0xae, 0xb5, 0x31, 0xe8, 0x1b, 0x36, 0x95, 0xa8, 0x57,
+	0x53, 0x6a, 0x75, 0x86, 0x76, 0x9a, 0x95, 0xd7, 0x70, 0xe5, 0x50, 0x55, 0x94, 0x7b, 0x67, 0x8a,
+	0xa2, 0x10, 0xcb, 0xcb, 0x65, 0xb5, 0xc7, 0x50, 0x5a, 0xb4, 0x0b, 0xdb, 0xa0, 0x79, 0x6c, 0xea,
+	0xa0, 0x06, 0x6a, 0x95, 0x48, 0x7a, 0xc4, 0x97, 0xc1, 0x10, 0x39, 0x1c, 0xb5, 0x81, 0x5a, 0x1a,
+	0xc9, 0x1e, 0x9e, 0xaa, 0x4f, 0x50, 0xed, 0x19, 0x6c, 0x2f, 0x75, 0x4b, 0x36, 0x6b, 0x6b, 0xcc,
+	0x95, 0x55, 0xb3, 0xfc, 0xcd, 0x2f, 0xba, 0x19, 0xc9, 0xe6, 0xe7, 0x60, 0xaf, 0x76, 0xe6, 0x22,
+	0xbf, 0x2a, 0xfb, 0x3f, 0x41, 0x45, 0x6e, 0x87, 0xec, 0xad, 0x66, 0xde, 0x07, 0xb2, 0x77, 0xa7,
+	0x73, 0xbd, 0xa8, 0x63, 0x7c, 0xec, 0xcb, 0xe0, 0x3e, 0x6c, 0x2f, 0xf5, 0x44, 0x26, 0xeb, 0x19,
+	0xb9, 0x23, 0x93, 0xcb, 0x9d, 0x1b, 0x45, 0x64, 0xff, 0x88, 0x1d, 0xcb, 0xe8, 0xcf, 0xb0, 0xbb,
+	0xd2, 0x98, 0x35, 0x2b, 0xff, 0x7b, 0xec, 0xa5, 0xd6, 0xc8, 0x64, 0xf3, 0xff, 0x62, 0x9b, 0x60,
+	0x88, 0x77, 0xcd, 0x4b, 0xa0, 0xa7, 0xd7, 0xe2, 0x32, 0x98, 0x2f, 0xbb, 0xaf, 0x5e, 0x7c, 0xd8,
+	0x7f, 0x6f, 0x2b, 0x7b, 0x95, 0xb3, 0x79, 0x1d, 0xfd, 0x98, 0xd7, 0xd1, 0xcf, 0x79, 0x1d, 0x1d,
+	0x6d, 0x89, 0x3f, 0xe3, 0xc3, 0xdf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x66, 0x9b, 0x60, 0x9f, 0x52,
+	0x05, 0x00, 0x00,
 }

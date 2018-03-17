@@ -4,6 +4,8 @@ package tests.kitchensink;
 import "google/protobuf/duration.proto";
 import "validate/validate.proto";
 
+import "gogoproto/gogo.proto";
+
 message Duration {
     google.protobuf.Duration none = 1;
 
@@ -25,4 +27,9 @@ message Duration {
     google.protobuf.Duration required = 14 [(validate.rules).duration.required = true];
     google.protobuf.Duration in     = 15 [(validate.rules).duration = {in: [{seconds: 123}]}];
     google.protobuf.Duration not_in = 16 [(validate.rules).duration = {not_in: [{seconds: 123}]}];
+
+    google.protobuf.Duration gogo1 = 17 [(validate.rules).duration.lt  = {seconds: 5}, (gogoproto.stdduration) = true];
+    google.protobuf.Duration gogo2 = 18 [(validate.rules).duration.lt  = {seconds: 5}, (gogoproto.nullable) = false];
+    google.protobuf.Duration gogo3 = 19 [(validate.rules).duration.lt  = {seconds: 5}, (gogoproto.stdduration) = true, (gogoproto.nullable) = false];
+    google.protobuf.Duration gogo4 = 20 [(validate.rules).duration.required = true, (gogoproto.nullable) = false];
 }

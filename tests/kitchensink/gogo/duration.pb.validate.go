@@ -357,6 +357,55 @@ func (m *Duration) Validate() error {
 
 	}
 
+	if d := m.GetGogo1(); d != nil {
+		dur := *d
+
+		lt := time.Duration(5*time.Second + 0*time.Nanosecond)
+
+		if dur >= lt {
+			return DurationValidationError{
+				Field:  "Gogo1",
+				Reason: "value must be less than 5s",
+			}
+		}
+
+	}
+
+	if d := m.GetGogo2(); true {
+		dur, err := types.DurationFromProto(&d)
+		if err != nil {
+			return DurationValidationError{
+				Field:  "Gogo2",
+				Reason: "value is not a valid duration",
+				Cause:  err,
+			}
+		}
+
+		lt := time.Duration(5*time.Second + 0*time.Nanosecond)
+
+		if dur >= lt {
+			return DurationValidationError{
+				Field:  "Gogo2",
+				Reason: "value must be less than 5s",
+			}
+		}
+
+	}
+
+	if true {
+		dur := m.GetGogo3()
+
+		lt := time.Duration(5*time.Second + 0*time.Nanosecond)
+
+		if dur >= lt {
+			return DurationValidationError{
+				Field:  "Gogo3",
+				Reason: "value must be less than 5s",
+			}
+		}
+
+	}
+
 	return nil
 }
 

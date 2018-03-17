@@ -3,59 +3,59 @@
 // DO NOT EDIT!
 
 /*
-Package tests_kitchensink is a generated protocol buffer package.
+	Package tests_kitchensink is a generated protocol buffer package.
 
-It is generated from these files:
-	enum.proto
-	map.proto
-	bool.proto
-	sint32.proto
-	fixed64.proto
-	message.proto
-	disabled.proto
-	uint64.proto
-	uint32.proto
-	duration.proto
-	bytes.proto
-	sfixed32.proto
-	wrapper.proto
-	repeated.proto
-	string.proto
-	oneof.proto
-	float.proto
-	any.proto
-	int64.proto
-	timestamp.proto
-	fixed32.proto
-	sint64.proto
-	sfixed64.proto
-	int32.proto
+	It is generated from these files:
+		enum.proto
+		map.proto
+		bool.proto
+		sint32.proto
+		fixed64.proto
+		message.proto
+		disabled.proto
+		uint64.proto
+		uint32.proto
+		duration.proto
+		bytes.proto
+		sfixed32.proto
+		wrapper.proto
+		repeated.proto
+		string.proto
+		oneof.proto
+		float.proto
+		any.proto
+		int64.proto
+		timestamp.proto
+		fixed32.proto
+		sint64.proto
+		sfixed64.proto
+		int32.proto
 
-It has these top-level messages:
-	Enum
-	Map
-	Bool
-	SInt32
-	Fixed64
-	Message
-	Disabled
-	UInt64
-	UInt32
-	Duration
-	Bytes
-	SFixed32
-	Wrappers
-	Repeated
-	String
-	OneOf
-	Float
-	Any
-	Int64
-	Timestamp
-	Fixed32
-	SInt64
-	SFixed64
-	Int32
+	It has these top-level messages:
+		Enum
+		Map
+		Bool
+		SInt32
+		Fixed64
+		Message
+		Disabled
+		UInt64
+		UInt32
+		Duration
+		Bytes
+		SFixed32
+		Wrappers
+		Repeated
+		String
+		OneOf
+		Float
+		Any
+		Int64
+		Timestamp
+		Fixed32
+		SInt64
+		SFixed64
+		Int32
 */
 package tests_kitchensink
 
@@ -63,6 +63,8 @@ import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
 import _ "github.com/lyft/protoc-gen-validate/validate"
+
+import io "io"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -160,27 +162,381 @@ func init() {
 	proto.RegisterType((*Enum)(nil), "tests.kitchensink.Enum")
 	proto.RegisterEnum("tests.kitchensink.MyEnum", MyEnum_name, MyEnum_value)
 }
+func (m *Enum) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Enum) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.None != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintEnum(dAtA, i, uint64(m.None))
+	}
+	if m.Const != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintEnum(dAtA, i, uint64(m.Const))
+	}
+	if m.DefinedOnly != 0 {
+		dAtA[i] = 0x18
+		i++
+		i = encodeVarintEnum(dAtA, i, uint64(m.DefinedOnly))
+	}
+	if m.In != 0 {
+		dAtA[i] = 0x20
+		i++
+		i = encodeVarintEnum(dAtA, i, uint64(m.In))
+	}
+	if m.NotIn != 0 {
+		dAtA[i] = 0x28
+		i++
+		i = encodeVarintEnum(dAtA, i, uint64(m.NotIn))
+	}
+	return i, nil
+}
+
+func encodeFixed64Enum(dAtA []byte, offset int, v uint64) int {
+	dAtA[offset] = uint8(v)
+	dAtA[offset+1] = uint8(v >> 8)
+	dAtA[offset+2] = uint8(v >> 16)
+	dAtA[offset+3] = uint8(v >> 24)
+	dAtA[offset+4] = uint8(v >> 32)
+	dAtA[offset+5] = uint8(v >> 40)
+	dAtA[offset+6] = uint8(v >> 48)
+	dAtA[offset+7] = uint8(v >> 56)
+	return offset + 8
+}
+func encodeFixed32Enum(dAtA []byte, offset int, v uint32) int {
+	dAtA[offset] = uint8(v)
+	dAtA[offset+1] = uint8(v >> 8)
+	dAtA[offset+2] = uint8(v >> 16)
+	dAtA[offset+3] = uint8(v >> 24)
+	return offset + 4
+}
+func encodeVarintEnum(dAtA []byte, offset int, v uint64) int {
+	for v >= 1<<7 {
+		dAtA[offset] = uint8(v&0x7f | 0x80)
+		v >>= 7
+		offset++
+	}
+	dAtA[offset] = uint8(v)
+	return offset + 1
+}
+func (m *Enum) Size() (n int) {
+	var l int
+	_ = l
+	if m.None != 0 {
+		n += 1 + sovEnum(uint64(m.None))
+	}
+	if m.Const != 0 {
+		n += 1 + sovEnum(uint64(m.Const))
+	}
+	if m.DefinedOnly != 0 {
+		n += 1 + sovEnum(uint64(m.DefinedOnly))
+	}
+	if m.In != 0 {
+		n += 1 + sovEnum(uint64(m.In))
+	}
+	if m.NotIn != 0 {
+		n += 1 + sovEnum(uint64(m.NotIn))
+	}
+	return n
+}
+
+func sovEnum(x uint64) (n int) {
+	for {
+		n++
+		x >>= 7
+		if x == 0 {
+			break
+		}
+	}
+	return n
+}
+func sozEnum(x uint64) (n int) {
+	return sovEnum(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *Enum) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowEnum
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Enum: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Enum: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field None", wireType)
+			}
+			m.None = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEnum
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.None |= (MyEnum(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Const", wireType)
+			}
+			m.Const = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEnum
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Const |= (MyEnum(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DefinedOnly", wireType)
+			}
+			m.DefinedOnly = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEnum
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.DefinedOnly |= (MyEnum(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field In", wireType)
+			}
+			m.In = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEnum
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.In |= (MyEnum(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NotIn", wireType)
+			}
+			m.NotIn = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEnum
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.NotIn |= (MyEnum(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipEnum(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthEnum
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func skipEnum(dAtA []byte) (n int, err error) {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return 0, ErrIntOverflowEnum
+			}
+			if iNdEx >= l {
+				return 0, io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		wireType := int(wire & 0x7)
+		switch wireType {
+		case 0:
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowEnum
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				iNdEx++
+				if dAtA[iNdEx-1] < 0x80 {
+					break
+				}
+			}
+			return iNdEx, nil
+		case 1:
+			iNdEx += 8
+			return iNdEx, nil
+		case 2:
+			var length int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowEnum
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				length |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			iNdEx += length
+			if length < 0 {
+				return 0, ErrInvalidLengthEnum
+			}
+			return iNdEx, nil
+		case 3:
+			for {
+				var innerWire uint64
+				var start int = iNdEx
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return 0, ErrIntOverflowEnum
+					}
+					if iNdEx >= l {
+						return 0, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					innerWire |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				innerWireType := int(innerWire & 0x7)
+				if innerWireType == 4 {
+					break
+				}
+				next, err := skipEnum(dAtA[start:])
+				if err != nil {
+					return 0, err
+				}
+				iNdEx = start + next
+			}
+			return iNdEx, nil
+		case 4:
+			return iNdEx, nil
+		case 5:
+			iNdEx += 4
+			return iNdEx, nil
+		default:
+			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
+		}
+	}
+	panic("unreachable")
+}
+
+var (
+	ErrInvalidLengthEnum = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowEnum   = fmt.Errorf("proto: integer overflow")
+)
 
 func init() { proto.RegisterFile("enum.proto", fileDescriptorEnum) }
 
 var fileDescriptorEnum = []byte{
-	// 280 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x91, 0xcf, 0x4a, 0xf3, 0x40,
-	0x14, 0x47, 0x3b, 0x7f, 0x92, 0xf4, 0xbb, 0x2d, 0x65, 0xbe, 0xd9, 0x38, 0x76, 0x15, 0x5c, 0x89,
-	0x60, 0x04, 0x5d, 0x89, 0xe0, 0x42, 0x10, 0xea, 0x42, 0x84, 0xbc, 0x40, 0x49, 0x9a, 0x09, 0x0e,
-	0x4d, 0xef, 0x48, 0x33, 0x11, 0x92, 0x65, 0x5e, 0x4a, 0x70, 0xe5, 0xeb, 0xf8, 0x16, 0x32, 0x8d,
-	0xae, 0x5c, 0xc4, 0xdd, 0x81, 0x7b, 0xce, 0x6f, 0x73, 0x01, 0x34, 0x36, 0xbb, 0xe4, 0x65, 0x6f,
-	0x9d, 0x95, 0xff, 0x9d, 0xae, 0x5d, 0x9d, 0x6c, 0x8d, 0xdb, 0x3c, 0x6b, 0xac, 0x0d, 0x6e, 0x97,
-	0x47, 0xaf, 0x59, 0x65, 0x8a, 0xcc, 0xe9, 0x8b, 0x1f, 0x18, 0xdc, 0x93, 0x37, 0x0a, 0xfc, 0x1e,
-	0x9b, 0x9d, 0x3c, 0x07, 0x8e, 0x16, 0xb5, 0x22, 0x31, 0x39, 0x5d, 0x5c, 0x1e, 0x27, 0xbf, 0x36,
-	0x92, 0xc7, 0xd6, 0x8b, 0xe9, 0x41, 0x93, 0x37, 0x10, 0x6c, 0x2c, 0xd6, 0x4e, 0xd1, 0x11, 0xff,
-	0x0e, 0xde, 0x3f, 0x3f, 0x58, 0xd0, 0x13, 0x3a, 0x65, 0xe9, 0xd0, 0xc8, 0x15, 0xcc, 0x0b, 0x5d,
-	0x1a, 0xd4, 0xc5, 0xda, 0x62, 0xd5, 0x2a, 0xf6, 0xe7, 0x0d, 0x41, 0xd2, 0xd9, 0x77, 0xfa, 0x84,
-	0x55, 0x2b, 0xaf, 0x81, 0x1a, 0x54, 0x7c, 0xac, 0x5f, 0xf8, 0xfe, 0x5f, 0x4f, 0x42, 0x35, 0x51,
-	0x44, 0xb1, 0x94, 0x1a, 0x94, 0xb7, 0x10, 0xa2, 0x75, 0x6b, 0x83, 0x2a, 0x18, 0xcb, 0xe7, 0x3e,
-	0x8f, 0x7a, 0xc2, 0x63, 0x1a, 0xf3, 0x34, 0x40, 0xeb, 0x1e, 0xf0, 0x6c, 0x05, 0xe1, 0x70, 0x96,
-	0x33, 0x88, 0x0a, 0x5d, 0x66, 0x4d, 0xe5, 0xc4, 0x44, 0x46, 0xc0, 0x4a, 0x6b, 0x05, 0xf1, 0x90,
-	0x67, 0x7b, 0x41, 0x07, 0xe8, 0x04, 0x95, 0x53, 0xe0, 0xa5, 0xe9, 0x3a, 0xc1, 0x3c, 0xe5, 0x4d,
-	0xd7, 0x09, 0xbe, 0xa4, 0x82, 0xe4, 0xe1, 0xe1, 0x15, 0x57, 0x5f, 0x01, 0x00, 0x00, 0xff, 0xff,
-	0xf9, 0xcf, 0xf6, 0x22, 0xc4, 0x01, 0x00, 0x00,
+	// 298 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x91, 0xb1, 0x4a, 0x33, 0x41,
+	0x14, 0x46, 0x73, 0x67, 0x66, 0x37, 0xf9, 0x6f, 0x42, 0x98, 0x7f, 0x1a, 0xc7, 0x14, 0x21, 0x58,
+	0x89, 0xe0, 0x0a, 0x5a, 0x89, 0x60, 0x11, 0x10, 0x62, 0x21, 0xc2, 0xbe, 0x40, 0xd8, 0x64, 0x67,
+	0x71, 0xc8, 0xe6, 0x8e, 0x64, 0x67, 0x85, 0x6c, 0x99, 0x97, 0x12, 0xac, 0x2c, 0x2d, 0x7d, 0x04,
+	0x49, 0xe7, 0x5b, 0xc8, 0x66, 0xb5, 0xb2, 0x88, 0xdd, 0x81, 0x7b, 0xce, 0xd7, 0x5c, 0x44, 0x43,
+	0xe5, 0x32, 0x7a, 0x5c, 0x39, 0xef, 0xd4, 0x7f, 0x6f, 0x0a, 0x5f, 0x44, 0x0b, 0xeb, 0xe7, 0x0f,
+	0x86, 0x0a, 0x4b, 0x8b, 0xc1, 0xc1, 0x53, 0x92, 0xdb, 0x34, 0xf1, 0xe6, 0xec, 0x07, 0x1a, 0xf7,
+	0xe8, 0x99, 0xa1, 0xb8, 0xa1, 0x72, 0xa9, 0x4e, 0x51, 0x90, 0x23, 0xa3, 0x61, 0x04, 0xc7, 0xfd,
+	0xf3, 0xc3, 0xe8, 0xd7, 0x46, 0x74, 0xb7, 0xae, 0xc5, 0x78, 0xa7, 0xa9, 0x2b, 0x0c, 0xe6, 0x8e,
+	0x0a, 0xaf, 0xd9, 0x1e, 0x7f, 0x8c, 0x2f, 0x9f, 0xaf, 0x3c, 0xd8, 0x00, 0xeb, 0xf0, 0xb8, 0x69,
+	0xd4, 0x04, 0x7b, 0xa9, 0xc9, 0x2c, 0x99, 0x74, 0xea, 0x28, 0x5f, 0x6b, 0xfe, 0xe7, 0x0d, 0x09,
+	0x71, 0xf7, 0x3b, 0xbd, 0xa7, 0x7c, 0xad, 0x2e, 0x91, 0x59, 0xd2, 0x62, 0x5f, 0xdf, 0xaf, 0xfb,
+	0x7f, 0x1b, 0x08, 0x75, 0x4b, 0x83, 0xe6, 0x31, 0xb3, 0xa4, 0xae, 0x31, 0x24, 0xe7, 0xa7, 0x96,
+	0x74, 0xb0, 0x2f, 0xef, 0xd5, 0x79, 0x7b, 0x03, 0x62, 0xc4, 0x46, 0x22, 0x0e, 0xc8, 0xf9, 0x5b,
+	0x3a, 0x99, 0x60, 0xd8, 0x9c, 0x55, 0x17, 0xdb, 0xa9, 0xc9, 0x92, 0x32, 0xf7, 0xb2, 0xa5, 0xda,
+	0xc8, 0x33, 0xe7, 0x24, 0xd4, 0x30, 0x4b, 0x56, 0x92, 0x35, 0x50, 0x49, 0xa6, 0x3a, 0x28, 0x32,
+	0x5b, 0x55, 0x92, 0xd7, 0x34, 0x2b, 0xab, 0x4a, 0x8a, 0x01, 0x93, 0x30, 0xee, 0xbd, 0x6d, 0x87,
+	0xf0, 0xbe, 0x1d, 0xc2, 0xc7, 0x76, 0x08, 0xb3, 0x70, 0xf7, 0x98, 0x8b, 0xaf, 0x00, 0x00, 0x00,
+	0xff, 0xff, 0xb9, 0xc3, 0x4f, 0x04, 0xd2, 0x01, 0x00, 0x00,
 }

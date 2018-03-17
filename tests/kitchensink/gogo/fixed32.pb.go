@@ -9,6 +9,8 @@ import fmt "fmt"
 import math "math"
 import _ "github.com/lyft/protoc-gen-validate/validate"
 
+import io "io"
+
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
 var _ = fmt.Errorf
@@ -153,33 +155,590 @@ func (m *Fixed32) GetConst() uint32 {
 func init() {
 	proto.RegisterType((*Fixed32)(nil), "tests.kitchensink.Fixed32")
 }
+func (m *Fixed32) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Fixed32) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.None != 0 {
+		dAtA[i] = 0xd
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.None))
+	}
+	if m.Lt != 0 {
+		dAtA[i] = 0x15
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.Lt))
+	}
+	if m.Lte != 0 {
+		dAtA[i] = 0x1d
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.Lte))
+	}
+	if m.Gt != 0 {
+		dAtA[i] = 0x25
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.Gt))
+	}
+	if m.Gte != 0 {
+		dAtA[i] = 0x2d
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.Gte))
+	}
+	if m.LtGt != 0 {
+		dAtA[i] = 0x35
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.LtGt))
+	}
+	if m.LtGte != 0 {
+		dAtA[i] = 0x3d
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.LtGte))
+	}
+	if m.LteGt != 0 {
+		dAtA[i] = 0x45
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.LteGt))
+	}
+	if m.LteGte != 0 {
+		dAtA[i] = 0x4d
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.LteGte))
+	}
+	if m.LtGtInv != 0 {
+		dAtA[i] = 0x55
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.LtGtInv))
+	}
+	if m.LtGteInv != 0 {
+		dAtA[i] = 0x5d
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.LtGteInv))
+	}
+	if m.LteGtInv != 0 {
+		dAtA[i] = 0x65
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.LteGtInv))
+	}
+	if m.LteGteInv != 0 {
+		dAtA[i] = 0x6d
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.LteGteInv))
+	}
+	if m.In != 0 {
+		dAtA[i] = 0x75
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.In))
+	}
+	if m.NotIn != 0 {
+		dAtA[i] = 0x7d
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.NotIn))
+	}
+	if m.Const != 0 {
+		dAtA[i] = 0x85
+		i++
+		dAtA[i] = 0x1
+		i++
+		i = encodeFixed32Fixed32(dAtA, i, uint32(m.Const))
+	}
+	return i, nil
+}
+
+func encodeFixed64Fixed32(dAtA []byte, offset int, v uint64) int {
+	dAtA[offset] = uint8(v)
+	dAtA[offset+1] = uint8(v >> 8)
+	dAtA[offset+2] = uint8(v >> 16)
+	dAtA[offset+3] = uint8(v >> 24)
+	dAtA[offset+4] = uint8(v >> 32)
+	dAtA[offset+5] = uint8(v >> 40)
+	dAtA[offset+6] = uint8(v >> 48)
+	dAtA[offset+7] = uint8(v >> 56)
+	return offset + 8
+}
+func encodeFixed32Fixed32(dAtA []byte, offset int, v uint32) int {
+	dAtA[offset] = uint8(v)
+	dAtA[offset+1] = uint8(v >> 8)
+	dAtA[offset+2] = uint8(v >> 16)
+	dAtA[offset+3] = uint8(v >> 24)
+	return offset + 4
+}
+func encodeVarintFixed32(dAtA []byte, offset int, v uint64) int {
+	for v >= 1<<7 {
+		dAtA[offset] = uint8(v&0x7f | 0x80)
+		v >>= 7
+		offset++
+	}
+	dAtA[offset] = uint8(v)
+	return offset + 1
+}
+func (m *Fixed32) Size() (n int) {
+	var l int
+	_ = l
+	if m.None != 0 {
+		n += 5
+	}
+	if m.Lt != 0 {
+		n += 5
+	}
+	if m.Lte != 0 {
+		n += 5
+	}
+	if m.Gt != 0 {
+		n += 5
+	}
+	if m.Gte != 0 {
+		n += 5
+	}
+	if m.LtGt != 0 {
+		n += 5
+	}
+	if m.LtGte != 0 {
+		n += 5
+	}
+	if m.LteGt != 0 {
+		n += 5
+	}
+	if m.LteGte != 0 {
+		n += 5
+	}
+	if m.LtGtInv != 0 {
+		n += 5
+	}
+	if m.LtGteInv != 0 {
+		n += 5
+	}
+	if m.LteGtInv != 0 {
+		n += 5
+	}
+	if m.LteGteInv != 0 {
+		n += 5
+	}
+	if m.In != 0 {
+		n += 5
+	}
+	if m.NotIn != 0 {
+		n += 5
+	}
+	if m.Const != 0 {
+		n += 6
+	}
+	return n
+}
+
+func sovFixed32(x uint64) (n int) {
+	for {
+		n++
+		x >>= 7
+		if x == 0 {
+			break
+		}
+	}
+	return n
+}
+func sozFixed32(x uint64) (n int) {
+	return sovFixed32(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *Fixed32) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowFixed32
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Fixed32: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Fixed32: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field None", wireType)
+			}
+			m.None = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.None = uint32(dAtA[iNdEx-4])
+			m.None |= uint32(dAtA[iNdEx-3]) << 8
+			m.None |= uint32(dAtA[iNdEx-2]) << 16
+			m.None |= uint32(dAtA[iNdEx-1]) << 24
+		case 2:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Lt", wireType)
+			}
+			m.Lt = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.Lt = uint32(dAtA[iNdEx-4])
+			m.Lt |= uint32(dAtA[iNdEx-3]) << 8
+			m.Lt |= uint32(dAtA[iNdEx-2]) << 16
+			m.Lt |= uint32(dAtA[iNdEx-1]) << 24
+		case 3:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Lte", wireType)
+			}
+			m.Lte = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.Lte = uint32(dAtA[iNdEx-4])
+			m.Lte |= uint32(dAtA[iNdEx-3]) << 8
+			m.Lte |= uint32(dAtA[iNdEx-2]) << 16
+			m.Lte |= uint32(dAtA[iNdEx-1]) << 24
+		case 4:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Gt", wireType)
+			}
+			m.Gt = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.Gt = uint32(dAtA[iNdEx-4])
+			m.Gt |= uint32(dAtA[iNdEx-3]) << 8
+			m.Gt |= uint32(dAtA[iNdEx-2]) << 16
+			m.Gt |= uint32(dAtA[iNdEx-1]) << 24
+		case 5:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Gte", wireType)
+			}
+			m.Gte = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.Gte = uint32(dAtA[iNdEx-4])
+			m.Gte |= uint32(dAtA[iNdEx-3]) << 8
+			m.Gte |= uint32(dAtA[iNdEx-2]) << 16
+			m.Gte |= uint32(dAtA[iNdEx-1]) << 24
+		case 6:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LtGt", wireType)
+			}
+			m.LtGt = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.LtGt = uint32(dAtA[iNdEx-4])
+			m.LtGt |= uint32(dAtA[iNdEx-3]) << 8
+			m.LtGt |= uint32(dAtA[iNdEx-2]) << 16
+			m.LtGt |= uint32(dAtA[iNdEx-1]) << 24
+		case 7:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LtGte", wireType)
+			}
+			m.LtGte = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.LtGte = uint32(dAtA[iNdEx-4])
+			m.LtGte |= uint32(dAtA[iNdEx-3]) << 8
+			m.LtGte |= uint32(dAtA[iNdEx-2]) << 16
+			m.LtGte |= uint32(dAtA[iNdEx-1]) << 24
+		case 8:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LteGt", wireType)
+			}
+			m.LteGt = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.LteGt = uint32(dAtA[iNdEx-4])
+			m.LteGt |= uint32(dAtA[iNdEx-3]) << 8
+			m.LteGt |= uint32(dAtA[iNdEx-2]) << 16
+			m.LteGt |= uint32(dAtA[iNdEx-1]) << 24
+		case 9:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LteGte", wireType)
+			}
+			m.LteGte = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.LteGte = uint32(dAtA[iNdEx-4])
+			m.LteGte |= uint32(dAtA[iNdEx-3]) << 8
+			m.LteGte |= uint32(dAtA[iNdEx-2]) << 16
+			m.LteGte |= uint32(dAtA[iNdEx-1]) << 24
+		case 10:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LtGtInv", wireType)
+			}
+			m.LtGtInv = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.LtGtInv = uint32(dAtA[iNdEx-4])
+			m.LtGtInv |= uint32(dAtA[iNdEx-3]) << 8
+			m.LtGtInv |= uint32(dAtA[iNdEx-2]) << 16
+			m.LtGtInv |= uint32(dAtA[iNdEx-1]) << 24
+		case 11:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LtGteInv", wireType)
+			}
+			m.LtGteInv = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.LtGteInv = uint32(dAtA[iNdEx-4])
+			m.LtGteInv |= uint32(dAtA[iNdEx-3]) << 8
+			m.LtGteInv |= uint32(dAtA[iNdEx-2]) << 16
+			m.LtGteInv |= uint32(dAtA[iNdEx-1]) << 24
+		case 12:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LteGtInv", wireType)
+			}
+			m.LteGtInv = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.LteGtInv = uint32(dAtA[iNdEx-4])
+			m.LteGtInv |= uint32(dAtA[iNdEx-3]) << 8
+			m.LteGtInv |= uint32(dAtA[iNdEx-2]) << 16
+			m.LteGtInv |= uint32(dAtA[iNdEx-1]) << 24
+		case 13:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LteGteInv", wireType)
+			}
+			m.LteGteInv = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.LteGteInv = uint32(dAtA[iNdEx-4])
+			m.LteGteInv |= uint32(dAtA[iNdEx-3]) << 8
+			m.LteGteInv |= uint32(dAtA[iNdEx-2]) << 16
+			m.LteGteInv |= uint32(dAtA[iNdEx-1]) << 24
+		case 14:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field In", wireType)
+			}
+			m.In = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.In = uint32(dAtA[iNdEx-4])
+			m.In |= uint32(dAtA[iNdEx-3]) << 8
+			m.In |= uint32(dAtA[iNdEx-2]) << 16
+			m.In |= uint32(dAtA[iNdEx-1]) << 24
+		case 15:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NotIn", wireType)
+			}
+			m.NotIn = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.NotIn = uint32(dAtA[iNdEx-4])
+			m.NotIn |= uint32(dAtA[iNdEx-3]) << 8
+			m.NotIn |= uint32(dAtA[iNdEx-2]) << 16
+			m.NotIn |= uint32(dAtA[iNdEx-1]) << 24
+		case 16:
+			if wireType != 5 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Const", wireType)
+			}
+			m.Const = 0
+			if (iNdEx + 4) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 4
+			m.Const = uint32(dAtA[iNdEx-4])
+			m.Const |= uint32(dAtA[iNdEx-3]) << 8
+			m.Const |= uint32(dAtA[iNdEx-2]) << 16
+			m.Const |= uint32(dAtA[iNdEx-1]) << 24
+		default:
+			iNdEx = preIndex
+			skippy, err := skipFixed32(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthFixed32
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func skipFixed32(dAtA []byte) (n int, err error) {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return 0, ErrIntOverflowFixed32
+			}
+			if iNdEx >= l {
+				return 0, io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		wireType := int(wire & 0x7)
+		switch wireType {
+		case 0:
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowFixed32
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				iNdEx++
+				if dAtA[iNdEx-1] < 0x80 {
+					break
+				}
+			}
+			return iNdEx, nil
+		case 1:
+			iNdEx += 8
+			return iNdEx, nil
+		case 2:
+			var length int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowFixed32
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				length |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			iNdEx += length
+			if length < 0 {
+				return 0, ErrInvalidLengthFixed32
+			}
+			return iNdEx, nil
+		case 3:
+			for {
+				var innerWire uint64
+				var start int = iNdEx
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return 0, ErrIntOverflowFixed32
+					}
+					if iNdEx >= l {
+						return 0, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					innerWire |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				innerWireType := int(innerWire & 0x7)
+				if innerWireType == 4 {
+					break
+				}
+				next, err := skipFixed32(dAtA[start:])
+				if err != nil {
+					return 0, err
+				}
+				iNdEx = start + next
+			}
+			return iNdEx, nil
+		case 4:
+			return iNdEx, nil
+		case 5:
+			iNdEx += 4
+			return iNdEx, nil
+		default:
+			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
+		}
+	}
+	panic("unreachable")
+}
+
+var (
+	ErrInvalidLengthFixed32 = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowFixed32   = fmt.Errorf("proto: integer overflow")
+)
 
 func init() { proto.RegisterFile("fixed32.proto", fileDescriptorFixed32) }
 
 var fileDescriptorFixed32 = []byte{
-	// 371 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x64, 0x92, 0xcf, 0x6a, 0x22, 0x41,
-	0x10, 0xc6, 0xdb, 0x71, 0xfe, 0x68, 0xa9, 0xeb, 0xda, 0xac, 0x6c, 0xef, 0xb2, 0xca, 0xae, 0x8b,
-	0x8b, 0x2c, 0x8c, 0x12, 0xc5, 0xa3, 0x97, 0x1c, 0x22, 0x7a, 0xf4, 0x05, 0xc4, 0x68, 0x65, 0x32,
-	0x38, 0xf4, 0x84, 0x4c, 0x21, 0x79, 0xb6, 0x9c, 0xf2, 0x3a, 0x79, 0x81, 0x9c, 0x43, 0x57, 0xc7,
-	0x48, 0x33, 0xb7, 0xc6, 0xef, 0xf7, 0xab, 0xfa, 0xec, 0x1e, 0x68, 0xdd, 0xa5, 0x4f, 0x78, 0x98,
-	0x4d, 0xc7, 0x0f, 0x8f, 0x39, 0xe5, 0xb2, 0x43, 0x58, 0x50, 0x31, 0x3e, 0xa6, 0xb4, 0xbf, 0x47,
-	0x5d, 0xa4, 0xfa, 0xf8, 0xf3, 0xfb, 0x69, 0x97, 0xa5, 0x87, 0x1d, 0xe1, 0xe4, 0x7c, 0xb0, 0xec,
-	0xe0, 0xcd, 0x87, 0xe8, 0xc6, 0xda, 0x52, 0x82, 0xaf, 0x73, 0x8d, 0xaa, 0xf2, 0xbb, 0x32, 0x8a,
-	0x36, 0x7c, 0x96, 0xbf, 0xc0, 0xcb, 0x48, 0x79, 0xe6, 0x97, 0xeb, 0xe6, 0xf3, 0xeb, 0x4b, 0x35,
-	0x5a, 0x07, 0xdd, 0x40, 0x08, 0xb1, 0xf1, 0x32, 0x92, 0x7d, 0xa8, 0x66, 0x84, 0xaa, 0xea, 0xc4,
-	0x3d, 0x8e, 0x4d, 0x60, 0xec, 0x84, 0x94, 0xef, 0xc4, 0x43, 0x6b, 0x27, 0x6c, 0x27, 0x84, 0x2a,
-	0x70, 0xe2, 0xd8, 0xda, 0x09, 0xa1, 0xfc, 0x07, 0x41, 0x46, 0xdb, 0x84, 0x54, 0xc8, 0x44, 0xc7,
-	0x10, 0xcd, 0x35, 0x74, 0xdb, 0x42, 0x88, 0x21, 0x18, 0xcc, 0xcf, 0x68, 0x49, 0x72, 0x04, 0x21,
-	0x73, 0xa8, 0xa2, 0x32, 0x18, 0x33, 0x18, 0x18, 0x10, 0x2d, 0x89, 0x66, 0x64, 0xcd, 0x21, 0x7b,
-	0x97, 0x91, 0x41, 0x46, 0xb8, 0x24, 0xf9, 0x1f, 0x22, 0x4b, 0xa2, 0xaa, 0x97, 0x51, 0x3b, 0x34,
-	0x64, 0x14, 0x65, 0x0c, 0x75, 0xde, 0xbf, 0x4d, 0xf5, 0x49, 0x81, 0x5b, 0xe1, 0x9b, 0x19, 0xfc,
-	0xc3, 0xd0, 0x91, 0xa9, 0xb0, 0xd2, 0x27, 0x39, 0x01, 0xb0, 0x75, 0x99, 0x6f, 0x94, 0xf9, 0x98,
-	0xf9, 0x1a, 0x57, 0xfe, 0x14, 0xf0, 0xbc, 0xa0, 0xe9, 0xd6, 0xb9, 0x2c, 0xa8, 0x71, 0x1d, 0x23,
-	0x5c, 0x41, 0xe3, 0xa3, 0x3c, 0x1b, 0xad, 0xb2, 0x61, 0x57, 0xd4, 0xed, 0x1f, 0x30, 0xca, 0x1f,
-	0xf0, 0x52, 0xad, 0xbe, 0x38, 0xe4, 0xbc, 0x2f, 0x84, 0x98, 0xff, 0xe5, 0xe7, 0x4a, 0xb5, 0xb9,
-	0x3c, 0x9d, 0x9b, 0x0e, 0xaa, 0xed, 0x60, 0x8b, 0x91, 0x10, 0x62, 0x11, 0xf3, 0xe5, 0xe9, 0x9c,
-	0x56, 0x5a, 0x0e, 0x20, 0xd8, 0xe7, 0xba, 0x20, 0xf5, 0xd5, 0x79, 0xda, 0xd6, 0x94, 0x19, 0x8e,
-	0x6e, 0x43, 0xfe, 0xfe, 0x66, 0xef, 0x01, 0x00, 0x00, 0xff, 0xff, 0x07, 0x10, 0x48, 0x54, 0xbc,
-	0x02, 0x00, 0x00,
+	// 389 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x64, 0x92, 0xcf, 0x8e, 0xda, 0x30,
+	0x10, 0xc6, 0x9d, 0x90, 0x3f, 0x30, 0x84, 0x52, 0xac, 0xa2, 0xba, 0x55, 0x89, 0x5a, 0x2a, 0x2a,
+	0x54, 0x29, 0xa0, 0x82, 0x38, 0x72, 0xe1, 0x50, 0x04, 0x47, 0x5e, 0x00, 0x51, 0x70, 0xd3, 0x88,
+	0xc8, 0xa9, 0x9a, 0x11, 0xea, 0xb3, 0xed, 0x69, 0x8f, 0x7b, 0xdc, 0x47, 0x58, 0x71, 0xdb, 0x17,
+	0xd8, 0xf3, 0xca, 0xe3, 0x65, 0x91, 0x95, 0x9b, 0xc5, 0xf7, 0xfb, 0xcd, 0x7c, 0xd8, 0x81, 0xd6,
+	0xef, 0xec, 0xbf, 0x3c, 0x4c, 0x27, 0xa3, 0xbf, 0xff, 0x0a, 0x2c, 0x78, 0x07, 0x65, 0x89, 0xe5,
+	0xe8, 0x98, 0xe1, 0xfe, 0x8f, 0x54, 0x65, 0xa6, 0x8e, 0x1f, 0xdf, 0x9f, 0x76, 0x79, 0x76, 0xd8,
+	0xa1, 0x1c, 0x5f, 0x0e, 0x86, 0xed, 0x3f, 0x79, 0x10, 0xfe, 0x34, 0x36, 0xe7, 0xe0, 0xa9, 0x42,
+	0x49, 0xe1, 0x7c, 0x76, 0x86, 0xe1, 0x86, 0xce, 0xfc, 0x13, 0xb8, 0x39, 0x0a, 0x57, 0xff, 0xb2,
+	0x88, 0x6e, 0x1e, 0x6f, 0x6b, 0xe1, 0xda, 0xef, 0xfa, 0x8c, 0xb1, 0x8d, 0x9b, 0x23, 0x8f, 0xa1,
+	0x96, 0xa3, 0x14, 0x35, 0x2b, 0xee, 0x51, 0xac, 0x03, 0x6d, 0xa7, 0x28, 0x3c, 0x2b, 0x1e, 0x18,
+	0x3b, 0x25, 0x3b, 0x45, 0x29, 0x7c, 0x2b, 0x4e, 0x8c, 0x9d, 0xa2, 0xe4, 0xdf, 0xc0, 0xcf, 0x71,
+	0x9b, 0xa2, 0x08, 0x88, 0xe8, 0x68, 0x22, 0x5a, 0x43, 0xb7, 0xcd, 0x18, 0x1b, 0x80, 0xc6, 0xbc,
+	0x1c, 0x97, 0xc8, 0x87, 0x10, 0x10, 0x27, 0x45, 0x58, 0x05, 0x13, 0x02, 0x7d, 0x0d, 0x4a, 0x43,
+	0x4a, 0x3d, 0xb2, 0x6e, 0x91, 0xbd, 0xeb, 0x48, 0x3f, 0x47, 0xb9, 0x44, 0xfe, 0x1d, 0x42, 0x43,
+	0x4a, 0xd1, 0xa8, 0xa2, 0x66, 0x68, 0x40, 0xa8, 0xe4, 0x09, 0x34, 0x68, 0xff, 0x36, 0x53, 0x27,
+	0x01, 0x76, 0x85, 0x77, 0x7a, 0xf0, 0x07, 0x4d, 0x87, 0xba, 0xc2, 0x4a, 0x9d, 0xf8, 0x18, 0xc0,
+	0xd4, 0x25, 0xbe, 0x59, 0xe5, 0x13, 0xe2, 0xeb, 0x54, 0xf9, 0x55, 0x90, 0x97, 0x05, 0x91, 0x5d,
+	0xe7, 0xba, 0xa0, 0x4e, 0x75, 0xb4, 0xf0, 0x03, 0x9a, 0x2f, 0xe5, 0xc9, 0x68, 0x55, 0x0d, 0xb3,
+	0xa2, 0x61, 0xfe, 0x80, 0x56, 0xbe, 0x80, 0x9b, 0x29, 0xf1, 0xc6, 0x22, 0x67, 0x31, 0x63, 0x6c,
+	0xf6, 0x95, 0x9e, 0x2b, 0x53, 0xfa, 0xf2, 0x54, 0xa1, 0x3b, 0x88, 0xb6, 0x85, 0xcd, 0x87, 0x8c,
+	0xb1, 0x79, 0x42, 0x97, 0xa7, 0x0a, 0x5c, 0x29, 0xde, 0x07, 0x7f, 0x5f, 0xa8, 0x12, 0xc5, 0x5b,
+	0xeb, 0x69, 0x5b, 0x13, 0x62, 0x28, 0x5a, 0x44, 0x77, 0xe7, 0xd8, 0xb9, 0x3f, 0xc7, 0xce, 0xc3,
+	0x39, 0x76, 0x7e, 0x05, 0xf4, 0x35, 0x4e, 0x9f, 0x03, 0x00, 0x00, 0xff, 0xff, 0x87, 0x1f, 0x10,
+	0xa3, 0xca, 0x02, 0x00, 0x00,
 }

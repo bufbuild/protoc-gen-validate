@@ -90,7 +90,7 @@ kitchensink-gogo:
 	protoc \
 		-I . \
 		-I ../.. \
-		--gogo_out="${GOGO_IMPORT}:./gogo" \
+		--gogofast_out="${GOGO_IMPORT}:./gogo" \
 		--validate_out="lang=gogo:./gogo" \
 		`find . -name "*.proto"`
 	cd tests/kitchensink/gogo && go build .

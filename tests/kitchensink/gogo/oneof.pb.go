@@ -9,6 +9,8 @@ import fmt "fmt"
 import math "math"
 import _ "github.com/lyft/protoc-gen-validate/validate"
 
+import io "io"
+
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
 var _ = fmt.Errorf
@@ -53,9 +55,13 @@ func (*OneOf) Descriptor() ([]byte, []int) { return fileDescriptorOneof, []int{0
 
 type isOneOf_None interface {
 	isOneOf_None()
+	MarshalTo([]byte) (int, error)
+	Size() int
 }
 type isOneOf_Required interface {
 	isOneOf_Required()
+	MarshalTo([]byte) (int, error)
+	Size() int
 }
 
 type OneOf_String_ struct {
@@ -336,30 +342,752 @@ func init() {
 	proto.RegisterType((*OneOf_OtherEmbed)(nil), "tests.kitchensink.OneOf.OtherEmbed")
 	proto.RegisterEnum("tests.kitchensink.OneOf_Enum", OneOf_Enum_name, OneOf_Enum_value)
 }
+func (m *OneOf) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *OneOf) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.None != nil {
+		nn1, err := m.None.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += nn1
+	}
+	if m.Required != nil {
+		nn2, err := m.Required.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += nn2
+	}
+	return i, nil
+}
+
+func (m *OneOf_String_) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	dAtA[i] = 0xa
+	i++
+	i = encodeVarintOneof(dAtA, i, uint64(len(m.String_)))
+	i += copy(dAtA[i:], m.String_)
+	return i, nil
+}
+func (m *OneOf_MsgNone) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.MsgNone != nil {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintOneof(dAtA, i, uint64(m.MsgNone.Size()))
+		n3, err := m.MsgNone.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n3
+	}
+	return i, nil
+}
+func (m *OneOf_Bytes) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.Bytes != nil {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintOneof(dAtA, i, uint64(len(m.Bytes)))
+		i += copy(dAtA[i:], m.Bytes)
+	}
+	return i, nil
+}
+func (m *OneOf_MsgReq) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.MsgReq != nil {
+		dAtA[i] = 0x22
+		i++
+		i = encodeVarintOneof(dAtA, i, uint64(m.MsgReq.Size()))
+		n4, err := m.MsgReq.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n4
+	}
+	return i, nil
+}
+func (m *OneOf_Enum_) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	dAtA[i] = 0x28
+	i++
+	i = encodeVarintOneof(dAtA, i, uint64(m.Enum))
+	return i, nil
+}
+func (m *OneOf_Embed_) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.Embed != nil {
+		dAtA[i] = 0x32
+		i++
+		i = encodeVarintOneof(dAtA, i, uint64(m.Embed.Size()))
+		n5, err := m.Embed.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n5
+	}
+	return i, nil
+}
+func (m *OneOf_OtherEmbed_) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	dAtA[i] = 0x3a
+	i++
+	i = encodeVarintOneof(dAtA, i, uint64(len(m.OtherEmbed)))
+	i += copy(dAtA[i:], m.OtherEmbed)
+	return i, nil
+}
+func (m *OneOf_Embed) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *OneOf_Embed) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	return i, nil
+}
+
+func (m *OneOf_OtherEmbed) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *OneOf_OtherEmbed) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	return i, nil
+}
+
+func encodeFixed64Oneof(dAtA []byte, offset int, v uint64) int {
+	dAtA[offset] = uint8(v)
+	dAtA[offset+1] = uint8(v >> 8)
+	dAtA[offset+2] = uint8(v >> 16)
+	dAtA[offset+3] = uint8(v >> 24)
+	dAtA[offset+4] = uint8(v >> 32)
+	dAtA[offset+5] = uint8(v >> 40)
+	dAtA[offset+6] = uint8(v >> 48)
+	dAtA[offset+7] = uint8(v >> 56)
+	return offset + 8
+}
+func encodeFixed32Oneof(dAtA []byte, offset int, v uint32) int {
+	dAtA[offset] = uint8(v)
+	dAtA[offset+1] = uint8(v >> 8)
+	dAtA[offset+2] = uint8(v >> 16)
+	dAtA[offset+3] = uint8(v >> 24)
+	return offset + 4
+}
+func encodeVarintOneof(dAtA []byte, offset int, v uint64) int {
+	for v >= 1<<7 {
+		dAtA[offset] = uint8(v&0x7f | 0x80)
+		v >>= 7
+		offset++
+	}
+	dAtA[offset] = uint8(v)
+	return offset + 1
+}
+func (m *OneOf) Size() (n int) {
+	var l int
+	_ = l
+	if m.None != nil {
+		n += m.None.Size()
+	}
+	if m.Required != nil {
+		n += m.Required.Size()
+	}
+	return n
+}
+
+func (m *OneOf_String_) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.String_)
+	n += 1 + l + sovOneof(uint64(l))
+	return n
+}
+func (m *OneOf_MsgNone) Size() (n int) {
+	var l int
+	_ = l
+	if m.MsgNone != nil {
+		l = m.MsgNone.Size()
+		n += 1 + l + sovOneof(uint64(l))
+	}
+	return n
+}
+func (m *OneOf_Bytes) Size() (n int) {
+	var l int
+	_ = l
+	if m.Bytes != nil {
+		l = len(m.Bytes)
+		n += 1 + l + sovOneof(uint64(l))
+	}
+	return n
+}
+func (m *OneOf_MsgReq) Size() (n int) {
+	var l int
+	_ = l
+	if m.MsgReq != nil {
+		l = m.MsgReq.Size()
+		n += 1 + l + sovOneof(uint64(l))
+	}
+	return n
+}
+func (m *OneOf_Enum_) Size() (n int) {
+	var l int
+	_ = l
+	n += 1 + sovOneof(uint64(m.Enum))
+	return n
+}
+func (m *OneOf_Embed_) Size() (n int) {
+	var l int
+	_ = l
+	if m.Embed != nil {
+		l = m.Embed.Size()
+		n += 1 + l + sovOneof(uint64(l))
+	}
+	return n
+}
+func (m *OneOf_OtherEmbed_) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.OtherEmbed)
+	n += 1 + l + sovOneof(uint64(l))
+	return n
+}
+func (m *OneOf_Embed) Size() (n int) {
+	var l int
+	_ = l
+	return n
+}
+
+func (m *OneOf_OtherEmbed) Size() (n int) {
+	var l int
+	_ = l
+	return n
+}
+
+func sovOneof(x uint64) (n int) {
+	for {
+		n++
+		x >>= 7
+		if x == 0 {
+			break
+		}
+	}
+	return n
+}
+func sozOneof(x uint64) (n int) {
+	return sovOneof(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *OneOf) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowOneof
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: OneOf: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: OneOf: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field String_", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOneof
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOneof
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.None = &OneOf_String_{string(dAtA[iNdEx:postIndex])}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MsgNone", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOneof
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthOneof
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &OneOf_Embed{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.None = &OneOf_MsgNone{v}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Bytes", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOneof
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthOneof
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := make([]byte, postIndex-iNdEx)
+			copy(v, dAtA[iNdEx:postIndex])
+			m.Required = &OneOf_Bytes{v}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MsgReq", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOneof
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthOneof
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &OneOf_Embed{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Required = &OneOf_MsgReq{v}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Enum", wireType)
+			}
+			var v OneOf_Enum
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOneof
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (OneOf_Enum(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Required = &OneOf_Enum_{v}
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Embed", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOneof
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthOneof
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &OneOf_Embed{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Required = &OneOf_Embed_{v}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OtherEmbed", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOneof
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOneof
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Required = &OneOf_OtherEmbed_{string(dAtA[iNdEx:postIndex])}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipOneof(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthOneof
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *OneOf_Embed) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowOneof
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Embed: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Embed: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipOneof(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthOneof
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *OneOf_OtherEmbed) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowOneof
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: OtherEmbed: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: OtherEmbed: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipOneof(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthOneof
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func skipOneof(dAtA []byte) (n int, err error) {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return 0, ErrIntOverflowOneof
+			}
+			if iNdEx >= l {
+				return 0, io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		wireType := int(wire & 0x7)
+		switch wireType {
+		case 0:
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowOneof
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				iNdEx++
+				if dAtA[iNdEx-1] < 0x80 {
+					break
+				}
+			}
+			return iNdEx, nil
+		case 1:
+			iNdEx += 8
+			return iNdEx, nil
+		case 2:
+			var length int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowOneof
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				length |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			iNdEx += length
+			if length < 0 {
+				return 0, ErrInvalidLengthOneof
+			}
+			return iNdEx, nil
+		case 3:
+			for {
+				var innerWire uint64
+				var start int = iNdEx
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return 0, ErrIntOverflowOneof
+					}
+					if iNdEx >= l {
+						return 0, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					innerWire |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				innerWireType := int(innerWire & 0x7)
+				if innerWireType == 4 {
+					break
+				}
+				next, err := skipOneof(dAtA[start:])
+				if err != nil {
+					return 0, err
+				}
+				iNdEx = start + next
+			}
+			return iNdEx, nil
+		case 4:
+			return iNdEx, nil
+		case 5:
+			iNdEx += 4
+			return iNdEx, nil
+		default:
+			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
+		}
+	}
+	panic("unreachable")
+}
+
+var (
+	ErrInvalidLengthOneof = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowOneof   = fmt.Errorf("proto: integer overflow")
+)
 
 func init() { proto.RegisterFile("oneof.proto", fileDescriptorOneof) }
 
 var fileDescriptorOneof = []byte{
-	// 331 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x91, 0xc1, 0x4a, 0xf3, 0x40,
-	0x10, 0x80, 0xbb, 0x4d, 0x36, 0x69, 0x27, 0xe5, 0xa7, 0xdd, 0x1f, 0x34, 0x14, 0x94, 0x58, 0x2f,
-	0x39, 0x45, 0xa8, 0xe0, 0xc5, 0x83, 0x18, 0xac, 0xe4, 0x20, 0x16, 0x16, 0x3d, 0x97, 0xd6, 0x4e,
-	0xd3, 0x50, 0xb3, 0x6b, 0x77, 0xb7, 0x82, 0x57, 0x8f, 0xbe, 0x8a, 0x2f, 0x20, 0x9e, 0xfa, 0x3a,
-	0x7d, 0x0b, 0x49, 0x52, 0xbd, 0x88, 0xd0, 0xdb, 0xec, 0xec, 0x37, 0xdf, 0xce, 0xce, 0x80, 0x27,
-	0x05, 0xca, 0x59, 0xf4, 0xa4, 0xa4, 0x91, 0xac, 0x63, 0x50, 0x1b, 0x1d, 0x2d, 0x32, 0xf3, 0x30,
-	0x47, 0xa1, 0x33, 0xb1, 0xe8, 0xee, 0x3f, 0x8f, 0x1f, 0xb3, 0xe9, 0xd8, 0xe0, 0xc9, 0x77, 0x50,
-	0xb1, 0xbd, 0x77, 0x0b, 0xe8, 0x50, 0xe0, 0x70, 0xc6, 0x8e, 0xc1, 0xd1, 0x46, 0x65, 0x22, 0xf5,
-	0x49, 0x40, 0xc2, 0x66, 0xdc, 0xfc, 0xdc, 0xac, 0x2d, 0x5b, 0xd5, 0xdb, 0x34, 0xa9, 0xf1, 0xed,
-	0x15, 0x3b, 0x87, 0x46, 0xae, 0xd3, 0x91, 0x90, 0x02, 0xfd, 0x7a, 0x40, 0x42, 0xaf, 0x7f, 0x18,
-	0xfd, 0x7a, 0x2d, 0x2a, 0x85, 0xd1, 0x20, 0x9f, 0xe0, 0x34, 0xa9, 0x71, 0x37, 0xd7, 0xe9, 0xad,
-	0x14, 0xc8, 0xf6, 0x80, 0x4e, 0x5e, 0x0c, 0x6a, 0xdf, 0x0a, 0x48, 0xd8, 0x4a, 0x08, 0xaf, 0x8e,
-	0x6c, 0x00, 0x05, 0x32, 0x52, 0xb8, 0xf4, 0xed, 0x5d, 0x9c, 0x31, 0x14, 0xad, 0xd1, 0x37, 0x52,
-	0x6f, 0x93, 0x84, 0x70, 0x27, 0xd7, 0x29, 0xc7, 0x25, 0xbb, 0x00, 0x1b, 0xc5, 0x2a, 0xf7, 0x69,
-	0x40, 0xc2, 0x7f, 0xfd, 0x83, 0xbf, 0x1d, 0x62, 0x95, 0x6f, 0x15, 0xaf, 0x5b, 0x45, 0x59, 0xc8,
-	0xce, 0x80, 0x62, 0xe1, 0xf7, 0x9d, 0x9d, 0x7e, 0x46, 0x78, 0x85, 0xb3, 0x23, 0xf0, 0xa4, 0x99,
-	0xa3, 0x1a, 0x55, 0xd5, 0x6e, 0x31, 0xbe, 0x84, 0x70, 0x28, 0x93, 0x25, 0xdb, 0x75, 0x81, 0x56,
-	0x41, 0x0b, 0x60, 0xf8, 0x93, 0xee, 0xfd, 0x07, 0xbb, 0xe8, 0x86, 0x79, 0xe0, 0x5e, 0x0d, 0xae,
-	0x2f, 0xef, 0x6f, 0xee, 0xda, 0xb5, 0xd8, 0x01, 0xbb, 0x98, 0x6f, 0xdc, 0x81, 0x86, 0xc2, 0xe5,
-	0x2a, 0x53, 0x38, 0x65, 0xf4, 0x63, 0xb3, 0xb6, 0xc8, 0xc4, 0x29, 0x97, 0x76, 0xfa, 0x15, 0x00,
-	0x00, 0xff, 0xff, 0x4b, 0x10, 0x63, 0x00, 0xef, 0x01, 0x00, 0x00,
+	// 351 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x91, 0xb1, 0x6a, 0xe3, 0x40,
+	0x10, 0x40, 0x3d, 0x96, 0x56, 0xb2, 0x47, 0xe6, 0xb0, 0xf7, 0xe0, 0x4e, 0x18, 0x4e, 0xe8, 0x7c,
+	0x8d, 0x2a, 0x1d, 0xf8, 0xe0, 0x9a, 0x14, 0x21, 0x22, 0x0e, 0x2a, 0x42, 0x0c, 0x22, 0xa9, 0x8d,
+	0x1d, 0x8f, 0x65, 0xe1, 0x68, 0x15, 0x6b, 0xd7, 0x81, 0xb4, 0x29, 0xf3, 0x2b, 0xf9, 0x81, 0x90,
+	0xca, 0x65, 0xca, 0x7c, 0x42, 0x70, 0xe7, 0xbf, 0x08, 0x92, 0x9c, 0x34, 0x21, 0xe0, 0x6e, 0x76,
+	0xf6, 0xcd, 0xdb, 0xd9, 0x19, 0xb4, 0x32, 0x41, 0xd9, 0xcc, 0xbf, 0xce, 0x33, 0x95, 0xf1, 0x8e,
+	0x22, 0xa9, 0xa4, 0xbf, 0x48, 0xd4, 0xe5, 0x9c, 0x84, 0x4c, 0xc4, 0xa2, 0xfb, 0xf3, 0x66, 0x7c,
+	0x95, 0x4c, 0xc7, 0x8a, 0xfe, 0xbe, 0x07, 0x15, 0xdb, 0x7b, 0xd0, 0x90, 0x0d, 0x05, 0x0d, 0x67,
+	0xfc, 0x0f, 0x1a, 0x52, 0xe5, 0x89, 0x88, 0x6d, 0x70, 0xc1, 0x6b, 0x06, 0xcd, 0xa7, 0xed, 0x5a,
+	0xd3, 0xf3, 0x7a, 0x9b, 0x85, 0xb5, 0x68, 0x77, 0xc5, 0x0f, 0xb0, 0x91, 0xca, 0x78, 0x24, 0x32,
+	0x41, 0x76, 0xdd, 0x05, 0xcf, 0xea, 0x3b, 0xfe, 0xa7, 0xd7, 0xfc, 0x52, 0xe8, 0x0f, 0xd2, 0x09,
+	0x4d, 0xc3, 0x5a, 0x64, 0xa6, 0x32, 0x3e, 0xcb, 0x04, 0xf1, 0x1f, 0xc8, 0x26, 0xb7, 0x8a, 0xa4,
+	0xad, 0xb9, 0xe0, 0xb5, 0x42, 0x88, 0xaa, 0x23, 0x1f, 0x60, 0x81, 0x8c, 0x72, 0x5a, 0xda, 0xfa,
+	0x3e, 0xce, 0x00, 0x8b, 0xd6, 0xd8, 0x3d, 0xd4, 0xdb, 0x10, 0x42, 0x64, 0xa4, 0x32, 0x8e, 0x68,
+	0xc9, 0x0f, 0x51, 0x27, 0xb1, 0x4a, 0x6d, 0xe6, 0x82, 0xf7, 0xad, 0xff, 0xeb, 0x6b, 0x87, 0x58,
+	0xa5, 0x3b, 0xc5, 0xdd, 0x4e, 0x51, 0x16, 0xf2, 0xff, 0xc8, 0xa8, 0xf0, 0xdb, 0xc6, 0x5e, 0x3f,
+	0x83, 0xa8, 0xc2, 0xf9, 0x6f, 0xb4, 0x32, 0x35, 0xa7, 0x7c, 0x54, 0x55, 0x9b, 0xc5, 0xf8, 0x42,
+	0x88, 0xb0, 0x4c, 0x96, 0x6c, 0xd7, 0x44, 0x56, 0x05, 0x2d, 0xc4, 0xe1, 0x47, 0xba, 0xf7, 0x1d,
+	0xf5, 0xa2, 0x1b, 0x6e, 0xa1, 0x79, 0x3c, 0x38, 0x39, 0xba, 0x38, 0x3d, 0x6f, 0xd7, 0x02, 0x03,
+	0xf5, 0x62, 0xbe, 0x41, 0x07, 0x1b, 0x39, 0x2d, 0x57, 0x49, 0x4e, 0x53, 0xce, 0x1e, 0xb7, 0x6b,
+	0x0d, 0x82, 0xd6, 0xf3, 0xc6, 0x81, 0x97, 0x8d, 0x03, 0xaf, 0x1b, 0x07, 0x26, 0x46, 0xb9, 0xc2,
+	0x7f, 0x6f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x0b, 0xa8, 0x98, 0x69, 0xfd, 0x01, 0x00, 0x00,
 }

@@ -427,6 +427,53 @@ func (m *Timestamp) Validate() error {
 
 	}
 
+	if ts := m.GetGogo1(); ts != nil {
+
+		lt := time.Unix(5, 0)
+
+		if ts.Sub(lt) >= 0 {
+			return TimestampValidationError{
+				Field:  "Gogo1",
+				Reason: "value must be less than 1970-01-01 00:00:05 +0000 UTC",
+			}
+		}
+
+	}
+
+	if t := m.GetGogo2(); true {
+		ts, err := types.TimestampFromProto(&t)
+		if err != nil {
+			return TimestampValidationError{
+				Field:  "Gogo2",
+				Reason: "value is not a valid timestamp",
+				Cause:  err,
+			}
+		}
+
+		lt := time.Unix(5, 0)
+
+		if ts.Sub(lt) >= 0 {
+			return TimestampValidationError{
+				Field:  "Gogo2",
+				Reason: "value must be less than 1970-01-01 00:00:05 +0000 UTC",
+			}
+		}
+
+	}
+
+	if ts := m.GetGogo3(); true {
+
+		lt := time.Unix(5, 0)
+
+		if ts.Sub(lt) >= 0 {
+			return TimestampValidationError{
+				Field:  "Gogo3",
+				Reason: "value must be less than 1970-01-01 00:00:05 +0000 UTC",
+			}
+		}
+
+	}
+
 	return nil
 }
 
