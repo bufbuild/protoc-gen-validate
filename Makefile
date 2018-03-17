@@ -1,5 +1,18 @@
 # protoc-gen-go parameters for properly generating the import path for PGV
-VALIDATE_IMPORT="Mvalidate/validate.proto=github.com/lyft/protoc-gen-validate/validate"
+VALIDATE_IMPORT := Mvalidate/validate.proto=github.com/lyft/protoc-gen-validate/validate
+
+# protoc-gen-gogo parameters
+GOGO_IMPORT_SPACES := ${VALIDATE_IMPORT},\
+Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,\
+Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types,\
+Mgoogle/protobuf/struct.proto=github.com/gogo/protobuf/types,\
+Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types,\
+Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types,\
+Mgoogle/protobuf/descriptor.proto=github.com/gogo/protobuf/types,\
+Mgogoproto/gogo.proto=github.com/gogo/protobuf/gogoproto
+empty :=
+space := $(empty) $(empty)
+GOGO_IMPORT:=$(subst $(space),,$(GOGO_IMPORT_SPACES))
 
 .PHONY: build
 build: validate/validate.pb.go
@@ -67,6 +80,20 @@ kitchensink:
 		--validate_out="lang=go:./go" \
 		`find . -name "*.proto"`
 	cd tests/kitchensink/go && go build .
+
+.PHONY: kitchensink-gogo
+kitchensink-gogo:
+	# generates the kitchensink gogo files
+	rm -r tests/kitchensink/gogo || true
+	mkdir -p tests/kitchensink/gogo
+	cd tests/kitchensink && \
+	protoc \
+		-I . \
+		-I ../.. \
+		--gogo_out="${GOGO_IMPORT}:./gogo" \
+		--validate_out="lang=gogo:./gogo" \
+		`find . -name "*.proto"`
+	cd tests/kitchensink/gogo && go build .
 
 .PHONY: testcases
 testcases:
