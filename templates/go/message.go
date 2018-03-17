@@ -17,8 +17,16 @@ const messageTpl = `
 
 const requiredTpl = `
 	{{ if .Rules.GetRequired }}
-		if {{ accessor . }} == nil {
-			return {{ err . "value is required" }}
-		}
+		{{ if gogo }}
+			{{ if .Gogo.Nullable }}
+				if {{ accessor . }} == nil {
+					return {{ err . "value is required" }}
+				}
+			{{ end }}
+		{{ else }}
+			if {{ accessor . }} == nil {
+				return {{ err . "value is required" }}
+			}
+		{{ end }} 
 	{{ end }}
 `

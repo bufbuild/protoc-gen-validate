@@ -36,6 +36,7 @@ func Register(tpl *template.Template) {
 		"tsGt":        tsGt,
 		"tsStr":       tsStr,
 		"unwrap":      unwrap,
+		"gogo":        func() bool { return false },
 	})
 
 	template.Must(tpl.Parse(fileTpl))
@@ -76,6 +77,13 @@ func Register(tpl *template.Template) {
 	template.Must(tpl.New("timestamp").Parse(timestampTpl))
 
 	template.Must(tpl.New("wrapper").Parse(wrapperTpl))
+}
+
+func RegisterGogo(tpl *template.Template) {
+	Register(tpl)
+	tpl.Funcs(map[string]interface{}{
+		"gogo": func() bool { return true },
+	})
 }
 
 func accessor(ctx shared.RuleContext) string {

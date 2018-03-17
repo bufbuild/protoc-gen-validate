@@ -18,7 +18,11 @@ import (
 	"time"
 	"unicode/utf8"
 
+{{ if gogo }}
+	"github.com/gogo/protobuf/types"
+{{ else }}
 	"github.com/golang/protobuf/ptypes"
+{{ end }}
 )
 
 // ensure the imports are used
@@ -33,7 +37,11 @@ var (
 	_ = time.Duration(0)
 	_ = (*url.URL)(nil)
 	_ = (*mail.Address)(nil)
+{{ if gogo }}
+	_ = types.DynamicAny{}
+{{ else }}
 	_ = ptypes.DynamicAny{}
+{{ end }}
 )
 
 {{ range .AllMessages }}
