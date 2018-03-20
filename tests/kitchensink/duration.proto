@@ -28,8 +28,8 @@ message Duration {
     google.protobuf.Duration in     = 15 [(validate.rules).duration = {in: [{seconds: 123}]}];
     google.protobuf.Duration not_in = 16 [(validate.rules).duration = {not_in: [{seconds: 123}]}];
 
-    google.protobuf.Duration gogo1 = 17 [(validate.rules).duration.lt  = {seconds: 5}, (gogoproto.stdduration) = true];
-    google.protobuf.Duration gogo2 = 18 [(validate.rules).duration.lt  = {seconds: 5}, (gogoproto.nullable) = false];
-    google.protobuf.Duration gogo3 = 19 [(validate.rules).duration.lt  = {seconds: 5}, (gogoproto.stdduration) = true, (gogoproto.nullable) = false];
-    google.protobuf.Duration gogo4 = 20 [(validate.rules).duration.required = true, (gogoproto.nullable) = false];
+    google.protobuf.Duration stdduration = 17 [(validate.rules).duration.lt  = {seconds: 5}, (gogoproto.stdduration) = true];
+    google.protobuf.Duration nullable    = 18 [(validate.rules).duration.lt  = {seconds: 5}, (gogoproto.nullable) = false];
+    google.protobuf.Duration stdnullable = 19 [(validate.rules).duration.lt  = {seconds: 5}, (gogoproto.stdduration) = true, (gogoproto.nullable) = false];
+    google.protobuf.Duration reqnullable = 20 [(validate.rules).duration.required = true, (gogoproto.nullable) = false];
 }
