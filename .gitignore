@@ -9,3 +9,4 @@ bazel-*
 /tests/harness/cc/cc-harness
 
 /tests/kitchensink/go/
+/tests/kitchensink/gogo/
