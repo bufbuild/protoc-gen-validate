@@ -10,7 +10,7 @@ GO_IMPORT_SPACES := ${VALIDATE_IMPORT},\
 	Mgoogle/protobuf/struct.proto=github.com/golang/protobuf/ptypes/struct,\
 	Mgoogle/protobuf/timestamp.proto=github.com/golang/protobuf/ptypes/timestamp,\
 	Mgoogle/protobuf/wrappers.proto=github.com/golang/protobuf/ptypes/wrappers,\
-	Mgoogle/protobuf/descriptor.proto=github.com/golang/protobuf/descriptor,\
+	Mgoogle/protobuf/descriptor.proto=github.com/golang/protobuf/protoc-gen-go/descriptor,\
 	Mgogoproto/gogo.proto=${PACKAGE}/gogoproto
 GO_IMPORT:=$(subst $(space),,$(GO_IMPORT_SPACES))
 
@@ -139,6 +139,7 @@ tests/harness/harness.pb.go:
 	# generates the test harness protos
 	cd tests/harness && protoc -I . --go_out=. harness.proto
 
+.PHONY: tests/harness/go/go-harness
 tests/harness/go/go-harness:
 	# generates the go-specific test harness
 	go build -o ./tests/harness/go/go-harness ./tests/harness/go
