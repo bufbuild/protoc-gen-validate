@@ -69,7 +69,7 @@ cover:
 	open cover.html
 
 .PHONY: harness
-harness: tests/harness/harness.pb.go tests/harness/go/go-harness tests/harness/cc/cc-harness
+harness: tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.go tests/harness/go/go-harness tests/harness/gogo/go-harness tests/harness/cc/cc-harness
  	# runs the test harness, validating a series of test cases in all supported languages
 	go run ./tests/harness/executor/*.go
 
@@ -134,14 +134,23 @@ update-vendor:
 	dep ensure -update
 	$(MAKE) gazelle
 
-tests/harness/harness.pb.go:
+tests/harness/go/harness.pb.go:
 	# generates the test harness protos
-	cd tests/harness && protoc -I . --go_out=. harness.proto
+	cd tests/harness && protoc -I . --go_out="${GO_IMPORT}:./go" harness.proto
+
+tests/harness/gogo/harness.pb.go:
+	# generates the test harness protos
+	cd tests/harness && protoc -I . --gogofast_out="${GOGO_IMPORT}:./gogo" harness.proto
 
 .PHONY: tests/harness/go/go-harness
 tests/harness/go/go-harness:
 	# generates the go-specific test harness
-	go build -o ./tests/harness/go/go-harness ./tests/harness/go
+	go build -o ./tests/harness/go/go-harness ./tests/harness/go/main
+
+.PHONY: tests/harness/gogo/go-harness
+tests/harness/gogo/go-harness:
+	# generates the gogo-specific test harness
+	go build -o ./tests/harness/gogo/go-harness ./tests/harness/gogo/main
 
 tests/harness/cc/cc-harness: tests/harness/cc/harness.cc
 	# generates the C++-specific test harness

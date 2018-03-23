@@ -6,8 +6,9 @@ bazel-*
 /tests/harness/cases/gogo
 /tests/harness/cases/other_package/go
 /tests/harness/cases/other_package/gogo
-/tests/harness/harness.pb.go
+/tests/harness/go/harness.pb.go
 /tests/harness/go/go-harness
+/tests/harness/gogo/harness.pb.go
 /tests/harness/gogo/go-harness
 /tests/harness/cc/cc-harness
 
