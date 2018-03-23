@@ -83,27 +83,18 @@ kitchensink:
 	# generates the kitchensink test protos
 	rm -r tests/kitchensink/go || true
 	mkdir -p tests/kitchensink/go
-	cd tests/kitchensink && \
-	protoc \
-		-I . \
-		-I ../.. \
-		--go_out="${GO_IMPORT}:./go" \
-		--validate_out="lang=go:./go" \
-		`find . -name "*.proto"`
-	cd tests/kitchensink/go && go build .
-
-.PHONY: kitchensink-gogo
-kitchensink-gogo:
-	# generates the kitchensink gogo files
 	rm -r tests/kitchensink/gogo || true
 	mkdir -p tests/kitchensink/gogo
 	cd tests/kitchensink && \
 	protoc \
 		-I . \
 		-I ../.. \
+		--go_out="${GO_IMPORT}:./go" \
+		--validate_out="lang=go:./go" \
 		--gogofast_out="${GOGO_IMPORT}:./gogo" \
 		--validate_out="lang=gogo:./gogo" \
 		`find . -name "*.proto"`
+	cd tests/kitchensink/go && go build .
 	cd tests/kitchensink/gogo && go build .
 
 .PHONY: testcases
@@ -113,20 +104,28 @@ testcases:
 	mkdir tests/harness/cases/go
 	rm -r tests/harness/cases/other_package/go || true
 	mkdir tests/harness/cases/other_package/go
+	rm -r tests/harness/cases/gogo || true
+	mkdir tests/harness/cases/gogo
+	rm -r tests/harness/cases/other_package/gogo || true
+	mkdir tests/harness/cases/other_package/gogo
 	# protoc-gen-go makes us go a package at a time
 	cd tests/harness/cases/other_package && \
 	protoc \
 		-I . \
 		-I ../../../.. \
 		--go_out="${GO_IMPORT}:./go" \
+		--gogofast_out="${GOGO_IMPORT}:./gogo" \
 		--validate_out="lang=go:./go" \
+		--validate_out="lang=gogo:./gogo" \
 		./*.proto
 	cd tests/harness/cases && \
 	protoc \
 		-I . \
 		-I ../../.. \
 		--go_out="Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go,${GO_IMPORT}:./go" \
+		--gogofast_out="Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/gogo,${GOGO_IMPORT}:./gogo" \
 		--validate_out="lang=go:./go" \
+		--validate_out="lang=gogo:./gogo" \
 		./*.proto
 
 .PHONY: update-vendor
@@ -152,4 +151,4 @@ tests/harness/cc/cc-harness: tests/harness/cc/harness.cc
 	chmod 0755 $@
 
 .PHONY: ci
-ci: lint build tests kitchensink kitchensink-gogo testcases harness bazel-harness
+ci: lint build tests kitchensink testcases harness bazel-harness
