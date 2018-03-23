@@ -1,17 +1,28 @@
+empty :=
+space := $(empty) $(empty)
+PACKAGE := github.com/lyft/protoc-gen-validate
+
 # protoc-gen-go parameters for properly generating the import path for PGV
-VALIDATE_IMPORT := Mvalidate/validate.proto=github.com/lyft/protoc-gen-validate/validate
+VALIDATE_IMPORT := Mvalidate/validate.proto=${PACKAGE}/validate
+GO_IMPORT_SPACES := ${VALIDATE_IMPORT},\
+	Mgoogle/protobuf/any.proto=github.com/golang/protobuf/ptypes/any,\
+	Mgoogle/protobuf/duration.proto=github.com/golang/protobuf/ptypes/duration,\
+	Mgoogle/protobuf/struct.proto=github.com/golang/protobuf/ptypes/struct,\
+	Mgoogle/protobuf/timestamp.proto=github.com/golang/protobuf/ptypes/timestamp,\
+	Mgoogle/protobuf/wrappers.proto=github.com/golang/protobuf/ptypes/wrappers,\
+	Mgoogle/protobuf/descriptor.proto=github.com/golang/protobuf/descriptor,\
+	Mgogoproto/gogo.proto=${PACKAGE}/gogoproto
+GO_IMPORT:=$(subst $(space),,$(GO_IMPORT_SPACES))
 
 # protoc-gen-gogo parameters
 GOGO_IMPORT_SPACES := ${VALIDATE_IMPORT},\
-Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,\
-Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types,\
-Mgoogle/protobuf/struct.proto=github.com/gogo/protobuf/types,\
-Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types,\
-Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types,\
-Mgoogle/protobuf/descriptor.proto=github.com/gogo/protobuf/types,\
-Mgogoproto/gogo.proto=github.com/gogo/protobuf/gogoproto
-empty :=
-space := $(empty) $(empty)
+	Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,\
+	Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types,\
+	Mgoogle/protobuf/struct.proto=github.com/gogo/protobuf/types,\
+	Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types,\
+	Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types,\
+	Mgoogle/protobuf/descriptor.proto=github.com/gogo/protobuf/types,\
+	Mgogoproto/gogo.proto=github.com/gogo/protobuf/gogoproto
 GOGO_IMPORT:=$(subst $(space),,$(GOGO_IMPORT_SPACES))
 
 .PHONY: build
@@ -76,7 +87,7 @@ kitchensink:
 	protoc \
 		-I . \
 		-I ../.. \
-		--go_out="${VALIDATE_IMPORT}:./go" \
+		--go_out="${GO_IMPORT}:./go" \
 		--validate_out="lang=go:./go" \
 		`find . -name "*.proto"`
 	cd tests/kitchensink/go && go build .
@@ -107,14 +118,14 @@ testcases:
 	protoc \
 		-I . \
 		-I ../../../.. \
-		--go_out="${VALIDATE_IMPORT}:./go" \
+		--go_out="${GO_IMPORT}:./go" \
 		--validate_out="lang=go:./go" \
 		./*.proto
 	cd tests/harness/cases && \
 	protoc \
 		-I . \
 		-I ../../.. \
-		--go_out="Mtests/harness/cases/other_package/embed.proto=github.com/lyft/protoc-gen-validate/tests/harness/cases/other_package/go,${VALIDATE_IMPORT}:./go" \
+		--go_out="Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go,${GO_IMPORT}:./go" \
 		--validate_out="lang=go:./go" \
 		./*.proto
 
@@ -140,4 +151,4 @@ tests/harness/cc/cc-harness: tests/harness/cc/harness.cc
 	chmod 0755 $@
 
 .PHONY: ci
-ci: lint build tests kitchensink testcases harness bazel-harness
+ci: lint build tests kitchensink kitchensink-gogo testcases harness bazel-harness
