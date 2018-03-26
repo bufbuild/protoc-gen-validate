@@ -7,9 +7,9 @@ bazel-*
 /tests/harness/cases/other_package/go
 /tests/harness/cases/other_package/gogo
 /tests/harness/go/harness.pb.go
-/tests/harness/go/go-harness
+/tests/harness/go/main/go-harness
 /tests/harness/gogo/harness.pb.go
-/tests/harness/gogo/go-harness
+/tests/harness/gogo/main/go-harness
 /tests/harness/cc/cc-harness
 
 /tests/kitchensink/go/

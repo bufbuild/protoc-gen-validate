@@ -49,6 +49,7 @@ proto_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//gogoproto:gogoproto_proto",
         "//validate:validate_proto",
         "@com_google_protobuf//:any_proto",
         "@com_google_protobuf//:duration_proto",
@@ -63,6 +64,7 @@ go_proto_library(
     proto = ":tests_kitchensink_proto",
     visibility = ["//visibility:public"],
     deps = [
+        "//gogoproto:go_default_library",
         "//validate:go_default_library",
         "//vendor/github.com/golang/protobuf/ptypes/any:go_default_library",
         "//vendor/github.com/golang/protobuf/ptypes/duration:go_default_library",

@@ -15,8 +15,8 @@ import (
 )
 
 var Harnesses = []Harness{
-	InitHarness("tests/harness/go/go-harness"),
-	InitHarness("tests/harness/gogo/go-harness"),
+	InitHarness("tests/harness/go/main/go-harness"),
+	InitHarness("tests/harness/gogo/main/go-harness"),
 	InitHarness("tests/harness/cc/cc-harness"),
 }
 
