@@ -2,6 +2,8 @@ bazel-*
 
 !vendor/*
 
+/gogofast
+
 /tests/harness/cases/go
 /tests/harness/cases/gogo
 /tests/harness/cases/other_package/go

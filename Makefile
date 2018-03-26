@@ -68,6 +68,9 @@ cover:
 	go tool cover -html cover.out -o cover.html
 	open cover.html
 
+gogofast:
+	go build -o $@ vendor/github.com/gogo/protobuf/protoc-gen-gogofast/main.go
+
 .PHONY: harness
 harness: tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.go tests/harness/go/main/go-harness tests/harness/gogo/main/go-harness tests/harness/cc/cc-harness
  	# runs the test harness, validating a series of test cases in all supported languages
@@ -79,7 +82,7 @@ bazel-harness:
 	bazel run //tests/harness/executor:executor
 
 .PHONY: kitchensink
-kitchensink:
+kitchensink: gogofast
 	# generates the kitchensink test protos
 	rm -r tests/kitchensink/go || true
 	mkdir -p tests/kitchensink/go
@@ -91,6 +94,7 @@ kitchensink:
 		-I ../.. \
 		--go_out="${GO_IMPORT}:./go" \
 		--validate_out="lang=go:./go" \
+		--plugin=protoc-gen-gogofast=$(shell pwd)/gogofast \
 		--gogofast_out="${GOGO_IMPORT}:./gogo" \
 		--validate_out="lang=gogo:./gogo" \
 		`find . -name "*.proto"`
@@ -98,7 +102,7 @@ kitchensink:
 	cd tests/kitchensink/gogo && go build .
 
 .PHONY: testcases
-testcases:
+testcases: gogofast
 	# generate the test harness case protos
 	rm -r tests/harness/cases/go || true
 	mkdir tests/harness/cases/go
@@ -114,6 +118,7 @@ testcases:
 		-I . \
 		-I ../../../.. \
 		--go_out="${GO_IMPORT}:./go" \
+		--plugin=protoc-gen-gogofast=$(shell pwd)/gogofast \
 		--gogofast_out="${GOGO_IMPORT}:./gogo" \
 		--validate_out="lang=go:./go" \
 		--validate_out="lang=gogo:./gogo" \
@@ -123,6 +128,7 @@ testcases:
 		-I . \
 		-I ../../.. \
 		--go_out="Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go,${GO_IMPORT}:./go" \
+		--plugin=protoc-gen-gogofast=$(shell pwd)/gogofast \
 		--gogofast_out="Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/gogo,${GOGO_IMPORT}:./gogo" \
 		--validate_out="lang=go:./go" \
 		--validate_out="lang=gogo:./gogo" \
@@ -136,11 +142,14 @@ update-vendor:
 
 tests/harness/go/harness.pb.go:
 	# generates the test harness protos
-	cd tests/harness && protoc -I . --go_out="${GO_IMPORT}:./go" harness.proto
+	cd tests/harness && protoc -I . \
+		--go_out="${GO_IMPORT}:./go" harness.proto
 
-tests/harness/gogo/harness.pb.go:
+tests/harness/gogo/harness.pb.go: gogofast
 	# generates the test harness protos
-	cd tests/harness && protoc -I . --gogofast_out="${GOGO_IMPORT}:./gogo" harness.proto
+	cd tests/harness && protoc -I . \
+		--plugin=protoc-gen-gogofast=$(shell pwd)/gogofast \
+		--gogofast_out="${GOGO_IMPORT}:./gogo" harness.proto
 
 .PHONY: tests/harness/go/main/go-harness
 tests/harness/go/main/go-harness:
