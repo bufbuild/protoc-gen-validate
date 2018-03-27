@@ -14,19 +14,3 @@ const messageTpl = `
 		}
 	{{ end }}
 `
-
-const requiredTpl = `
-	{{ if .Rules.GetRequired }}
-		{{ if gogo }}
-			{{ if .Gogo.Nullable }}
-				if {{ accessor . }} == nil {
-					return {{ err . "value is required" }}
-				}
-			{{ end }}
-		{{ else }}
-			if {{ accessor . }} == nil {
-				return {{ err . "value is required" }}
-			}
-		{{ end }} 
-	{{ end }}
-`

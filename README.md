@@ -95,6 +95,28 @@ protoc \
 
 All messages generated include the new `Validate() error` method. PGV requires no additional runtime dependencies from the existing generated code.
 
+#### Gogo
+
+There is an experimental support for [gogo
+protobuf](https://github.com/gogo/protobuf) plugin for `go`. Use the following
+command to generate `gogo`-compatible validation code:
+
+```sh
+protoc \
+  -I . \
+  -I ${GOPATH}/src \
+  --gogofast_out=":../generated"\
+  --validate_out="lang=gogo:../generated" \ example.proto
+```
+
+Gogo support has the following limitations:
+- only `gogofast` plugin is supported and tested, meaning that the fields
+  should be properly annotated with `gogoproto` annotations;
+- `gogoproto.nullable` is supported on fields;
+- `gogoproto.stdduration` is supported on fields;
+- `gogoproto.stdtime` is supported on fields;
+
+
 ## Constraint Rules
 
 [The provided constraints](validate/validate.proto) are modeled largerly after those in JSON Schema. PGV rules can be mixed for the same field; the plugin ensures the rules applied to a field cannot contradict before code generation.

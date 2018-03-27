@@ -36,15 +36,12 @@ func Register(tpl *template.Template) {
 		"tsGt":        tsGt,
 		"tsStr":       tsStr,
 		"unwrap":      unwrap,
-		"gogo":        func() bool { return false },
 	})
 
-	template.Must(tpl.Parse(fileTpl))
 	template.Must(tpl.New("msg").Parse(msgTpl))
 	template.Must(tpl.New("const").Parse(constTpl))
 	template.Must(tpl.New("ltgt").Parse(ltgtTpl))
 	template.Must(tpl.New("in").Parse(inTpl))
-	template.Must(tpl.New("required").Parse(requiredTpl))
 
 	template.Must(tpl.New("none").Parse(noneTpl))
 	template.Must(tpl.New("float").Parse(numTpl))
@@ -73,17 +70,10 @@ func Register(tpl *template.Template) {
 	template.Must(tpl.New("map").Parse(mapTpl))
 
 	template.Must(tpl.New("any").Parse(anyTpl))
-	template.Must(tpl.New("duration").Parse(durationTpl))
-	template.Must(tpl.New("timestamp").Parse(timestampTpl))
+	template.Must(tpl.New("timestampcmp").Parse(timestampcmpTpl))
+	template.Must(tpl.New("durationcmp").Parse(durationcmpTpl))
 
 	template.Must(tpl.New("wrapper").Parse(wrapperTpl))
-}
-
-func RegisterGogo(tpl *template.Template) {
-	Register(tpl)
-	tpl.Funcs(map[string]interface{}{
-		"gogo": func() bool { return true },
-	})
 }
 
 func accessor(ctx shared.RuleContext) string {

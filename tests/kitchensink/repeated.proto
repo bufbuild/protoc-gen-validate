@@ -3,6 +3,8 @@ package tests.kitchensink;
 
 import "validate/validate.proto";
 
+import "gogoproto/gogo.proto";
+
 message Repeated {
     repeated int64 none = 1;
 
@@ -15,6 +17,8 @@ message Repeated {
     repeated bytes unique_bytes = 7 [(validate.rules).repeated.unique = true];
 
     repeated double item_rules = 8 [(validate.rules).repeated.items.double.lt = 3];
+
+    repeated Embed nonnullable_items = 9 [(validate.rules).repeated.min_items = 1, (gogoproto.nullable) = false];
 
     message Embed {}
 }
