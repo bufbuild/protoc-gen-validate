@@ -6,23 +6,23 @@ const timestampTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 	{{ if or $r.Lt $r.Lte $r.Gt $r.Gte $r.LtNow $r.GtNow $r.Within $r.Const }}
 		{{ if .Gogo.Stdtime }}
 			{{ if .Gogo.Nullable }}
-		if ts := {{ accessor . }}; ts != nil {
+				if ts := {{ accessor . }}; ts != nil {
 			{{ else }}
-		if ts := {{ accessor . }}; true {
+				if ts := {{ accessor . }}; true {
 			{{ end }}
 		{{ else }}
 			{{ if .Gogo.Nullable }}
-		if t := {{ accessor . }}; t != nil {
-			ts, err := types.TimestampFromProto(t)
-			if err != nil { return {{ errCause . "err" "value is not a valid timestamp" }} }
+				if t := {{ accessor . }}; t != nil {
+					ts, err := types.TimestampFromProto(t)
+					if err != nil { return {{ errCause . "err" "value is not a valid timestamp" }} }
 			{{ else }}
-		if t := {{ accessor . }}; true {
-			ts, err := types.TimestampFromProto(&t)
-			if err != nil { return {{ errCause . "err" "value is not a valid timestamp" }} }
+				if t := {{ accessor . }}; true {
+					ts, err := types.TimestampFromProto(&t)
+					if err != nil { return {{ errCause . "err" "value is not a valid timestamp" }} }
 			{{ end }}
 		{{ end }}
 
-			{{ template "timestampcmp" . }}
-		}
+					{{ template "timestampcmp" . }}
+				}
 	{{ end }}
 `
