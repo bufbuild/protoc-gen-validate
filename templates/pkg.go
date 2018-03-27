@@ -5,6 +5,7 @@ import (
 
 	cctpl "github.com/lyft/protoc-gen-validate/templates/cc"
 	gotpl "github.com/lyft/protoc-gen-validate/templates/go"
+	gogotpl "github.com/lyft/protoc-gen-validate/templates/gogo"
 	"github.com/lyft/protoc-gen-validate/templates/shared"
 )
 
@@ -17,7 +18,8 @@ func makeTemplate(lang string, register_fn func(*template.Template)) *template.T
 
 func Template() map[string][]*template.Template {
 	return map[string][]*template.Template{
-		"cc": {makeTemplate("h", cctpl.RegisterHeader), makeTemplate("cc", cctpl.RegisterModule)},
-		"go": {makeTemplate("go", gotpl.Register)},
+		"cc":   {makeTemplate("h", cctpl.RegisterHeader), makeTemplate("cc", cctpl.RegisterModule)},
+		"go":   {makeTemplate("go", gotpl.Register)},
+		"gogo": {makeTemplate("go", gogotpl.Register)},
 	}
 }

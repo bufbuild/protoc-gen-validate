@@ -4,6 +4,8 @@ package tests.kitchensink;
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
 
+import "gogoproto/gogo.proto";
+
 message Timestamp {
     google.protobuf.Timestamp none = 1;
 
@@ -30,4 +32,9 @@ message Timestamp {
     google.protobuf.Timestamp lt_now_within = 17 [(validate.rules).timestamp = {lt_now: true, within: {seconds: 300}}];
     google.protobuf.Timestamp gt_now_within = 18 [(validate.rules).timestamp = {gt_now: true, within: {seconds: 3000}}];
     google.protobuf.Timestamp within = 19 [(validate.rules).timestamp.within = {seconds: 30000}];
+
+    google.protobuf.Timestamp stdtime     = 20 [(validate.rules).timestamp.lt  = {seconds: 5}, (gogoproto.stdtime) = true];
+    google.protobuf.Timestamp nullable    = 21 [(validate.rules).timestamp.lt  = {seconds: 5}, (gogoproto.nullable) = false];
+    google.protobuf.Timestamp stdnullable = 22 [(validate.rules).timestamp.lt  = {seconds: 5}, (gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+    google.protobuf.Timestamp reqnullable = 23 [(validate.rules).timestamp.required = true, (gogoproto.nullable) = false];
 }

@@ -7,12 +7,14 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/lyft/protoc-gen-star"
+	"github.com/lyft/protoc-gen-validate/gogoproto"
 	"github.com/lyft/protoc-gen-validate/validate"
 )
 
 type RuleContext struct {
 	Field pgs.Field
 	Rules proto.Message
+	Gogo  Gogo
 
 	Typ        string
 	WrapperTyp string
@@ -22,8 +24,19 @@ type RuleContext struct {
 	AccessorOverride string
 }
 
+type Gogo struct {
+	Nullable    bool
+	Stdduration bool
+	Stdtime     bool
+}
+
 func rulesContext(f pgs.Field) (out RuleContext, err error) {
 	out.Field = f
+
+	out.Gogo.Nullable = true
+	f.Extension(gogoproto.E_Nullable, &out.Gogo.Nullable)
+	f.Extension(gogoproto.E_Stdduration, &out.Gogo.Stdduration)
+	f.Extension(gogoproto.E_Stdtime, &out.Gogo.Stdtime)
 
 	var rules validate.FieldRules
 	if _, err = f.Extension(validate.E_Rules, &rules); err != nil {

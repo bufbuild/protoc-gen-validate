@@ -11,9 +11,9 @@ go_library(
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/executor",
     visibility = ["//visibility:private"],
     deps = [
-        "//tests/harness:go_default_library",
         "//tests/harness/cases:go",
         "//tests/harness/cases/other_package:go",
+        "//tests/harness/go:go_default_library",
         "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/golang/protobuf/ptypes:go_default_library",
         "//vendor/github.com/golang/protobuf/ptypes/any:go_default_library",
@@ -28,7 +28,8 @@ go_binary(
     name = "executor",
     data = [
         "//tests/harness/cc:cc-harness",
-        "//tests/harness/go:go-harness",
+        "//tests/harness/go/main:go-harness",
+        "//tests/harness/gogo/main:go-harness",
     ],
     embed = [":go_default_library"],
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/executor",

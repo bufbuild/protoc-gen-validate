@@ -10,12 +10,13 @@ import (
 	"strings"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/lyft/protoc-gen-validate/tests/harness"
+	harness "github.com/lyft/protoc-gen-validate/tests/harness/go"
 	"golang.org/x/net/context"
 )
 
 var Harnesses = []Harness{
-	InitHarness("tests/harness/go/go-harness"),
+	InitHarness("tests/harness/go/main/go-harness"),
+	InitHarness("tests/harness/gogo/main/go-harness"),
 	InitHarness("tests/harness/cc/cc-harness"),
 }
 
