@@ -141,14 +141,14 @@ Gogo support has the following limitations:
   // x must be greater than or equal to 20
   uint64 x = 1 [(validate.rules).uint64.gte = 20];
 
-  // x must be in the range [30, 40)
+  // x must be in the range [30, 40]
   fixed32 x = 1 [(validate.rules).fixed32 = {gte:30, lt: 40}];
   ```
 
   Inverting the values of `lt(e)` and `gt(e)` is valid and creates an exclusive range.
 
   ```protobuf
-  // x must be outside the range [30, 40)
+  // x must be outside the range [30, 40]
   double x = 1 [(validate.rules).double = {lt:30, gte:40}];
   ```
 
@@ -531,7 +531,7 @@ google.protobuf.Int32Value x = 1 [(validate.rules).int32.gt = 3];
   // x must be greater than or equal to 20ns
   google.protobuf.Duration x = 1 [(validate.rules).duration.gte.nanos = 20];
 
-  // x must be in the range [0s, 1s)
+  // x must be in the range [0s, 1s]
   google.protobuf.Duration x = 1 [(validate.rules).duration = {
       gte: {},
       lt:  {seconds: 1}
@@ -541,7 +541,7 @@ google.protobuf.Int32Value x = 1 [(validate.rules).int32.gt = 3];
   Inverting the values of `lt(e)` and `gt(e)` is valid and creates an exclusive range.
 
   ```protobuf
-  // x must be outside the range [0s, 1s)
+  // x must be outside the range [0s, 1s]
   google.protobuf.Duration x = 1 [(validate.rules).duration = {
       lt:  {},
       gte: {seconds: 1}
@@ -592,7 +592,7 @@ google.protobuf.Int32Value x = 1 [(validate.rules).int32.gt = 3];
   // x must be greater than or equal to 2009/11/10T23:00:00Z
   google.protobuf.Timestamp x = 1 [(validate.rules).timestamp.gte.seconds = 63393490800];
 
-  // x must be in the range [epoch, 2009/11/10T23:00:00Z)
+  // x must be in the range [epoch, 2009/11/10T23:00:00Z]
   google.protobuf.Timestamp x = 1 [(validate.rules).timestamp = {
       gte: {},
       lt:  {seconds: 63393490800}
@@ -602,7 +602,7 @@ google.protobuf.Int32Value x = 1 [(validate.rules).int32.gt = 3];
   Inverting the values of `lt(e)` and `gt(e)` is valid and creates an exclusive range.
 
   ```protobuf
-  // x must be outside the range [epoch, 2009/11/10T23:00:00Z)
+  // x must be outside the range [epoch, 2009/11/10T23:00:00Z]
   google.protobuf.Timestamp x = 1 [(validate.rules).timestamp = {
       lt:  {},
       gte: {seconds: 63393490800}
@@ -621,7 +621,7 @@ google.protobuf.Int32Value x = 1 [(validate.rules).int32.gt = 3];
   // x must be within ±1s of the current time
   google.protobuf.Timestamp x = 1 [(validate.rules).timestamp.within.seconds = 1];
 
-  // x must be within the range (now, now+1h)
+  // x must be within the range [now, now+1h]
   google.protobuf.Timestamp x = 1 [(validate.rules).timestamp = {
       gt_now: true,
       within: {seconds: 3600}
