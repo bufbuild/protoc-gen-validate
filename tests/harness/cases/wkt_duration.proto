@@ -24,3 +24,10 @@ message DurationGTLT     { google.protobuf.Duration val = 1 [(validate.rules).du
 message DurationExLTGT   { google.protobuf.Duration val = 1 [(validate.rules).duration = {lt: {}, gt: {seconds: 1}}]; }
 message DurationGTELTE   { google.protobuf.Duration val = 1 [(validate.rules).duration = {gte: {seconds: 60}, lte: {seconds: 3600}}]; }
 message DurationExGTELTE { google.protobuf.Duration val = 1 [(validate.rules).duration = {lte: {seconds: 60}, gte: {seconds: 3600}}]; }
+
+// Regression for earlier bug where missing Duration field would short circuit
+// evaluationi in C++.
+message DurationFieldWithOtherFields {
+  google.protobuf.Duration duration_val = 1 [(validate.rules).duration.lte = {seconds: 1}];
+  int32 int_val = 2 [(validate.rules).int32.gt = 16];
+}

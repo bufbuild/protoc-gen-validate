@@ -685,6 +685,14 @@ All PGV dependencies are currently checked into the project. To test PGV, `proto
 
 - **`make harness`**: executes the test-cases against each language's test harness.
 
+### Run all tests under Bazel
+
+Ensure that your `PATH` is setup to include `protoc-gen-go` and `protoc`, then:
+
+```
+bazel run //tests/harness/executor:executor
+```
+
 ### Docker
 
 PGV comes with a [Dockerfile](/Dockerfile) for consistent development tooling and CI. The main entrypoint is `make` with `quick` as the default target. This repo should be volumed into `/go/src/github.com/lyft/protoc-gen-validate` for the proper behavior.
