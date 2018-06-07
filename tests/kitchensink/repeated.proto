@@ -20,5 +20,8 @@ message Repeated {
 
     repeated Embed nonnullable_items = 9 [(validate.rules).repeated.min_items = 1, (gogoproto.nullable) = false];
 
+    repeated string in_item_rules = 10 [(validate.rules).repeated.items.string = {in: ["foo"]}];
+    repeated string not_in_item_rules = 11 [(validate.rules).repeated.items.string = {not_in: ["foo"]}];
+
     message Embed {}
 }
