@@ -99,7 +99,7 @@ var _ error = {{ errname . }}{}
 
 	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
 	{{ if has .Rules.Items.GetString_ "In" }} {{ if .Rules.Items.GetString_.In }}
-	var {{ lookup .Field "InLookup" }} = map[{{ inType .Field .Rules.In }}]struct{}{
+	var {{ lookup .Field "InLookup" }} = map[string]struct{}{
 		{{- range .Rules.Items.GetString_.In }}
 			{{ inKey $f . }}: {},
 		{{- end }}
@@ -109,7 +109,7 @@ var _ error = {{ errname . }}{}
 
 	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
 	{{ if has .Rules.Items.GetString_ "NotIn" }} {{ if .Rules.Items.GetString_.NotIn }}
-	var {{ lookup .Field "NotInLookup" }} = map[{{ inType .Field .Rules.NotIn }}]struct{}{
+	var {{ lookup .Field "NotInLookup" }} = map[string]struct{}{
 		{{- range .Rules.Items.GetString_.NotIn }}
 			{{ inKey $f . }}: {},
 		{{- end }}
