@@ -28,6 +28,26 @@ const msgTpl = `
 		};
 	{{ end }}{{ end }}
 
+	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
+	{{ if has .Rules.Items.GetString_ "In" }} {{ if .Rules.Items.GetString_.In }}
+	const std::set<{{ inType .Field .Rules.In }}> {{ lookup .Field "InLookup" }} = {
+			{{- range .Rules.Items.GetString_.In }}
+				{{ inKey $f . }},
+			{{- end }}
+		};
+	{{ end }}{{ end }}
+	{{ end }}{{ end }}
+
+	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
+	{{ if has .Rules.Items.GetString_ "NotIn" }} {{ if .Rules.Items.GetString_.NotIn }}
+	const std::set<{{ inType .Field .Rules.NotIn }}> {{ lookup .Field "NotInLookup" }} = {
+			{{- range .Rules.Items.GetString_.NotIn }}
+				{{ inKey $f . }},
+			{{- end }}
+		};
+	{{ end }}{{ end }}
+	{{ end }}{{ end }}
+
 	{{ if has .Rules "Pattern"}}{{ if .Rules.Pattern }}
 	{{/* TODO(akonradi) implement pattern matching
 		var {{ lookup .Field "Pattern" }} = regexp.MustCompile({{ lit .Rules.GetPattern }})
