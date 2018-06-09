@@ -30,7 +30,7 @@ const msgTpl = `
 
 	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
 	{{ if has .Rules.Items.GetString_ "In" }} {{ if .Rules.Items.GetString_.In }}
-	const std::set<{{ inType .Field .Rules.In }}> {{ lookup .Field "InLookup" }} = {
+	const std::set<string> {{ lookup .Field "InLookup" }} = {
 			{{- range .Rules.Items.GetString_.In }}
 				{{ inKey $f . }},
 			{{- end }}
@@ -40,7 +40,7 @@ const msgTpl = `
 
 	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
 	{{ if has .Rules.Items.GetString_ "NotIn" }} {{ if .Rules.Items.GetString_.NotIn }}
-	const std::set<{{ inType .Field .Rules.NotIn }}> {{ lookup .Field "NotInLookup" }} = {
+	const std::set<string> {{ lookup .Field "NotInLookup" }} = {
 			{{- range .Rules.Items.GetString_.NotIn }}
 				{{ inKey $f . }},
 			{{- end }}
