@@ -3,32 +3,11 @@ package tpl
 const bytesTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 
-	{{ if $r.Pattern }}
-		if !{{ lookup $f "Pattern" }}.Match({{ accessor . }}) {
-			return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+	{{ if $r.Len }}
+		if len({{ accessor . }}) != {{ $r.GetLen }} {
+			return {{ err . "value length must be " $r.GetLen " bytes" }}
 		}
-	{{ end }}
-
-
-	{{ if $r.Prefix }}
-		if !bytes.HasPrefix({{ accessor . }}, {{ lit $r.GetPrefix }}) {
-			return {{ err . "value does not have prefix " (byteStr $r.GetPrefix) }}
-		}
-	{{ end }}
-
-	{{ if $r.Suffix }}
-		if !bytes.HasSuffix({{ accessor . }}, {{ lit $r.GetSuffix }}) {
-			return {{ err . "value does not have suffix " (byteStr $r.GetSuffix) }}
-		}
-	{{ end }}
-
-	{{ if $r.Contains }}
-		if !bytes.Contains({{ accessor . }}, {{ lit $r.GetContains }}) {
-			return {{ err . "value does not contain " (byteStr $r.GetContains) }}
-		}
-	{{ end }}
-
-	{{ if $r.MinLen }}
+	{{ else if $r.MinLen }}
 		{{ if $r.MaxLen }}
 			{{ if eq $r.GetMinLen $r.GetMaxLen }}
 				if len({{ accessor . }}) != {{ $r.GetMinLen }} {
@@ -47,6 +26,24 @@ const bytesTpl = `
 	{{ else if $r.MaxLen }}
 		if len({{ accessor . }}) > {{ $r.GetMaxLen }} {
 			return {{ err . "value length must be at most " $r.GetMaxLen " bytes" }}
+		}
+	{{ end }}
+
+	{{ if $r.Prefix }}
+		if !bytes.HasPrefix({{ accessor . }}, {{ lit $r.GetPrefix }}) {
+			return {{ err . "value does not have prefix " (byteStr $r.GetPrefix) }}
+		}
+	{{ end }}
+
+	{{ if $r.Suffix }}
+		if !bytes.HasSuffix({{ accessor . }}, {{ lit $r.GetSuffix }}) {
+			return {{ err . "value does not have suffix " (byteStr $r.GetSuffix) }}
+		}
+	{{ end }}
+
+	{{ if $r.Contains }}
+		if !bytes.Contains({{ accessor . }}, {{ lit $r.GetContains }}) {
+			return {{ err . "value does not contain " (byteStr $r.GetContains) }}
 		}
 	{{ end }}
 
@@ -78,5 +75,11 @@ const bytesTpl = `
 		if ip := net.IP({{ accessor . }}); ip.To16() == nil || ip.To4() != nil {
 			return {{ err . "value must be a valid IPv6 address" }}
 		}
+	{{ end }}
+
+	{{ if $r.Pattern }}
+	if !{{ lookup $f "Pattern" }}.Match({{ accessor . }}) {
+		return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+	}
 	{{ end }}
 `

@@ -5,15 +5,37 @@ const bytesTpl = `
 	{{ template "const" . }}
 	{{ template "in" . }}
 
-	{{ if $r.Pattern }}
-		{{ unimplemented }}
-		{{/* TODO(akonradi) implement regular expression matching
-		if !{{ lookup $f "Pattern" }}.Match({{ accessor . }}) {
-			return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+	{{ if $r.Len }}
+	{
+		const auto length = {{ accessor . }}.size();
+		if (length != {{ $r.GetLen }}) {
+			{{ err . "value length must be " $r.GetLen " bytes" }}
 		}
-		*/}}
+	}
+	{{ else if $r.MinLen }}
+	{
+		const auto length = {{ accessor . }}.size();
+		{{ if $r.MaxLen }}
+			{{ if eq $r.GetMinLen $r.GetMaxLen }}
+				if (length != {{ $r.GetMinLen }}) {
+					{{ err . "value length must be " $r.GetMinLen " bytes" }}
+				}
+			{{ else }}
+				if (length < {{ $r.GetMinLen }} || length > {{ $r.GetMaxLen }}) {
+					{{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " bytes, inclusive" }}
+				}
+			{{ end }}
+		{{ else }}
+			if (length < {{ $r.GetMinLen }}) {
+				{{ err . "value length must be at least " $r.GetMinLen " bytes" }}
+			}
+		{{ end }}
+	}
+	{{ else if $r.MaxLen }}
+		if ({{ accessor . }}.size() > {{ $r.GetMaxLen }}) {
+			{{ err . "value length must be at most " $r.GetMaxLen " bytes" }}
+		}
 	{{ end }}
-
 
 	{{ if $r.Prefix }}
 	{
@@ -41,31 +63,6 @@ const bytesTpl = `
 	}
 	{{ end }}
 
-	{{ if $r.MinLen }}
-	{
-		const auto length = {{ accessor . }}.size();
-		{{ if $r.MaxLen }}
-			{{ if eq $r.GetMinLen $r.GetMaxLen }}
-				if (length != {{ $r.GetMinLen }}) {
-					{{ err . "value length must be " $r.GetMinLen " bytes" }}
-				}
-			{{ else }}
-				if (length < {{ $r.GetMinLen }} || length > {{ $r.GetMaxLen }}) {
-					{{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " bytes, inclusive" }}
-				}
-			{{ end }}
-		{{ else }}
-			if (length < {{ $r.GetMinLen }}) {
-				{{ err . "value length must be at least " $r.GetMinLen " bytes" }}
-			}
-		{{ end }}
-	}
-	{{ else if $r.MaxLen }}
-		if ({{ accessor . }}.size() > {{ $r.GetMaxLen }}) {
-			{{ err . "value length must be at most " $r.GetMaxLen " bytes" }}
-		}
-	{{ end }}
-
 	{{ if $r.GetIp }}
 		{{ unimplemented }}
 		{{/* TODO(akonradi) implement all of this
@@ -87,5 +84,14 @@ const bytesTpl = `
 			return {{ err . "value must be a valid IPv6 address" }}
 		}
 		*/}}
+	{{ end }}
+
+	{{ if $r.Pattern }}
+	{{ unimplemented }}
+	{{/* TODO(akonradi) implement regular expression matching
+	if !{{ lookup $f "Pattern" }}.Match({{ accessor . }}) {
+		return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+	}
+	*/}}
 	{{ end }}
 `

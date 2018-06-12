@@ -455,136 +455,148 @@ message BoolRules {
 // StringRules describe the constraints applied to `string` values
 message StringRules {
     // Const specifies that this field must be exactly the specified value
-    optional string const = 1;
+	optional string const = 1;
+
+	// Len specifies that this field must be the specified number of
+    // characters (Unicode code points). Note that the number of
+    // characters may differ from the number of bytes in the string.
+    optional uint64 len = 2;
 
     // MinLen specifies that this field must be the specified number of
     // characters (Unicode code points) at a minimum. Note that the number of
     // characters may differ from the number of bytes in the string.
-    optional uint64 min_len = 2;
+    optional uint64 min_len = 3;
 
     // MaxLen specifies that this field must be the specified number of
     // characters (Unicode code points) at a maximum. Note that the number of
     // characters may differ from the number of bytes in the string.
-    optional uint64 max_len = 3;
+    optional uint64 max_len = 4;
+
+	// LenBytes specifies that this field must be the specified number of bytes
+    // at a minimum
+    optional uint64 len_bytes = 5;
 
     // MinBytes specifies that this field must be the specified number of bytes
     // at a minimum
-    optional uint64 min_bytes = 4;
+    optional uint64 min_bytes = 6;
 
     // MaxBytes specifies that this field must be the specified number of bytes
     // at a maximum
-    optional uint64 max_bytes = 5;
+    optional uint64 max_bytes = 7;
 
     // Pattern specifes that this field must match against the specified
     // regular expression (RE2 syntax). The included expression should elide
     // any delimiters.
-    optional string pattern  = 6;
+    optional string pattern  = 8;
 
     // Prefix specifies that this field must have the specified substring at
     // the beginning of the string.
-    optional string prefix   = 7;
+    optional string prefix   = 9;
 
     // Suffix specifies that this field must have the specified substring at
     // the end of the string.
-    optional string suffix   = 8;
+    optional string suffix   = 10;
 
     // Contains specifies that this field must have the specified substring
     // anywhere in the string.
-    optional string contains = 9;
+    optional string contains = 11;
 
     // In specifies that this field must be equal to one of the specified
     // values
-    repeated string in     = 10;
+    repeated string in     = 12;
 
     // NotIn specifies that this field cannot be equal to one of the specified
     // values
-    repeated string not_in = 11;
+    repeated string not_in = 13;
 
     // WellKnown rules provide advanced constraints against common string
     // patterns
     oneof well_known {
         // Email specifies that the field must be a valid email address as
         // defined by RFC 5322
-        bool email    = 12;
+        bool email    = 14;
 
         // Hostname specifies that the field must be a valid hostname as
         // defined by RFC 1034. This constraint does not support
         // internationalized domain names (IDNs).
-        bool hostname = 13;
+        bool hostname = 15;
 
         // Ip specifies that the field must be a valid IP (v4 or v6) address.
         // Valid IPv6 addresses should not include surrounding square brackets.
-        bool ip       = 14;
+        bool ip       = 16;
 
         // Ipv4 specifies that the field must be a valid IPv4 address.
-        bool ipv4     = 15;
+        bool ipv4     = 17;
 
         // Ipv6 specifies that the field must be a valid IPv6 address. Valid
         // IPv6 addresses should not include surrounding square brackets.
-        bool ipv6     = 16;
+        bool ipv6     = 18;
 
         // Uri specifies that the field must be a valid, absolute URI as defined
         // by RFC 3986
-        bool uri      = 17;
+        bool uri      = 19;
 
         // UriRef specifies that the field must be a valid URI as defined by RFC
         // 3986 and may be relative or absolute.
-        bool uri_ref  = 18;
+        bool uri_ref  = 20;
     }
 }
 
 // BytesRules describe the constraints applied to `bytes` values
 message BytesRules {
     // Const specifies that this field must be exactly the specified value
-    optional bytes const = 1;
+	optional bytes const = 1;
+
+	// Len specifies that this field must be the specified number of bytes
+    optional uint64 len = 2;
 
     // MinLen specifies that this field must be the specified number of bytes
     // at a minimum
-    optional uint64 min_len = 2;
+    optional uint64 min_len = 3;
 
     // MaxLen specifies that this field must be the specified number of bytes
     // at a maximum
-    optional uint64 max_len = 3;
+    optional uint64 max_len = 4;
 
     // Pattern specifes that this field must match against the specified
     // regular expression (RE2 syntax). The included expression should elide
     // any delimiters.
-    optional string pattern  = 4;
+    optional string pattern  = 5;
 
     // Prefix specifies that this field must have the specified bytes at the
     // beginning of the string.
-    optional bytes  prefix   = 5;
+    optional bytes  prefix   = 6;
 
     // Suffix specifies that this field must have the specified bytes at the
     // end of the string.
-    optional bytes  suffix   = 6;
+    optional bytes  suffix   = 7;
 
     // Contains specifies that this field must have the specified bytes
     // anywhere in the string.
-    optional bytes  contains = 7;
+    optional bytes  contains = 8;
 
     // In specifies that this field must be equal to one of the specified
     // values
-    repeated bytes in     = 8;
+    repeated bytes in     = 9;
 
     // NotIn specifies that this field cannot be equal to one of the specified
     // values
-    repeated bytes not_in = 9;
+    repeated bytes not_in = 10;
 
     // WellKnown rules provide advanced constraints against common byte
     // patterns
     oneof well_known {
         // Ip specifies that the field must be a valid IP (v4 or v6) address in
         // byte format
-        bool ip   = 10;
+        bool ip   = 11;
 
         // Ipv4 specifies that the field must be a valid IPv4 address in byte
         // format
-        bool ipv4 = 11;
+        bool ipv4 = 12;
 
         // Ipv6 specifies that the field must be a valid IPv6 address in byte
         // format
-        bool ipv6 = 12;
+        bool ipv6 = 13;
     }
 }
 

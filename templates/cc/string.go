@@ -4,14 +4,67 @@ const strTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 	{{ template "const" . }}
 	{{ template "in" . }}
-	{{ if $r.Pattern }}
+	{{ if $r.Len }}
+		if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetLen }} {
+			return {{ err . "value length must be " $r.GetLen " runes" }}
+		}
+	{{ else if $r.MinLen }}
 		{{ unimplemented }}
-		{{/* TODO(akonradi) implement regular expression constraints.
-		if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
-			return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+		{{ if $r.MaxLen }}
+			{{ if eq $r.GetMinLen $r.GetMaxLen }}
+				if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetMinLen }} {
+					return {{ err . "value length must be " $r.GetMinLen " runes" }}
+				}
+			{{ else }}
+				if l := utf8.RuneCountInString({{ accessor . }}); l < {{ $r.GetMinLen }} || l > {{ $r.GetMaxLen }} {
+					return {{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " runes, inclusive" }}
+				}
+			{{ end }}
+		{{ else }}
+			if utf8.RuneCountInString({{ accessor . }}) < {{ $r.GetMinLen }} {
+				return {{ err . "value length must be at least " $r.GetMinLen " runes" }}
+			}
+		{{ end }}
+		*/}}
+	{{ else if $r.MaxLen }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement UTF-8 length constraints
+		if utf8.RuneCountInString({{ accessor . }}) > {{ $r.GetMaxLen }} {
+			return {{ err . "value length must be at most " $r.GetMaxLen " runes" }}
 		}
 		*/}}
 	{{ end }}
+
+	{{ if $r.LenBytes }}
+		const auto length = {{ accessor . }}.size();
+		if (length != {{ $r.GetLenBytes }}) {
+			{{ err . "value length must be " $r.GetLenBytes " bytes" }}
+		}
+	{{ else if $r.MinBytes }}
+	{
+		const auto length = {{ accessor . }}.size();
+		{{ if $r.MaxBytes }}
+			{{ if eq $r.GetMinBytes $r.GetMaxBytes }}
+				if (length != {{ $r.GetMinBytes }}) {
+					{{ err . "value length must be " $r.GetMinBytes " bytes" }}
+				}
+			{{ else }}
+				if (length < {{ $r.GetMinBytes }} || length > {{ $r.GetMaxBytes }}) {
+					{{ err . "value length must be between " $r.GetMinBytes " and " $r.GetMaxBytes " bytes, inclusive" }}
+				}
+			{{ end }}
+		{{ else }}
+			if (length < {{ $r.GetMinBytes }}) {
+				{{ err . "value length must be at least " $r.GetMinBytes " bytes" }}
+			}
+		{{ end }}
+	}
+	{{ else if $r.MaxBytes }}
+		if ({{ accessor . }}.size() > {{ $r.GetMaxBytes }}) {
+			{{ err . "value length must be at most " $r.GetMaxBytes " bytes" }}
+		}
+	{{ end }}
+
 	{{ if $r.Prefix }}
 	{
 		const std::string prefix = {{ lit $r.GetPrefix }};
@@ -92,56 +145,12 @@ const strTpl = `
 		*/}}
 	{{ end }}
 
-	{{ if $r.MinLen }}
-		{{ unimplemented }}
-		{{/* TODO(akonradi) implement UTF-8 length constraints
-		{{ if $r.MaxLen }}
-			{{ if eq $r.GetMinLen $r.GetMaxLen }}
-				if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetMinLen }} {
-					return {{ err . "value length must be " $r.GetMinLen " runes" }}
-				}
-			{{ else }}
-				if l := utf8.RuneCountInString({{ accessor . }}); l < {{ $r.GetMinLen }} || l > {{ $r.GetMaxLen }} {
-					return {{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " runes, inclusive" }}
-				}
-			{{ end }}
-		{{ else }}
-			if utf8.RuneCountInString({{ accessor . }}) < {{ $r.GetMinLen }} {
-				return {{ err . "value length must be at least " $r.GetMinLen " runes" }}
-			}
-		{{ end }}
-		*/}}
-	{{ else if $r.MaxLen }}
-		{{ unimplemented }}
-		{{/* TODO(akonradi) implement UTF-8 length constraints
-		if utf8.RuneCountInString({{ accessor . }}) > {{ $r.GetMaxLen }} {
-			return {{ err . "value length must be at most " $r.GetMaxLen " runes" }}
-		}
-		*/}}
-	{{ end }}
-
-	{{ if $r.MinBytes }}
-	{
-		const auto length = {{ accessor . }}.size();
-		{{ if $r.MaxBytes }}
-			{{ if eq $r.GetMinBytes $r.GetMaxBytes }}
-				if (length != {{ $r.GetMinBytes }}) {
-					{{ err . "value length must be " $r.GetMinBytes " bytes" }}
-				}
-			{{ else }}
-				if (length < {{ $r.GetMinBytes }} || length > {{ $r.GetMaxBytes }}) {
-					{{ err . "value length must be between " $r.GetMinBytes " and " $r.GetMaxBytes " bytes, inclusive" }}
-				}
-			{{ end }}
-		{{ else }}
-			if (length < {{ $r.GetMinBytes }}) {
-				{{ err . "value length must be at least " $r.GetMinBytes " bytes" }}
-			}
-		{{ end }}
+	{{ if $r.Pattern }}
+	{{ unimplemented }}
+	{{/* TODO(akonradi) implement regular expression constraints.
+	if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
+		return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
 	}
-	{{ else if $r.MaxBytes }}
-		if ({{ accessor . }}.size() > {{ $r.GetMaxBytes }}) {
-			{{ err . "value length must be at most " $r.GetMaxBytes " bytes" }}
-		}
+	*/}}
 	{{ end }}
 `
