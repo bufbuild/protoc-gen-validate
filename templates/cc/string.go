@@ -10,6 +10,7 @@ const strTpl = `
 		}
 	{{ else if $r.MinLen }}
 		{{ unimplemented }}
+		{{/* TODO(akonradi) implement UTF-8 length constraints
 		{{ if $r.MaxLen }}
 			{{ if eq $r.GetMinLen $r.GetMaxLen }}
 				if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetMinLen }} {
