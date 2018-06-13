@@ -427,17 +427,13 @@ func (m Module) checkLen(len, min, max *uint64) {
 		return
 	}
 
-	if min != nil {
-		m.Assert(
-			*min == *len,
-			"`min` value is not equal to `len` value")
-	}
+	m.Assert(
+		min == nil,
+		"cannot have both `len` and `min_len` rules on the same field")
 
-	if max != nil {
-		m.Assert(
-			*max == *len,
-			"`max` value is not equal to `len` value")
-	}
+	m.Assert(
+		max == nil,
+		"cannot have both `len` and `max_len` rules on the same field")
 }
 
 func (m Module) checkPattern(p *string, in int) {

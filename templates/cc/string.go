@@ -5,9 +5,12 @@ const strTpl = `
 	{{ template "const" . }}
 	{{ template "in" . }}
 	{{ if $r.Len }}
+		{{ unimplemented }}
+		{{/* TODO(akonradi) implement UTF-8 length constraints
 		if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetLen }} {
 			return {{ err . "value length must be " $r.GetLen " runes" }}
 		}
+		*/}}
 	{{ else if $r.MinLen }}
 		{{ unimplemented }}
 		{{/* TODO(akonradi) implement UTF-8 length constraints
@@ -37,10 +40,12 @@ const strTpl = `
 	{{ end }}
 
 	{{ if $r.LenBytes }}
+	{
 		const auto length = {{ accessor . }}.size();
 		if (length != {{ $r.GetLenBytes }}) {
 			{{ err . "value length must be " $r.GetLenBytes " bytes" }}
 		}
+	}
 	{{ else if $r.MinBytes }}
 	{
 		const auto length = {{ accessor . }}.size();
