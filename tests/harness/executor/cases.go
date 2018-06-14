@@ -715,6 +715,12 @@ var stringCases = []TestCase{
 	{"string - not in - valid", &cases.StringNotIn{Val: "quux"}, true},
 	{"string - not in - invalid", &cases.StringNotIn{Val: "fizz"}, false},
 
+	{"string - len - valid", &cases.StringLen{Val: "baz"}, true},
+	{"string - len - valid (multibyte)", &cases.StringLen{Val: "你好吖"}, true},
+	{"string - len - invalid (lt)", &cases.StringLen{Val: "go"}, false},
+	{"string - len - invalid (gt)", &cases.StringLen{Val: "fizz"}, false},
+	{"string - len - invalid (multibyte)", &cases.StringLen{Val: "你好"}, false},
+
 	{"string - min len - valid", &cases.StringMinLen{Val: "protoc"}, true},
 	{"string - min len - valid (min)", &cases.StringMinLen{Val: "baz"}, true},
 	{"string - min len - invalid", &cases.StringMinLen{Val: "go"}, false},
@@ -731,6 +737,11 @@ var stringCases = []TestCase{
 	{"string - min/max len - valid (multibyte)", &cases.StringMinMaxLen{Val: "你好你好"}, true},
 	{"string - min/max len - invalid (below)", &cases.StringMinMaxLen{Val: "go"}, false},
 	{"string - min/max len - invalid (above)", &cases.StringMinMaxLen{Val: "validate"}, false},
+
+	{"string - len bytes - valid", &cases.StringLenBytes{Val: "pace"}, true},
+	{"string - len bytes - invalid (lt)", &cases.StringLenBytes{Val: "val"}, false},
+	{"string - len bytes - invalid (gt)", &cases.StringLenBytes{Val: "world"}, false},
+	{"string - len bytes - invalid (multibyte)", &cases.StringLenBytes{Val: "世界和平"}, false},
 
 	{"string - min bytes - valid", &cases.StringMinBytes{Val: "proto"}, true},
 	{"string - min bytes - valid (min)", &cases.StringMinBytes{Val: "quux"}, true},
@@ -819,6 +830,10 @@ var bytesCases = []TestCase{
 	{"bytes - in - invalid", &cases.BytesIn{Val: []byte("quux")}, false},
 	{"bytes - not in - valid", &cases.BytesNotIn{Val: []byte("quux")}, true},
 	{"bytes - not in - invalid", &cases.BytesNotIn{Val: []byte("fizz")}, false},
+
+	{"bytes - len - valid", &cases.BytesLen{Val: []byte("baz")}, true},
+	{"bytes - len - invalid (lt)", &cases.BytesLen{Val: []byte("go")}, false},
+	{"bytes - len - invalid (gt)", &cases.BytesLen{Val: []byte("fizz")}, false},
 
 	{"bytes - min len - valid", &cases.BytesMinLen{Val: []byte("fizz")}, true},
 	{"bytes - min len - valid (min)", &cases.BytesMinLen{Val: []byte("baz")}, true},
