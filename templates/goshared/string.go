@@ -33,7 +33,7 @@ const strTpl = `
 
 	{{ if $r.LenBytes }}
 		if len({{ accessor . }}) != {{ $r.LenBytes }} {
-			return {{ err . "value length must be " $r.LenBytes " bytes" }}
+			return {{ err . "value length must be " $r.GetLenBytes " bytes" }}
 		}
 	{{ else if $r.MinBytes }}
 		{{ if $r.MaxBytes }}
