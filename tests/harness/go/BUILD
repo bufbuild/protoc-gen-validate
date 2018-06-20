@@ -6,7 +6,7 @@ go_library(
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/go",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/golang/protobuf/proto:go_default_library",
-        "//vendor/github.com/golang/protobuf/ptypes/any:go_default_library",
+        "@com_github_golang_protobuf//proto:go_default_library",
+        "@com_github_golang_protobuf//ptypes/any:go_default_library",
     ],
 )

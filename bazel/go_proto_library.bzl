@@ -374,7 +374,7 @@ def go_proto_repositories(shared = 1):
   go_repository(
       name = "com_github_golang_protobuf",
       importpath = "github.com/golang/protobuf",
-      commit = "5afd06f9d81a86d6e3bb7dc702d6bd148ea3ff23",
+      commit = "925541529c1fa6821df4e44ce2723319eb2be768",
   )
   if shared:
     # if using multiple *_proto_library, allows caller to skip this.
