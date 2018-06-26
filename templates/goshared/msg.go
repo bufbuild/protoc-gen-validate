@@ -97,6 +97,26 @@ var _ error = {{ errname . }}{}
 	{{ end }}{{ end }}
 	{{ end }}{{ end }}
 
+	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
+	{{ if has .Rules.Items.GetString_ "In" }} {{ if .Rules.Items.GetString_.In }}
+		var {{ lookup .Field "InLookup" }} = map[string]struct{}{
+			{{- range .Rules.Items.GetString_.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ end }}{{ end }}
+
+	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
+	{{ if has .Rules.Items.GetString_ "NotIn" }} {{ if .Rules.Items.GetString_.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[string]struct{}{
+			{{- range .Rules.Items.GetString_.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ end }}{{ end }}
+
 	{{ if has .Rules "Keys"}}{{ if .Rules.Keys }}
 	{{ if has .Rules.Keys.GetString_ "Pattern" }} {{ if .Rules.Keys.GetString_.Pattern }}
 		var {{ lookup .Field "Pattern" }} = regexp.MustCompile({{ lit .Rules.Keys.GetString_.GetPattern }})

@@ -753,9 +753,9 @@ var stringCases = []TestCase{
 	{"string - pattern - invalid", &cases.StringPattern{Val: "!@#$%^&*()"}, false},
 	{"string - pattern - invalid (empty)", &cases.StringPattern{Val: ""}, false},
 
-	{ "string - pattern (escapes) - valid", &cases.StringPatternEscapes{Val: "* \\ x"}, true},
-	{ "string - pattern (escapes) - invalid", &cases.StringPatternEscapes{Val: "invalid"}, false},
-	{ "string - pattern (escapes) - invalid (empty)", &cases.StringPatternEscapes{Val: ""}, false},
+	{"string - pattern (escapes) - valid", &cases.StringPatternEscapes{Val: "* \\ x"}, true},
+	{"string - pattern (escapes) - invalid", &cases.StringPatternEscapes{Val: "invalid"}, false},
+	{"string - pattern (escapes) - invalid (empty)", &cases.StringPatternEscapes{Val: ""}, false},
 
 	{"string - prefix - valid", &cases.StringPrefix{Val: "foobar"}, true},
 	{"string - prefix - valid (only)", &cases.StringPrefix{Val: "foo"}, true},
@@ -957,6 +957,10 @@ var repeatedCases = []TestCase{
 	{"repeated - items - valid (pattern)", &cases.RepeatedItemPattern{Val: []string{"Alpha", "Beta123"}}, true},
 	{"repeated - items - invalid", &cases.RepeatedItemRule{Val: []float32{1, -2, 3}}, false},
 	{"repeated - items - invalid (pattern)", &cases.RepeatedItemPattern{Val: []string{"Alpha", "!@#$%^&*()"}}, false},
+	{"repeated - items - invalid (in)", &cases.RepeatedItemIn{Val: []string{"baz"}}, false},
+	{"repeated - items - valid (in)", &cases.RepeatedItemIn{Val: []string{"foo"}}, true},
+	{"repeated - items - invalid (not_in)", &cases.RepeatedItemNotIn{Val: []string{"foo"}}, false},
+	{"repeated - items - valid (not_in)", &cases.RepeatedItemNotIn{Val: []string{"baz"}}, true},
 
 	{"repeated - embed skip - valid", &cases.RepeatedEmbedSkip{Val: []*cases.Embed{{Val: 1}}}, true},
 	{"repeated - embed skip - valid (invalid element)", &cases.RepeatedEmbedSkip{Val: []*cases.Embed{{Val: -1}}}, true},
