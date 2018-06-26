@@ -66,10 +66,10 @@ go_proto_library(
     deps = [
         "//gogoproto:go_default_library",
         "//validate:go_default_library",
-        "//vendor/github.com/golang/protobuf/ptypes/any:go_default_library",
-        "//vendor/github.com/golang/protobuf/ptypes/duration:go_default_library",
-        "//vendor/github.com/golang/protobuf/ptypes/timestamp:go_default_library",
-        "//vendor/github.com/golang/protobuf/ptypes/wrappers:go_default_library",
+        "@com_github_golang_protobuf//ptypes/any:go_default_library",
+        "@com_github_golang_protobuf//ptypes/duration:go_default_library",
+        "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
+        "@com_github_golang_protobuf//ptypes/wrappers:go_default_library",
     ],
 )
 
