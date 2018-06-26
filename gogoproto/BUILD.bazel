@@ -20,5 +20,5 @@ go_proto_library(
     importpath = "github.com/lyft/protoc-gen-validate/gogoproto",
     proto = ":gogoproto_proto",
     visibility = ["//visibility:public"],
-    deps = ["//vendor/github.com/golang/protobuf/protoc-gen-go/descriptor:go_default_library"],
+    deps = ["@com_github_golang_protobuf//protoc-gen-go/descriptor:go_default_library"],
 )
