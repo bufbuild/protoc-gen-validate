@@ -3,21 +3,15 @@ package tpl
 const bytesTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 
-	{{ if $r.Len }}
+	{{ if or $r.Len (and $r.MinLen $r.MaxLen (eq $r.GetMinLen $r.GetMaxLen)) }}
 		if len({{ accessor . }}) != {{ $r.GetLen }} {
 			return {{ err . "value length must be " $r.GetLen " bytes" }}
 		}
 	{{ else if $r.MinLen }}
 		{{ if $r.MaxLen }}
-			{{ if eq $r.GetMinLen $r.GetMaxLen }}
-				if len({{ accessor . }}) != {{ $r.GetMinLen }} {
-					return {{ err . "value length must be " $r.GetMinLen " bytes" }}
-				}
-			{{ else }}
-				if l := len({{ accessor . }}); l < {{ $r.GetMinLen }} || l > {{ $r.GetMaxLen }} {
-					return {{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " bytes, inclusive" }}
-				}
-			{{ end }}
+			if l := len({{ accessor . }}); l < {{ $r.GetMinLen }} || l > {{ $r.GetMaxLen }} {
+				return {{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " bytes, inclusive" }}
+			}
 		{{ else }}
 			if len({{ accessor . }}) < {{ $r.GetMinLen }} {
 				return {{ err . "value length must be at least " $r.GetMinLen " bytes" }}

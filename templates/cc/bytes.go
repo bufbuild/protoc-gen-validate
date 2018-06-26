@@ -5,7 +5,7 @@ const bytesTpl = `
 	{{ template "const" . }}
 	{{ template "in" . }}
 
-	{{ if $r.Len }}
+	{{ if or $r.Len (and $r.MinLen $r.MaxLen (eq $r.GetMinLen $r.GetMaxLen)) }}
 	{
 		const auto length = {{ accessor . }}.size();
 		if (length != {{ $r.GetLen }}) {
@@ -16,15 +16,9 @@ const bytesTpl = `
 	{
 		const auto length = {{ accessor . }}.size();
 		{{ if $r.MaxLen }}
-			{{ if eq $r.GetMinLen $r.GetMaxLen }}
-				if (length != {{ $r.GetMinLen }}) {
-					{{ err . "value length must be " $r.GetMinLen " bytes" }}
-				}
-			{{ else }}
-				if (length < {{ $r.GetMinLen }} || length > {{ $r.GetMaxLen }}) {
-					{{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " bytes, inclusive" }}
-				}
-			{{ end }}
+			if (length < {{ $r.GetMinLen }} || length > {{ $r.GetMaxLen }}) {
+				{{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " bytes, inclusive" }}
+			}
 		{{ else }}
 			if (length < {{ $r.GetMinLen }}) {
 				{{ err . "value length must be at least " $r.GetMinLen " bytes" }}
