@@ -23,15 +23,9 @@ const strTpl = `
 		{{ unimplemented }}
 		{{/* TODO(akonradi) implement UTF-8 length constraints
 		{{ if $r.MaxLen }}
-			{{ if eq $r.GetMinLen $r.GetMaxLen }}
-				if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetMinLen }} {
-					return {{ err . "value length must be " $r.GetMinLen " runes" }}
-				}
-			{{ else }}
-				if l := utf8.RuneCountInString({{ accessor . }}); l < {{ $r.GetMinLen }} || l > {{ $r.GetMaxLen }} {
-					return {{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " runes, inclusive" }}
-				}
-			{{ end }}
+			if l := utf8.RuneCountInString({{ accessor . }}); l < {{ $r.GetMinLen }} || l > {{ $r.GetMaxLen }} {
+				return {{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " runes, inclusive" }}
+			}
 		{{ else }}
 			if utf8.RuneCountInString({{ accessor . }}) < {{ $r.GetMinLen }} {
 				return {{ err . "value length must be at least " $r.GetMinLen " runes" }}
@@ -47,12 +41,18 @@ const strTpl = `
 		*/}}
 	{{ end }}
 
-	{{ if $r.LenBytes }}
+	{{ if or $r.LenBytes (and $r.MinBytes $r.MaxBytes (eq $r.GetMinBytes $r.GetMaxBytes)) }}
 	{
 		const auto length = {{ accessor . }}.size();
-		if (length != {{ $r.GetLenBytes }}) {
-			{{ err . "value length must be " $r.GetLenBytes " bytes" }}
-		}
+		{{ if $r.LenBytes }}
+			if (length != {{ $r.GetLenBytes }}) {
+				{{ err . "value length must be " $r.GetLenBytes " bytes" }}
+			}
+		{{ else }}
+			if (length != {{ $r.GetMinBytes }}) {
+				{{ err . "value length must be " $r.GetMinBytes " bytes" }}
+			}
+		{{ end }}
 	}
 	{{ else if $r.MinBytes }}
 	{
