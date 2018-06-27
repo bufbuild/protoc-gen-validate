@@ -13,6 +13,7 @@ message BytesLen         { bytes val = 1 [(validate.rules).bytes.len = 3]; }
 message BytesMinLen      { bytes val = 1 [(validate.rules).bytes.min_len = 3]; }
 message BytesMaxLen      { bytes val = 1 [(validate.rules).bytes.max_len = 5]; }
 message BytesMinMaxLen   { bytes val = 1 [(validate.rules).bytes = {min_len: 3, max_len: 5}]; }
+message BytesEqualMinMaxLen   { bytes val = 1 [(validate.rules).bytes = {min_len: 5, max_len: 5}]; }
 message BytesPattern     { bytes val = 1 [(validate.rules).bytes.pattern = "^[\x00-\x7F]+$"]; }
 message BytesPrefix      { bytes val = 1 [(validate.rules).bytes.prefix = "\x99"]; }
 message BytesContains    { bytes val = 1 [(validate.rules).bytes.contains = "bar"]; }

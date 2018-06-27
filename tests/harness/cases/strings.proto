@@ -13,10 +13,12 @@ message StringLen            { string val = 1 [(validate.rules).string.len = 3];
 message StringMinLen         { string val = 1 [(validate.rules).string.min_len = 3]; }
 message StringMaxLen         { string val = 1 [(validate.rules).string.max_len = 5]; }
 message StringMinMaxLen      { string val = 1 [(validate.rules).string = {min_len: 3, max_len: 5}]; }
+message StringEqualMinMaxLen      { string val = 1 [(validate.rules).string = {min_len: 5, max_len: 5}]; }
 message StringLenBytes       { string val = 1 [(validate.rules).string.len_bytes = 4]; }
 message StringMinBytes       { string val = 1 [(validate.rules).string.min_bytes = 4]; }
 message StringMaxBytes       { string val = 1 [(validate.rules).string.max_bytes = 8]; }
 message StringMinMaxBytes    { string val = 1 [(validate.rules).string = {min_bytes: 4, max_bytes: 8}]; }
+message StringEqualMinMaxBytes    { string val = 1 [(validate.rules).string = {min_bytes: 4, max_bytes: 8}]; }
 message StringPattern        { string val = 1 [(validate.rules).string.pattern = "(?i)^[a-z0-9]+$"]; }
 message StringPatternEscapes { string val = 1 [(validate.rules).string.pattern = "\\* \\\\ \\w"]; }
 message StringPrefix         { string val = 1 [(validate.rules).string.prefix = "foo"]; }
