@@ -4,13 +4,21 @@ const strTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 	{{ template "const" . }}
 	{{ template "in" . }}
-	{{ if $r.Len }}
+	{{ if or $r.Len (and $r.MinLen $r.MaxLen (eq $r.GetMinLen $r.GetMaxLen)) }}
 		{{ unimplemented }}
-		{{/* TODO(akonradi) implement UTF-8 length constraints
-		if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetLen }} {
-			return {{ err . "value length must be " $r.GetLen " runes" }}
-		}
-		*/}}
+		{{ if $r.Len }}
+			{{/* TODO(akonradi) implement UTF-8 length constraints
+			if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetLen }} {
+				return {{ err . "value length must be " $r.GetLen " runes" }}
+			}
+			*/}}
+		{{ else }}
+			{{/* TODO(akonradi) implement UTF-8 length constraints
+			if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetMinLen }} {
+				return {{ err . "value length must be " $r.GetMinLen " runes" }}
+			}
+			*/}}
+		{{ end }}
 	{{ else if $r.MinLen }}
 		{{ unimplemented }}
 		{{/* TODO(akonradi) implement UTF-8 length constraints

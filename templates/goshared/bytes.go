@@ -4,9 +4,15 @@ const bytesTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 
 	{{ if or $r.Len (and $r.MinLen $r.MaxLen (eq $r.GetMinLen $r.GetMaxLen)) }}
-		if len({{ accessor . }}) != {{ $r.GetLen }} {
-			return {{ err . "value length must be " $r.GetLen " bytes" }}
-		}
+		{{ if $r.Len }}
+			if len({{ accessor . }}) != {{ $r.GetLen }} {
+				return {{ err . "value length must be " $r.GetLen " bytes" }}
+			}
+		{{ else }}
+			if len({{ accessor . }}) != {{ $r.GetMinLen }} {
+				return {{ err . "value length must be " $r.GetMinLen " bytes" }}
+			}
+		{{ end }}
 	{{ else if $r.MinLen }}
 		{{ if $r.MaxLen }}
 			if l := len({{ accessor . }}); l < {{ $r.GetMinLen }} || l > {{ $r.GetMaxLen }} {

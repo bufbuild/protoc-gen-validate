@@ -7,10 +7,17 @@ const bytesTpl = `
 
 	{{ if or $r.Len (and $r.MinLen $r.MaxLen (eq $r.GetMinLen $r.GetMaxLen)) }}
 	{
-		const auto length = {{ accessor . }}.size();
-		if (length != {{ $r.GetLen }}) {
-			{{ err . "value length must be " $r.GetLen " bytes" }}
-		}
+		{{ if $r.Len }}
+			const auto length = {{ accessor . }}.size();
+			if (length != {{ $r.GetLen }}) {
+				{{ err . "value length must be " $r.GetLen " bytes" }}
+			}
+		{{ else }}
+			const auto length = {{ accessor . }}.size();
+			if (length != {{ $r.GetMinLen }}) {
+				{{ err . "value length must be " $r.GetMinLen " bytes" }}
+			}
+		{{ end }}
 	}
 	{{ else if $r.MinLen }}
 	{

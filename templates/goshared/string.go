@@ -6,8 +6,13 @@ const strTpl = `
 	{{ template "in" . }}
 
 	{{ if or $r.Len (and $r.MinLen $r.MaxLen (eq $r.GetMinLen $r.GetMaxLen)) }}
-		if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetLen }} {
-		return {{ err . "value length must be " $r.GetLen " runes" }}
+		{{ if $r.Len }}
+			if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetLen }} {
+			return {{ err . "value length must be " $r.GetLen " runes" }}
+		{{ else }}
+		if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetMinLen }} {
+			return {{ err . "value length must be " $r.GetMinLen " runes" }}
+		{{ end }}
 	}
 	{{ else if $r.MinLen }}
 		{{ if $r.MaxLen }}
@@ -26,13 +31,19 @@ const strTpl = `
 	{{ end }}
 
 	{{ if or $r.LenBytes (and $r.MinBytes $r.MaxBytes (eq $r.GetMinBytes $r.GetMaxBytes)) }}
-		if len({{ accessor . }}) != {{ $r.LenBytes }} {
-			return {{ err . "value length must be " $r.GetLenBytes " bytes" }}
-		}
+		{{ if $r.LenBytes }}
+			if len({{ accessor . }}) != {{ $r.GetLenBytes }} {
+				return {{ err . "value length must be " $r.GetLenBytes " bytes" }}
+			}
+		{{ else }}
+			if len({{ accessor . }}) != {{ $r.GetMinBytes }} {
+				return {{ err . "value length must be " $r.GetMinBytes " bytes" }}
+			}
+		{{ end }}
 	{{ else if $r.MinBytes }}
 		{{ if $r.MaxBytes }}
 			if l := len({{ accessor . }}); l < {{ $r.GetMinBytes }} || l > {{ $r.GetMaxBytes }} {
-				return {{ err . "value length must be between " $r.GetMinBytes " and " $r.GetMaxBytes " bytes, inclusive" }}
+					return {{ err . "value length must be between " $r.GetMinBytes " and " $r.GetMaxBytes " bytes, inclusive" }}
 			}
 		{{ else }}
 			if len({{ accessor . }}) < {{ $r.GetMinBytes }} {
