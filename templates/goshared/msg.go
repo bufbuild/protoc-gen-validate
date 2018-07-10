@@ -48,6 +48,21 @@ type {{ errname . }} struct {
 	Key    bool
 }
 
+// GetField function returns Field value.
+func (e {{ errname . }}) GetField() string { return e.Field }
+
+// GetReason function returns Reason value.
+func (e {{ errname . }}) GetReason() string { return e.Reason }
+
+// GetCause function returns Cause value.
+func (e {{ errname . }}) GetCause() error { return e.Cause }
+
+// GetKey function returns Key value.
+func (e {{ errname . }}) GetKey() bool { return e.Key }
+
+// GetErrorName returns Error Name value.
+func (e {{ errname . }}) GetErrorName() string { return "{{ errname . }}" }
+
 // Error satisfies the builtin error interface
 func (e {{ errname . }}) Error() string {
 	cause := ""
@@ -69,6 +84,14 @@ func (e {{ errname . }}) Error() string {
 }
 
 var _ error = {{ errname . }}{}
+
+var _ interface{
+	GetField() string
+	GetReason() string
+	GetKey() bool
+	GetCause() error
+	GetErrorName() string
+} = {{ errname . }}{}
 
 {{ range .Fields }}{{ with (context .) }}{{ $f := .Field }}
 	{{ if has .Rules "In" }}{{ if .Rules.In }}
