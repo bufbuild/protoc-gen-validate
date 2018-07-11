@@ -186,7 +186,7 @@ Gogo support has the following limitations:
 - **len/min_len/max_len**: these rules constrain the number of characters (Unicode code points) in the field. Note that the number of characters may differ from the number of bytes in the string. The string is considered as-is, and does not normalize.
 
   ```protobuf
-  // x must exactly 5 characters
+  // x must be exactly 5 characters long
   string x = 1 [(validate.rules).string.len = 5];
 
   // x must be at least 3 characters long
