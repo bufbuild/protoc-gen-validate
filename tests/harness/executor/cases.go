@@ -715,6 +715,12 @@ var stringCases = []TestCase{
 	{"string - not in - valid", &cases.StringNotIn{Val: "quux"}, true},
 	{"string - not in - invalid", &cases.StringNotIn{Val: "fizz"}, false},
 
+	{"string - len - valid", &cases.StringLen{Val: "baz"}, true},
+	{"string - len - valid (multibyte)", &cases.StringLen{Val: "你好吖"}, true},
+	{"string - len - invalid (lt)", &cases.StringLen{Val: "go"}, false},
+	{"string - len - invalid (gt)", &cases.StringLen{Val: "fizz"}, false},
+	{"string - len - invalid (multibyte)", &cases.StringLen{Val: "你好"}, false},
+
 	{"string - min len - valid", &cases.StringMinLen{Val: "protoc"}, true},
 	{"string - min len - valid (min)", &cases.StringMinLen{Val: "baz"}, true},
 	{"string - min len - invalid", &cases.StringMinLen{Val: "go"}, false},
@@ -732,6 +738,14 @@ var stringCases = []TestCase{
 	{"string - min/max len - invalid (below)", &cases.StringMinMaxLen{Val: "go"}, false},
 	{"string - min/max len - invalid (above)", &cases.StringMinMaxLen{Val: "validate"}, false},
 
+	{"string - equal min/max len - valid", &cases.StringEqualMinMaxLen{Val: "proto"}, true},
+	{"string - equal min/max len - invalid", &cases.StringEqualMinMaxLen{Val: "validate"}, false},
+
+	{"string - len bytes - valid", &cases.StringLenBytes{Val: "pace"}, true},
+	{"string - len bytes - invalid (lt)", &cases.StringLenBytes{Val: "val"}, false},
+	{"string - len bytes - invalid (gt)", &cases.StringLenBytes{Val: "world"}, false},
+	{"string - len bytes - invalid (multibyte)", &cases.StringLenBytes{Val: "世界和平"}, false},
+
 	{"string - min bytes - valid", &cases.StringMinBytes{Val: "proto"}, true},
 	{"string - min bytes - valid (min)", &cases.StringMinBytes{Val: "quux"}, true},
 	{"string - min bytes - valid (multibyte)", &cases.StringMinBytes{Val: "你好"}, true},
@@ -748,6 +762,9 @@ var stringCases = []TestCase{
 	{"string - min/max bytes - valid (multibyte)", &cases.StringMinMaxBytes{Val: "你好"}, true},
 	{"string - min/max bytes - invalid (below)", &cases.StringMinMaxBytes{Val: "foo"}, false},
 	{"string - min/max bytes - invalid (above)", &cases.StringMinMaxBytes{Val: "你好你好你"}, false},
+
+	{"string - equal min/max bytes - valid", &cases.StringEqualMinMaxBytes{Val: "protoc"}, true},
+	{"string - equal min/max bytes - invalid", &cases.StringEqualMinMaxBytes{Val: "foo"}, false},
 
 	{"string - pattern - valid", &cases.StringPattern{Val: "Foo123"}, true},
 	{"string - pattern - invalid", &cases.StringPattern{Val: "!@#$%^&*()"}, false},
@@ -820,6 +837,10 @@ var bytesCases = []TestCase{
 	{"bytes - not in - valid", &cases.BytesNotIn{Val: []byte("quux")}, true},
 	{"bytes - not in - invalid", &cases.BytesNotIn{Val: []byte("fizz")}, false},
 
+	{"bytes - len - valid", &cases.BytesLen{Val: []byte("baz")}, true},
+	{"bytes - len - invalid (lt)", &cases.BytesLen{Val: []byte("go")}, false},
+	{"bytes - len - invalid (gt)", &cases.BytesLen{Val: []byte("fizz")}, false},
+
 	{"bytes - min len - valid", &cases.BytesMinLen{Val: []byte("fizz")}, true},
 	{"bytes - min len - valid (min)", &cases.BytesMinLen{Val: []byte("baz")}, true},
 	{"bytes - min len - invalid", &cases.BytesMinLen{Val: []byte("go")}, false},
@@ -833,6 +854,9 @@ var bytesCases = []TestCase{
 	{"bytes - min/max len - valid (max)", &cases.BytesMinMaxLen{Val: []byte("proto")}, true},
 	{"bytes - min/max len - invalid (below)", &cases.BytesMinMaxLen{Val: []byte("go")}, false},
 	{"bytes - min/max len - invalid (above)", &cases.BytesMinMaxLen{Val: []byte("validate")}, false},
+
+	{"bytes - equal min/max len - valid", &cases.BytesEqualMinMaxLen{Val: []byte("proto")}, true},
+	{"bytes - equal min/max len - invalid", &cases.BytesEqualMinMaxLen{Val: []byte("validate")}, false},
 
 	{"bytes - pattern - valid", &cases.BytesPattern{Val: []byte("Foo123")}, true},
 	{"bytes - pattern - invalid", &cases.BytesPattern{Val: []byte("你好你好")}, false},
@@ -1013,10 +1037,10 @@ var oneofCases = []TestCase{
 	{"oneof - field - valid (Z)", &cases.OneOf{O: &cases.OneOf_Z{Z: &cases.TestOneOfMsg{Val: true}}}, true},
 	{"oneof - field - valid (empty)", &cases.OneOf{}, true},
 	{"oneof - field - invalid (X)", &cases.OneOf{O: &cases.OneOf_X{X: "fizzbuzz"}}, false},
-	{"oneof - field - invalid (Y)", &cases.OneOf{O: &cases.OneOf_Y{-1}}, false},
-	{"oneof - filed - invalid (Z)", &cases.OneOf{O: &cases.OneOf_Z{&cases.TestOneOfMsg{}}}, false},
+	{"oneof - field - invalid (Y)", &cases.OneOf{O: &cases.OneOf_Y{Y: -1}}, false},
+	{"oneof - filed - invalid (Z)", &cases.OneOf{O: &cases.OneOf_Z{Z: &cases.TestOneOfMsg{}}}, false},
 
-	{"oneof - required - valid", &cases.OneOfRequired{O: &cases.OneOfRequired_X{""}}, true},
+	{"oneof - required - valid", &cases.OneOfRequired{O: &cases.OneOfRequired_X{X: ""}}, true},
 	{"oneof - require - invalid", &cases.OneOfRequired{}, false},
 }
 

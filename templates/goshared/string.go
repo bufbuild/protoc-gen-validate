@@ -5,9 +5,54 @@ const strTpl = `
 	{{ template "const" . }}
 	{{ template "in" . }}
 
-	{{ if $r.Pattern }}
-		if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
-			return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+	{{ if or $r.Len (and $r.MinLen $r.MaxLen (eq $r.GetMinLen $r.GetMaxLen)) }}
+		{{ if $r.Len }}
+			if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetLen }} {
+			return {{ err . "value length must be " $r.GetLen " runes" }}
+		{{ else }}
+		if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetMinLen }} {
+			return {{ err . "value length must be " $r.GetMinLen " runes" }}
+		{{ end }}
+	}
+	{{ else if $r.MinLen }}
+		{{ if $r.MaxLen }}
+			if l := utf8.RuneCountInString({{ accessor . }}); l < {{ $r.GetMinLen }} || l > {{ $r.GetMaxLen }} {
+				return {{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " runes, inclusive" }}
+			}
+		{{ else }}
+			if utf8.RuneCountInString({{ accessor . }}) < {{ $r.GetMinLen }} {
+				return {{ err . "value length must be at least " $r.GetMinLen " runes" }}
+			}
+		{{ end }}
+	{{ else if $r.MaxLen }}
+		if utf8.RuneCountInString({{ accessor . }}) > {{ $r.GetMaxLen }} {
+			return {{ err . "value length must be at most " $r.GetMaxLen " runes" }}
+		}
+	{{ end }}
+
+	{{ if or $r.LenBytes (and $r.MinBytes $r.MaxBytes (eq $r.GetMinBytes $r.GetMaxBytes)) }}
+		{{ if $r.LenBytes }}
+			if len({{ accessor . }}) != {{ $r.GetLenBytes }} {
+				return {{ err . "value length must be " $r.GetLenBytes " bytes" }}
+			}
+		{{ else }}
+			if len({{ accessor . }}) != {{ $r.GetMinBytes }} {
+				return {{ err . "value length must be " $r.GetMinBytes " bytes" }}
+			}
+		{{ end }}
+	{{ else if $r.MinBytes }}
+		{{ if $r.MaxBytes }}
+			if l := len({{ accessor . }}); l < {{ $r.GetMinBytes }} || l > {{ $r.GetMaxBytes }} {
+					return {{ err . "value length must be between " $r.GetMinBytes " and " $r.GetMaxBytes " bytes, inclusive" }}
+			}
+		{{ else }}
+			if len({{ accessor . }}) < {{ $r.GetMinBytes }} {
+				return {{ err . "value length must be at least " $r.GetMinBytes " bytes" }}
+			}
+		{{ end }}
+	{{ else if $r.MaxBytes }}
+		if len({{ accessor . }}) > {{ $r.GetMaxBytes }} {
+			return {{ err . "value length must be at most " $r.GetMaxBytes " bytes" }}
 		}
 	{{ end }}
 
@@ -61,47 +106,9 @@ const strTpl = `
 		}
 	{{ end }}
 
-	{{ if $r.MinLen }}
-		{{ if $r.MaxLen }}
-			{{ if eq $r.GetMinLen $r.GetMaxLen }}
-				if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetMinLen }} {
-					return {{ err . "value length must be " $r.GetMinLen " runes" }}
-				}
-			{{ else }}
-				if l := utf8.RuneCountInString({{ accessor . }}); l < {{ $r.GetMinLen }} || l > {{ $r.GetMaxLen }} {
-					return {{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " runes, inclusive" }}
-				}
-			{{ end }}
-		{{ else }}
-			if utf8.RuneCountInString({{ accessor . }}) < {{ $r.GetMinLen }} {
-				return {{ err . "value length must be at least " $r.GetMinLen " runes" }}
-			}
-		{{ end }}
-	{{ else if $r.MaxLen }}
-		if utf8.RuneCountInString({{ accessor . }}) > {{ $r.GetMaxLen }} {
-			return {{ err . "value length must be at most " $r.GetMaxLen " runes" }}
-		}
-	{{ end }}
-
-	{{ if $r.MinBytes }}
-		{{ if $r.MaxBytes }}
-			{{ if eq $r.GetMinBytes $r.GetMaxBytes }}
-				if len({{ accessor . }}) != {{ $r.GetMinBytes }} {
-					return {{ err . "value length must be " $r.GetMinBytes " bytes" }}
-				}
-			{{ else }}
-				if l := len({{ accessor . }}); l < {{ $r.GetMinBytes }} || l > {{ $r.GetMaxBytes }} {
-					return {{ err . "value length must be between " $r.GetMinBytes " and " $r.GetMaxBytes " bytes, inclusive" }}
-				}
-			{{ end }}
-		{{ else }}
-			if len({{ accessor . }}) < {{ $r.GetMinBytes }} {
-				return {{ err . "value length must be at least " $r.GetMinBytes " bytes" }}
-			}
-		{{ end }}
-	{{ else if $r.MaxBytes }}
-		if len({{ accessor . }}) > {{ $r.GetMaxBytes }} {
-			return {{ err . "value length must be at most " $r.GetMaxBytes " bytes" }}
-		}
-	{{ end }}
+	{{ if $r.Pattern }}
+	if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
+		return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+	}
+{{ end }}
 `
