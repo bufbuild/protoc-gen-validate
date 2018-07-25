@@ -9,7 +9,8 @@ git_repository(
 )
 load("@io_bazel_rules_go//go:def.bzl", "go_rules_dependencies", "go_register_toolchains")
 load("//bazel:go_proto_library.bzl", "go_proto_repositories")
-
+go_rules_dependencies()
+go_register_toolchains()
 go_proto_repositories()
 
 # TODO(htuch): This can switch back to a point release http_archive at the next
@@ -21,9 +22,6 @@ http_archive(
     sha256 = "5d4551193416861cb81c3bc0a428f22a6878148c57c31fb6f8f2aa4cf27ff635",
     url = "https://github.com/google/protobuf/archive/c4f59dcc5c13debc572154c8f636b8a9361aacde.tar.gz",
 )
-
-go_rules_dependencies()
-go_register_toolchains()
 
 bind(
     name = "six",
