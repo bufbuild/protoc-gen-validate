@@ -59,7 +59,7 @@ tests:
 	go test -race -cover
 	# tests validate proto generation
 	bazel build //validate:go_default_library \
-		&& diff $$(bazel info bazel-genfiles)/validate/validate.pb.go validate/validate.pb.go
+		&& diff bazel-out/k8-fastbuild/bin/validate/linux_amd64_stripped/go_default_library%/github.com/lyft/protoc-gen-validate/validate/validate.pb.go validate/validate.pb.go
 
 .PHONY: cover
 cover:

@@ -7,8 +7,8 @@ load(
     "pgv_cc_proto_library",
 )
 
-pgv_go_proto_library(
-    name = "go",
+proto_library(
+    name = "go_proto",
     srcs = [
         "bool.proto",
         "bytes.proto",
@@ -24,10 +24,23 @@ pgv_go_proto_library(
         "wkt_timestamp.proto",
         "wkt_wrappers.proto",
     ],
+    deps = [
+            "//validate:validate_proto",
+            "//tests/harness/cases/other_package:embed_proto",
+        "@com_google_protobuf//:any_proto",
+        "@com_google_protobuf//:duration_proto",
+        "@com_google_protobuf//:timestamp_proto",
+        "@com_google_protobuf//:wrappers_proto",
+            ],
+)
+
+pgv_go_proto_library(
+    name = "go",
+    proto = ":go_proto",
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/go",
-    rules_go_repo_only_for_internal_use = "",
     deps = [
         "//tests/harness/cases/other_package:go",
+        "@com_github_golang_protobuf//ptypes:go_default_library",
         "@com_github_golang_protobuf//ptypes/any:go_default_library",
         "@com_github_golang_protobuf//ptypes/duration:go_default_library",
         "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",

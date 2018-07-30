@@ -9,9 +9,14 @@ load(
     "pgv_go_proto_library",
 )
 
+proto_library(
+    name = "fixed32_proto",
+    srcs = ["fixed32.proto"],
+)
+
 pgv_go_proto_library(
     name = "fixed32_go",
-    srcs = ["fixed32.proto"],
+    proto = ":fixed32_proto"
 )
 
 pgv_cc_proto_library(

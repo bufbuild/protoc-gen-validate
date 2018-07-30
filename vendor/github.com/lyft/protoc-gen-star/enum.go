@@ -43,6 +43,7 @@ type enum struct {
 }
 
 func (e *enum) Name() Name                            { return Name(e.rawDesc.GetName()) }
+func (e *enum) FullyQualifiedName() string            { return fullyQualifiedName(e.parent, e) }
 func (e *enum) Syntax() Syntax                        { return e.parent.Syntax() }
 func (e *enum) Package() Package                      { return e.parent.Package() }
 func (e *enum) File() File                            { return e.parent.File() }
@@ -87,6 +88,5 @@ func (e *enum) addValue(v EnumValue) {
 }
 
 func (e *enum) setParent(p ParentEntity) { e.parent = p }
-func (e *enum) lookupName() string       { return lookupName(e.parent, e) }
 
 var _ Enum = (*enum)(nil)

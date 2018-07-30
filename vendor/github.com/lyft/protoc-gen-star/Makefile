@@ -8,7 +8,7 @@ install: # downloads dependencies (including test deps) for the package
 
 .PHONY: lint
 lint: # lints the package for common code smells
-	which golint || go get -u github.com/golang/lint/golint
+	which golint || go get -u golang.org/x/lint/golint
 	test -z "$(gofmt -d -s ./*.go)" || (gofmt -d -s ./*.go && exit 1)
 	golint -set_exit_status
 	go tool vet -all -shadow -shadowstrict *.go

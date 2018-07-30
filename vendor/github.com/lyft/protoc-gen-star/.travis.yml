@@ -1,9 +1,9 @@
 language: go
-go: 1.8
+go: "1.10"
 
 env:
   global:
-    - GLIDE_VER="v0.12.3"
+    - GLIDE_VER="v0.13.1"
     - GLIDE_ARCH="linux-amd64"
 
 before_install:

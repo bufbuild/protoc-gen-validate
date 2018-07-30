@@ -1,7 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "gazelle", "go_binary", "go_library", "go_prefix")
-load("//bazel:go_proto_library.bzl", "go_google_protobuf")
-
-go_prefix("github.com/lyft/protoc-gen-validate")
+load("@io_bazel_rules_go//go:def.bzl", "gazelle", "go_binary", "go_library")
 
 gazelle(
     name = "gazelle",
@@ -14,8 +11,6 @@ go_binary(
     importpath = "github.com/lyft/protoc-gen-validate",
     visibility = ["//visibility:public"],
 )
-
-go_google_protobuf()
 
 go_library(
     name = "go_default_library",

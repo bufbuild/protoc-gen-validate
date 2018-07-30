@@ -78,7 +78,6 @@ func (p *pkg) setComments(comments string) {
 // cannot be used directly as its PackageName method calls out to a global map.
 type packageFD interface {
 	GetPackage() string
-	PackageName() string
 }
 
 var _ Package = (*pkg)(nil)

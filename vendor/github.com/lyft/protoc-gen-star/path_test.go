@@ -50,10 +50,11 @@ func TestGoFileName(t *testing.T) {
 		},
 	}
 
-	assert.Equal(t, "dir/file.pb.go", goFileName(fd))
+	assert.Equal(t, "dir/file.pb.go", goFileName(fd, ImportPath))
 
 	fd.FileDescriptorProto.Options.GoPackage = proto.String("other/path")
-	assert.Equal(t, "other/path/file.pb.go", goFileName(fd))
+	assert.Equal(t, "other/path/file.pb.go", goFileName(fd, ImportPath))
+	assert.Equal(t, "dir/file.pb.go", goFileName(fd, SourceRelative))
 }
 
 func TestGoImportPath(t *testing.T) {
@@ -68,10 +69,10 @@ func TestGoImportPath(t *testing.T) {
 
 	g := &generator.Generator{ImportMap: map[string]string{}}
 
-	assert.Equal(t, "dir", goImportPath(g, fd))
+	assert.Equal(t, generator.GoImportPath("dir"), goImportPath(g, fd))
 
 	g.ImportMap[fd.GetName()] = "other/pkg"
 	g.ImportPrefix = "github.com/example"
 
-	assert.Equal(t, "github.com/example/other/pkg", goImportPath(g, fd))
+	assert.Equal(t, generator.GoImportPath("github.com/example/other/pkg"), goImportPath(g, fd))
 }

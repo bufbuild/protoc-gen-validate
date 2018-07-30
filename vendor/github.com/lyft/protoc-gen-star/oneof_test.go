@@ -17,6 +17,16 @@ func TestOneof_Name(t *testing.T) {
 	assert.Equal(t, "foo", o.Name().String())
 }
 
+func TestOneOf_FullyQualifiedName(t *testing.T) {
+	t.Parallel()
+
+	m := dummyMsg()
+	o := &oneof{desc: &descriptor.OneofDescriptorProto{Name: proto.String("one_of")}}
+	m.addOneOf(o)
+
+	assert.Equal(t, m.FullyQualifiedName()+".one_of", o.FullyQualifiedName())
+}
+
 func TestOneof_Syntax(t *testing.T) {
 	t.Parallel()
 
@@ -59,16 +69,6 @@ func TestOneof_BuildTarget(t *testing.T) {
 	assert.False(t, o.BuildTarget())
 	m.setParent(&file{buildTarget: true})
 	assert.True(t, o.BuildTarget())
-}
-
-func TestOneOf_LookupName(t *testing.T) {
-	t.Parallel()
-
-	m := dummyMsg()
-	o := &oneof{desc: &descriptor.OneofDescriptorProto{Name: proto.String("one_of")}}
-	m.addOneOf(o)
-
-	assert.Equal(t, m.lookupName()+".one_of", o.lookupName())
 }
 
 func TestOneof_Descriptor(t *testing.T) {

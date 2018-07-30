@@ -7,13 +7,22 @@ load(
     "pgv_cc_proto_library",
 )
 
-pgv_go_proto_library(
-    name = "go",
+proto_library(
+    name = "embed_proto",
     srcs = [
         "embed.proto",
     ],
+    visibility = ["//visibility:public"],
+    deps = ["//validate:validate_proto"],
+)
+
+pgv_go_proto_library(
+    name = "go",
+    proto = ":embed_proto",
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/other_package/go",
-    rules_go_repo_only_for_internal_use = "",
+    deps = [
+        "@com_github_golang_protobuf//ptypes:go_default_library",
+    ],
 )
 
 go_library(

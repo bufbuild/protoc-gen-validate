@@ -5,12 +5,14 @@ load('@bazel_tools//tools/build_defs/repo:git.bzl', 'git_repository')
 git_repository(
     name = "io_bazel_rules_go",
     remote = "https://github.com/bazelbuild/rules_go.git",
-    commit = "cdaa8e35cf53ba539ebe5bf6a4a407f91a284594",
+    commit = "238329474a90d8ac8c128cec3184c515ef467c04",
 )
-load("@io_bazel_rules_go//go:def.bzl", "go_rules_dependencies", "go_register_toolchains")
-load("//bazel:go_proto_library.bzl", "go_proto_repositories")
+http_archive(
+    name = "bazel_gazelle",
+    urls = ["https://github.com/bazelbuild/bazel-gazelle/releases/download/0.13.0/bazel-gazelle-0.13.0.tar.gz"],
+    sha256 = "bc653d3e058964a5a26dcad02b6c72d7d63e6bb88d94704990b908a1445b8758",
+)
 
-go_proto_repositories()
 
 # TODO(htuch): This can switch back to a point release http_archive at the next
 # release (> 3.4.1), we need HEAD proto_library support and
@@ -22,8 +24,11 @@ http_archive(
     url = "https://github.com/google/protobuf/archive/c4f59dcc5c13debc572154c8f636b8a9361aacde.tar.gz",
 )
 
+load("@io_bazel_rules_go//go:def.bzl", "go_rules_dependencies", "go_register_toolchains")
 go_rules_dependencies()
 go_register_toolchains()
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+gazelle_dependencies()
 
 bind(
     name = "six",

@@ -8,7 +8,6 @@ import (
 	"text/template"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/golang/protobuf/protoc-gen-go/generator"
 	"github.com/stretchr/testify/assert"
 )
@@ -190,14 +189,14 @@ func TestPluginBase_BuildTarget(t *testing.T) {
 	t.Parallel()
 
 	g := generator.New()
-	g.Request.FileToGenerate = []string{"foo"}
+	g.Request.FileToGenerate = []string{"file.proto"}
 
 	pb := new(PluginBase)
 	pb.Init(g)
 
-	o := mockGeneratorObj{f: &descriptor.FileDescriptorProto{Name: proto.String("foo")}}
+	o := mockGeneratorObj{f: dummyFile().Descriptor()}
 
-	assert.True(t, pb.BuildTarget("foo"))
+	assert.True(t, pb.BuildTarget("file.proto"))
 	assert.True(t, pb.BuildTargetObj(o))
 
 	o.f.Name = proto.String("bar")
@@ -224,7 +223,7 @@ func (p *pluginProtocGenGo) Out()                  { p.in-- }
 
 type mockGeneratorObj struct {
 	generator.Object
-	f *descriptor.FileDescriptorProto
+	f *generator.FileDescriptor
 }
 
-func (o mockGeneratorObj) File() *descriptor.FileDescriptorProto { return o.f }
+func (o mockGeneratorObj) File() *generator.FileDescriptor { return o.f }

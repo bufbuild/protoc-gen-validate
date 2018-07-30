@@ -18,6 +18,16 @@ func TestMsg_Name(t *testing.T) {
 	assert.Equal(t, "msg", m.Name().String())
 }
 
+func TestMsg_FullyQualifiedName(t *testing.T) {
+	t.Parallel()
+
+	m := &msg{rawDesc: &descriptor.DescriptorProto{Name: proto.String("msg")}}
+	f := dummyFile()
+	f.addMessage(m)
+
+	assert.Equal(t, f.FullyQualifiedName()+".msg", m.FullyQualifiedName())
+}
+
 func TestMsg_TypeName(t *testing.T) {
 	t.Parallel()
 
@@ -291,16 +301,6 @@ func TestMsg_Imports(t *testing.T) {
 
 	m.addField(&mockField{i: []Package{&pkg{}, &pkg{}}})
 	assert.Len(t, m.Imports(), 2)
-}
-
-func TestMsg_LookupName(t *testing.T) {
-	t.Parallel()
-
-	m := &msg{rawDesc: &descriptor.DescriptorProto{Name: proto.String("msg")}}
-	f := dummyFile()
-	f.addMessage(m)
-
-	assert.Equal(t, f.lookupName()+".msg", m.lookupName())
 }
 
 type mockMessage struct {
