@@ -6,13 +6,9 @@ go_library(
         "chars.go",
         "col.go",
         "colcmp.go",
+        "darwin.go",
         "gen.go",
-    ] + select({
-        "@io_bazel_rules_go//go/platform:darwin": [
-            "darwin.go",
-        ],
-        "//conditions:default": [],
-    }),
+    ],
     cgo = True,
     clinkopts = select({
         "@io_bazel_rules_go//go/platform:darwin": [
@@ -20,6 +16,7 @@ go_library(
         ],
         "//conditions:default": [],
     }),
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/collate/tools/colcmp",
     importpath = "golang.org/x/text/collate/tools/colcmp",
     visibility = ["//visibility:private"],
     deps = [
@@ -32,6 +29,5 @@ go_library(
 go_binary(
     name = "colcmp",
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/collate/tools/colcmp",
     visibility = ["//visibility:public"],
 )

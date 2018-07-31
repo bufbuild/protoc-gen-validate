@@ -17,6 +17,23 @@ const (
 	pluginsSep         = "+"
 )
 
+// PathType describes how the generated file paths should be constructed.
+type PathType string
+
+const (
+	// PathTypeParam is the plugin param that allows specifying the path type
+	// mode used in code generation.
+	pathTypeKey = "paths"
+
+	// ImportPath is the default and outputs the file based off the go import
+	// path defined in the go_package option.
+	ImportPath PathType = ""
+
+	// SourceRelative indicates files should be output relative to the path of
+	// the source file.
+	SourceRelative PathType = "source_relative"
+)
+
 // Parameters provides a convenience for accessing and modifying the parameters
 // passed into the protoc-gen-star plugin.
 type Parameters map[string]string
@@ -113,6 +130,17 @@ func (p Parameters) ImportPath() string { return p.Str(importPathKey) }
 // SetImportPath sets the protoc-gen-go ImportPath parameter. This is useful
 // for overriding the behavior of the ImportPath at runtime.
 func (p Parameters) SetImportPath(path string) { p.SetStr(importPathKey, path) }
+
+// Paths returns the protoc-gen-go parameter. This value is used to switch the
+// mode used to determine the output paths of the generated code. By default,
+// paths are derived from the import path specified by go_package. It can be
+// overridden to be "source_relative", ignoring the import path using the
+// source path exclusively.
+func (p Parameters) Paths() PathType { return PathType(p.Str(pathTypeKey)) }
+
+// SetPaths sets the protoc-gen-go Paths parameter. This is useful for
+// overriding the behavior of Paths at runtime.
+func (p Parameters) SetPaths(pt PathType) { p.SetStr(pathTypeKey, string(pt)) }
 
 // ImportMap returns the protoc-gen-go import map overrides. Each entry in the
 // map keys off a proto file (as loaded by protoc) with values of the Go

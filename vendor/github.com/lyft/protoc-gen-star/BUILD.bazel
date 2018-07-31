@@ -37,15 +37,16 @@ go_library(
         "workflow.go",
         "workflow_multipackage.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/lyft/protoc-gen-star",
     importpath = "github.com/lyft/protoc-gen-star",
     visibility = ["//visibility:public"],
     deps = [
         "//vendor/github.com/golang/protobuf/proto:go_default_library",
-        "//vendor/github.com/golang/protobuf/protoc-gen-go/descriptor:go_default_library",
         "//vendor/github.com/golang/protobuf/protoc-gen-go/generator:go_default_library",
-        "//vendor/github.com/golang/protobuf/protoc-gen-go/plugin:go_default_library",
         "//vendor/github.com/spf13/afero:go_default_library",
         "//vendor/golang.org/x/sync/errgroup:go_default_library",
+        "@io_bazel_rules_go//proto/wkt:compiler_plugin_go_proto",
+        "@io_bazel_rules_go//proto/wkt:descriptor_go_proto",
     ],
 )
 
@@ -87,14 +88,13 @@ go_test(
         "workflow_test.go",
     ],
     embed = [":go_default_library"],
-    importpath = "github.com/lyft/protoc-gen-star",
     deps = [
         "//vendor/github.com/golang/protobuf/proto:go_default_library",
-        "//vendor/github.com/golang/protobuf/protoc-gen-go/descriptor:go_default_library",
         "//vendor/github.com/golang/protobuf/protoc-gen-go/generator:go_default_library",
-        "//vendor/github.com/golang/protobuf/protoc-gen-go/plugin:go_default_library",
         "//vendor/github.com/spf13/afero:go_default_library",
         "//vendor/github.com/stretchr/testify/assert:go_default_library",
         "//vendor/golang.org/x/sync/errgroup:go_default_library",
+        "@io_bazel_rules_go//proto/wkt:compiler_plugin_go_proto",
+        "@io_bazel_rules_go//proto/wkt:descriptor_go_proto",
     ],
 )

@@ -31,20 +31,21 @@ type Method interface {
 }
 
 type method struct {
-	comments string
-
 	desc    *descriptor.MethodDescriptorProto
 	service Service
 
 	in, out Message
+
+	comments string
 }
 
-func (m *method) Comments() string                              { return m.comments }
 func (m *method) Name() Name                                    { return Name(m.desc.GetName()) }
+func (m *method) FullyQualifiedName() string                    { return fullyQualifiedName(m.service, m) }
 func (m *method) Syntax() Syntax                                { return m.service.Syntax() }
 func (m *method) Package() Package                              { return m.service.Package() }
 func (m *method) File() File                                    { return m.service.File() }
 func (m *method) BuildTarget() bool                             { return m.service.BuildTarget() }
+func (m *method) Comments() string                              { return m.comments }
 func (m *method) Descriptor() *descriptor.MethodDescriptorProto { return m.desc }
 func (m *method) Service() Service                              { return m.service }
 func (m *method) Input() Message                                { return m.in }
@@ -80,5 +81,4 @@ func (m *method) accept(v Visitor) (err error) {
 	return
 }
 
-func (m *method) lookupName() string   { return lookupName(m.service, m) }
 func (m *method) setService(s Service) { m.service = s }

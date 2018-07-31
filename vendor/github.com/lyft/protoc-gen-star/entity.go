@@ -11,6 +11,11 @@ type Entity interface {
 	// The Name of the entity
 	Name() Name
 
+	// The fully qualified name of the entity. For example, a message
+	// 'HelloRequest' in a 'helloworld' package it takes the form of
+	// '.helloworld.HelloRequest'.
+	FullyQualifiedName() string
+
 	// Syntax identifies whether this entity is encoded with proto2 or proto3
 	// syntax.
 	Syntax() Syntax
@@ -34,8 +39,6 @@ type Entity interface {
 	// this entity. Use this flag to determine if the file was targeted in the
 	// protoc run or if it was loaded as an external dependency.
 	BuildTarget() bool
-
-	lookupName() string
 }
 
 // A ParentEntity is any Entity type that can contain messages and/or enums.

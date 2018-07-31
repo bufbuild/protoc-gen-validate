@@ -15,6 +15,16 @@ func TestEnumVal_Name(t *testing.T) {
 	assert.Equal(t, "eval", ev.Name().String())
 }
 
+func TestEnumVal_FullyQualifiedName(t *testing.T) {
+	t.Parallel()
+
+	ev := &enumVal{desc: &descriptor.EnumValueDescriptorProto{Name: proto.String("ev")}}
+	e := dummyEnum()
+	e.addValue(ev)
+
+	assert.Equal(t, e.FullyQualifiedName()+".ev", ev.FullyQualifiedName())
+}
+
 func TestEnumVal_Syntax(t *testing.T) {
 	t.Parallel()
 	ev := &enumVal{}
@@ -92,16 +102,6 @@ func TestEnumVal_Accept(t *testing.T) {
 	v := &mockVisitor{err: errors.New("")}
 	assert.Error(t, ev.accept(v))
 	assert.Equal(t, 1, v.enumvalue)
-}
-
-func TestEnumVAl_LookupName(t *testing.T) {
-	t.Parallel()
-
-	ev := &enumVal{desc: &descriptor.EnumValueDescriptorProto{Name: proto.String("ev")}}
-	e := dummyEnum()
-	e.addValue(ev)
-
-	assert.Equal(t, e.lookupName()+".ev", ev.lookupName())
 }
 
 type mockEnumValue struct {

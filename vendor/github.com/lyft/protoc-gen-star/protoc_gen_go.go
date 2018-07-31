@@ -24,12 +24,12 @@ type ProtocGenGo interface {
 	Fail(msgs ...string)
 	ObjectNamed(n string) generator.Object
 	GoType(message *generator.Descriptor, field *descriptor.FieldDescriptorProto) (typ string, wire string)
+	GoPackageName(importPath generator.GoImportPath) generator.GoPackageName
 	P(args ...interface{})
 	In()
 	Out()
 
 	// The following methods simplify execution in the protoc-gen-star Generator & Gatherer
-	packageName(fd packageFD) string
 	prepare(params Parameters)
 	generate()
 	request() *plugin_go.CodeGeneratorRequest
@@ -45,7 +45,6 @@ func Wrap(g *generator.Generator) ProtocGenGo { return &wrappedPGG{g} }
 type wrappedPGG struct{ *generator.Generator }
 
 func (pgg *wrappedPGG) Unwrap() *generator.Generator                     { return pgg.Generator }
-func (pgg *wrappedPGG) packageName(fd packageFD) string                  { return fd.PackageName() }
 func (pgg *wrappedPGG) request() *plugin_go.CodeGeneratorRequest         { return pgg.Request }
 func (pgg *wrappedPGG) setRequest(req *plugin_go.CodeGeneratorRequest)   { pgg.Request = req }
 func (pgg *wrappedPGG) response() *plugin_go.CodeGeneratorResponse       { return pgg.Response }

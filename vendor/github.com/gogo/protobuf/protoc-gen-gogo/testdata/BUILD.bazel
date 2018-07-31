@@ -6,8 +6,11 @@ go_test(
         "extension_test.go",
         "main_test.go",
     ],
-    importpath = "github.com/gogo/protobuf/protoc-gen-gogo/testdata",
     deps = [
+        "//vendor/github.com/gogo/protobuf/proto:go_default_library",
+        "//vendor/github.com/gogo/protobuf/protoc-gen-gogo/testdata/extension_base:go_default_library",
+        "//vendor/github.com/gogo/protobuf/protoc-gen-gogo/testdata/extension_user:go_default_library",
+        "//vendor/github.com/gogo/protobuf/protoc-gen-gogo/testdata/imports:go_default_library",
         "//vendor/github.com/gogo/protobuf/protoc-gen-gogo/testdata/multi:go_default_library",
         "//vendor/github.com/gogo/protobuf/protoc-gen-gogo/testdata/my_test:go_default_library",
     ],

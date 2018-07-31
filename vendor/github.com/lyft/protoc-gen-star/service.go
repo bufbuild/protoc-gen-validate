@@ -28,6 +28,7 @@ type service struct {
 }
 
 func (s *service) Name() Name                                     { return Name(s.desc.GetName()) }
+func (s *service) FullyQualifiedName() string                     { return fullyQualifiedName(s.file, s) }
 func (s *service) Syntax() Syntax                                 { return s.file.Syntax() }
 func (s *service) Package() Package                               { return s.file.Package() }
 func (s *service) File() File                                     { return s.file }
@@ -52,8 +53,7 @@ func (s *service) Methods() []Method {
 	return m
 }
 
-func (s *service) setFile(f File)     { s.file = f }
-func (s *service) lookupName() string { return lookupName(s.file, s) }
+func (s *service) setFile(f File) { s.file = f }
 
 func (s *service) addMethod(m Method) {
 	m.setService(s)

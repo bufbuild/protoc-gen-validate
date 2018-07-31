@@ -29,12 +29,16 @@ func goPackageOption(f *generator.FileDescriptor) (impPath, pkg string, ok bool)
 	return
 }
 
-func goFileName(f *generator.FileDescriptor) string {
+func goFileName(f *generator.FileDescriptor, pathType PathType) string {
 	name := f.GetName()
 	if ext := path.Ext(name); ext == ".proto" || ext == ".protodevel" {
 		name = name[:len(name)-len(ext)]
 	}
 	name += ".pb.go"
+
+	if pathType == SourceRelative {
+		return name
+	}
 
 	if impPath, _, ok := goPackageOption(f); ok && impPath != "" {
 		_, name = path.Split(name)
@@ -44,8 +48,8 @@ func goFileName(f *generator.FileDescriptor) string {
 	return name
 }
 
-func goImportPath(g *generator.Generator, f *generator.FileDescriptor) string {
-	fn := goFileName(f)
+func goImportPath(g *generator.Generator, f *generator.FileDescriptor) generator.GoImportPath {
+	fn := goFileName(f, Parameters(g.Param).Paths())
 
 	importPath := path.Dir(fn)
 	if sub, ok := g.ImportMap[f.GetName()]; ok {
@@ -53,5 +57,5 @@ func goImportPath(g *generator.Generator, f *generator.FileDescriptor) string {
 	}
 	importPath = path.Join(g.ImportPrefix, importPath)
 
-	return importPath
+	return generator.GoImportPath(importPath)
 }

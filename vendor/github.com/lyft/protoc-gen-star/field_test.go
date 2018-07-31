@@ -18,6 +18,16 @@ func TestField_Name(t *testing.T) {
 	assert.Equal(t, "foo", f.Name().String())
 }
 
+func TestField_FullyQualifiedName(t *testing.T) {
+	t.Parallel()
+
+	f := &field{desc: &descriptor.FieldDescriptorProto{Name: proto.String("field")}}
+	m := dummyMsg()
+	m.addField(f)
+
+	assert.Equal(t, m.FullyQualifiedName()+".field", f.FullyQualifiedName())
+}
+
 func TestField_Syntax(t *testing.T) {
 	t.Parallel()
 
@@ -60,16 +70,6 @@ func TestField_BuildTarget(t *testing.T) {
 	assert.False(t, f.BuildTarget())
 	m.setParent(&file{buildTarget: true})
 	assert.True(t, f.BuildTarget())
-}
-
-func TestField_LookupName(t *testing.T) {
-	t.Parallel()
-
-	f := &field{desc: &descriptor.FieldDescriptorProto{Name: proto.String("field")}}
-	m := dummyMsg()
-	m.addField(f)
-
-	assert.Equal(t, m.lookupName()+".field", f.lookupName())
 }
 
 func TestField_Descriptor(t *testing.T) {

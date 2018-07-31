@@ -6,6 +6,7 @@ go_library(
         "union.go",
         "uniontest.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/plugin/union",
     importpath = "github.com/gogo/protobuf/plugin/union",
     visibility = ["//visibility:public"],
     deps = [

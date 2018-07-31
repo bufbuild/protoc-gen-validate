@@ -9,6 +9,7 @@ go_library(
         "pipeline.go",
         "rewrite.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/message/pipeline",
     importpath = "golang.org/x/text/message/pipeline",
     visibility = ["//visibility:public"],
     deps = [
@@ -31,6 +32,5 @@ go_test(
         "pipeline_test.go",
     ],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/message/pipeline",
     deps = ["//vendor/golang.org/x/text/language:go_default_library"],
 )

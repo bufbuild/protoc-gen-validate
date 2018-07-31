@@ -22,6 +22,16 @@ func TestFile_Name(t *testing.T) {
 	assert.Equal(t, Name("foobar"), f.Name())
 }
 
+func TestFile_FullyQualifiedName(t *testing.T) {
+	t.Parallel()
+
+	f := &file{desc: &generator.FileDescriptor{
+		FileDescriptorProto: &descriptor.FileDescriptorProto{Package: proto.String("foo")},
+	}}
+
+	assert.Equal(t, ".foo", f.FullyQualifiedName())
+}
+
 func TestFile_Syntax(t *testing.T) {
 	t.Parallel()
 
@@ -235,16 +245,6 @@ func TestFile_Extension(t *testing.T) {
 			desc: &generator.FileDescriptor{FileDescriptorProto: &descriptor.FileDescriptorProto{}},
 		}).Extension(nil, nil)
 	})
-}
-
-func TestFile_LookupName(t *testing.T) {
-	t.Parallel()
-
-	f := &file{desc: &generator.FileDescriptor{
-		FileDescriptorProto: &descriptor.FileDescriptorProto{Package: proto.String("foo")},
-	}}
-
-	assert.Equal(t, ".foo", f.lookupName())
 }
 
 // needed to wrap since there is a File method

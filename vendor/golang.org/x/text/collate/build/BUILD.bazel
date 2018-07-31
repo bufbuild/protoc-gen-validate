@@ -10,6 +10,7 @@ go_library(
         "table.go",
         "trie.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/collate/build",
     importpath = "golang.org/x/text/collate/build",
     visibility = ["//visibility:public"],
     deps = [
@@ -29,6 +30,5 @@ go_test(
         "trie_test.go",
     ],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/collate/build",
     deps = ["//vendor/golang.org/x/text/internal/colltab:go_default_library"],
 )
