@@ -8,6 +8,7 @@ go_library(
         "search.go",
         "tables.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/search",
     importpath = "golang.org/x/text/search",
     visibility = ["//visibility:public"],
     deps = [
@@ -20,6 +21,5 @@ go_test(
     name = "go_default_test",
     srcs = ["pattern_test.go"],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/search",
     deps = ["//vendor/golang.org/x/text/language:go_default_library"],
 )

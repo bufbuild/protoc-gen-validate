@@ -256,6 +256,6 @@ func (n FilePath) Pop() FilePath { return JoinPaths(n.String(), "..") }
 // Push returns a new FilePath with elem added to the end
 func (n FilePath) Push(elem string) FilePath { return JoinPaths(n.String(), elem) }
 
-func lookupName(p, e Entity) string {
-	return fmt.Sprintf("%s.%s", p.lookupName(), e.Name())
+func fullyQualifiedName(p, e Entity) string {
+	return fmt.Sprintf("%s.%s", p.FullyQualifiedName(), e.Name())
 }

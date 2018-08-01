@@ -11,6 +11,7 @@ go_library(
         "trie.go",
         "trieval.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/internal/export/idna",
     importpath = "golang.org/x/text/internal/export/idna",
     visibility = ["//vendor/golang.org/x/text:__subpackages__"],
     deps = [
@@ -24,6 +25,7 @@ go_test(
     name = "go_default_test",
     srcs = [
         "common_test.go",
+        "example_test.go",
         "gen10.0.0_test.go",
         "gen9.0.0_test.go",
         "idna10.0.0_test.go",
@@ -32,17 +34,9 @@ go_test(
         "punycode_test.go",
     ],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/internal/export/idna",
     deps = [
         "//vendor/golang.org/x/text/internal/gen:go_default_library",
         "//vendor/golang.org/x/text/internal/testtext:go_default_library",
         "//vendor/golang.org/x/text/internal/ucd:go_default_library",
     ],
-)
-
-go_test(
-    name = "go_default_xtest",
-    srcs = ["example_test.go"],
-    importpath = "golang.org/x/text/internal/export/idna_test",
-    deps = [":go_default_library"],
 )

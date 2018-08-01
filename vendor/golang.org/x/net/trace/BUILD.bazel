@@ -9,6 +9,7 @@ go_library(
         "trace_go16.go",
         "trace_go17.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/trace",
     importpath = "golang.org/x/net/trace",
     visibility = ["//visibility:public"],
     deps = [
@@ -24,5 +25,4 @@ go_test(
         "trace_test.go",
     ],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/net/trace",
 )

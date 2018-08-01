@@ -17,6 +17,16 @@ func TestService_Name(t *testing.T) {
 	assert.Equal(t, "foo", s.Name().String())
 }
 
+func TestService_FullyQualifiedName(t *testing.T) {
+	t.Parallel()
+
+	f := dummyFile()
+	s := &service{desc: &descriptor.ServiceDescriptorProto{Name: proto.String("foo")}}
+	f.addService(s)
+
+	assert.Equal(t, f.FullyQualifiedName()+".foo", s.FullyQualifiedName())
+}
+
 func TestService_Syntax(t *testing.T) {
 	t.Parallel()
 
@@ -91,16 +101,6 @@ func TestService_Methods(t *testing.T) {
 	assert.Empty(t, s.Methods())
 	s.addMethod(&method{})
 	assert.Len(t, s.Methods(), 1)
-}
-
-func TestService_LookupName(t *testing.T) {
-	t.Parallel()
-
-	f := dummyFile()
-	s := &service{desc: &descriptor.ServiceDescriptorProto{Name: proto.String("foo")}}
-	f.addService(s)
-
-	assert.Equal(t, f.lookupName()+".foo", s.lookupName())
 }
 
 func TestService_Accept(t *testing.T) {

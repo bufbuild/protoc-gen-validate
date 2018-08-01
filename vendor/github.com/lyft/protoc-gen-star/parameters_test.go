@@ -326,3 +326,13 @@ func TestParameters_Duration(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 789*time.Second, out)
 }
+
+func TestParameters_Paths(t *testing.T) {
+	t.Parallel()
+
+	p := Parameters{}
+
+	assert.Equal(t, ImportPath, p.Paths())
+	p.SetPaths(SourceRelative)
+	assert.Equal(t, SourceRelative, p.Paths())
+}
