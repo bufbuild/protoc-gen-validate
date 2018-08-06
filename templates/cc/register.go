@@ -22,7 +22,6 @@ func RegisterModule(tpl *template.Template) {
 		"accessor":      accessor,
 		"hasAccessor":   hasAccessor,
 		"ctype":         cType,
-		"weakCheckMsgs": weakCheckMsgs,
 		"err":           err,
 		"errCause":      errCause,
 		"errIdx":        errIdx,
@@ -43,6 +42,7 @@ func RegisterModule(tpl *template.Template) {
 		"tsStr":         tsStr,
 		"unwrap":        unwrap,
 		"unimplemented": failUnimplemented,
+		"staticVarName": staticVarName,
 	})
 	template.Must(tpl.Parse(moduleFileTpl))
 	template.Must(tpl.New("msg").Parse(msgTpl))
@@ -86,8 +86,8 @@ func RegisterModule(tpl *template.Template) {
 
 func RegisterHeader(tpl *template.Template) {
 	tpl.Funcs(map[string]interface{}{
-		"class":         className,
-		"upper":         strings.ToUpper,
+		"class": className,
+		"upper": strings.ToUpper,
 	})
 
 	template.Must(tpl.Parse(headerFileTpl))
@@ -274,7 +274,7 @@ func cType(t pgs.FieldType) string {
 	if t.IsEmbed() {
 		return className(t.Embed())
 	}
-	if t.IsRepeated(){
+	if t.IsRepeated() {
 		if t.ProtoType() == pgs.MessageT {
 			return className(t.Element().Embed())
 		}
@@ -283,42 +283,6 @@ func cType(t pgs.FieldType) string {
 	}
 
 	return cTypeOfString(t.Name().String())
-}
-
-// Compute unique C++ types that correspond to all message fields in a
-// compilation unit that need to be weak (i.e. not already defined). Used to
-// generate weak default definitions for CheckMessage.
-func weakCheckMsgs(msgs []pgs.Message) []string {
-	already_defined := map[string]bool{}
-	// First compute the C++ type names for things we're going to provide an explicit
-	// CheckMessage() with Validate(..) body in this file. We can't define the
-	// same CheckMessage() signature twice in a compilation unit, even if one of
-	// them is weak.
-	for _, msg := range msgs {
-		already_defined[className(msg)] = true
-	}
-	// Compute the set of C++ type names we need weak definitions for.
-	ctype_map := map[string]bool{}
-	for _, msg := range msgs {
-		if disabled, _ := shared.Disabled(msg); disabled {
-			continue
-		}
-		for _, f := range msg.Fields() {
-			ctype := cType(f.Type())
-			if already_defined[ctype] {
-				continue
-			}
-			if f.Type().IsEmbed() || (f.Type().IsRepeated() && f.Type().Element().IsEmbed()) {
-				ctype_map[ctype] = true
-			}
-		}
-	}
-	// Convert to array.
-	ctypes := make([]string, 0, len(ctype_map))
-	for ctype := range ctype_map {
-		ctypes = append(ctypes, ctype)
-	}
-	return ctypes
 }
 
 func cTypeOfString(s string) string {
@@ -411,4 +375,8 @@ func unwrap(ctx shared.RuleContext, name string) (shared.RuleContext, error) {
 
 func failUnimplemented() string {
 	return "throw pgv::UnimplementedException();"
+}
+
+func staticVarName(msg pgs.Message) string {
+	return "validator_" + strings.Replace(className(msg), ":", "_", -1)
 }
