@@ -41,6 +41,7 @@ type file struct {
 }
 
 func (f *file) Name() Name                            { return Name(f.desc.GetName()) }
+func (f *file) FullyQualifiedName() string            { return "." + f.desc.GetPackage() }
 func (f *file) Syntax() Syntax                        { return Syntax(f.desc.GetSyntax()) }
 func (f *file) Package() Package                      { return f.pkg }
 func (f *file) File() File                            { return f }
@@ -130,8 +131,6 @@ func (f *file) accept(v Visitor) (err error) {
 }
 
 func (f *file) setPackage(pkg Package) { f.pkg = pkg }
-
-func (f *file) lookupName() string { return "." + f.desc.GetPackage() }
 
 func (f *file) addEnum(e Enum) {
 	e.setParent(f)

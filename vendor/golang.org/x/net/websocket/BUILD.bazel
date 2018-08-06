@@ -9,6 +9,7 @@ go_library(
         "server.go",
         "websocket.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/websocket",
     importpath = "golang.org/x/net/websocket",
     visibility = ["//visibility:public"],
 )
@@ -17,19 +18,10 @@ go_test(
     name = "go_default_test",
     srcs = [
         "dial_test.go",
+        "exampledial_test.go",
+        "examplehandler_test.go",
         "hybi_test.go",
         "websocket_test.go",
     ],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/net/websocket",
-)
-
-go_test(
-    name = "go_default_xtest",
-    srcs = [
-        "exampledial_test.go",
-        "examplehandler_test.go",
-    ],
-    importpath = "golang.org/x/net/websocket_test",
-    deps = [":go_default_library"],
 )

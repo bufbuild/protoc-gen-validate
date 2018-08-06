@@ -10,8 +10,8 @@
     "sortkeys",
     "types"
   ]
-  revision = "342cbe0a04158f6dcb03ca0079991a51a4248c02"
-  version = "v0.5"
+  revision = "636bf0302bc95575d69441b25a2603156ffdddf1"
+  version = "v1.1.1"
 
 [[projects]]
   name = "github.com/golang/protobuf"
@@ -19,6 +19,7 @@
     "proto",
     "protoc-gen-go/descriptor",
     "protoc-gen-go/generator",
+    "protoc-gen-go/generator/internal/remap",
     "protoc-gen-go/plugin",
     "ptypes",
     "ptypes/any",
@@ -26,14 +27,14 @@
     "ptypes/timestamp",
     "ptypes/wrappers"
   ]
-  revision = "925541529c1fa6821df4e44ce2723319eb2be768"
-  version = "v1.0.0"
+  revision = "b4deda0973fb4c70b50d226b1af49f3da59f5265"
+  version = "v1.1.0"
 
 [[projects]]
   name = "github.com/lyft/protoc-gen-star"
   packages = ["."]
-  revision = "6f176a97c8cfa3e7d164b0115ade1fd6d9aff49d"
-  version = "v0.3.2"
+  revision = "f3b83fca61817e55058744eb1a3c8e2e95a0dada"
+  version = "v0.3.7"
 
 [[projects]]
   name = "github.com/spf13/afero"
@@ -72,6 +73,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5ba908f243f59a158243b2d33de3d4d999a6bfb79720749d06b9e72e6dd83ab5"
+  inputs-digest = "81f9fa6b249daa4cd03277d7b1fb76ad70758c91e793ba6016cfc1152507a6da"
   solver-name = "gps-cdcl"
   solver-version = 1

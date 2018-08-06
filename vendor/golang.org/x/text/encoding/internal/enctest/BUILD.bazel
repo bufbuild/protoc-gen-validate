@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["enctest.go"],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/encoding/internal/enctest",
     importpath = "golang.org/x/text/encoding/internal/enctest",
     visibility = ["//vendor/golang.org/x/text/encoding:__subpackages__"],
     deps = [

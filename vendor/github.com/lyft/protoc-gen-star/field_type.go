@@ -55,11 +55,20 @@ type FieldType interface {
 	Embed() Message
 
 	// Element returns the FieldTypeElem representing the element component of
-	// the type. Nil will be returned if IsRepeated and IsMap return false.
+	// the type.
+	//
+	// For repeated fields, the returned type describes the type being repeated (i.e.,
+	// the element type in the list implied by the repeated field).
+	//
+	// For maps, the returned type describes the type of values in the map.
+	//
+	// Nil will be returned if IsRepeated and IsMap both return false.
 	Element() FieldTypeElem
 
-	// Key returns the FieldTypeElem representing the key component of the type.
-	// Nil will be return sif IsMap returns false.
+	// Key returns the FieldTypeElem representing the key component of the type (i.e,
+	// the type of keys in a map).
+	//
+	// Nil will be returned if IsMap returns false.
 	Key() FieldTypeElem
 
 	setField(f Field)

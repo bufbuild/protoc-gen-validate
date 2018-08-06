@@ -6,12 +6,14 @@ go_library(
         "generator.go",
         "helper.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/protoc-gen-gogo/generator",
     importpath = "github.com/gogo/protobuf/protoc-gen-gogo/generator",
     visibility = ["//visibility:public"],
     deps = [
         "//vendor/github.com/gogo/protobuf/gogoproto:go_default_library",
         "//vendor/github.com/gogo/protobuf/proto:go_default_library",
         "//vendor/github.com/gogo/protobuf/protoc-gen-gogo/descriptor:go_default_library",
+        "//vendor/github.com/gogo/protobuf/protoc-gen-gogo/generator/internal/remap:go_default_library",
         "//vendor/github.com/gogo/protobuf/protoc-gen-gogo/plugin:go_default_library",
     ],
 )
@@ -20,6 +22,5 @@ go_test(
     name = "go_default_test",
     srcs = ["name_test.go"],
     embed = [":go_default_library"],
-    importpath = "github.com/gogo/protobuf/protoc-gen-gogo/generator",
     deps = ["//vendor/github.com/gogo/protobuf/protoc-gen-gogo/descriptor:go_default_library"],
 )

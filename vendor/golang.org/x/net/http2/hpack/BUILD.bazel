@@ -8,6 +8,7 @@ go_library(
         "huffman.go",
         "tables.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/http2/hpack",
     importpath = "golang.org/x/net/http2/hpack",
     visibility = ["//visibility:public"],
 )
@@ -20,5 +21,4 @@ go_test(
         "tables_test.go",
     ],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/net/http2/hpack",
 )
