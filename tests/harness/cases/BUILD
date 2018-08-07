@@ -64,8 +64,8 @@ go_library(
 
 pgv_cc_proto_library(
     name = "cc",
-    proto = ":cases_proto",
-    deps = [
+    deps = [":cases_proto"],
+    cc_deps = [
         "//tests/harness/cases/other_package:cc",
     ],
     visibility = ["//tests:__subpackages__"],

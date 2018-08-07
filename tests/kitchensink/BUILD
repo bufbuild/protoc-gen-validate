@@ -21,7 +21,7 @@ pgv_go_proto_library(
 
 pgv_cc_proto_library(
     name = "fixed32_cc",
-    srcs = ["fixed32.proto"],
+    deps = [":fixed32_proto"],
 )
 
 proto_library(

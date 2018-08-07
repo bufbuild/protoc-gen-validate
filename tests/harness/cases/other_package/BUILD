@@ -40,6 +40,6 @@ go_library(
 
 pgv_cc_proto_library(
     name = "cc",
-    proto = ":embed_proto",
+    deps = [":embed_proto"],
     visibility = ["//tests:__subpackages__"],
 )

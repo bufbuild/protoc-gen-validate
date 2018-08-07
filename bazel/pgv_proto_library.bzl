@@ -20,28 +20,28 @@ def pgv_go_proto_library(name, proto = None, deps = [], **kwargs):
 
 def pgv_cc_proto_library(
         name,
-        proto,
         deps=[],
+        cc_deps=[],
         **kargs):
     """Bazel rule to create a C++ protobuf validation library from proto source files
     Args:
       name: the name of the pgv_cc_proto_library.
-      proto: a single proto_library rule which contains the necessary .proto files. Note that this
+      deps: proto_library rules that contains the necessary .proto files. Note that this
              must include @com_lyft_protoc_gen_validate//validate:validate_proto
-      deps: C++ dependencies of the protos being compiled. Likely cc_proto_library or pgv_cc_proto_library
+      cc_deps: C++ dependencies of the protos being compiled. Likely cc_proto_library or pgv_cc_proto_library
       **kargs: other keyword arguments that are passed to cc_library.
     """
 
     cc_proto_gen_validate(
         name=name+"_validate",
-        proto=proto,
+        deps=deps,
     )
 
     native.cc_library(
         name=name,
         hdrs=[":"+name+"_validate"],
         srcs=[":"+name+"_validate"],
-        deps= deps + [
+        deps= cc_deps + [
             "@com_lyft_protoc_gen_validate//validate:cc_validate",
             "@com_lyft_protoc_gen_validate//validate:validate_cc",
             "@com_google_protobuf//:protobuf",

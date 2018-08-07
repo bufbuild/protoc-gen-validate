@@ -18,7 +18,9 @@ def _proto_path(proto):
 
 def _protoc_gen_validate_impl(ctx):
   """Generate protos using protoc-gen-validate plugin"""
-  protos = [f for f in ctx.attr.proto.proto.direct_sources]
+  protos = []
+  for dep in ctx.attr.deps:
+    protos += [f for f in dep.proto.direct_sources]
 
   cc_hdrs = [p.basename[:-len(".proto")] + ".pb.validate.h" for p in protos]
   cc_hdrs += [p.basename[:-len(".proto")] + ".pb.h" for p in protos]
@@ -38,16 +40,18 @@ def _protoc_gen_validate_impl(ctx):
     "--validate_out=lang=cc:"+ dir_out,
   ]
 
-  tds = ctx.attr.proto.proto.transitive_descriptor_sets
-  if tds:
-    args += ["--descriptor_set_in=%s" % ":".join([ds.path for ds in tds])]
+  tds = depset([], transitive = [dep.proto.transitive_descriptor_sets for dep in ctx.attr.deps])
+  descriptor_args = [ds.path for ds in tds]
+
+  if len(descriptor_args) != 0:
+    args += ["--descriptor_set_in=%s" % ":".join(descriptor_args)]
 
   ctx.action(
-      inputs=protos + tds.to_list() +  [ctx.executable._plugin],
+      inputs=protos + tds.to_list() + [ctx.executable._plugin],
       outputs=out_files,
       arguments=args + [_proto_path(proto) for proto in protos],
       executable=ctx.executable._protoc,
-      mnemonic="ProtoGenValidateCompile",
+      mnemonic="ProtoGenValidateCcGenerate",
       use_default_shell_env=True,
   )
 
@@ -57,7 +61,7 @@ def _protoc_gen_validate_impl(ctx):
 
 cc_proto_gen_validate = rule(
     attrs = {
-        "proto": attr.label(
+        "deps": attr.label_list(
             mandatory = True,
             providers = ["proto"],
         ),
