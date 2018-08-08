@@ -1,6 +1,7 @@
 #ifndef _VALIDATE_H
 #define _VALIDATE_H
 
+#include <functional>
 #include <stdexcept>
 #include <string>
 #include <typeinfo>
