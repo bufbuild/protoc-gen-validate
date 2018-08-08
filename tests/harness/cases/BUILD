@@ -8,7 +8,7 @@ load(
 )
 
 proto_library(
-    name = "go_proto",
+    name = "cases_proto",
     srcs = [
         "bool.proto",
         "bytes.proto",
@@ -36,7 +36,7 @@ proto_library(
 
 pgv_go_proto_library(
     name = "go",
-    proto = ":go_proto",
+    proto = ":cases_proto",
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/go",
     deps = [
         "//tests/harness/cases/other_package:go",
@@ -64,22 +64,8 @@ go_library(
 
 pgv_cc_proto_library(
     name = "cc",
-    srcs = [
-        "bool.proto",
-        "bytes.proto",
-        "enums.proto",
-        "maps.proto",
-        "messages.proto",
-        "numbers.proto",
-        "oneofs.proto",
-        "repeated.proto",
-        "strings.proto",
-        "wkt_any.proto",
-        "wkt_duration.proto",
-        "wkt_timestamp.proto",
-        "wkt_wrappers.proto",
-    ],
-    deps = [
+    deps = [":cases_proto"],
+    cc_deps = [
         "//tests/harness/cases/other_package:cc",
     ],
     visibility = ["//tests:__subpackages__"],
