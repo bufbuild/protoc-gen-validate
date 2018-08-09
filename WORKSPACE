@@ -1,27 +1,32 @@
 workspace(name = "com_lyft_protoc_gen_validate")
 
-load('@bazel_tools//tools/build_defs/repo:git.bzl', 'git_repository')
+load('@bazel_tools//tools/build_defs/repo:http.bzl', 'http_archive')
 
-git_repository(
+http_archive(
     name = "io_bazel_rules_go",
-    remote = "https://github.com/bazelbuild/rules_go.git",
-    commit = "238329474a90d8ac8c128cec3184c515ef467c04",
+    url = "https://github.com/bazelbuild/rules_go/releases/download/0.14.0/rules_go-0.14.0.tar.gz",
+    sha256 = "5756a4ad75b3703eb68249d50e23f5d64eaf1593e886b9aa931aa6e938c4e301",
 )
 http_archive(
     name = "bazel_gazelle",
-    urls = ["https://github.com/bazelbuild/bazel-gazelle/releases/download/0.13.0/bazel-gazelle-0.13.0.tar.gz"],
-    sha256 = "bc653d3e058964a5a26dcad02b6c72d7d63e6bb88d94704990b908a1445b8758",
+    url = "https://github.com/bazelbuild/bazel-gazelle/releases/download/0.14.0/bazel-gazelle-0.14.0.tar.gz",
+    sha256 = "c0a5739d12c6d05b6c1ad56f2200cb0b57c5a70e03ebd2f7b87ce88cabf09c7b",
 )
-
-
-# TODO(htuch): This can switch back to a point release http_archive at the next
-# release (> 3.4.1), we need HEAD proto_library support and
-# https://github.com/google/protobuf/pull/3761.
+# TODO: patch is to work around issue here
+# https://github.com/google/protobuf/pull/5024
 http_archive(
     name = "com_google_protobuf",
-    strip_prefix = "protobuf-c4f59dcc5c13debc572154c8f636b8a9361aacde",
-    sha256 = "5d4551193416861cb81c3bc0a428f22a6878148c57c31fb6f8f2aa4cf27ff635",
-    url = "https://github.com/google/protobuf/archive/c4f59dcc5c13debc572154c8f636b8a9361aacde.tar.gz",
+    url = "https://github.com/google/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.tar.gz",
+    sha256 = "fd65488e618032ac924879a3a94fa68550b3b5bcb445b93b7ddf3c925b1a351f",
+    strip_prefix = "protobuf-3.6.1",
+    patches = ["//:protobuf.patch"],
+    patch_tool = "git",
+    patch_args = ["apply"],
+)
+http_archive(
+    name = "bazel_skylib",
+    url = "https://github.com/bazelbuild/bazel-skylib/archive/0.5.0.tar.gz",
+    sha256 = "b5f6abe419da897b7901f90cbab08af958b97a8f3575b0d3dd062ac7ce78541f",
 )
 
 load("@io_bazel_rules_go//go:def.bzl", "go_rules_dependencies", "go_register_toolchains")

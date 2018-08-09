@@ -22,6 +22,14 @@ genrule(
     visibility = ["//visibility:public"],
 )
 
+genrule(
+    name = "go-harness-exe",
+    srcs = [":main"],
+    outs = ["go-harness.exe"],
+    cmd = "cp $(SRCS) $@",
+    visibility = ["//visibility:public"],
+)
+
 go_binary(
     name = "main",
     embed = [":go_default_library"],

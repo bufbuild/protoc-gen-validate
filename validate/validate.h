@@ -28,7 +28,11 @@ protected:
   static std::map<size_t, BaseValidator*> validators;
 };
 
+#if !defined(WIN32)
 std::map<size_t, BaseValidator*> __attribute__((weak)) BaseValidator::validators;
+#else
+__declspec(selectany) std::map<size_t, BaseValidator*> BaseValidator::validators;
+#endif
 
 template <typename T>
 class Validator : public BaseValidator {
