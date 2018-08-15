@@ -1,4 +1,3 @@
 # TODO: remove experimental_shortened_obj_file_path for Bazel 0.16.0
 build --experimental_shortened_obj_file_path
-build --features=pure
 build --verbose_failures

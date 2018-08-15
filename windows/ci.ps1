@@ -48,7 +48,7 @@ if ($le -ne 0) {
   exit $le
 }
 
-$diff = Compare-Object (Get-Content "bazel-out\x64_windows-fastbuild\bin\validate\windows_amd64_pure_stripped\go_default_library%\github.com\lyft\protoc-gen-validate\validate\validate.pb.go") (Get-Content "validate\validate.pb.go")
+$diff = Compare-Object (Get-Content "bazel-out\x64_windows-fastbuild\bin\validate\windows_amd64_stripped\go_default_library%\github.com\lyft\protoc-gen-validate\validate\validate.pb.go") (Get-Content "validate\validate.pb.go")
 if ($diff -ne $null) {
   $diff
   exit 1
