@@ -10,8 +10,8 @@ go_library(
         "//tests/harness/cases:gogo",
         "//tests/harness/cases/other_package:gogo",
         "//tests/harness/gogo:go_default_library",
-        "//vendor/github.com/gogo/protobuf/proto:go_default_library",
-        "//vendor/github.com/gogo/protobuf/types:go_default_library",
+        "@com_github_gogo_protobuf//proto:go_default_library",
+        "@com_github_gogo_protobuf//types:go_default_library",
     ],
 )
 
