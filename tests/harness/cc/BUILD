@@ -15,7 +15,7 @@ cc_binary(
     copts = C_OPTS,
     visibility = ["//visibility:public"],
     deps = [
-        "//tests/harness:harness_proto",
+        "//tests/harness:harness_cc_proto",
         "//tests/harness/cases:cc",
     ],
 )
