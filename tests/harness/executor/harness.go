@@ -1,10 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
+	"runtime"
 	"sync"
 
 	"strings"
@@ -26,6 +29,27 @@ type Harness struct {
 }
 
 func InitHarness(cmd string, args ...string) Harness {
+	if runtime.GOOS == "windows" {
+		// Bazel runfiles are not symlinked in on windows,
+		// so we have to use the manifest instead. If the manifest
+		// doesn't exist, assume we're running in a non-Bazel context
+		f, err := os.Open("MANIFEST")
+		if err == nil {
+			defer f.Close()
+
+			s := bufio.NewScanner(f)
+			manifest := map[string]string{}
+			for s.Scan() {
+				values := strings.Split(s.Text(), " ")
+				manifest[values[0]] = values[1]
+			}
+			for k, v := range manifest {
+				if strings.Contains(k, cmd) {
+					cmd = v
+				}
+			}
+		}
+	}
 
 	return Harness{
 		Name: cmd,

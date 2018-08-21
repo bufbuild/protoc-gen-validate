@@ -9,6 +9,13 @@
 #include <google/protobuf/message.h>
 #include <google/protobuf/util/time_util.h>
 
+// It looks like one of the above protobuf headers includes windows.h. This
+// causes GetMessage to be defined to GetMessageA or GetMessageW, interfering
+// with the protobuf code
+#if defined(WIN32) && defined(GetMessage)
+#undef GetMessage
+#endif
+
 namespace pgv {
 using std::string;
 
@@ -28,7 +35,11 @@ protected:
   static std::map<size_t, BaseValidator*> validators;
 };
 
+#if !defined(WIN32)
 std::map<size_t, BaseValidator*> __attribute__((weak)) BaseValidator::validators;
+#else
+__declspec(selectany) std::map<size_t, BaseValidator*> BaseValidator::validators;
+#endif
 
 template <typename T>
 class Validator : public BaseValidator {
