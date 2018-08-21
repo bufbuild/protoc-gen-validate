@@ -44,7 +44,7 @@ def _protoc_gen_validate_impl(ctx):
   descriptor_args = [ds.path for ds in tds]
 
   if len(descriptor_args) != 0:
-    args += ["--descriptor_set_in=%s" % ":".join(descriptor_args)]
+    args += ["--descriptor_set_in=%s" % ctx.configuration.host_path_separator.join(descriptor_args)]
 
   ctx.action(
       inputs=protos + tds.to_list() + [ctx.executable._plugin],
