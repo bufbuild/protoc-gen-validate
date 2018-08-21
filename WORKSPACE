@@ -12,21 +12,20 @@ http_archive(
     url = "https://github.com/bazelbuild/bazel-gazelle/releases/download/0.14.0/bazel-gazelle-0.14.0.tar.gz",
     sha256 = "c0a5739d12c6d05b6c1ad56f2200cb0b57c5a70e03ebd2f7b87ce88cabf09c7b",
 )
-# TODO: patch is to work around issue here
-# https://github.com/google/protobuf/pull/5024
+# TODO: use released version of protobuf that includes commit
+# fa252ec2a54acb24ddc87d48fed1ecfd458445fd. This works around the issue
+# described here: https://github.com/google/protobuf/pull/5024
 http_archive(
     name = "com_google_protobuf",
-    url = "https://github.com/google/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.tar.gz",
-    sha256 = "fd65488e618032ac924879a3a94fa68550b3b5bcb445b93b7ddf3c925b1a351f",
-    strip_prefix = "protobuf-3.6.1",
-    patches = ["//:protobuf.patch"],
-    patch_tool = "git",
-    patch_args = ["apply"],
+    url = "https://github.com/google/protobuf/archive/fa252ec2a54acb24ddc87d48fed1ecfd458445fd.tar.gz",
+    sha256 = "3d610ac90f8fa16e12490088605c248b85fdaf23114ce4b3605cdf81f7823604",
+    strip_prefix = "protobuf-fa252ec2a54acb24ddc87d48fed1ecfd458445fd",
 )
 http_archive(
     name = "bazel_skylib",
     url = "https://github.com/bazelbuild/bazel-skylib/archive/0.5.0.tar.gz",
     sha256 = "b5f6abe419da897b7901f90cbab08af958b97a8f3575b0d3dd062ac7ce78541f",
+    strip_prefix = "bazel-skylib-0.5.0",
 )
 
 load("@io_bazel_rules_go//go:def.bzl", "go_rules_dependencies", "go_register_toolchains")
