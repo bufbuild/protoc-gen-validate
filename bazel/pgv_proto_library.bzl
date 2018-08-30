@@ -4,19 +4,39 @@ load(":protobuf.bzl", "cc_proto_gen_validate")
 
 def pgv_go_proto_library(name, proto = None, deps = [], **kwargs):
     go_proto_compiler(
-        name = "pgv_plugin",
+        name = "pgv_plugin_go",
         suffix = ".pb.validate.go",
         valid_archive = False,
         plugin = "//:protoc-gen-validate",
         options = ["lang=go"],
     )
 
-    go_proto_library(name = name,
-                     proto = proto,
-                     deps = ["//validate:go_default_library"] + deps,
-                     compilers = ["@io_bazel_rules_go//proto:go_proto", "pgv_plugin"],
-                     visibility = ["//visibility:public"],
-                     **kwargs)
+    go_proto_library(
+        name = name,
+        proto = proto,
+        deps = ["//validate:go_default_library"] + deps,
+        compilers = ["@io_bazel_rules_go//proto:go_proto", "pgv_plugin_go"],
+        visibility = ["//visibility:public"],
+        **kwargs
+    )
+
+def pgv_gogo_proto_library(name, proto = None, deps = [], **kwargs):
+    go_proto_compiler(
+        name = "pgv_plugin_gogo",
+        suffix = ".pb.validate.go",
+        valid_archive = False,
+        plugin = "//:protoc-gen-validate",
+        options = ["lang=gogo"],
+    )
+
+    go_proto_library(
+        name = name,
+        proto = proto,
+        deps = ["//validate:go_default_library"] + deps,
+        compilers = ["@io_bazel_rules_go//proto:gogo_proto", "pgv_plugin_gogo"],
+        visibility = ["//visibility:public"],
+        **kwargs
+    )
 
 def pgv_cc_proto_library(
         name,

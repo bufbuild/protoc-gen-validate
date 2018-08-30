@@ -3,7 +3,7 @@
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 
 proto_library(
-    name = "harness_proto_target",
+    name = "harness_proto",
     srcs = ["harness.proto"],
     deps = [
         "@com_google_protobuf//:any_proto",
@@ -12,22 +12,36 @@ proto_library(
 )
 
 go_proto_library(
-    name = "go_default_library",
-    proto = ":harness_proto_target",
-    importpath = "github.com/lyft/protoc-gen-validate/tests/harness",
+    name = "harness_go_proto",
+    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/go",
+    proto = ":harness_proto",
     visibility = ["//visibility:public"],
     deps = [
-        "@io_bazel_rules_go//proto/wkt:descriptor_go_proto",
         "@com_github_golang_protobuf//ptypes/any:go_default_library",
         "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
         "@com_github_golang_protobuf//ptypes/wrappers:go_default_library",
+        "@io_bazel_rules_go//proto/wkt:descriptor_go_proto",
+    ],
+)
+
+go_proto_library(
+    name = "harness_gogo_proto",
+    compilers = ["@io_bazel_rules_go//proto:gogo_proto"],
+    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/gogo",
+    proto = ":harness_proto",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_golang_protobuf//ptypes/any:go_default_library",
+        "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
+        "@com_github_golang_protobuf//ptypes/wrappers:go_default_library",
+        "@io_bazel_rules_go//proto/wkt:descriptor_go_proto",
     ],
 )
 
 cc_proto_library(
-    name = "harness_proto",
+    name = "harness_cc_proto",
     deps = [
-        ":harness_proto_target",
+        ":harness_proto",
     ],
     visibility = ["//visibility:public"],
 )
