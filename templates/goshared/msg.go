@@ -25,8 +25,8 @@ func (m {{ .TypeName.Pointer }}) Validate() error {
 				{{ if required . }}
 					default:
 						return {{ errname .Message }}{
-							Field: "{{ .Name.PGGUpperCamelCase }}",
-							Reason: "value is required",
+							field: "{{ .Name.PGGUpperCamelCase }}",
+							reason: "value is required",
 						}
 				{{ end }}
 			}
@@ -42,55 +42,55 @@ func (m {{ .TypeName.Pointer }}) Validate() error {
 
 {{ cmt (errname .) " is the validation error returned by " .TypeName.Value ".Validate if the designated constraints aren't met." -}}
 type {{ errname . }} struct {
-	Field  string
-	Reason string
-	Cause  error
-	Key    bool
+	field  string
+	reason string
+	cause  error
+	key    bool
 }
 
-// GetField function returns Field value.
-func (e {{ errname . }}) GetField() string { return e.Field }
+// Field function returns field value.
+func (e {{ errname . }}) Field() string { return e.field }
 
-// GetReason function returns Reason value.
-func (e {{ errname . }}) GetReason() string { return e.Reason }
+// Reason function returns reason value.
+func (e {{ errname . }}) Reason() string { return e.reason }
 
-// GetCause function returns Cause value.
-func (e {{ errname . }}) GetCause() error { return e.Cause }
+// Cause function returns cause value.
+func (e {{ errname . }}) Cause() error { return e.cause }
 
-// GetKey function returns Key value.
-func (e {{ errname . }}) GetKey() bool { return e.Key }
+// Key function returns key value.
+func (e {{ errname . }}) Key() bool { return e.key }
 
-// GetErrorName returns Error Name value.
-func (e {{ errname . }}) GetErrorName() string { return "{{ errname . }}" }
+// ErrorName returns error name.
+func (e {{ errname . }}) ErrorName() string { return "{{ errname . }}" }
 
 // Error satisfies the builtin error interface
 func (e {{ errname . }}) Error() string {
 	cause := ""
-	if e.Cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.Cause)
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
 	}
 
 	key := ""
-	if e.Key {
+	if e.key {
 		key = "key for "
 	}
 
 	return fmt.Sprintf(
 		"invalid %s{{ .TypeName }}.%s: %s%s",
 		key,
-		e.Field,
-		e.Reason,
+		e.field,
+		e.reason,
 		cause)
 }
 
 var _ error = {{ errname . }}{}
 
 var _ interface{
-	GetField() string
-	GetReason() string
-	GetKey() bool
-	GetCause() error
-	GetErrorName() string
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
 } = {{ errname . }}{}
 
 {{ range .Fields }}{{ with (context .) }}{{ $f := .Field }}
