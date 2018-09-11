@@ -14,6 +14,7 @@ go_library(
         "transform.go",
         "trie.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/unicode/norm",
     importpath = "golang.org/x/text/unicode/norm",
     visibility = ["//visibility:public"],
     deps = ["//vendor/golang.org/x/text/transform:go_default_library"],
@@ -25,6 +26,8 @@ go_test(
         "composition_test.go",
         "data10.0.0_test.go",
         "data9.0.0_test.go",
+        "example_iter_test.go",
+        "example_test.go",
         "iter_test.go",
         "normalize_test.go",
         "readwriter_test.go",
@@ -32,20 +35,9 @@ go_test(
         "ucd_test.go",
     ],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/unicode/norm",
     deps = [
         "//vendor/golang.org/x/text/internal/gen:go_default_library",
         "//vendor/golang.org/x/text/internal/testtext:go_default_library",
         "//vendor/golang.org/x/text/transform:go_default_library",
     ],
-)
-
-go_test(
-    name = "go_default_xtest",
-    srcs = [
-        "example_iter_test.go",
-        "example_test.go",
-    ],
-    importpath = "golang.org/x/text/unicode/norm_test",
-    deps = [":go_default_library"],
 )

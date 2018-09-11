@@ -1,6 +1,8 @@
 syntax = "proto3";
 package tests.kitchensink;
 
+option go_package = "tests_kitchensink";
+
 import "validate/validate.proto";
 
 message Float {

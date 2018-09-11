@@ -16,6 +16,16 @@ func TestMethod_Name(t *testing.T) {
 	assert.Equal(t, "foo", m.Name().String())
 }
 
+func TestMethod_FullyQualifiedName(t *testing.T) {
+	t.Parallel()
+
+	s := dummyService()
+	m := &method{desc: &descriptor.MethodDescriptorProto{Name: proto.String("fizz")}}
+	s.addMethod(m)
+
+	assert.Equal(t, s.FullyQualifiedName()+".fizz", m.FullyQualifiedName())
+}
+
 func TestMethod_Syntax(t *testing.T) {
 	t.Parallel()
 	m := &method{}
@@ -148,16 +158,6 @@ func TestMethod_Accept(t *testing.T) {
 	v := &mockVisitor{err: errors.New("foo")}
 	assert.Error(t, m.accept(v))
 	assert.Equal(t, 1, v.method)
-}
-
-func TestMethod_LookupName(t *testing.T) {
-	t.Parallel()
-
-	s := dummyService()
-	m := &method{desc: &descriptor.MethodDescriptorProto{Name: proto.String("fizz")}}
-	s.addMethod(m)
-
-	assert.Equal(t, s.lookupName()+".fizz", m.lookupName())
 }
 
 type mockMethod struct {

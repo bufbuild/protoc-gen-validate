@@ -1,18 +1,22 @@
 syntax = "proto3";
 package tests.kitchensink;
 
+option go_package = "tests_kitchensink";
+
 import "validate/validate.proto";
 
 message String {
     string none = 1;
 
-    string min     = 2 [(validate.rules).string.min_len = 3];
-    string max     = 3 [(validate.rules).string.max_len = 10];
-    string min_max = 4 [(validate.rules).string = { min_len: 3, max_len: 10 }];
+    string len     = 24 [(validate.rules).string.len = 5];
+    string min     = 2  [(validate.rules).string.min_len = 3];
+    string max     = 3  [(validate.rules).string.max_len = 10];
+    string min_max = 4  [(validate.rules).string = { min_len: 3, max_len: 10 }];
     string eq_len  = 5 [(validate.rules).string = { min_len: 5, max_len: 5}];
 
-    string min_bytes     = 6 [(validate.rules).string.min_bytes = 4];
-    string max_bytes     = 7 [(validate.rules).string.max_bytes = 11];
+    string len_bytes     = 25  [(validate.rules).string.len = 6];
+    string min_bytes     = 6  [(validate.rules).string.min_bytes = 4];
+    string max_bytes     = 7  [(validate.rules).string.max_bytes = 11];
     string min_max_bytes = 8 [(validate.rules).string = { min_bytes: 4, max_bytes: 11}];
     string eq_bytes      = 9 [(validate.rules).string = { min_bytes: 6, max_bytes: 6}];
 

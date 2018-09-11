@@ -68,6 +68,7 @@ type msg struct {
 }
 
 func (m *msg) Name() Name                        { return Name(m.rawDesc.GetName()) }
+func (m *msg) FullyQualifiedName() string        { return fullyQualifiedName(m.parent, m) }
 func (m *msg) Syntax() Syntax                    { return m.parent.Syntax() }
 func (m *msg) Package() Package                  { return m.parent.Package() }
 func (m *msg) File() File                        { return m.parent.File() }
@@ -189,7 +190,6 @@ func (m *msg) accept(v Visitor) (err error) {
 }
 
 func (m *msg) setParent(p ParentEntity) { m.parent = p }
-func (m *msg) lookupName() string       { return lookupName(m.parent, m) }
 
 func (m *msg) addEnum(e Enum) {
 	e.setParent(m)

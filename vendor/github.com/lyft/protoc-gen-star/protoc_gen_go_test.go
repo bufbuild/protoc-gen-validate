@@ -9,15 +9,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestWrappedPGG_PackageName(t *testing.T) {
-	t.Parallel()
-
-	fd := mockPackageFD{pn: "foo"}
-
-	pgg := Wrap(generator.New())
-	assert.Equal(t, "foo", pgg.packageName(fd))
-}
-
 func TestWrappedPGG_SetRequest(t *testing.T) {
 	t.Parallel()
 

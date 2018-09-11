@@ -11,6 +11,7 @@ go_library(
         "rewrite.go",
         "update.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/cmd/gotext",
     importpath = "golang.org/x/text/cmd/gotext",
     visibility = ["//visibility:private"],
     deps = [
@@ -24,6 +25,5 @@ go_library(
 go_binary(
     name = "gotext",
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/cmd/gotext",
     visibility = ["//visibility:public"],
 )

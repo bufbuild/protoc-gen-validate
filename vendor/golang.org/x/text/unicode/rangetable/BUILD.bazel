@@ -8,6 +8,7 @@ go_library(
         "tables10.0.0.go",
         "tables9.0.0.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/unicode/rangetable",
     importpath = "golang.org/x/text/unicode/rangetable",
     visibility = ["//visibility:public"],
 )
@@ -19,5 +20,4 @@ go_test(
         "rangetable_test.go",
     ],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/unicode/rangetable",
 )

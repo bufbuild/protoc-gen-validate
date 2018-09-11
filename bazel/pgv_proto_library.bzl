@@ -1,13 +1,21 @@
-load(":go_proto_library.bzl", "go_proto_library")
+load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+load("@io_bazel_rules_go//proto:compiler.bzl", "go_proto_compiler")
 load("@com_google_protobuf//:protobuf.bzl", "proto_gen", "cc_proto_library")
 
-def pgv_go_proto_library(name, srcs = None, deps = [], **kwargs):
-    go_proto_library(name,
-                     srcs,
+def pgv_go_proto_library(name, proto = None, deps = [], **kwargs):
+    go_proto_compiler(
+        name = "pgv_plugin",
+        suffix = ".pb.validate.go",
+        valid_archive = False,
+        plugin = "//:protoc-gen-validate",
+        options = ["lang=go"],
+    )
+
+    go_proto_library(name = name,
+                     proto = proto,
                      deps = ["//validate:go_default_library"] + deps,
-                     protoc = "@com_google_protobuf//:protoc",
+                     compilers = ["@io_bazel_rules_go//proto:go_proto", "pgv_plugin"],
                      visibility = ["//visibility:public"],
-                     validate = 1,
                      **kwargs)
 
 def _CcValidateHdrs(srcs):

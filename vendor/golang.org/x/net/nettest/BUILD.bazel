@@ -7,6 +7,7 @@ go_library(
         "conntest_go16.go",
         "conntest_go17.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/nettest",
     importpath = "golang.org/x/net/nettest",
     visibility = ["//visibility:public"],
 )
@@ -15,6 +16,5 @@ go_test(
     name = "go_default_test",
     srcs = ["conntest_test.go"],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/net/nettest",
     deps = ["//vendor/golang.org/x/net/internal/nettest:go_default_library"],
 )

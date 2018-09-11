@@ -1,26 +1,18 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
-load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
-
-proto_library(
-    name = "test_proto",
-    srcs = ["example.proto"],
-    visibility = ["//visibility:public"],
-    deps = ["//github.com/gogo/protobuf/gogoproto:gogoproto_proto"],
-)
-
-go_proto_library(
-    name = "test_go_proto",
-    importpath = "github.com/gogo/protobuf/test/example",
-    proto = ":test_proto",
-    visibility = ["//visibility:public"],
-    deps = ["//vendor/github.com/gogo/protobuf/gogoproto:go_default_library"],
-)
 
 go_library(
     name = "go_default_library",
-    embed = [":test_go_proto"],
+    srcs = ["example.pb.go"],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/example",
     importpath = "github.com/gogo/protobuf/test/example",
     visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/gogo/protobuf/gogoproto:go_default_library",
+        "//vendor/github.com/gogo/protobuf/proto:go_default_library",
+        "//vendor/github.com/gogo/protobuf/protoc-gen-gogo/descriptor:go_default_library",
+        "//vendor/github.com/gogo/protobuf/test:go_default_library",
+        "//vendor/github.com/gogo/protobuf/test/custom:go_default_library",
+    ],
 )
 
 go_test(
@@ -30,7 +22,6 @@ go_test(
         "examplepb_test.go",
     ],
     embed = [":go_default_library"],
-    importpath = "github.com/gogo/protobuf/test/example",
     deps = [
         "//vendor/github.com/gogo/protobuf/gogoproto:go_default_library",
         "//vendor/github.com/gogo/protobuf/jsonpb:go_default_library",

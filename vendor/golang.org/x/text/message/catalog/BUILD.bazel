@@ -8,6 +8,7 @@ go_library(
         "go19.go",
         "gopre19.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/message/catalog",
     importpath = "golang.org/x/text/message/catalog",
     visibility = ["//visibility:public"],
     deps = [
@@ -21,7 +22,6 @@ go_test(
     name = "go_default_test",
     srcs = ["catalog_test.go"],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/message/catalog",
     deps = [
         "//vendor/golang.org/x/text/internal/catmsg:go_default_library",
         "//vendor/golang.org/x/text/language:go_default_library",

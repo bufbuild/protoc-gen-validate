@@ -7,25 +7,21 @@ go_library(
         "runenames.go",
         "tables.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/unicode/runenames",
     importpath = "golang.org/x/text/unicode/runenames",
     visibility = ["//visibility:public"],
 )
 
 go_test(
     name = "go_default_test",
-    srcs = ["runenames_test.go"],
+    srcs = [
+        "example_test.go",
+        "runenames_test.go",
+    ],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/unicode/runenames",
     deps = [
         "//vendor/golang.org/x/text/internal/gen:go_default_library",
         "//vendor/golang.org/x/text/internal/testtext:go_default_library",
         "//vendor/golang.org/x/text/internal/ucd:go_default_library",
     ],
-)
-
-go_test(
-    name = "go_default_xtest",
-    srcs = ["example_test.go"],
-    importpath = "golang.org/x/text/unicode/runenames_test",
-    deps = [":go_default_library"],
 )

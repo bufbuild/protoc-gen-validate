@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["main.go"],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/cmd/gotext/examples/rewrite",
     importpath = "golang.org/x/text/cmd/gotext/examples/rewrite",
     visibility = ["//visibility:private"],
     deps = [
@@ -14,6 +15,5 @@ go_library(
 go_binary(
     name = "rewrite",
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/cmd/gotext/examples/rewrite",
     visibility = ["//visibility:public"],
 )

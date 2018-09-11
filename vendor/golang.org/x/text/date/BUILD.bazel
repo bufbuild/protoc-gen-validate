@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "go_default_library",
     srcs = ["tables.go"],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/date",
     importpath = "golang.org/x/text/date",
     visibility = ["//visibility:public"],
     deps = ["//vendor/golang.org/x/text/internal/cldrtree:go_default_library"],
@@ -15,7 +16,6 @@ go_test(
         "gen_test.go",
     ],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/date",
     deps = [
         "//vendor/golang.org/x/text/internal/cldrtree:go_default_library",
         "//vendor/golang.org/x/text/internal/gen:go_default_library",

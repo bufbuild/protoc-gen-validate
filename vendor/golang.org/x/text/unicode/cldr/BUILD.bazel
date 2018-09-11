@@ -11,6 +11,7 @@ go_library(
         "slice.go",
         "xml.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/unicode/cldr",
     importpath = "golang.org/x/text/unicode/cldr",
     visibility = ["//visibility:public"],
 )
@@ -21,16 +22,9 @@ go_test(
         "cldr_test.go",
         "collate_test.go",
         "data_test.go",
+        "examples_test.go",
         "resolve_test.go",
         "slice_test.go",
     ],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/unicode/cldr",
-)
-
-go_test(
-    name = "go_default_xtest",
-    srcs = ["examples_test.go"],
-    importpath = "golang.org/x/text/unicode/cldr_test",
-    deps = [":go_default_library"],
 )

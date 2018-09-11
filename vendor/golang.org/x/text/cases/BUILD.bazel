@@ -13,6 +13,7 @@ go_library(
         "trieval.go",
     ],
     cgo = True,
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/cases",
     importpath = "golang.org/x/text/cases",
     visibility = ["//visibility:public"],
     deps = [
@@ -27,28 +28,18 @@ go_test(
     name = "go_default_test",
     srcs = [
         "context_test.go",
+        "example_test.go",
         "fold_test.go",
         "map_test.go",
         "tables10.0.0_test.go",
         "tables9.0.0_test.go",
     ],
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/cases",
     deps = [
         "//vendor/golang.org/x/text/internal/testtext:go_default_library",
         "//vendor/golang.org/x/text/language:go_default_library",
         "//vendor/golang.org/x/text/transform:go_default_library",
         "//vendor/golang.org/x/text/unicode/norm:go_default_library",
         "//vendor/golang.org/x/text/unicode/rangetable:go_default_library",
-    ],
-)
-
-go_test(
-    name = "go_default_xtest",
-    srcs = ["example_test.go"],
-    importpath = "golang.org/x/text/cases_test",
-    deps = [
-        ":go_default_library",
-        "//vendor/golang.org/x/text/language:go_default_library",
     ],
 )

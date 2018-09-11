@@ -6,6 +6,7 @@ go_library(
         "catalog_gen.go",
         "main.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/cmd/gotext/examples/extract_http",
     importpath = "golang.org/x/text/cmd/gotext/examples/extract_http",
     visibility = ["//visibility:private"],
     deps = [
@@ -19,6 +20,5 @@ go_library(
 go_binary(
     name = "extract_http",
     embed = [":go_default_library"],
-    importpath = "golang.org/x/text/cmd/gotext/examples/extract_http",
     visibility = ["//visibility:public"],
 )

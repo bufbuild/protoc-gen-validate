@@ -188,6 +188,8 @@ func (m Module) CheckSFixed64(r *validate.SFixed64Rules) {
 }
 
 func (m Module) CheckString(r *validate.StringRules) {
+	m.checkLen(r.Len, r.MinLen, r.MaxLen)
+	m.checkLen(r.LenBytes, r.MinBytes, r.MaxBytes)
 	m.checkMinMax(r.MinLen, r.MaxLen)
 	m.checkMinMax(r.MinBytes, r.MaxBytes)
 	m.checkIns(len(r.In), len(r.NotIn))
@@ -418,6 +420,20 @@ func (m Module) checkMinMax(min, max *uint64) {
 	m.Assert(
 		*min <= *max,
 		"`min` value is greater than `max` value")
+}
+
+func (m Module) checkLen(len, min, max *uint64) {
+	if len == nil {
+		return
+	}
+
+	m.Assert(
+		min == nil,
+		"cannot have both `len` and `min_len` rules on the same field")
+
+	m.Assert(
+		max == nil,
+		"cannot have both `len` and `max_len` rules on the same field")
 }
 
 func (m Module) checkPattern(p *string, in int) {

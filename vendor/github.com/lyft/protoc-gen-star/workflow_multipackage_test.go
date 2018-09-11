@@ -50,8 +50,6 @@ func TestMultiPackageWorkflow_Init(t *testing.T) {
 }
 
 func TestMultiPackageWorkflow_Go(t *testing.T) {
-	t.Parallel()
-
 	d := newMockDebugger(t)
 	g := Init()
 	g.Debugger = d
@@ -73,8 +71,6 @@ func TestMultiPackageWorkflow_Go(t *testing.T) {
 }
 
 func TestMultiPackageWorkflow_Go_SinglePackage(t *testing.T) {
-	t.Parallel()
-
 	d := newMockDebugger(t)
 	g := Init()
 	g.Debugger = d
@@ -99,8 +95,6 @@ func TestMultiPackageWorkflow_Go_SinglePackage(t *testing.T) {
 }
 
 func TestMultiPackageWorkflow_Go_SubProcess(t *testing.T) {
-	t.Parallel()
-
 	d := newMockDebugger(t)
 	g := Init()
 	g.Debugger = d
@@ -129,8 +123,6 @@ func TestMultiPackageWorkflow_Go_SubProcess(t *testing.T) {
 }
 
 func TestMultiPackageWorkflow_SplitRequests(t *testing.T) {
-	t.Parallel()
-
 	g := Init()
 	g.pgg.setRequest(multiPackageReq())
 	wf := &multiPackageWorkflow{Generator: g}
@@ -156,8 +148,6 @@ func TestMultiPackageWorkflow_SplitRequests(t *testing.T) {
 }
 
 func TestMultiPackageWorkflow(t *testing.T) {
-	t.Parallel()
-
 	g := Init()
 	g.Debugger = newMockDebugger(t)
 	wf := &multiPackageWorkflow{Generator: g}
@@ -168,8 +158,6 @@ func TestMultiPackageWorkflow(t *testing.T) {
 }
 
 func TestMultiPackageWorkflow_PrepareProcesses(t *testing.T) {
-	t.Parallel()
-
 	wf := &multiPackageWorkflow{}
 	procs := wf.prepareProcesses(context.Background(), 3)
 
@@ -180,7 +168,6 @@ func TestMultiPackageWorkflow_PrepareProcesses(t *testing.T) {
 }
 
 func TestMultiPackageWorkflow_HandleProcesses(t *testing.T) {
-
 	g := Init()
 	d := newMockDebugger(t)
 	g.Debugger = d
@@ -217,8 +204,6 @@ func TestMultiPackageWorkflow_HandleProcesses(t *testing.T) {
 }
 
 func TestMultiPackageWorkflow_HandleProcess_Success(t *testing.T) {
-	t.Parallel()
-
 	g := Init()
 	g.Debugger = newMockDebugger(t)
 	wf := &multiPackageWorkflow{Generator: g}
@@ -241,8 +226,6 @@ func TestMultiPackageWorkflow_HandleProcess_Success(t *testing.T) {
 }
 
 func TestMultiPackageWorkflow_HandleProcess_BrokenIn(t *testing.T) {
-	t.Parallel()
-
 	g := Init()
 	g.Debugger = newMockDebugger(t)
 	wf := &multiPackageWorkflow{Generator: g}
@@ -253,8 +236,6 @@ func TestMultiPackageWorkflow_HandleProcess_BrokenIn(t *testing.T) {
 }
 
 func TestMultiPackageWorkflow_HandleProcess_BrokenOut(t *testing.T) {
-	t.Parallel()
-
 	g := Init()
 	g.Debugger = newMockDebugger(t)
 	wf := &multiPackageWorkflow{Generator: g}
@@ -265,8 +246,6 @@ func TestMultiPackageWorkflow_HandleProcess_BrokenOut(t *testing.T) {
 }
 
 func TestMultiPackageWorkflow_HandleProcess_BrokenErr(t *testing.T) {
-	t.Parallel()
-
 	g := Init()
 	g.Debugger = newMockDebugger(t)
 	wf := &multiPackageWorkflow{Generator: g}
@@ -277,8 +256,6 @@ func TestMultiPackageWorkflow_HandleProcess_BrokenErr(t *testing.T) {
 }
 
 func TestMultiPackageWorkflow_HandleProcess_StartErr(t *testing.T) {
-	t.Parallel()
-
 	g := Init()
 	g.Debugger = newMockDebugger(t)
 	wf := &multiPackageWorkflow{Generator: g}
@@ -289,8 +266,6 @@ func TestMultiPackageWorkflow_HandleProcess_StartErr(t *testing.T) {
 }
 
 func TestMultiPackageWorkflow_HandleProcess_WaitErr(t *testing.T) {
-	t.Parallel()
-
 	g := Init()
 	g.Debugger = newMockDebugger(t)
 	wf := &multiPackageWorkflow{Generator: g}
@@ -301,8 +276,6 @@ func TestMultiPackageWorkflow_HandleProcess_WaitErr(t *testing.T) {
 }
 
 func TestMultiPackageWorkflow_HandleProcess_UnmarshalErr(t *testing.T) {
-	t.Parallel()
-
 	g := Init()
 	g.Debugger = newMockDebugger(t)
 	wf := &multiPackageWorkflow{Generator: g}

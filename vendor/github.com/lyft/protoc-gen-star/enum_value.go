@@ -29,6 +29,7 @@ type enumVal struct {
 }
 
 func (ev *enumVal) Name() Name                                       { return Name(ev.desc.GetName()) }
+func (ev *enumVal) FullyQualifiedName() string                       { return fullyQualifiedName(ev.enum, ev) }
 func (ev *enumVal) Syntax() Syntax                                   { return ev.enum.Syntax() }
 func (ev *enumVal) Package() Package                                 { return ev.enum.Package() }
 func (ev *enumVal) File() File                                       { return ev.enum.File() }
@@ -53,7 +54,6 @@ func (ev *enumVal) accept(v Visitor) (err error) {
 	return
 }
 
-func (ev *enumVal) setEnum(e Enum)     { ev.enum = e }
-func (ev *enumVal) lookupName() string { return lookupName(ev.enum, ev) }
+func (ev *enumVal) setEnum(e Enum) { ev.enum = e }
 
 var _ EnumValue = (*enumVal)(nil)
