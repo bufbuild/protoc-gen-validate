@@ -118,17 +118,17 @@ func errIdxCause(ctx shared.RuleContext, idx, cause string, reason ...interface{
 
 	causeFld := ""
 	if cause != "nil" && cause != "" {
-		causeFld = fmt.Sprintf("Cause: %s,", cause)
+		causeFld = fmt.Sprintf("cause: %s,", cause)
 	}
 
 	keyFld := ""
 	if ctx.OnKey {
-		keyFld = "Key: true,"
+		keyFld = "key: true,"
 	}
 
 	return fmt.Sprintf(`%s{
-		Field: %s,
-		Reason: %q,
+		field: %s,
+		reason: %q,
 		%s%s
 	}`,
 		errName(f.Message()),
