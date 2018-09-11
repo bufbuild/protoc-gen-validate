@@ -12,16 +12,10 @@ using std::string;
 
 {{ range .AllMessages }}
 {{- if not (disabled .) -}}
-bool CheckMessage(const {{ class . }}& m, pgv::ValidationMsg* err) {
-	return {{ package . }}::Validate(m, err);
-}
-{{ end }}
-{{ end }}
 
-{{ range (weakCheckMsgs .AllMessages) }}
-bool __attribute__((weak)) CheckMessage(const {{ . }}& m, pgv::ValidationMsg* err) {
-	return true;
-}
+pgv::Validator<{{ class . }}> {{ staticVarName . }}(static_cast<bool(*)(const {{ class .}}&, pgv::ValidationMsg*)>({{ package .}}::Validate));
+
+{{ end }}
 {{ end }}
 
 } // namespace validate

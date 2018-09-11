@@ -9,6 +9,8 @@ Developers import the PGV extension and annotate the messages and fields in thei
 ```protobuf
 syntax = "proto3";
 
+package examplepb;
+
 import "validate/validate.proto";
 
 message Person {
@@ -17,7 +19,7 @@ message Person {
   string email = 2 [(validate.rules).string.email = true];
 
   string name  = 3 [(validate.rules).string = {
-                      pattern:   "^[^\d\s]+( [^\d\s]+)*$",
+                      pattern:   "^[^[0-9]A-Za-z]+( [^[0-9]A-Za-z]+)*$",
                       max_bytes: 256,
                    }];
 
@@ -82,12 +84,13 @@ make build
 
 #### Go
 
-Go generation should occur into the same output path as the official plugin. For a proto file `example.proto`, the corresponding validation code is generated into `example.pb.validate.go`:
+Go generation should occur into the same output path as the official plugin. For a proto file `example.proto`, the corresponding validation code is generated into `../generated/example.pb.validate.go`:
 
 ```sh
 protoc \
   -I . \
   -I ${GOPATH}/src \
+  -I ${GOPATH}/src/github.com/lyft/protoc-gen-validate \
   --go_out=":../generated" \
   --validate_out="lang=go:../generated" \
   example.proto
@@ -105,6 +108,7 @@ command to generate `gogo`-compatible validation code:
 protoc \
   -I . \
   -I ${GOPATH}/src \
+  -I ${GOPATH}/src/github.com/lyft/protoc-gen-validate \
   --gogofast_out=":../generated"\
   --validate_out="lang=gogo:../generated" \ example.proto
 ```

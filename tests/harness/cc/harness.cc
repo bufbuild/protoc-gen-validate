@@ -1,6 +1,12 @@
 #include <functional>
 #include <iostream>
 
+#if defined(WIN32)
+#include <stdio.h>
+#include <io.h>
+#include <fcntl.h>
+#endif
+
 #include "validate/validate.h"
 
 #include "tests/harness/cases/bool.pb.h"
@@ -122,6 +128,12 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
 
 int main() {
   TestCase test_case;
+
+#if defined(WIN32)
+  // need to explicitly set the stdin file mode to binary on Windows
+  ExitIfFailed(_setmode(_fileno(stdin), _O_BINARY) != -1, "failed to set stdin to binary mode");
+#endif
+
   ExitIfFailed(test_case.ParseFromIstream(&std::cin), "failed to parse TestCase");
 
   auto validate_fn = GetValidationCheck(test_case.message());
