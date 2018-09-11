@@ -6,6 +6,7 @@ go_library(
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/go/main",
     visibility = ["//visibility:private"],
     deps = [
+        "//tests/harness:harness_go_proto",
         "//tests/harness/cases:go",
         "//tests/harness/cases/other_package:go",
         "//tests/harness/go:go_default_library",
@@ -18,6 +19,14 @@ genrule(
     name = "go-harness",
     srcs = [":main"],
     outs = ["go-harness"],
+    cmd = "cp $(SRCS) $@",
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "go-harness-exe",
+    srcs = [":main"],
+    outs = ["go-harness.exe"],
     cmd = "cp $(SRCS) $@",
     visibility = ["//visibility:public"],
 )

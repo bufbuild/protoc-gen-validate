@@ -12,16 +12,21 @@ load(
 proto_library(
     name = "fixed32_proto",
     srcs = ["fixed32.proto"],
+    deps = ["//validate:validate_proto"],
 )
 
 pgv_go_proto_library(
     name = "fixed32_go",
-    proto = ":fixed32_proto"
+    importpath = "github.com/lyft/protoc-gen-validate/tests/kitchensink/fixed32",
+    proto = ":fixed32_proto",
+    deps = [
+        "@com_github_golang_protobuf//ptypes:go_default_library",
+    ],
 )
 
 pgv_cc_proto_library(
     name = "fixed32_cc",
-    srcs = ["fixed32.proto"],
+    deps = [":fixed32_proto"],
 )
 
 proto_library(
