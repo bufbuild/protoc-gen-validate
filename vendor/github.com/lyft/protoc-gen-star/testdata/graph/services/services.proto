@@ -1,0 +1,27 @@
+syntax="proto3";
+package graph.services;
+
+message BeforeRequest {}
+message BeforeResponse {
+    int32 foo = 99; // comment
+}
+
+service Empty {}
+
+// unary only methods
+service Unary {
+    // message come before
+    rpc UnaryBefore(BeforeRequest) returns (BeforeResponse);
+
+    // messages come after
+    rpc UnaryAfter(AfterRequest) returns (AfterResponse);
+}
+
+service Streaming {
+    rpc ClientStream(stream BeforeRequest) returns (BeforeResponse);
+    rpc ServerStream(AfterRequest) returns (stream AfterResponse);
+    rpc BiDiStream(stream BeforeRequest) returns (stream AfterResponse);
+}
+
+message AfterRequest {}
+message AfterResponse {}

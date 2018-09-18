@@ -1,0 +1,1 @@
+Mtargets/fully_qualified/fully_qualified.proto=example.com/foo/bar,Mtargets/unqualified/unqualified.proto=example.com/fizz/buzz,Mtargets/none/none.proto=example.com/quux

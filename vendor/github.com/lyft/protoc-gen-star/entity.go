@@ -1,18 +1,19 @@
 package pgs
 
-import "github.com/golang/protobuf/proto"
+import (
+	"github.com/golang/protobuf/proto"
+)
 
 // Entity describes any member of the proto AST that is extensible via
-// options. All nodes file and below are considered entities.
+// options. All components of a File are considered entities.
 type Entity interface {
 	Node
-	Commenter
 
 	// The Name of the entity
 	Name() Name
 
 	// The fully qualified name of the entity. For example, a message
-	// 'HelloRequest' in a 'helloworld' package it takes the form of
+	// 'HelloRequest' in a 'helloworld' package takes the form of
 	// '.helloworld.HelloRequest'.
 	FullyQualifiedName() string
 
@@ -23,8 +24,8 @@ type Entity interface {
 	// Package returns the container package for this entity.
 	Package() Package
 
-	// Imports includes all external packages required by this entity.
-	Imports() []Package
+	// Imports includes all external files required by this entity.
+	Imports() []File
 
 	// File returns the File containing this entity.
 	File() File
@@ -39,6 +40,13 @@ type Entity interface {
 	// this entity. Use this flag to determine if the file was targeted in the
 	// protoc run or if it was loaded as an external dependency.
 	BuildTarget() bool
+
+	// SourceCodeInfo returns the SourceCodeInfo associated with the entity.
+	// Primarily, this struct contains the comments associated with the Entity.
+	SourceCodeInfo() SourceCodeInfo
+
+	childAtPath(path []int32) Entity
+	addSourceCodeInfo(info SourceCodeInfo)
 }
 
 // A ParentEntity is any Entity type that can contain messages and/or enums.
@@ -55,7 +63,7 @@ type ParentEntity interface {
 
 	// MapEntries returns the MapEntry message types contained within this
 	// Entity. These messages are not returned by the Messages or AllMessages
-	// methods.
+	// methods. Map Entry messages are typically not exposed to the end user.
 	MapEntries() []Message
 
 	// Enums returns the top-level enums from this entity. Nested enums

@@ -6,32 +6,24 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
-	"github.com/golang/protobuf/protoc-gen-go/generator"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestEnum_Name(t *testing.T) {
 	t.Parallel()
 
-	e := &enum{rawDesc: &descriptor.EnumDescriptorProto{Name: proto.String("foo")}}
+	e := &enum{desc: &descriptor.EnumDescriptorProto{Name: proto.String("foo")}}
 	assert.Equal(t, "foo", e.Name().String())
 }
 
 func TestEnum_FullyQualifiedName(t *testing.T) {
 	t.Parallel()
 
-	e := &enum{rawDesc: &descriptor.EnumDescriptorProto{Name: proto.String("enum")}}
+	e := &enum{desc: &descriptor.EnumDescriptorProto{Name: proto.String("enum")}}
 	f := dummyFile()
 	f.addEnum(e)
 
 	assert.Equal(t, f.FullyQualifiedName()+".enum", e.FullyQualifiedName())
-}
-
-func TestEnum_TypeName(t *testing.T) {
-	t.Parallel()
-
-	e := dummyEnum()
-	assert.Equal(t, e.Name().String(), e.TypeName().String())
 }
 
 func TestEnum_Syntax(t *testing.T) {
@@ -81,8 +73,8 @@ func TestEnum_BuildTarget(t *testing.T) {
 func TestEnum_Descriptor(t *testing.T) {
 	t.Parallel()
 
-	e := &enum{genDesc: &generator.EnumDescriptor{}}
-	assert.Equal(t, e.genDesc, e.Descriptor())
+	e := &enum{desc: &descriptor.EnumDescriptorProto{}}
+	assert.Equal(t, e.desc, e.Descriptor())
 }
 
 func TestEnum_Parent(t *testing.T) {
@@ -112,7 +104,7 @@ func TestEnum_Values(t *testing.T) {
 func TestEnum_Extension(t *testing.T) {
 	// cannot be parallel
 
-	e := &enum{rawDesc: &descriptor.EnumDescriptorProto{}}
+	e := &enum{desc: &descriptor.EnumDescriptorProto{}}
 	assert.NotPanics(t, func() { e.Extension(nil, nil) })
 }
 
@@ -148,6 +140,15 @@ func TestEnum_Accept(t *testing.T) {
 	assert.Equal(t, 2, v.enumvalue)
 }
 
+func TestEnum_ChildAtPath(t *testing.T) {
+	t.Parallel()
+
+	e := &enum{}
+	assert.Equal(t, e, e.childAtPath(nil))
+	assert.Nil(t, e.childAtPath([]int32{1}))
+	assert.Nil(t, e.childAtPath([]int32{999, 123}))
+}
+
 type mockEnum struct {
 	Enum
 	p   ParentEntity
@@ -166,8 +167,7 @@ func (e *mockEnum) accept(v Visitor) error {
 
 func dummyEnum() *enum {
 	f := dummyFile()
-	e := &enum{rawDesc: &descriptor.EnumDescriptorProto{Name: proto.String("enum")}}
-	e.genDesc = &generator.EnumDescriptor{EnumDescriptorProto: e.rawDesc}
+	e := &enum{desc: &descriptor.EnumDescriptorProto{Name: proto.String("enum")}}
 	f.addEnum(e)
 	return e
 }

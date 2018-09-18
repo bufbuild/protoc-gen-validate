@@ -28,7 +28,7 @@ type oneof struct {
 	msg  Message
 	flds []Field
 
-	comments string
+	info SourceCodeInfo
 }
 
 func (o *oneof) accept(v Visitor) (err error) {
@@ -46,12 +46,12 @@ func (o *oneof) Syntax() Syntax                               { return o.msg.Syn
 func (o *oneof) Package() Package                             { return o.msg.Package() }
 func (o *oneof) File() File                                   { return o.msg.File() }
 func (o *oneof) BuildTarget() bool                            { return o.msg.BuildTarget() }
-func (o *oneof) Comments() string                             { return o.comments }
+func (o *oneof) SourceCodeInfo() SourceCodeInfo               { return o.info }
 func (o *oneof) Descriptor() *descriptor.OneofDescriptorProto { return o.desc }
 func (o *oneof) Message() Message                             { return o.msg }
 func (o *oneof) setMessage(m Message)                         { o.msg = m }
 
-func (o *oneof) Imports() (i []Package) {
+func (o *oneof) Imports() (i []File) {
 	for _, f := range o.flds {
 		i = append(i, f.Imports()...)
 	}
@@ -72,5 +72,14 @@ func (o *oneof) addField(f Field) {
 	f.setOneOf(o)
 	o.flds = append(o.flds, f)
 }
+
+func (o *oneof) childAtPath(path []int32) Entity {
+	if len(path) == 0 {
+		return o
+	}
+	return nil
+}
+
+func (o *oneof) addSourceCodeInfo(info SourceCodeInfo) { o.info = info }
 
 var _ OneOf = (*oneof)(nil)

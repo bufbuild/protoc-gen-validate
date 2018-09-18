@@ -1,0 +1,65 @@
+syntax="proto2";
+package names.types;
+option go_package = "example.com/foo/bar";
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/type.proto";
+
+message Proto2 {
+    optional double double = 1;
+    optional float float = 2;
+    optional int64 int64 = 3;
+    optional sfixed64 sfixed64 = 4;
+    optional sint64 sint64 = 5;
+    optional uint64 uint64 = 6;
+    optional fixed64 fixed64 = 7;
+    optional int32 int32 = 8;
+    optional sfixed32 sfixed32 = 9;
+    optional sint32 sint32 = 10;
+    optional uint32 uint32 = 11;
+    optional fixed32 fixed32 = 12;
+    optional bool bool = 13;
+    optional string string = 14;
+    optional bytes bytes = 15;
+
+    optional Enum enum = 16;
+    optional google.protobuf.Syntax ext_enum = 17;
+    optional Required msg = 18;
+    optional google.protobuf.Duration ext_msg = 19;
+
+    repeated double repeated_scalar = 20;
+    repeated Enum repeated_enum = 21;
+    repeated google.protobuf.Syntax repeated_ext_enum = 22;
+    repeated Required repeated_msg = 23;
+    repeated google.protobuf.Duration repeated_ext_msg = 24;
+
+    map<string, float> map_scalar = 25;
+    map<int32, Enum> map_enum = 26;
+    map<uint64, google.protobuf.Syntax> map_ext_enum = 27;
+    map<fixed32, Required> map_msg = 28;
+    map<sfixed64, google.protobuf.Duration> map_ext_msg = 29;
+
+    enum Enum {VALUE = 0;}
+
+    message Required {
+        required double double = 1;
+        required float float = 2;
+        required int64 int64 = 3;
+        required sfixed64 sfixed64 = 4;
+        required sint64 sint64 = 5;
+        required uint64 uint64 = 6;
+        required fixed64 fixed64 = 7;
+        required int32 int32 = 8;
+        required sfixed32 sfixed32 = 9;
+        required sint32 sint32 = 10;
+        required uint32 uint32 = 11;
+        required fixed32 fixed32 = 12;
+        required bool bool = 13;
+        required string string = 14;
+        required bytes bytes = 15;
+        required Enum enum = 16;
+        required google.protobuf.Syntax ext_enum = 17;
+        required Required msg = 18;
+        required google.protobuf.Duration ext_msg = 19;
+    }
+}

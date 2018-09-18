@@ -1,5 +1,13 @@
+# vendored code
 vendor/
-testdata/generated/
+
+# binaries
+bin/
 
 # coverage reports
 cover.*
+
+
+testdata/generated/
+**/*.pb.go
+**/code_generator_request.pb.bin

@@ -18,20 +18,8 @@ func newMockModule() *mockModule { return &mockModule{ModuleBase: &ModuleBase{}}
 
 func (m *mockModule) Name() string { return m.name }
 
-func (m *mockModule) Execute(pkg Package, pkgs map[string]Package) []Artifact {
+func (m *mockModule) Execute(targets map[string]File, packages map[string]Package) []Artifact {
 	m.executed = true
-	return nil
-}
-
-type multiMockModule struct {
-	*mockModule
-	multiExecuted bool
-}
-
-func newMultiMockModule() *multiMockModule { return &multiMockModule{mockModule: newMockModule()} }
-
-func (m *multiMockModule) MultiExecute(targets map[string]Package, packages map[string]Package) []Artifact {
-	m.multiExecuted = true
 	return nil
 }
 
@@ -40,7 +28,7 @@ func TestModuleBase_InitContext(t *testing.T) {
 
 	m := new(ModuleBase)
 	assert.Nil(t, m.BuildContext)
-	bc := Context(newMockDebugger(t), Parameters{}, ".")
+	bc := Context(InitMockDebugger(), Parameters{}, ".")
 	m.InitContext(bc)
 	assert.NotNil(t, m.BuildContext)
 }
@@ -56,18 +44,18 @@ func TestModuleBase_Execute(t *testing.T) {
 	t.Parallel()
 
 	m := new(ModuleBase)
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	m.InitContext(Context(d, Parameters{}, "."))
 
 	assert.NotPanics(t, func() { m.Execute(nil, nil) })
-	assert.True(t, d.failed)
+	assert.True(t, d.Failed())
 }
 
 func TestModuleBase_PushPop(t *testing.T) {
 	t.Parallel()
 
 	m := new(ModuleBase)
-	m.InitContext(Context(newMockDebugger(t), Parameters{}, "."))
+	m.InitContext(Context(InitMockDebugger(), Parameters{}, "."))
 	m.Push("foo")
 	m.Pop()
 }
@@ -76,7 +64,7 @@ func TestModuleBase_PushPopDir(t *testing.T) {
 	t.Parallel()
 
 	m := new(ModuleBase)
-	m.InitContext(Context(newMockDebugger(t), Parameters{}, "foo"))
+	m.InitContext(Context(InitMockDebugger(), Parameters{}, "foo"))
 	m.PushDir("bar")
 	assert.Equal(t, "foo/bar", m.OutputPath())
 	m.PopDir()

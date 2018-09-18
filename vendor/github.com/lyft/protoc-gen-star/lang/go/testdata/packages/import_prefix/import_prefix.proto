@@ -1,0 +1,13 @@
+syntax="proto3";
+package packages.import_prefix;
+option go_package="example.com/packages/import_prefix";
+
+import "targets/fully_qualified/fully_qualified.proto";
+import "targets/unqualified/unqualified.proto";
+import "targets/none/none.proto";
+
+message ImportPrefixed {
+    targets.fully_qualified.FullyQualified fully = 1;
+    targets.unqualified.Unqualified unqualified = 2;
+    targets.none.None none = 3;
+}

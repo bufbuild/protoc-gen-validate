@@ -4,9 +4,7 @@
 [[projects]]
   name = "github.com/gogo/protobuf"
   packages = [
-    "gogoproto",
     "proto",
-    "protoc-gen-gogo/descriptor",
     "sortkeys",
     "types"
   ]
@@ -18,8 +16,6 @@
   packages = [
     "proto",
     "protoc-gen-go/descriptor",
-    "protoc-gen-go/generator",
-    "protoc-gen-go/generator/internal/remap",
     "protoc-gen-go/plugin",
     "ptypes",
     "ptypes/any",
@@ -33,8 +29,8 @@
 [[projects]]
   name = "github.com/lyft/protoc-gen-star"
   packages = ["."]
-  revision = "f3b83fca61817e55058744eb1a3c8e2e95a0dada"
-  version = "v0.3.7"
+  revision = "d47af57c91675da0382ae119b87acd82ebd13d1c"
+  version = "v0.4.1"
 
 [[projects]]
   name = "github.com/spf13/afero"
@@ -53,12 +49,6 @@
 
 [[projects]]
   branch = "master"
-  name = "golang.org/x/sync"
-  packages = ["errgroup"]
-  revision = "fd80eb99c8f653c847d294a001bdf2a3a6f768f5"
-
-[[projects]]
-  branch = "master"
   name = "golang.org/x/text"
   packages = [
     "internal/gen",
@@ -73,6 +63,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "81f9fa6b249daa4cd03277d7b1fb76ad70758c91e793ba6016cfc1152507a6da"
+  inputs-digest = "94a3c929c4f65ba3ec15f070c54b7ddae521779504ef670587fe02b327b41a93"
   solver-name = "gps-cdcl"
   solver-version = 1

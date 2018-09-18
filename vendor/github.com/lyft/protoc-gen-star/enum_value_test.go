@@ -104,6 +104,14 @@ func TestEnumVal_Accept(t *testing.T) {
 	assert.Equal(t, 1, v.enumvalue)
 }
 
+func TestEnumVal_ChildAtPath(t *testing.T) {
+	t.Parallel()
+
+	ev := &enumVal{}
+	assert.Equal(t, ev, ev.childAtPath(nil))
+	assert.Nil(t, ev.childAtPath([]int32{1}))
+}
+
 type mockEnumValue struct {
 	EnumValue
 	e   Enum

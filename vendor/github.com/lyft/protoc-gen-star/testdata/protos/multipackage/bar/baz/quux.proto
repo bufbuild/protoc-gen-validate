@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package baz;
+option go_package = "github.com/lyft/protoc-gen-star/testdata/generated/multipackage/bar/baz";
 
 message Quux {
     oneof id {

@@ -11,16 +11,14 @@ import (
 
 type persister interface {
 	SetDebugger(d Debugger)
-	SetPGG(pgg ProtocGenGo)
 	SetFS(fs afero.Fs)
 	AddPostProcessor(proc ...PostProcessor)
-	Persist(a ...Artifact)
+	Persist(a ...Artifact) *plugin_go.CodeGeneratorResponse
 }
 
 type stdPersister struct {
 	Debugger
 
-	pgg   ProtocGenGo
 	fs    afero.Fs
 	procs []PostProcessor
 }
@@ -28,45 +26,46 @@ type stdPersister struct {
 func newPersister() *stdPersister { return &stdPersister{fs: afero.NewOsFs()} }
 
 func (p *stdPersister) SetDebugger(d Debugger)                 { p.Debugger = d }
-func (p *stdPersister) SetPGG(pgg ProtocGenGo)                 { p.pgg = pgg }
 func (p *stdPersister) SetFS(fs afero.Fs)                      { p.fs = fs }
 func (p *stdPersister) AddPostProcessor(proc ...PostProcessor) { p.procs = append(p.procs, proc...) }
 
-func (p *stdPersister) Persist(arts ...Artifact) {
+func (p *stdPersister) Persist(arts ...Artifact) *plugin_go.CodeGeneratorResponse {
+	resp := new(plugin_go.CodeGeneratorResponse)
+
 	for _, a := range arts {
 		switch a := a.(type) {
 		case GeneratorFile:
 			f, err := a.ProtoFile()
 			p.CheckErr(err, "unable to convert ", a.Name, " to proto")
 			f.Content = proto.String(p.postProcess(a, f.GetContent()))
-			p.insertFile(f, a.Overwrite)
+			p.insertFile(resp, f, a.Overwrite)
 		case GeneratorTemplateFile:
 			f, err := a.ProtoFile()
 			p.CheckErr(err, "unable to convert ", a.Name, " to proto")
 			f.Content = proto.String(p.postProcess(a, f.GetContent()))
-			p.insertFile(f, a.Overwrite)
+			p.insertFile(resp, f, a.Overwrite)
 		case GeneratorAppend:
 			f, err := a.ProtoFile()
 			p.CheckErr(err, "unable to convert append for ", a.FileName, " to proto")
 			f.Content = proto.String(p.postProcess(a, f.GetContent()))
 			n, _ := cleanGeneratorFileName(a.FileName)
-			p.insertAppend(n, f)
+			p.insertAppend(resp, n, f)
 		case GeneratorTemplateAppend:
 			f, err := a.ProtoFile()
 			p.CheckErr(err, "unable to convert append for ", a.FileName, " to proto")
 			f.Content = proto.String(p.postProcess(a, f.GetContent()))
 			n, _ := cleanGeneratorFileName(a.FileName)
-			p.insertAppend(n, f)
+			p.insertAppend(resp, n, f)
 		case GeneratorInjection:
 			f, err := a.ProtoFile()
 			p.CheckErr(err, "unable to convert injection ", a.InsertionPoint, " for ", a.FileName, " to proto")
 			f.Content = proto.String(p.postProcess(a, f.GetContent()))
-			p.insertFile(f, false)
+			p.insertFile(resp, f, false)
 		case GeneratorTemplateInjection:
 			f, err := a.ProtoFile()
 			p.CheckErr(err, "unable to convert injection ", a.InsertionPoint, " for ", a.FileName, " to proto")
 			f.Content = proto.String(p.postProcess(a, f.GetContent()))
-			p.insertFile(f, false)
+			p.insertFile(resp, f, false)
 		case CustomFile:
 			p.writeFile(
 				a.Name,
@@ -88,10 +87,12 @@ func (p *stdPersister) Persist(arts ...Artifact) {
 			p.Failf("unrecognized artifact type: %T", a)
 		}
 	}
+
+	return resp
 }
 
-func (p *stdPersister) indexOfFile(name string) int {
-	for i, f := range p.pgg.response().GetFile() {
+func (p *stdPersister) indexOfFile(resp *plugin_go.CodeGeneratorResponse, name string) int {
+	for i, f := range resp.GetFile() {
 		if f.GetName() == name && f.InsertionPoint == nil {
 			return i
 		}
@@ -100,26 +101,28 @@ func (p *stdPersister) indexOfFile(name string) int {
 	return -1
 }
 
-func (p *stdPersister) insertFile(f *plugin_go.CodeGeneratorResponse_File, overwrite bool) {
+func (p *stdPersister) insertFile(resp *plugin_go.CodeGeneratorResponse,
+	f *plugin_go.CodeGeneratorResponse_File, overwrite bool) {
 	if overwrite {
-		if i := p.indexOfFile(f.GetName()); i >= 0 {
-			p.pgg.response().File[i] = f
+		if i := p.indexOfFile(resp, f.GetName()); i >= 0 {
+			resp.File[i] = f
 			return
 		}
 	}
 
-	p.pgg.response().File = append(p.pgg.response().File, f)
+	resp.File = append(resp.File, f)
 }
 
-func (p *stdPersister) insertAppend(name string, f *plugin_go.CodeGeneratorResponse_File) {
-	i := p.indexOfFile(name)
+func (p *stdPersister) insertAppend(resp *plugin_go.CodeGeneratorResponse,
+	name string, f *plugin_go.CodeGeneratorResponse_File) {
+	i := p.indexOfFile(resp, name)
 	p.Assert(i > -1, "append target ", name, " missing")
 
-	p.pgg.response().File = append(
-		p.pgg.response().File[:i+1],
+	resp.File = append(
+		resp.File[:i+1],
 		append(
 			[]*plugin_go.CodeGeneratorResponse_File{f},
-			p.pgg.response().File[i+1:]...,
+			resp.File[i+1:]...,
 		)...,
 	)
 }
