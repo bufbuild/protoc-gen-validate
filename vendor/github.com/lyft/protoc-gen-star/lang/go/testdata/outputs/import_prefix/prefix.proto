@@ -1,0 +1,4 @@
+syntax="proto3";
+package outputs.import_prefix;
+option go_package = "example.com/import_prefix";
+message ImportPrefix {}

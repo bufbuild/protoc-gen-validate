@@ -1,0 +1,44 @@
+syntax="proto3";
+package graph.messages;
+
+import "messages/scalars.proto";
+import "messages/enums_ext.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/type.proto";
+
+message BeforeMapMsg {}
+enum BeforeMapEnum { BME_BEFORE = 0; }
+
+message Maps {
+    message NestedBeforeMsg {}
+    enum NestedBeforeEnum { BME_BEFORE = 0; }
+
+    map<string,uint32> scalar = 1;
+
+    map<string, BeforeMapMsg> before_msg = 2;
+    map<string, AfterMapMsg> after_msg = 3;
+
+    map<string, BeforeMapEnum> before_enum = 4;
+    map<string, AfterMapEnum> after_enum = 5;
+
+    map<string, NestedBeforeMsg> nested_before_msg = 6;
+    map<string, NestedAfterMsg> nested_after_msg = 7;
+
+    map<string, NestedBeforeEnum> nested_before_enum = 8;
+    map<string, NestedAfterEnum> nested_after_enum = 9;
+
+    map<string, Scalars> external_in_package_msg = 10;
+    map<string, External> external_in_package_enum = 11;
+
+    map<string, google.protobuf.Duration> external_3rd_party_msg = 12;
+    map<string, google.protobuf.Syntax> external_3rd_party_enum = 13;
+
+    // this is a message!
+    message NestedAfterMsg {}
+
+    // this is an enum!
+    enum NestedAfterEnum { AME_AFTER = 0; }
+}
+
+message AfterMapMsg {}
+enum AfterMapEnum { AME_AFTER = 0; }

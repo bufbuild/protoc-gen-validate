@@ -25,7 +25,7 @@ type enumVal struct {
 	desc *descriptor.EnumValueDescriptorProto
 	enum Enum
 
-	comments string
+	info SourceCodeInfo
 }
 
 func (ev *enumVal) Name() Name                                       { return Name(ev.desc.GetName()) }
@@ -34,11 +34,11 @@ func (ev *enumVal) Syntax() Syntax                                   { return ev
 func (ev *enumVal) Package() Package                                 { return ev.enum.Package() }
 func (ev *enumVal) File() File                                       { return ev.enum.File() }
 func (ev *enumVal) BuildTarget() bool                                { return ev.enum.BuildTarget() }
-func (ev *enumVal) Comments() string                                 { return ev.comments }
+func (ev *enumVal) SourceCodeInfo() SourceCodeInfo                   { return ev.info }
 func (ev *enumVal) Descriptor() *descriptor.EnumValueDescriptorProto { return ev.desc }
 func (ev *enumVal) Enum() Enum                                       { return ev.enum }
 func (ev *enumVal) Value() int32                                     { return ev.desc.GetNumber() }
-func (ev *enumVal) Imports() []Package                               { return nil }
+func (ev *enumVal) Imports() []File                                  { return nil }
 
 func (ev *enumVal) Extension(desc *proto.ExtensionDesc, ext interface{}) (bool, error) {
 	return extension(ev.desc.GetOptions(), desc, &ext)
@@ -55,5 +55,14 @@ func (ev *enumVal) accept(v Visitor) (err error) {
 }
 
 func (ev *enumVal) setEnum(e Enum) { ev.enum = e }
+
+func (ev *enumVal) childAtPath(path []int32) Entity {
+	if len(path) == 0 {
+		return ev
+	}
+	return nil
+}
+
+func (ev *enumVal) addSourceCodeInfo(info SourceCodeInfo) { ev.info = info }
 
 var _ EnumValue = (*enumVal)(nil)

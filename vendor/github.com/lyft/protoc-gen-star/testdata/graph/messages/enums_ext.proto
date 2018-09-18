@@ -1,0 +1,4 @@
+syntax="proto3";
+package graph.messages;
+
+enum External { EXT_VALUE = 0; }

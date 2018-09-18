@@ -1,11 +1,9 @@
 package pgs
 
 import (
-	"reflect"
-
-	"fmt"
-
 	"errors"
+	"fmt"
+	"reflect"
 
 	"github.com/golang/protobuf/proto"
 )

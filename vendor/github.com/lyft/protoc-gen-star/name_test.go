@@ -153,169 +153,6 @@ func TestName(t *testing.T) {
 	}
 }
 
-func TestName_PGGUpperCamelCase(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		in string
-		ex string
-	}{
-		{"foo_bar", "FooBar"},
-		{"myJSON", "MyJSON"},
-		{"PDFTemplate", "PDFTemplate"},
-		{"_my_field_name_2", "XMyFieldName_2"},
-		{"my.field", "My.field"},
-		{"my_Field", "My_Field"},
-		{"string", "String_"},
-		{"String", "String_"},
-	}
-
-	for _, tc := range tests {
-		assert.Equal(t, tc.ex, Name(tc.in).PGGUpperCamelCase().String())
-	}
-}
-
-func TestTypeName(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		in  string
-		el  string
-		key string
-		ptr string
-		val string
-	}{
-		{
-			in:  "int",
-			el:  "int",
-			ptr: "*int",
-			val: "int",
-		},
-		{
-			in:  "*int",
-			el:  "*int",
-			ptr: "*int",
-			val: "int",
-		},
-		{
-			in:  "foo.bar",
-			el:  "foo.bar",
-			ptr: "*foo.bar",
-			val: "foo.bar",
-		},
-		{
-			in:  "*foo.bar",
-			el:  "*foo.bar",
-			ptr: "*foo.bar",
-			val: "foo.bar",
-		},
-		{
-			in:  "[]string",
-			el:  "string",
-			key: "int",
-			ptr: "[]string",
-			val: "[]string",
-		},
-		{
-			in:  "[]*string",
-			el:  "*string",
-			key: "int",
-			ptr: "[]*string",
-			val: "[]*string",
-		},
-		{
-			in:  "[]foo.bar",
-			el:  "foo.bar",
-			key: "int",
-			ptr: "[]foo.bar",
-			val: "[]foo.bar",
-		},
-		{
-			in:  "[]*foo.bar",
-			el:  "*foo.bar",
-			key: "int",
-			ptr: "[]*foo.bar",
-			val: "[]*foo.bar",
-		},
-		{
-			in:  "map[string]float64",
-			el:  "float64",
-			key: "string",
-			ptr: "map[string]float64",
-			val: "map[string]float64",
-		},
-		{
-			in:  "map[string]*float64",
-			el:  "*float64",
-			key: "string",
-			ptr: "map[string]*float64",
-			val: "map[string]*float64",
-		},
-		{
-			in:  "map[string]foo.bar",
-			el:  "foo.bar",
-			key: "string",
-			ptr: "map[string]foo.bar",
-			val: "map[string]foo.bar",
-		},
-		{
-			in:  "map[string]*foo.bar",
-			el:  "*foo.bar",
-			key: "string",
-			ptr: "map[string]*foo.bar",
-			val: "map[string]*foo.bar",
-		},
-		{
-			in:  "[][]byte",
-			el:  "[]byte",
-			key: "int",
-			ptr: "[][]byte",
-			val: "[][]byte",
-		},
-		{
-			in:  "map[int64][]byte",
-			el:  "[]byte",
-			key: "int64",
-			ptr: "map[int64][]byte",
-			val: "map[int64][]byte",
-		},
-	}
-
-	for _, test := range tests {
-		tc := test
-		t.Run(tc.in, func(t *testing.T) {
-			tn := TypeName(tc.in)
-			t.Parallel()
-
-			t.Run("Element", func(t *testing.T) {
-				t.Parallel()
-				assert.Equal(t, tc.el, tn.Element().String())
-			})
-
-			t.Run("Key", func(t *testing.T) {
-				t.Parallel()
-				assert.Equal(t, tc.key, tn.Key().String())
-			})
-
-			t.Run("Pointer", func(t *testing.T) {
-				t.Parallel()
-				assert.Equal(t, tc.ptr, tn.Pointer().String())
-			})
-
-			t.Run("Value", func(t *testing.T) {
-				t.Parallel()
-				assert.Equal(t, tc.val, tn.Value().String())
-			})
-		})
-	}
-}
-
-func TestTypeName_Key_Malformed(t *testing.T) {
-	t.Parallel()
-	tn := TypeName("]malformed")
-	assert.Empty(t, tn.Key().String())
-}
-
 func TestNameTransformer_Chain(t *testing.T) {
 	t.Parallel()
 
@@ -355,29 +192,6 @@ func ExampleName_UpperCamelCase() {
 	// FooBar
 	// MyJSON
 	// PDFTemplate
-}
-
-func ExampleName_PGGUpperCamelCase() {
-	names := []string{
-		"foo_bar",
-		"myJSON",
-		"PDFTemplate",
-		"_my_field_name_2",
-		"my.field",
-		"my_Field",
-	}
-
-	for _, n := range names {
-		fmt.Println(Name(n).PGGUpperCamelCase())
-	}
-
-	// Output:
-	// FooBar
-	// MyJSON
-	// PDFTemplate
-	// XMyFieldName_2
-	// My.field
-	// My_Field
 }
 
 func ExampleName_LowerCamelCase() {
@@ -448,6 +262,23 @@ func ExampleName_UpperSnakeCase() {
 	// PDF_Template
 }
 
+func ExampleName_SnakeCase() {
+	names := []string{
+		"foo_bar",
+		"myJSON",
+		"PDFTemplate",
+	}
+
+	for _, n := range names {
+		fmt.Println(Name(n).SnakeCase())
+	}
+
+	// Output:
+	// foo_bar
+	// my_JSON
+	// PDF_Template
+}
+
 func ExampleName_LowerDotNotation() {
 	names := []string{
 		"foo_bar",
@@ -480,80 +311,4 @@ func ExampleName_UpperDotNotation() {
 	// Foo.Bar
 	// My.JSON
 	// PDF.Template
-}
-
-func ExampleTypeName_Element() {
-	types := []string{
-		"int",
-		"*my.Type",
-		"[]string",
-		"map[string]*io.Reader",
-	}
-
-	for _, t := range types {
-		fmt.Println(TypeName(t).Element())
-	}
-
-	// Output:
-	// int
-	// *my.Type
-	// string
-	// *io.Reader
-}
-
-func ExampleTypeName_Key() {
-	types := []string{
-		"int",
-		"*my.Type",
-		"[]string",
-		"map[string]*io.Reader",
-	}
-
-	for _, t := range types {
-		fmt.Println(TypeName(t).Key())
-	}
-
-	// Output:
-	//
-	//
-	// int
-	// string
-}
-
-func ExampleTypeName_Pointer() {
-	types := []string{
-		"int",
-		"*my.Type",
-		"[]string",
-		"map[string]*io.Reader",
-	}
-
-	for _, t := range types {
-		fmt.Println(TypeName(t).Pointer())
-	}
-
-	// Output:
-	// *int
-	// *my.Type
-	// []string
-	// map[string]*io.Reader
-}
-
-func ExampleTypeName_Value() {
-	types := []string{
-		"int",
-		"*my.Type",
-		"[]string",
-		"map[string]*io.Reader",
-	}
-
-	for _, t := range types {
-		fmt.Println(TypeName(t).Value())
-	}
-
-	// Output:
-	// int
-	// my.Type
-	// []string
-	// map[string]*io.Reader
 }

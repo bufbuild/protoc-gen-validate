@@ -1,0 +1,13 @@
+syntax="proto3";
+package graph.messages;
+
+message OneOfs {
+    string before = 1;
+
+    oneof oneof {
+        int32 inside = 2;
+    }
+
+    bool after = 3;
+}
+

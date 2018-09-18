@@ -95,7 +95,7 @@ func TestOneof_Imports(t *testing.T) {
 	o := &oneof{}
 	assert.Empty(t, o.Imports())
 
-	o.addField(&mockField{i: []Package{&pkg{}, &pkg{}}, Field: &field{}})
+	o.addField(&mockField{i: []File{&file{}, &file{}}, Field: &field{}})
 	assert.Len(t, o.Imports(), 2)
 }
 
@@ -127,14 +127,22 @@ func TestOneof_Accept(t *testing.T) {
 	assert.Equal(t, 1, v.oneof)
 }
 
+func TestOneof_ChildAtPath(t *testing.T) {
+	t.Parallel()
+
+	o := &oneof{}
+	assert.Equal(t, o, o.childAtPath(nil))
+	assert.Nil(t, o.childAtPath([]int32{1}))
+}
+
 type mockOneOf struct {
 	OneOf
-	i   []Package
+	i   []File
 	m   Message
 	err error
 }
 
-func (o *mockOneOf) Imports() []Package { return o.i }
+func (o *mockOneOf) Imports() []File { return o.i }
 
 func (o *mockOneOf) setMessage(m Message) { o.m = m }
 

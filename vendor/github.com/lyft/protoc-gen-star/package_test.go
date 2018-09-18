@@ -3,6 +3,9 @@ package pgs
 import (
 	"testing"
 
+	"github.com/golang/protobuf/proto"
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
+
 	"errors"
 
 	"github.com/stretchr/testify/assert"
@@ -11,22 +14,8 @@ import (
 func TestPkg_ProtoName(t *testing.T) {
 	t.Parallel()
 
-	p := &pkg{fd: mockPackageFD{gp: "foobar"}}
-	assert.Equal(t, Name("foobar"), p.ProtoName())
-}
-
-func TestPkg_GoName(t *testing.T) {
-	t.Parallel()
-
-	p := &pkg{name: "foobar"}
-	assert.Equal(t, Name("foobar"), p.GoName())
-}
-
-func TestPkg_ImportPath(t *testing.T) {
-	t.Parallel()
-
-	p := &pkg{importPath: "fizz/buzz"}
-	assert.Equal(t, "fizz/buzz", p.ImportPath())
+	p := dummyPkg()
+	assert.Equal(t, p.fd.GetPackage(), p.ProtoName().String())
 }
 
 func TestPkg_Files(t *testing.T) {
@@ -84,21 +73,16 @@ func TestPkg_Accept(t *testing.T) {
 	assert.Equal(t, 2, v.file)
 }
 
-type mockPackageFD struct {
-	packageFD
-	pn string
-	gp string
-}
+func TestPackage_Comments(t *testing.T) {
+	t.Parallel()
 
-func (mp mockPackageFD) PackageName() string { return mp.pn }
-func (mp mockPackageFD) GetPackage() string  { return mp.gp }
+	pkg := dummyPkg()
+	pkg.setComments("foobar")
+	assert.Equal(t, "foobar", pkg.Comments())
+}
 
 func dummyPkg() *pkg {
 	return &pkg{
-		fd: &mockPackageFD{
-			pn: "pkg_name",
-			gp: "get_pkg",
-		},
-		importPath: "import/path",
+		fd: &descriptor.FileDescriptorProto{Package: proto.String("pkg_name")},
 	}
 }

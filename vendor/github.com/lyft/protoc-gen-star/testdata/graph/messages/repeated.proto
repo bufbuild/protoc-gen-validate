@@ -1,0 +1,41 @@
+syntax="proto3";
+package graph.messages;
+
+import "messages/scalars.proto";
+import "messages/enums_ext.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/type.proto";
+
+message BeforeRepMsg {}
+enum BeforeRepEnum { BRE_BEFORE = 0; }
+
+message Repeated {
+    message NestedBeforeMsg {}
+    enum NestedBeforeEnum { BME_BEFORE = 0; }
+
+    repeated string scalar = 1;
+
+    repeated BeforeRepMsg before_msg = 2;
+    repeated AfterRepMsg after_msg = 3;
+
+    repeated BeforeRepEnum before_enum = 4;
+    repeated AfterRepEnum after_enum = 5;
+
+    repeated NestedBeforeMsg nested_before_msg = 6;
+    repeated NestedAfterMsg nested_after_msg = 7;
+
+    repeated NestedBeforeEnum nested_before_enum = 8;
+    repeated NestedAfterEnum nested_after_enum = 9;
+
+    repeated Scalars external_in_package_msg = 10;
+    repeated External external_in_package_enum = 11;
+
+    repeated google.protobuf.Duration external_3rd_party_msg = 12;
+    repeated google.protobuf.Syntax external_3rd_party_enum = 13;
+
+    message NestedAfterMsg {}
+    enum NestedAfterEnum { AME_AFTER = 0; }
+}
+
+message AfterRepMsg {}
+enum AfterRepEnum { ARE_AFTER = 0; }

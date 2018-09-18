@@ -50,62 +50,62 @@ func TestPrefixContext_Debugf(t *testing.T) {
 func TestPrefixContext_Fail(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	c := initPrefixContext(nil, d, "foo")
 
 	c.Fail("bar")
-	assert.True(t, d.failed)
+	assert.True(t, d.Failed())
 }
 
 func TestPrefixContext_Failf(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	c := initPrefixContext(nil, d, "foo")
 
 	c.Failf("bar %s", "baz")
-	assert.True(t, d.failed)
+	assert.True(t, d.Failed())
 }
 
 func TestPrefixContext_CheckErr(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	c := initPrefixContext(nil, d, "foo")
 
 	c.CheckErr(nil)
-	assert.False(t, d.failed)
+	assert.False(t, d.Failed())
 	err := errors.New("bar")
 	c.CheckErr(err)
-	assert.True(t, d.failed)
-	assert.Equal(t, d.err, err)
+	assert.True(t, d.Exited())
+	assert.Equal(t, d.Err(), err)
 }
 
 func TestPrefixContext_Assert(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	c := initPrefixContext(nil, d, "foo")
 
 	c.Assert(true)
-	assert.False(t, d.failed)
+	assert.False(t, d.Failed())
 	c.Assert(false)
-	assert.True(t, d.failed)
+	assert.True(t, d.Failed())
 }
 
 func TestPrefixContext_OutputPath(t *testing.T) {
 	t.Parallel()
 
-	d := Context(newMockDebugger(t), Parameters{}, "foo/bar")
-	c := initPrefixContext(d, newMockDebugger(t), "")
+	d := Context(InitMockDebugger(), Parameters{}, "foo/bar")
+	c := initPrefixContext(d, InitMockDebugger(), "")
 	assert.Equal(t, c.OutputPath(), d.OutputPath())
 }
 
 func TestPrefixContext_PushPop(t *testing.T) {
 	t.Parallel()
 
-	r := Context(newMockDebugger(t), Parameters{}, "foo/bar")
-	p := initPrefixContext(r, newMockDebugger(t), "baz")
+	r := Context(InitMockDebugger(), Parameters{}, "foo/bar")
+	p := initPrefixContext(r, InitMockDebugger(), "baz")
 
 	c := p.Push("fizz")
 	assert.IsType(t, prefixContext{}, c)
@@ -115,8 +115,8 @@ func TestPrefixContext_PushPop(t *testing.T) {
 func TestPrefixContext_PushPopDir(t *testing.T) {
 	t.Parallel()
 
-	r := Context(newMockDebugger(t), Parameters{}, "foo/bar")
-	p := initPrefixContext(r, newMockDebugger(t), "fizz")
+	r := Context(InitMockDebugger(), Parameters{}, "foo/bar")
+	p := initPrefixContext(r, InitMockDebugger(), "fizz")
 	c := p.PushDir("baz")
 
 	assert.Equal(t, "foo/bar/baz", c.OutputPath())
@@ -127,7 +127,7 @@ func TestPrefixContext_Parameters(t *testing.T) {
 	t.Parallel()
 
 	p := Parameters{"foo": "bar"}
-	r := Context(newMockDebugger(t), p, ".")
+	r := Context(InitMockDebugger(), p, ".")
 	c := r.Push("foo")
 
 	assert.Equal(t, p, c.Parameters())
@@ -136,16 +136,16 @@ func TestPrefixContext_Parameters(t *testing.T) {
 func TestDirContext_OutputPath(t *testing.T) {
 	t.Parallel()
 
-	r := Context(newMockDebugger(t), Parameters{}, "foo/bar")
-	d := initDirContext(r, newMockDebugger(t), "baz")
+	r := Context(InitMockDebugger(), Parameters{}, "foo/bar")
+	d := initDirContext(r, InitMockDebugger(), "baz")
 	assert.Equal(t, "foo/bar/baz", d.OutputPath())
 }
 
 func TestDirContext_Push(t *testing.T) {
 	t.Parallel()
 
-	r := Context(newMockDebugger(t), Parameters{}, "foo/bar")
-	d := initDirContext(r, newMockDebugger(t), "baz")
+	r := Context(InitMockDebugger(), Parameters{}, "foo/bar")
+	d := initDirContext(r, InitMockDebugger(), "baz")
 	c := d.Push("fizz")
 
 	assert.Equal(t, d.OutputPath(), c.OutputPath())
@@ -155,8 +155,8 @@ func TestDirContext_Push(t *testing.T) {
 func TestDirContext_PushPopDir(t *testing.T) {
 	t.Parallel()
 
-	r := Context(newMockDebugger(t), Parameters{}, "foo")
-	d := initDirContext(r, newMockDebugger(t), "bar")
+	r := Context(InitMockDebugger(), Parameters{}, "foo")
+	d := initDirContext(r, InitMockDebugger(), "bar")
 	c := d.PushDir("baz")
 
 	assert.Equal(t, "foo/bar/baz", c.OutputPath())
@@ -169,29 +169,29 @@ func TestDirContext_PushPopDir(t *testing.T) {
 func TestRootContext_OutputPath(t *testing.T) {
 	t.Parallel()
 
-	r := Context(newMockDebugger(t), Parameters{}, "foo")
+	r := Context(InitMockDebugger(), Parameters{}, "foo")
 	assert.Equal(t, "foo", r.OutputPath())
 }
 
 func TestRootContext_PushPop(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	r := Context(d, Parameters{}, "foo")
 
 	c := r.Push("bar")
 	assert.Equal(t, "foo", c.OutputPath())
 	c = c.Pop()
 
-	assert.False(t, d.failed)
+	assert.False(t, d.Failed())
 	c.Pop()
-	assert.True(t, d.failed)
+	assert.True(t, d.Failed())
 }
 
 func TestRootContext_PushPopDir(t *testing.T) {
 	t.Parallel()
 
-	r := Context(newMockDebugger(t), Parameters{}, "foo")
+	r := Context(InitMockDebugger(), Parameters{}, "foo")
 	c := r.PushDir("bar")
 	assert.Equal(t, "foo/bar", c.OutputPath())
 
@@ -206,21 +206,21 @@ func TestRootContext_Parameters(t *testing.T) {
 	t.Parallel()
 
 	p := Parameters{"foo": "bar"}
-	r := Context(newMockDebugger(t), p, "foo")
+	r := Context(InitMockDebugger(), p, "foo")
 	assert.Equal(t, p, r.Parameters())
 }
 
 func TestRootContext_JoinPath(t *testing.T) {
 	t.Parallel()
 
-	r := Context(newMockDebugger(t), Parameters{}, "foo")
+	r := Context(InitMockDebugger(), Parameters{}, "foo")
 	assert.Equal(t, "foo/bar", r.JoinPath("bar"))
 }
 
 func TestDirContext_JoinPath(t *testing.T) {
 	t.Parallel()
 
-	r := Context(newMockDebugger(t), Parameters{}, "foo")
+	r := Context(InitMockDebugger(), Parameters{}, "foo")
 	c := r.PushDir("bar")
 
 	assert.Equal(t, "foo/bar/baz", c.JoinPath("baz"))
@@ -229,7 +229,7 @@ func TestDirContext_JoinPath(t *testing.T) {
 func TestPrefixContext_JoinPath(t *testing.T) {
 	t.Parallel()
 
-	r := Context(newMockDebugger(t), Parameters{}, "foo")
+	r := Context(InitMockDebugger(), Parameters{}, "foo")
 	c := r.Push("baz")
 
 	assert.Equal(t, "foo/bar", c.JoinPath("bar"))
@@ -238,10 +238,10 @@ func TestPrefixContext_JoinPath(t *testing.T) {
 func TestPrefixContext_Exit(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	r := Context(d, Parameters{}, "")
 	r.Exit(123)
 
-	assert.True(t, d.exited)
-	assert.Equal(t, 123, d.exitCode)
+	assert.True(t, d.Exited())
+	assert.Equal(t, 123, d.ExitCode())
 }
