@@ -1,4 +1,4 @@
-package tpl
+package goshared
 
 const constTpl = `{{ $r := .Rules }}
 	{{ if $r.Const }}

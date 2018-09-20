@@ -1,0 +1,4 @@
+syntax="proto3";
+package names.import_path;
+
+message ImportPath {}

@@ -1,4 +1,4 @@
-package tpl
+package gogo
 
 const requiredTpl = `
 	{{ if .Rules.GetRequired }}

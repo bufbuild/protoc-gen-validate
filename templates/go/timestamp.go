@@ -1,4 +1,4 @@
-package tpl
+package golang
 
 const timestampTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 	{{ template "required" . }}

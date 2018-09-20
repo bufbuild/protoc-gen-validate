@@ -1,26 +1,15 @@
 package pgs
 
 import (
+	"bytes"
 	"math/rand"
 	"os"
 	"strconv"
 	"testing"
 
-	"bytes"
-
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
-
-func TestIncludeGo(t *testing.T) {
-	t.Parallel()
-
-	g := &Generator{}
-	assert.False(t, g.includeGo)
-
-	IncludeGo()(g)
-	assert.True(t, g.includeGo)
-}
 
 func TestDebugMode(t *testing.T) {
 	t.Parallel()
@@ -51,7 +40,7 @@ func TestDebugEnv(t *testing.T) {
 func TestFileSystem(t *testing.T) {
 	t.Parallel()
 
-	p := dummyPersister(newMockDebugger(t))
+	p := dummyPersister(InitMockDebugger())
 	g := &Generator{persister: p}
 
 	fs := afero.NewMemMapFs()
@@ -80,27 +69,4 @@ func TestProtocOutput(t *testing.T) {
 	b := &bytes.Buffer{}
 	ProtocOutput(b)(g)
 	assert.Equal(t, b, g.out)
-}
-
-func TestMultiPackage(t *testing.T) {
-	t.Parallel()
-
-	g := &Generator{workflow: &dummyWorkflow{}}
-
-	MultiPackage()(g)
-	_, ok := g.workflow.(*multiPackageWorkflow)
-	assert.True(t, ok)
-}
-
-func TestRequirePlugin(t *testing.T) {
-	t.Parallel()
-
-	g := Init(RequirePlugin("foo", "bar"))
-
-	p := Parameters{}
-	for _, pm := range g.paramMutators {
-		pm(p)
-	}
-
-	assert.Equal(t, "plugins=foo+bar", p.String())
 }

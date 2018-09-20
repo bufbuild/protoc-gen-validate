@@ -1,12 +1,12 @@
-package tpl
+package goshared
 
 const msgTpl = `
 {{ if disabled . -}}
-	{{ cmt "Validate is disabled for " .TypeName.Value ". This method will always return nil." }}
+	{{ cmt "Validate is disabled for " (msgTyp .) ". This method will always return nil." }}
 {{- else -}}
-	{{ cmt "Validate checks the field values on " .TypeName.Value " with the rules defined in the proto definition for this message. If any rules are violated, an error is returned." }}
+	{{ cmt "Validate checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, an error is returned." }}
 {{- end -}}
-func (m {{ .TypeName.Pointer }}) Validate() error {
+func (m {{ (msgTyp .).Pointer }}) Validate() error {
 	{{ if disabled . -}}
 		return nil
 	{{ else -}}
@@ -17,7 +17,7 @@ func (m {{ .TypeName.Pointer }}) Validate() error {
 		{{ end }}
 
 		{{ range .OneOfs }}
-			switch m.{{ .Name.PGGUpperCamelCase }}.(type) {
+			switch m.{{ name . }}.(type) {
 				{{ range .Fields }}
 					case {{ oneof . }}:
 						{{ render (context .) }}
@@ -25,7 +25,7 @@ func (m {{ .TypeName.Pointer }}) Validate() error {
 				{{ if required . }}
 					default:
 						return {{ errname .Message }}{
-							field: "{{ .Name.PGGUpperCamelCase }}",
+							field: "{{ name . }}",
 							reason: "value is required",
 						}
 				{{ end }}
@@ -40,7 +40,7 @@ func (m {{ .TypeName.Pointer }}) Validate() error {
 
 {{ if needs . "email" }}{{ template "email" . }}{{ end }}
 
-{{ cmt (errname .) " is the validation error returned by " .TypeName.Value ".Validate if the designated constraints aren't met." -}}
+{{ cmt (errname .) " is the validation error returned by " (msgTyp .) ".Validate if the designated constraints aren't met." -}}
 type {{ errname . }} struct {
 	field  string
 	reason string
@@ -76,7 +76,7 @@ func (e {{ errname . }}) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %s{{ .TypeName }}.%s: %s%s",
+		"invalid %s{{ (msgTyp .) }}.%s: %s%s",
 		key,
 		e.field,
 		e.reason,

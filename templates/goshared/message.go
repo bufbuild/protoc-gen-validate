@@ -1,4 +1,4 @@
-package tpl
+package goshared
 
 const messageTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}

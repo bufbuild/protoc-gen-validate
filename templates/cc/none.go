@@ -1,4 +1,4 @@
-package tpl
+package cc
 
 const noneTpl = `// no validation rules for {{ .Field.Name.PGGUpperCamelCase }}
 	{{- if .Index }}[{{ .Index }}]{{ end }}

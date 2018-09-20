@@ -1,4 +1,4 @@
-package tpl
+package cc
 
 const bytesTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}

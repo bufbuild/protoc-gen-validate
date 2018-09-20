@@ -1,4 +1,4 @@
-package tpl
+package goshared
 
 const wrapperTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}

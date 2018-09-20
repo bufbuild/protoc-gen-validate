@@ -8,23 +8,10 @@ import (
 	"unicode/utf8"
 
 	"path/filepath"
-
-	"github.com/golang/protobuf/protoc-gen-go/generator"
 )
 
-var protectedNames = map[Name]Name{
-	"Reset":               "Reset_",
-	"String":              "String_",
-	"ProtoMessage":        "ProtoMessage_",
-	"Marshal":             "Marshal_",
-	"Unmarshal":           "Unmarshal_",
-	"ExtensionRangeArray": "ExtensionRangeArray_",
-	"ExtensionMap":        "ExtensionMap_",
-	"Descriptor":          "Descriptor_",
-}
-
-// A Name describes a symbol (Message, Field, Enum, Service, Field) of the
-// Entity. It can be converted to multiple forms using the provided helper
+// A Name describes an identifier of an Entity (Message, Field, Enum, Service,
+// Field). It can be converted to multiple forms using the provided helper
 // methods, or a custom transform can be used to modify its behavior.
 type Name string
 
@@ -34,27 +21,6 @@ func (n Name) String() string { return string(n) }
 // UpperCamelCase converts Name n to upper camelcase, where each part is
 // title-cased and concatenated with no separator.
 func (n Name) UpperCamelCase() Name { return n.Transform(strings.Title, strings.Title, "") }
-
-// PGGUpperCamelCase converts Name n to the protoc-gen-go defined upper
-// camelcase. The rules are slightly different from UpperCamelCase in that
-// leading underscores are converted to 'X', mid-string underscores followed by
-// lowercase letters are removed and the letter is capitalized, all other
-// punctuation is preserved. This method should be used when deriving names of
-// protoc-gen-go generated code (ie, message/service struct names and field
-// names). In addition, this method ensures the Name does not conflict with one
-// of the generated method names, appending the fields with an underscore in
-// the same manner as protoc-gen-go.
-//
-// See: https://godoc.org/github.com/golang/protobuf/protoc-gen-go/generator#CamelCase
-func (n Name) PGGUpperCamelCase() Name {
-	out := Name(generator.CamelCase(n.String()))
-
-	if use, protected := protectedNames[out]; protected {
-		return use
-	}
-
-	return out
-}
 
 // LowerCamelCase converts Name n to lower camelcase, where each part is
 // title-cased and concatenated with no separator except the first which is
@@ -72,6 +38,10 @@ func (n Name) LowerSnakeCase() Name { return n.Transform(strings.ToLower, string
 // UpperSnakeCase converts Name n to upper-snake-case, where each part is
 // title-cased and concatenated with underscores.
 func (n Name) UpperSnakeCase() Name { return n.Transform(strings.Title, strings.Title, "_") }
+
+// SnakeCase converts Name n to snake-case, where each part preserves its
+// capitalization and concatenated with underscores.
+func (n Name) SnakeCase() Name { return n.Transform(ID, ID, "_") }
 
 // LowerDotNotation converts Name n to lower dot notation, where each part is
 // lower-cased and concatenated with periods.
@@ -142,6 +112,9 @@ func (n Name) Split() (parts []string) {
 // the standard strings package satisfy this signature.
 type NameTransformer func(string) string
 
+// ID is a NameTransformer that does not mutate the string.
+func ID(s string) string { return s }
+
 // Chain combines the behavior of two Transformers into one. If multiple
 // transformations need to be performed on a Name, this method should be used
 // to reduce it to a single transformation before applying.
@@ -166,56 +139,6 @@ func (n Name) Transform(mod, first NameTransformer, sep string) Name {
 	}
 
 	return Name(strings.Join(parts, sep))
-}
-
-// A TypeName describes the name of a type (type on a field, or method signature)
-type TypeName string
-
-// String satisfies the strings.Stringer interface.
-func (n TypeName) String() string { return string(n) }
-
-// Element returns the TypeName of the element of n. For types other than
-// slices and maps, this just returns n.
-func (n TypeName) Element() TypeName {
-	parts := strings.SplitN(string(n), "]", 2)
-	return TypeName(parts[len(parts)-1])
-}
-
-// Key returns the TypeName of the key of n. For slices, the return TypeName is
-// always "int", and for non slice/map types an empty TypeName is returned.
-func (n TypeName) Key() TypeName {
-	parts := strings.SplitN(string(n), "]", 2)
-	if len(parts) == 1 {
-		return TypeName("")
-	}
-
-	parts = strings.SplitN(parts[0], "[", 2)
-	if len(parts) != 2 {
-		return TypeName("")
-	} else if parts[1] == "" {
-		return TypeName("int")
-	}
-
-	return TypeName(parts[1])
-}
-
-// Pointer converts TypeName n to it's pointer type. If n is already a pointer,
-// slice, or map, it is returned unmodified.
-func (n TypeName) Pointer() TypeName {
-	ns := string(n)
-	if strings.HasPrefix(ns, "*") ||
-		strings.HasPrefix(ns, "[") ||
-		strings.HasPrefix(ns, "map[") {
-		return n
-	}
-
-	return TypeName("*" + ns)
-}
-
-// Value converts TypeName n to it's value type. If n is already a value type,
-// slice, or map it is returned unmodified.
-func (n TypeName) Value() TypeName {
-	return TypeName(strings.TrimPrefix(string(n), "*"))
 }
 
 // A FilePath describes the name of a file or directory. This type simplifies
@@ -250,8 +173,9 @@ func (n FilePath) SetExt(ext string) FilePath { return n.SetBase(n.BaseName() + 
 // SetBase returns a new FilePath with the base element replaced with base.
 func (n FilePath) SetBase(base string) FilePath { return n.Dir().Push(base) }
 
-// Pop returns a new FilePath with the last element removed
-func (n FilePath) Pop() FilePath { return JoinPaths(n.String(), "..") }
+// Pop returns a new FilePath with the last element removed. Pop is an alias
+// for the Dir method.
+func (n FilePath) Pop() FilePath { return n.Dir() }
 
 // Push returns a new FilePath with elem added to the end
 func (n FilePath) Push(elem string) FilePath { return JoinPaths(n.String(), elem) }

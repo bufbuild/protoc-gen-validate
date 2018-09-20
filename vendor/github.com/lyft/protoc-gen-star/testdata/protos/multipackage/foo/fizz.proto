@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package foo;
+option go_package = "github.com/lyft/protoc-gen-star/testdata/generated/multipackage/foo";
 
 import "multipackage/bar/buzz.proto";
 

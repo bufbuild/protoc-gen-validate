@@ -1,4 +1,4 @@
-package tpl
+package goshared
 
 const durationcmpTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 			{{  if $r.Const }}

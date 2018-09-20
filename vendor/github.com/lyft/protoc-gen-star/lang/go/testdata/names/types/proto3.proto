@@ -1,0 +1,45 @@
+syntax="proto3";
+package names.types;
+option go_package = "example.com/foo/bar";
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/type.proto";
+
+message Proto3 {
+    double double = 1;
+    float float = 2;
+    int64 int64 = 3;
+    sfixed64 sfixed64 = 4;
+    sint64 sint64 = 5;
+    uint64 uint64 = 6;
+    fixed64 fixed64 = 7;
+    int32 int32 = 8;
+    sfixed32 sfixed32 = 9;
+    sint32 sint32 = 10;
+    uint32 uint32 = 11;
+    fixed32 fixed32 = 12;
+    bool bool = 13;
+    string string = 14;
+    bytes bytes = 15;
+
+    Enum enum = 16;
+    google.protobuf.Syntax ext_enum = 17;
+    Message msg = 18;
+    google.protobuf.Duration ext_msg = 19;
+
+    repeated double repeated_scalar = 20;
+    repeated Enum repeated_enum = 21;
+    repeated google.protobuf.Syntax repeated_ext_enum = 22;
+    repeated Message repeated_msg = 23;
+    repeated google.protobuf.Duration repeated_ext_msg = 24;
+
+    map<string, float> map_scalar = 25;
+    map<int32, Enum> map_enum = 26;
+    map<uint64, google.protobuf.Syntax> map_ext_enum = 27;
+    map<fixed32, Message> map_msg = 28;
+    map<sfixed64, google.protobuf.Duration> map_ext_msg = 29;
+
+    enum Enum {VALUE = 0;}
+
+    message Message {}
+}

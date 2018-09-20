@@ -1,4 +1,4 @@
-package tpl
+package cc
 
 const constTpl = `{{ $r := .Rules }}
 	{{ if $r.Const }}

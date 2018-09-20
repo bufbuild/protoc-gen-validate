@@ -1,4 +1,4 @@
-package tpl
+package goshared
 
 const bytesTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}

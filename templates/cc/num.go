@@ -1,4 +1,4 @@
-package tpl
+package cc
 
 const numTpl = `
 	{{ template "const" . }}

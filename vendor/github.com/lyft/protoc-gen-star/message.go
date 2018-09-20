@@ -1,26 +1,19 @@
 package pgs
 
 import (
-	"strings"
-
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
-	"github.com/golang/protobuf/protoc-gen-go/generator"
 )
 
-// Message describes a proto message, akin to a struct in Go. Messages can be
-// contained in either another Message or File, and may house further Messages
-// and/or Enums. While all Fields technically live on the Message, some may be
-// contained within OneOf blocks.
+// Message describes a proto message. Messages can be contained in either
+// another Message or File, and may house further Messages and/or Enums. While
+// all Fields technically live on the Message, some may be contained within
+// OneOf blocks.
 type Message interface {
 	ParentEntity
 
-	// TypeName returns the type of this message as it would be created in Go.
-	// This value will only differ from Name for nested messages.
-	TypeName() TypeName
-
 	// Descriptor returns the underlying proto descriptor for this message
-	Descriptor() *generator.Descriptor
+	Descriptor() *descriptor.DescriptorProto
 
 	// Parent returns either the File or Message that directly contains this
 	// Message.
@@ -44,45 +37,58 @@ type Message interface {
 	// to the wire format.
 	IsMapEntry() bool
 
+	// IsWellKnown identifies whether or not this Message is a WKT from the
+	// `google.protobuf` package. Most official plugins special case these types
+	// and they usually need to be handled differently.
+	IsWellKnown() bool
+
+	// WellKnownType returns the WellKnownType associated with this field. If
+	// IsWellKnown returns false, UnknownWKT is returned.
+	WellKnownType() WellKnownType
+
 	setParent(p ParentEntity)
 	addField(f Field)
 	addOneOf(o OneOf)
 }
 
-// An MessageParent is any Entity type that can contain messages. File and
-// Message types implement MessageParent.
-
 type msg struct {
+	desc   *descriptor.DescriptorProto
 	parent ParentEntity
 
-	msgs       []Message
-	enums      []Enum
-	fields     []Field
-	oneofs     []OneOf
-	mapEntries []Message
+	msgs, preservedMsgs []Message
+	enums               []Enum
+	fields              []Field
+	oneofs              []OneOf
+	maps                []Message
 
-	rawDesc *descriptor.DescriptorProto
-	genDesc *generator.Descriptor
-
-	comments string
+	info SourceCodeInfo
 }
 
-func (m *msg) Name() Name                        { return Name(m.rawDesc.GetName()) }
-func (m *msg) FullyQualifiedName() string        { return fullyQualifiedName(m.parent, m) }
-func (m *msg) Syntax() Syntax                    { return m.parent.Syntax() }
-func (m *msg) Package() Package                  { return m.parent.Package() }
-func (m *msg) File() File                        { return m.parent.File() }
-func (m *msg) BuildTarget() bool                 { return m.parent.BuildTarget() }
-func (m *msg) Comments() string                  { return m.comments }
-func (m *msg) Descriptor() *generator.Descriptor { return m.genDesc }
-func (m *msg) Parent() ParentEntity              { return m.parent }
-func (m *msg) IsMapEntry() bool                  { return m.rawDesc.GetOptions().GetMapEntry() }
-func (m *msg) TypeName() TypeName                { return TypeName(strings.Join(m.genDesc.TypeName(), "_")) }
+func (m *msg) Name() Name                              { return Name(m.desc.GetName()) }
+func (m *msg) FullyQualifiedName() string              { return fullyQualifiedName(m.parent, m) }
+func (m *msg) Syntax() Syntax                          { return m.parent.Syntax() }
+func (m *msg) Package() Package                        { return m.parent.Package() }
+func (m *msg) File() File                              { return m.parent.File() }
+func (m *msg) BuildTarget() bool                       { return m.parent.BuildTarget() }
+func (m *msg) SourceCodeInfo() SourceCodeInfo          { return m.info }
+func (m *msg) Descriptor() *descriptor.DescriptorProto { return m.desc }
+func (m *msg) Parent() ParentEntity                    { return m.parent }
+func (m *msg) IsMapEntry() bool                        { return m.desc.GetOptions().GetMapEntry() }
+func (m *msg) Enums() []Enum                           { return m.enums }
+func (m *msg) Messages() []Message                     { return m.msgs }
+func (m *msg) Fields() []Field                         { return m.fields }
+func (m *msg) OneOfs() []OneOf                         { return m.oneofs }
+func (m *msg) MapEntries() []Message                   { return m.maps }
 
-func (m *msg) Enums() []Enum {
-	es := make([]Enum, len(m.enums))
-	copy(es, m.enums)
-	return es
+func (m *msg) WellKnownType() WellKnownType {
+	if m.Package().ProtoName() == WellKnownTypePackage {
+		return LookupWKT(m.Name())
+	}
+	return UnknownWKT
+}
+
+func (m *msg) IsWellKnown() bool {
+	return m.WellKnownType().Valid()
 }
 
 func (m *msg) AllEnums() []Enum {
@@ -93,30 +99,12 @@ func (m *msg) AllEnums() []Enum {
 	return es
 }
 
-func (m *msg) Messages() []Message {
-	msgs := make([]Message, len(m.msgs))
-	copy(msgs, m.msgs)
-	return msgs
-}
-
 func (m *msg) AllMessages() []Message {
 	msgs := m.Messages()
 	for _, sm := range m.msgs {
 		msgs = append(msgs, sm.AllMessages()...)
 	}
 	return msgs
-}
-
-func (m *msg) MapEntries() []Message {
-	me := make([]Message, len(m.mapEntries))
-	copy(me, m.mapEntries)
-	return me
-}
-
-func (m *msg) Fields() []Field {
-	f := make([]Field, len(m.fields))
-	copy(f, m.fields)
-	return f
 }
 
 func (m *msg) NonOneOfFields() (f []Field) {
@@ -136,13 +124,7 @@ func (m *msg) OneOfFields() (f []Field) {
 	return f
 }
 
-func (m *msg) OneOfs() []OneOf {
-	o := make([]OneOf, len(m.oneofs))
-	copy(o, m.oneofs)
-	return o
-}
-
-func (m *msg) Imports() (i []Package) {
+func (m *msg) Imports() (i []File) {
 	for _, f := range m.fields {
 		i = append(i, f.Imports()...)
 	}
@@ -150,7 +132,7 @@ func (m *msg) Imports() (i []Package) {
 }
 
 func (m *msg) Extension(desc *proto.ExtensionDesc, ext interface{}) (bool, error) {
-	return extension(m.rawDesc.GetOptions(), desc, &ext)
+	return extension(m.desc.GetOptions(), desc, &ext)
 }
 
 func (m *msg) accept(v Visitor) (err error) {
@@ -213,7 +195,34 @@ func (m *msg) addOneOf(o OneOf) {
 
 func (m *msg) addMapEntry(me Message) {
 	me.setParent(m)
-	m.mapEntries = append(m.mapEntries, me)
+	m.maps = append(m.maps, me)
 }
+
+func (m *msg) childAtPath(path []int32) Entity {
+	switch {
+	case len(path) == 0:
+		return m
+	case len(path)%2 != 0:
+		return nil
+	}
+
+	var child Entity
+	switch path[0] {
+	case messageTypeFieldPath:
+		child = m.fields[path[1]]
+	case messageTypeNestedTypePath:
+		child = m.preservedMsgs[path[1]]
+	case messageTypeEnumTypePath:
+		child = m.enums[path[1]]
+	case messageTypeOneofDeclPath:
+		child = m.oneofs[path[1]]
+	default:
+		return nil
+	}
+
+	return child.childAtPath(path[2:])
+}
+
+func (m *msg) addSourceCodeInfo(info SourceCodeInfo) { m.info = info }
 
 var _ Message = (*msg)(nil)

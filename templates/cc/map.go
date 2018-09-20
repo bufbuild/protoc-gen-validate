@@ -1,4 +1,4 @@
-package tpl
+package cc
 
 const mapTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}

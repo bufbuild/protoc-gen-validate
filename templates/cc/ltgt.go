@@ -1,4 +1,4 @@
-package tpl
+package cc
 
 const ltgtTpl = `{{ $f := .Field }}{{ $r := .Rules }}{{ $v := (accessor .) }}
 	{{ if $r.Lt }}

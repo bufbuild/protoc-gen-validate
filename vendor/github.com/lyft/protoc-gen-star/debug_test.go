@@ -3,11 +3,11 @@ package pgs
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"testing"
 
 	"errors"
 
-	"github.com/golang/protobuf/protoc-gen-go/generator"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -44,7 +44,7 @@ func TestRootDebugger_Fail(t *testing.T) {
 
 	var failed bool
 
-	fail := func(msgs ...string) {
+	fail := func(msgs ...interface{}) {
 		assert.Equal(t, "foobar", msgs[0])
 		failed = true
 	}
@@ -60,7 +60,7 @@ func TestRootDebugger_Failf(t *testing.T) {
 
 	var failed bool
 
-	fail := func(msgs ...string) {
+	fail := func(msgs ...interface{}) {
 		assert.Equal(t, "fizz buzz", msgs[0])
 		failed = true
 	}
@@ -107,7 +107,7 @@ func TestRootDebugger_CheckErr(t *testing.T) {
 	e := errors.New("bad error")
 	errd := false
 
-	errfn := func(err error, msg ...string) {
+	errfn := func(err error, msg ...interface{}) {
 		assert.Equal(t, e, err)
 		assert.Equal(t, "foo", msg[0])
 		errd = true
@@ -126,17 +126,27 @@ func TestRootDebugger_Assert(t *testing.T) {
 
 	failed := false
 
-	fail := func(msgs ...string) {
+	fail := func(msgs ...interface{}) {
 		assert.Equal(t, "foo", msgs[0])
 		failed = true
 	}
 
 	rd := rootDebugger{fail: fail}
-	rd.Assert(1 == 1, "fizz")
+	rd.Assert(true, "fizz")
 	assert.False(t, failed)
 
-	rd.Assert(1 == 0, "foo")
+	rd.Assert(false, "foo")
 	assert.True(t, failed)
+}
+
+func TestRootDebugger_Exit(t *testing.T) {
+	t.Parallel()
+
+	var code int
+
+	rd := rootDebugger{exit: func(c int) { code = c }}
+	rd.Exit(123)
+	assert.Equal(t, 123, code)
 }
 
 func TestRootDebugger_Push(t *testing.T) {
@@ -154,6 +164,51 @@ func TestRootDebugger_Pop(t *testing.T) {
 
 	rd := rootDebugger{}
 	assert.Panics(t, func() { rd.Pop() })
+}
+
+func TestRootDebugger_DefaultErr(t *testing.T) {
+	t.Parallel()
+
+	exited := false
+	code := 0
+	l := newMockLogger()
+	rd := rootDebugger{
+		l: l,
+		exit: func(c int) {
+			code = c
+			exited = true
+		},
+	}
+
+	rd.defaultErr(nil, "nothing")
+
+	assert.False(t, exited)
+	assert.Empty(t, l.buf.String())
+
+	rd.defaultErr(errors.New("some error"), "something")
+	assert.True(t, exited)
+	assert.Equal(t, 1, code)
+	assert.Contains(t, l.buf.String(), "something")
+}
+
+func TestRootDebugger_DefaultFail(t *testing.T) {
+	t.Parallel()
+
+	exited := false
+	code := 0
+	l := newMockLogger()
+	rd := rootDebugger{
+		l: l,
+		exit: func(c int) {
+			code = c
+			exited = true
+		},
+	}
+
+	rd.defaultFail("something")
+	assert.True(t, exited)
+	assert.Equal(t, 1, code)
+	assert.Contains(t, l.buf.String(), "something")
 }
 
 func TestPrefixedDebugger_Log(t *testing.T) {
@@ -181,7 +236,7 @@ func TestPrefixedDebugger_Fail(t *testing.T) {
 
 	var failed bool
 
-	fail := func(msgs ...string) {
+	fail := func(msgs ...interface{}) {
 		assert.Contains(t, msgs[0], "FIZZ")
 		assert.Contains(t, msgs[0], "foobar")
 		failed = true
@@ -198,7 +253,7 @@ func TestPrefixedDebugger_Failf(t *testing.T) {
 
 	var failed bool
 
-	fail := func(msgs ...string) {
+	fail := func(msgs ...interface{}) {
 		assert.Contains(t, msgs[0], "FIZZ")
 		assert.Contains(t, msgs[0], "foo bar")
 		failed = true
@@ -252,7 +307,7 @@ func TestPrefixedDebugger_CheckErr(t *testing.T) {
 	e := errors.New("bad error")
 	errd := false
 
-	errfn := func(err error, msg ...string) {
+	errfn := func(err error, msg ...interface{}) {
 		assert.Equal(t, e, err)
 		assert.Contains(t, msg[0], "foo")
 		assert.Contains(t, msg[0], "FIZZ")
@@ -272,7 +327,7 @@ func TestPrefixedDebugger_Assert(t *testing.T) {
 
 	failed := false
 
-	fail := func(msgs ...string) {
+	fail := func(msgs ...interface{}) {
 		assert.Contains(t, msgs[0], "FIZZ")
 		assert.Contains(t, msgs[0], "foo")
 		failed = true
@@ -318,62 +373,25 @@ func TestPrefixedDebugger_Push_Format(t *testing.T) {
 func TestPrefixedDebugger_Exit(t *testing.T) {
 	t.Parallel()
 
-	md := newMockDebugger(t)
+	md := InitMockDebugger()
 	d := &prefixedDebugger{parent: md}
 	d.Exit(123)
 
-	assert.True(t, md.exited)
-	assert.Equal(t, 123, md.exitCode)
+	assert.True(t, md.Exited())
+	assert.Equal(t, 123, md.ExitCode())
 }
 
 func TestInitDebugger(t *testing.T) {
 	t.Parallel()
-
-	d := initDebugger(&Generator{
-		pgg:      Wrap(generator.New()),
-		gatherer: &gatherer{},
-	}, nil)
-
+	d := initDebugger(true, nil)
 	assert.NotNil(t, d)
 }
 
-type mockDebugger struct {
-	Debugger
+func TestMockDebugger_Output(t *testing.T) {
+	t.Parallel()
 
-	failed bool
-	err    error
-
-	exited   bool
-	exitCode int
-}
-
-func (d *mockDebugger) Exit(code int) {
-	if d.exited {
-		return
-	}
-
-	d.exited = true
-	d.exitCode = code
-}
-
-func newMockDebugger(t *testing.T) *mockDebugger {
-	d := &mockDebugger{}
-	d.Debugger = &rootDebugger{
-		l: newMockLogger(),
-		err: func(err error, msgs ...string) {
-			d.err = err
-			d.failed = true
-			if t != nil {
-				t.Log(msgs)
-			}
-		},
-		fail: func(msgs ...string) {
-			d.failed = true
-			if t != nil {
-				t.Log(msgs)
-			}
-		},
-	}
-
-	return d
+	md := InitMockDebugger()
+	md.Log("foobar")
+	b, _ := ioutil.ReadAll(md.Output())
+	assert.Equal(t, "foobar\n", string(b))
 }

@@ -42,24 +42,6 @@ func TestScalarT_IsEmbed(t *testing.T) {
 	assert.False(t, s.IsEmbed())
 }
 
-func TestScalarT_Name(t *testing.T) {
-	t.Parallel()
-	s := &scalarT{name: TypeName("foo")}
-	assert.Equal(t, "foo", s.Name().String())
-}
-
-func TestScalarT_IsSlice(t *testing.T) {
-	t.Parallel()
-	f := dummyField()
-	s := &scalarT{}
-	f.addType(s)
-	assert.False(t, s.IsSlice())
-
-	b := descriptor.FieldDescriptorProto_TYPE_BYTES
-	f.desc.Type = &b
-	assert.True(t, s.IsSlice())
-}
-
 func TestScalarT_ProtoType(t *testing.T) {
 	t.Parallel()
 	f := dummyField()
@@ -113,7 +95,7 @@ func TestScalarT_IsOptional(t *testing.T) {
 	assert.True(t, s.IsOptional())
 
 	fl := dummyFile()
-	fl.desc.Syntax = proto.String("proto2")
+	fl.desc.Syntax = nil
 	f.Message().setParent(fl)
 
 	assert.True(t, s.IsOptional())
@@ -134,7 +116,7 @@ func TestScalarT_IsRequired(t *testing.T) {
 	assert.False(t, s.IsRequired())
 
 	fl := dummyFile()
-	fl.desc.Syntax = proto.String("proto2")
+	fl.desc.Syntax = nil
 	f.Message().setParent(fl)
 
 	assert.False(t, s.IsRequired())
@@ -148,14 +130,13 @@ func TestScalarT_IsRequired(t *testing.T) {
 func TestScalarT_ToElem(t *testing.T) {
 	t.Parallel()
 
-	s := &scalarT{name: TypeName("foo")}
+	s := &scalarT{}
 	f := dummyField()
 	f.addType(s)
 
 	el := s.toElem()
 	assert.Equal(t, s, el.ParentType())
 	assert.Equal(t, s.ProtoType(), el.ProtoType())
-	assert.Equal(t, s.Name(), el.Name())
 }
 
 func TestEnumT_Enum(t *testing.T) {
@@ -173,23 +154,25 @@ func TestEnumT_IsEnum(t *testing.T) {
 func TestEnumT_Imports(t *testing.T) {
 	t.Parallel()
 
-	e := &enumT{scalarT: &scalarT{}, enum: dummyEnum()}
-	f := dummyField()
-	f.addType(e)
+	f := dummyFile()
+	en := dummyEnum()
+	en.parent = f
+	e := &enumT{scalarT: &scalarT{}, enum: en}
+	fld := dummyField()
+	fld.addType(e)
 
 	assert.Empty(t, e.Imports())
 
-	e.enum.File().setPackage(&pkg{name: "not_the_same"})
-
+	f.desc.Name = proto.String("some/other/file.proto")
 	assert.Len(t, e.Imports(), 1)
-	assert.Equal(t, e.enum.Package(), e.Imports()[0])
+	assert.Equal(t, e.enum.File(), e.Imports()[0])
 }
 
 func TestEnumT_ToElem(t *testing.T) {
 	t.Parallel()
 
 	e := &enumT{
-		scalarT: &scalarT{name: TypeName("foo")},
+		scalarT: &scalarT{},
 		enum:    dummyEnum(),
 	}
 	f := dummyField()
@@ -198,7 +181,6 @@ func TestEnumT_ToElem(t *testing.T) {
 	el := e.toElem()
 	assert.True(t, el.IsEnum())
 	assert.Equal(t, e.enum, el.Enum())
-	assert.Equal(t, e.Name(), el.Name())
 	assert.Equal(t, e.ProtoType(), el.ProtoType())
 }
 
@@ -217,23 +199,24 @@ func TestEmbedT_Embed(t *testing.T) {
 func TestEmbedT_Imports(t *testing.T) {
 	t.Parallel()
 
-	e := &embedT{scalarT: &scalarT{}, msg: dummyMsg()}
-	f := dummyField()
-	f.addType(e)
+	msg := dummyMsg()
+	f := dummyFile()
+	msg.parent = f
+	e := &embedT{scalarT: &scalarT{}, msg: msg}
+	dummyField().addType(e)
 
 	assert.Empty(t, e.Imports())
 
-	e.msg.File().setPackage(&pkg{name: "not_the_same"})
-
+	f.desc.Name = proto.String("some/other/file.proto")
 	assert.Len(t, e.Imports(), 1)
-	assert.Equal(t, e.msg.Package(), e.Imports()[0])
+	assert.Equal(t, e.msg.File(), e.Imports()[0])
 }
 
 func TestEmbedT_ToElem(t *testing.T) {
 	t.Parallel()
 
 	e := &embedT{
-		scalarT: &scalarT{name: TypeName("foo")},
+		scalarT: &scalarT{},
 		msg:     dummyMsg(),
 	}
 	f := dummyField()
@@ -242,7 +225,6 @@ func TestEmbedT_ToElem(t *testing.T) {
 	el := e.toElem()
 	assert.True(t, el.IsEmbed())
 	assert.Equal(t, e.msg, el.Embed())
-	assert.Equal(t, e.Name(), el.Name())
 	assert.Equal(t, e.ProtoType(), el.ProtoType())
 }
 
@@ -250,12 +232,6 @@ func TestRepT_IsRepeated(t *testing.T) {
 	t.Parallel()
 	r := &repT{}
 	assert.True(t, r.IsRepeated())
-}
-
-func TestRepT_IsSlice(t *testing.T) {
-	t.Parallel()
-	r := &repT{}
-	assert.True(t, r.IsSlice())
 }
 
 func TestRepT_Element(t *testing.T) {
@@ -267,18 +243,21 @@ func TestRepT_Element(t *testing.T) {
 func TestRepT_Imports(t *testing.T) {
 	t.Parallel()
 
-	e := &embedT{scalarT: &scalarT{}, msg: dummyMsg()}
+	msg := dummyMsg()
+	f := dummyFile()
+	msg.parent = f
+	e := &embedT{scalarT: &scalarT{}, msg: msg}
 	dummyField().addType(e)
 
-	f := dummyField()
+	fld := dummyField()
 	r := &repT{scalarT: &scalarT{}, el: e.toElem()}
-	f.addType(r)
+	fld.addType(r)
 
 	assert.Empty(t, r.Imports())
 
-	r.el.Embed().File().setPackage(&pkg{name: "not_the_same"})
+	f.desc.Name = proto.String("some/other/file.proto")
 	assert.Len(t, r.Imports(), 1)
-	assert.Equal(t, r.el.Embed().Package(), r.Imports()[0])
+	assert.Equal(t, r.el.Embed().File(), r.Imports()[0])
 }
 
 func TestRepT_ToElem(t *testing.T) {
@@ -296,11 +275,6 @@ func TestMapT_IsMap(t *testing.T) {
 	assert.True(t, (&mapT{}).IsMap())
 }
 
-func TestMapT_IsSlice(t *testing.T) {
-	t.Parallel()
-	assert.False(t, (&mapT{}).IsSlice())
-}
-
 func TestMapT_Key(t *testing.T) {
 	t.Parallel()
 	m := &mapT{key: &scalarE{}}
@@ -309,11 +283,11 @@ func TestMapT_Key(t *testing.T) {
 
 type mockT struct {
 	FieldType
-	i   []Package
+	i   []File
 	f   Field
 	err error
 }
 
-func (t *mockT) Imports() []Package { return t.i }
+func (t *mockT) Imports() []File { return t.i }
 
 func (t *mockT) setField(f Field) { t.f = f }

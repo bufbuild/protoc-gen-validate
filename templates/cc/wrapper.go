@@ -1,4 +1,4 @@
-package tpl
+package cc
 
 const wrapperTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}

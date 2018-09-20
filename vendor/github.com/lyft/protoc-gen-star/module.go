@@ -3,9 +3,7 @@ package pgs
 import "os"
 
 // Module describes the interface for a domain-specific code generation module
-// that can be registered with the pgs generator. A module should be used over
-// a generator.Plugin if generating code NOT included in the *.pg.go file is
-// desired.
+// that can be registered with the PG* generator.
 type Module interface {
 	// The Name of the Module, used when establishing the build context and used
 	// as the base prefix for all debugger output.
@@ -15,27 +13,27 @@ type Module interface {
 	// should be stored and used by the Module.
 	InitContext(c BuildContext)
 
-	// Execute is called on the module with the target Package as well as all
+	// Execute is called on the module with the target Files as well as all
 	// loaded Packages from the gatherer. The module should return a slice of
-	// Artifacts that it would like to be generated. If a Module is used in
-	// multi-package mode and this module does not implement MultiModule, Execute
-	// will be called multiple times for each target Package.
-	Execute(target Package, packages map[string]Package) []Artifact
-}
-
-// MultiModule adds special behavior to a Module that expects multi-package
-// mode to be enabled for this protoc-plugin.
-type MultiModule interface {
-	// MultiExecute is called instead of Execute for multi-package protoc
-	// executions. If this method is not present on a Module, Execute is called
-	// individually for each target package.
-	MultiExecute(targets map[string]Package, packages map[string]Package) []Artifact
+	// Artifacts that it would like to be generated.
+	Execute(targets map[string]File, packages map[string]Package) []Artifact
 }
 
 // ModuleBase provides utility methods and a base implementation for a
 // protoc-gen-star Module. ModuleBase should be used as an anonymously embedded
 // field of an actual Module implementation. The only methods that need to be
 // overridden are Name and Execute.
+//
+//   type MyModule {
+//       *pgs.ModuleBase
+//   }
+//
+//   func InitMyModule() *MyModule { return &MyModule{ &pgs.ModuleBase{} } }
+//
+//   func (m *MyModule) Name() string { return "MyModule" }
+//
+//   func (m *MyModule) Execute(...) []pgs.Artifact { ... }
+//
 type ModuleBase struct {
 	BuildContext
 	artifacts []Artifact
@@ -58,7 +56,7 @@ func (m *ModuleBase) Name() string {
 
 // Execute satisfies the Module interface, however this method will fail and
 // must be overridden by a parent struct.
-func (m *ModuleBase) Execute(target Package, packages map[string]Package) []Artifact {
+func (m *ModuleBase) Execute(targets map[string]File, packages map[string]Package) []Artifact {
 	m.Fail("Execute method is not implemented for this module")
 	return m.Artifacts()
 }
@@ -101,9 +99,9 @@ func (m *ModuleBase) Artifacts() []Artifact {
 	return out
 }
 
-// AddArtifact adds a to this Module's collection of generation artifacts. This
-// method is available as a convenience but the other Add/Overwrite methods
-// should be used preferentially.
+// AddArtifact adds an Artifact to this Module's collection of generation
+// artifacts. This method is available as a convenience but the other Add &
+// Overwrite methods should be used preferentially.
 func (m *ModuleBase) AddArtifact(a ...Artifact) { m.artifacts = append(m.artifacts, a...) }
 
 // AddGeneratorFile adds a file with the provided name and contents to the code
@@ -119,8 +117,8 @@ func (m *ModuleBase) AddGeneratorFile(name, content string) {
 }
 
 // OverwriteGeneratorFile behaves the same as AddGeneratorFile, however if a
-// previously executed Plugin or Module has created a file with the same name,
-// it will be overwritten with this one.
+// previously executed Module has created a file with the same name, it will be
+// overwritten with this one.
 func (m *ModuleBase) OverwriteGeneratorFile(name, content string) {
 	m.AddArtifact(GeneratorFile{
 		Name:      name,

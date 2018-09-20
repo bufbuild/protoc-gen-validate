@@ -1,4 +1,4 @@
-package tpl
+package goshared
 
 const anyTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 	{{ template "required" . }}

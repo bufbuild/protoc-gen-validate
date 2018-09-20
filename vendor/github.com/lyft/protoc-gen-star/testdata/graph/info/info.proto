@@ -1,0 +1,56 @@
+// syntax
+syntax="proto3";
+
+// package
+package graph.info;
+
+// root message
+message Info {
+    // before message
+    message Before {}
+
+    // before enum
+    enum BeforeEnum {
+        // before enum value
+        BEFORE = 0;
+    }
+
+    // field
+    map<string, string> field = 1;
+
+    // middle message
+    message Middle {
+        // inner field
+        bool inner = 1;
+    }
+
+    // other field
+    repeated int32 other_field = 2;
+
+    // after message
+    message After {}
+
+    // after enum
+    enum AfterEnum {
+        // after enum value
+        AFTER = 0;
+    }
+
+    // oneof
+    oneof OneOf {
+        // oneof field
+        After oneof_field = 3;
+    }
+}
+
+// root enum comment
+enum Enum {
+    // root enum value
+    ROOT = 0;
+}
+
+// service
+service Service {
+    // method
+    rpc Method(Info) returns (Info);
+}

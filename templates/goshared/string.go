@@ -1,4 +1,4 @@
-package tpl
+package goshared
 
 const strTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}

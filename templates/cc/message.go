@@ -1,4 +1,4 @@
-package tpl
+package cc
 
 const messageTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}

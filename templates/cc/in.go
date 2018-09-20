@@ -1,4 +1,4 @@
-package tpl
+package cc
 
 const inTpl = `{{ $f := .Field -}}{{ $r := .Rules -}}
 	{{- if $r.In }}

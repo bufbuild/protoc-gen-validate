@@ -1,0 +1,5 @@
+syntax="proto3";
+package packages.targets.fully_qualified;
+option go_package="example.com/packages/targets/fully_qualified";
+
+message FullyQualified{}

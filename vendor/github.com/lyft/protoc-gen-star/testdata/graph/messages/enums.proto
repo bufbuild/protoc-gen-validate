@@ -1,0 +1,24 @@
+syntax="proto3";
+package graph.messages;
+
+import "messages/enums_ext.proto";
+import "google/protobuf/type.proto";
+
+enum BeforeEnum { BEFORE_VALUE = 0; }
+
+message Enums {
+    enum NestedBefore { BEFORE_VALUE = 0; }
+
+    BeforeEnum before = 1;
+    AfterEnum after = 2;
+
+    NestedBefore nested_before = 3;
+    NestedAfter nested_after = 4;
+
+    External external_in_package = 5;
+    google.protobuf.Syntax external_3rd_party = 6;
+
+    enum NestedAfter { AFTER_VALUE = 0; }
+}
+
+enum AfterEnum { AFTER_VALUE = 0; }

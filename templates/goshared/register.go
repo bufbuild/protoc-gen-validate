@@ -1,4 +1,4 @@
-package tpl
+package goshared
 
 import (
 	"fmt"
@@ -9,33 +9,40 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
-	pgs "github.com/lyft/protoc-gen-star"
+	"github.com/lyft/protoc-gen-star"
+	"github.com/lyft/protoc-gen-star/lang/go"
 	"github.com/lyft/protoc-gen-validate/templates/shared"
 )
 
-func Register(tpl *template.Template) {
+func Register(tpl *template.Template, params pgs.Parameters) {
+	fns := goSharedFuncs{pgsgo.InitContext(params)}
+
 	tpl.Funcs(map[string]interface{}{
+		"pkg":         fns.PackageName,
 		"cmt":         pgs.C80,
-		"accessor":    accessor,
-		"errname":     errName,
-		"err":         err,
-		"errCause":    errCause,
-		"errIdx":      errIdx,
-		"errIdxCause": errIdxCause,
-		"lookup":      lookup,
-		"lit":         lit,
-		"isBytes":     isBytes,
-		"byteStr":     byteStr,
-		"oneof":       oneofTypeName,
-		"inType":      inType,
-		"inKey":       inKey,
-		"durLit":      durLit,
-		"durStr":      durStr,
-		"durGt":       durGt,
-		"tsLit":       tsLit,
-		"tsGt":        tsGt,
-		"tsStr":       tsStr,
-		"unwrap":      unwrap,
+		"accessor":    fns.accessor,
+		"errname":     fns.errName,
+		"err":         fns.err,
+		"errCause":    fns.errCause,
+		"errIdx":      fns.errIdx,
+		"errIdxCause": fns.errIdxCause,
+		"lookup":      fns.lookup,
+		"lit":         fns.lit,
+		"isBytes":     fns.isBytes,
+		"byteStr":     fns.byteStr,
+		"oneof":       fns.oneofTypeName,
+		"inType":      fns.inType,
+		"inKey":       fns.inKey,
+		"durLit":      fns.durLit,
+		"durStr":      fns.durStr,
+		"durGt":       fns.durGt,
+		"tsLit":       fns.tsLit,
+		"tsGt":        fns.tsGt,
+		"tsStr":       fns.tsStr,
+		"unwrap":      fns.unwrap,
+		"msgTyp":      fns.msgTyp,
+		"name":        fns.Name,
+		"typ":         fns.Type,
 	})
 
 	template.Must(tpl.New("msg").Parse(msgTpl))
@@ -76,44 +83,31 @@ func Register(tpl *template.Template) {
 	template.Must(tpl.New("wrapper").Parse(wrapperTpl))
 }
 
-func accessor(ctx shared.RuleContext) string {
+type goSharedFuncs struct{ pgsgo.Context }
+
+func (fns goSharedFuncs) accessor(ctx shared.RuleContext) string {
 	if ctx.AccessorOverride != "" {
 		return ctx.AccessorOverride
 	}
 
-	return fmt.Sprintf(
-		"m.Get%s()",
-		ctx.Field.Name().PGGUpperCamelCase())
+	return fmt.Sprintf("m.Get%s()", fns.Name(ctx.Field))
 }
 
-func errName(m pgs.Message) pgs.Name {
-	return pgs.Name(fmt.Sprintf(
-		"%sValidationError",
-		m.TypeName()))
+func (fns goSharedFuncs) errName(m pgs.Message) pgs.Name {
+	return fns.Name(m) + "ValidationError"
 }
 
-func err(ctx shared.RuleContext, reason ...interface{}) string {
-	return errIdxCause(ctx, "", "nil", reason...)
-}
-
-func errCause(ctx shared.RuleContext, cause string, reason ...interface{}) string {
-	return errIdxCause(ctx, "", cause, reason...)
-}
-
-func errIdx(ctx shared.RuleContext, idx string, reason ...interface{}) string {
-	return errIdxCause(ctx, idx, "nil", reason...)
-}
-
-func errIdxCause(ctx shared.RuleContext, idx, cause string, reason ...interface{}) string {
+func (fns goSharedFuncs) errIdxCause(ctx shared.RuleContext, idx, cause string, reason ...interface{}) string {
 	f := ctx.Field
+	n := fns.Name(f)
 
 	var fld string
 	if idx != "" {
-		fld = fmt.Sprintf(`fmt.Sprintf("%s[%%v]", %s)`, f.Name().PGGUpperCamelCase().String(), idx)
+		fld = fmt.Sprintf(`fmt.Sprintf("%s[%%v]", %s)`, n, idx)
 	} else if ctx.Index != "" {
-		fld = fmt.Sprintf(`fmt.Sprintf("%s[%%v]", %s)`, f.Name().PGGUpperCamelCase().String(), ctx.Index)
+		fld = fmt.Sprintf(`fmt.Sprintf("%s[%%v]", %s)`, n, ctx.Index)
 	} else {
-		fld = fmt.Sprintf("%q", f.Name().PGGUpperCamelCase().String())
+		fld = fmt.Sprintf("%q", n)
 	}
 
 	causeFld := ""
@@ -131,23 +125,35 @@ func errIdxCause(ctx shared.RuleContext, idx, cause string, reason ...interface{
 		reason: %q,
 		%s%s
 	}`,
-		errName(f.Message()),
+		fns.errName(f.Message()),
 		fld,
 		fmt.Sprint(reason...),
 		causeFld,
 		keyFld)
 }
 
-func lookup(f pgs.Field, name string) string {
+func (fns goSharedFuncs) err(ctx shared.RuleContext, reason ...interface{}) string {
+	return fns.errIdxCause(ctx, "", "nil", reason...)
+}
+
+func (fns goSharedFuncs) errCause(ctx shared.RuleContext, cause string, reason ...interface{}) string {
+	return fns.errIdxCause(ctx, "", cause, reason...)
+}
+
+func (fns goSharedFuncs) errIdx(ctx shared.RuleContext, idx string, reason ...interface{}) string {
+	return fns.errIdxCause(ctx, idx, "nil", reason...)
+}
+
+func (fns goSharedFuncs) lookup(f pgs.Field, name string) string {
 	return fmt.Sprintf(
 		"_%s_%s_%s",
-		f.Message().Name().PGGUpperCamelCase(),
-		f.Name().PGGUpperCamelCase(),
+		fns.Name(f.Message()),
+		fns.Name(f),
 		name,
 	)
 }
 
-func lit(x interface{}) string {
+func (fns goSharedFuncs) lit(x interface{}) string {
 	val := reflect.ValueOf(x)
 
 	if val.Kind() == reflect.Interface {
@@ -166,7 +172,7 @@ func lit(x interface{}) string {
 	case reflect.Slice:
 		els := make([]string, val.Len())
 		for i, l := 0, val.Len(); i < l; i++ {
-			els[i] = lit(val.Index(i).Interface())
+			els[i] = fns.lit(val.Index(i).Interface())
 		}
 		return fmt.Sprintf("%T{%s}", val.Interface(), strings.Join(els, ", "))
 	default:
@@ -174,13 +180,13 @@ func lit(x interface{}) string {
 	}
 }
 
-func isBytes(f interface {
+func (fns goSharedFuncs) isBytes(f interface {
 	ProtoType() pgs.ProtoType
 }) bool {
 	return f.ProtoType() == pgs.BytesT
 }
 
-func byteStr(x []byte) string {
+func (fns goSharedFuncs) byteStr(x []byte) string {
 	elms := make([]string, len(x))
 	for i, b := range x {
 		elms[i] = fmt.Sprintf(`\x%X`, b)
@@ -189,30 +195,11 @@ func byteStr(x []byte) string {
 	return fmt.Sprintf(`"%s"`, strings.Join(elms, ""))
 }
 
-func oneofTypeName(f pgs.Field) pgs.TypeName {
-	name := pgs.TypeName(fmt.Sprintf("%s_%s",
-		f.Message().TypeName().Value().String(),
-		f.Name().PGGUpperCamelCase(),
-	))
-
-	for _, enum := range f.Message().Enums() {
-		if name == enum.TypeName() {
-			name += "_"
-			break
-		}
-	}
-
-	for _, msg := range f.Message().Messages() {
-		if name == msg.TypeName() {
-			name += "_"
-			break
-		}
-	}
-
-	return name.Pointer()
+func (fns goSharedFuncs) oneofTypeName(f pgs.Field) pgsgo.TypeName {
+	return pgsgo.TypeName(fns.OneofOption(f)).Pointer()
 }
 
-func inType(f pgs.Field, x interface{}) string {
+func (fns goSharedFuncs) inType(f pgs.Field, x interface{}) string {
 	switch f.Type().ProtoType() {
 	case pgs.BytesT:
 		return "string"
@@ -221,75 +208,79 @@ func inType(f pgs.Field, x interface{}) string {
 		case []*duration.Duration:
 			return "time.Duration"
 		default:
-			return pgs.TypeName(fmt.Sprintf("%T", x)).Element().String()
+			return pgsgo.TypeName(fmt.Sprintf("%T", x)).Element().String()
 		}
 	default:
-		return f.Type().Name().String()
+		return fns.Type(f).String()
 	}
 }
 
-func inKey(f pgs.Field, x interface{}) string {
+func (fns goSharedFuncs) inKey(f pgs.Field, x interface{}) string {
 	switch f.Type().ProtoType() {
 	case pgs.BytesT:
-		return byteStr(x.([]byte))
+		return fns.byteStr(x.([]byte))
 	case pgs.MessageT:
 		switch x := x.(type) {
 		case *duration.Duration:
 			dur, _ := ptypes.Duration(x)
-			return lit(int64(dur))
+			return fns.lit(int64(dur))
 		default:
-			return lit(x)
+			return fns.lit(x)
 		}
 	default:
-		return lit(x)
+		return fns.lit(x)
 	}
 }
 
-func durLit(dur *duration.Duration) string {
+func (fns goSharedFuncs) durLit(dur *duration.Duration) string {
 	return fmt.Sprintf(
 		"time.Duration(%d * time.Second + %d * time.Nanosecond)",
 		dur.GetSeconds(), dur.GetNanos())
 }
 
-func durStr(dur *duration.Duration) string {
+func (fns goSharedFuncs) durStr(dur *duration.Duration) string {
 	d, _ := ptypes.Duration(dur)
 	return d.String()
 }
 
-func durGt(a, b *duration.Duration) bool {
+func (fns goSharedFuncs) durGt(a, b *duration.Duration) bool {
 	ad, _ := ptypes.Duration(a)
 	bd, _ := ptypes.Duration(b)
 
 	return ad > bd
 }
 
-func tsLit(ts *timestamp.Timestamp) string {
+func (fns goSharedFuncs) tsLit(ts *timestamp.Timestamp) string {
 	return fmt.Sprintf(
 		"time.Unix(%d, %d)",
 		ts.GetSeconds(), ts.GetNanos(),
 	)
 }
 
-func tsGt(a, b *timestamp.Timestamp) bool {
+func (fns goSharedFuncs) tsGt(a, b *timestamp.Timestamp) bool {
 	at, _ := ptypes.Timestamp(a)
 	bt, _ := ptypes.Timestamp(b)
 
 	return bt.Before(at)
 }
 
-func tsStr(ts *timestamp.Timestamp) string {
+func (fns goSharedFuncs) tsStr(ts *timestamp.Timestamp) string {
 	t, _ := ptypes.Timestamp(ts)
 	return t.String()
 }
 
-func unwrap(ctx shared.RuleContext, name string) (shared.RuleContext, error) {
+func (fns goSharedFuncs) unwrap(ctx shared.RuleContext, name string) (shared.RuleContext, error) {
 	ctx, err := ctx.Unwrap("wrapper")
 	if err != nil {
 		return ctx, err
 	}
 
 	ctx.AccessorOverride = fmt.Sprintf("%s.Get%s()", name,
-		ctx.Field.Type().Embed().Fields()[0].Name().PGGUpperCamelCase())
+		pgsgo.PGGUpperCamelCase(ctx.Field.Type().Embed().Fields()[0].Name()))
 
 	return ctx, nil
+}
+
+func (fns goSharedFuncs) msgTyp(message pgs.Message) pgsgo.TypeName {
+	return pgsgo.TypeName(fns.Name(message))
 }

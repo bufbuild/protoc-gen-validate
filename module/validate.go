@@ -2,6 +2,7 @@ package module
 
 import (
 	pgs "github.com/lyft/protoc-gen-star"
+	"github.com/lyft/protoc-gen-star/lang/go"
 	"github.com/lyft/protoc-gen-validate/templates"
 )
 
@@ -12,19 +13,26 @@ const (
 
 type Module struct {
 	*pgs.ModuleBase
+	ctx pgsgo.Context
 }
 
-func Validator() Module { return Module{&pgs.ModuleBase{}} }
+func Validator() pgs.Module { return &Module{ModuleBase: &pgs.ModuleBase{}} }
 
-func (m Module) Name() string { return validatorName }
+func (m *Module) InitContext(ctx pgs.BuildContext) {
+	m.ModuleBase.InitContext(ctx)
+	m.ctx = pgsgo.InitContext(ctx.Parameters())
+}
 
-func (m Module) Execute(target pgs.Package, packages map[string]pgs.Package) []pgs.Artifact {
+func (m *Module) Name() string { return validatorName }
+
+func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Package) []pgs.Artifact {
 	lang := m.Parameters().Str(langParam)
 	m.Assert(lang != "", "`lang` parameter must be set")
-	tpls := templates.Template()[lang]
+
+	tpls := templates.Template(m.Parameters())[lang]
 	m.Assert(tpls != nil, "could not find template for `lang`: ", lang)
 
-	for _, f := range target.Files() {
+	for _, f := range targets {
 		m.Push(f.Name().String())
 
 		for _, msg := range f.AllMessages() {
@@ -32,11 +40,13 @@ func (m Module) Execute(target pgs.Package, packages map[string]pgs.Package) []p
 		}
 
 		for _, tpl := range tpls {
-			m.AddGeneratorTemplateFile(
-				f.OutputPath().SetExt(".validate."+tpl.Name()).String(),
-				tpl,
-				f,
-			)
+			out := m.ctx.OutputPath(f)
+			if lang != "go" && lang != "gogo" {
+				out = f.InputPath()
+			}
+			out = out.SetExt(".validated." + tpl.Name())
+
+			m.AddGeneratorTemplateFile(out.String(), tpl, f)
 		}
 
 		m.Pop()
@@ -45,4 +55,4 @@ func (m Module) Execute(target pgs.Package, packages map[string]pgs.Package) []p
 	return m.Artifacts()
 }
 
-var _ pgs.Module = Module{}
+var _ pgs.Module = (*Module)(nil)

@@ -1,0 +1,5 @@
+syntax="proto3";
+package packages.targets.unqualified;
+option go_package="unqualified";
+
+message Unqualified{}
