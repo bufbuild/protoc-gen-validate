@@ -1,6 +1,7 @@
-# gazelle:exclude go
-load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 
+# gazelle:exclude go
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 load(
     "//bazel:pgv_proto_library.bzl",
     "pgv_gogo_proto_library",
@@ -25,20 +26,20 @@ proto_library(
         "wkt_timestamp.proto",
         "wkt_wrappers.proto",
     ],
+    visibility = ["//visibility:public"],
     deps = [
-            "//validate:validate_proto",
-            "//tests/harness/cases/other_package:embed_proto",
+        "//validate:validate_proto",
         "@com_google_protobuf//:any_proto",
         "@com_google_protobuf//:duration_proto",
         "@com_google_protobuf//:timestamp_proto",
         "@com_google_protobuf//:wrappers_proto",
-            ],
+    ],
 )
 
 pgv_go_proto_library(
     name = "go",
-    proto = ":cases_proto",
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/go",
+    proto = ":cases_proto",
     deps = [
         "//tests/harness/cases/other_package:go",
         "@com_github_golang_protobuf//ptypes:go_default_library",
@@ -65,9 +66,27 @@ pgv_gogo_proto_library(
 
 pgv_cc_proto_library(
     name = "cc",
-    deps = [":cases_proto"],
     cc_deps = [
         "//tests/harness/cases/other_package:cc",
     ],
     visibility = ["//tests:__subpackages__"],
+    deps = [":cases_proto"],
+)
+
+go_proto_library(
+    name = "cases_go_proto",
+    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases",
+    proto = ":cases_proto",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//tests/harness/cases/other_package:go_default_library",
+        "//validate:go_default_library",
+    ],
+)
+
+go_library(
+    name = "go_default_library",
+    embed = [":cases_go_proto"],
+    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases",
+    visibility = ["//visibility:public"],
 )

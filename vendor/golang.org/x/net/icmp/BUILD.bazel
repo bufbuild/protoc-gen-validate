@@ -36,12 +36,12 @@ go_library(
 go_test(
     name = "go_default_test",
     srcs = [
+        "diag_test.go",
         "example_test.go",
         "extension_test.go",
         "ipv4_test.go",
         "message_test.go",
         "multipart_test.go",
-        "ping_test.go",
     ],
     embed = [":go_default_library"],
     deps = [

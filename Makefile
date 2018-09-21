@@ -38,7 +38,11 @@ bazel:
 .PHONY: gazelle
 gazelle: vendor
 	# runs gazelle against the codebase to generate Bazel BUILD files
-	bazel run //:gazelle
+	bazel run //:gazelle -- -go_prefix=github.com/lyft/protoc-gen-validate
+	buildozer 'replace deps //vendor/github.com/golang/protobuf/proto:go_default_library @com_github_golang_protobuf//proto:go_default_library' '//...:%go_library'
+	buildozer 'replace deps @com_github_golang_protobuf//ptypes:go_default_library_gen @com_github_golang_protobuf//ptypes:go_default_library' '//...:%go_library'
+	buildozer 'replace deps @io_bazel_rules_go//proto/wkt:duration_go_proto @com_github_golang_protobuf//ptypes/duration:go_default_library' '//...:%go_library'
+	buildozer 'replace deps @io_bazel_rules_go//proto/wkt:timestamp_go_proto @com_github_golang_protobuf//ptypes/timestamp:go_default_library' '//...:%go_library'
 
 vendor:
 	dep ensure -v -update

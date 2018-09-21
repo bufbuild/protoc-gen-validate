@@ -6,12 +6,12 @@ load("@com_google_protobuf//:protobuf.bzl", "py_proto_library")
 proto_library(
     name = "validate_proto",
     srcs = ["validate.proto"],
+    visibility = ["//visibility:public"],
     deps = [
         "@com_google_protobuf//:descriptor_proto",
         "@com_google_protobuf//:duration_proto",
         "@com_google_protobuf//:timestamp_proto",
     ],
-    visibility = ["//visibility:public"],
 )
 
 cc_proto_library(
@@ -31,13 +31,8 @@ py_proto_library(
 
 go_proto_library(
     name = "go_default_library",
-    proto = ":validate_proto",
-    deps = [
-        "@com_github_golang_protobuf//ptypes/duration:go_default_library",
-        "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
-        "@io_bazel_rules_go//proto/wkt:descriptor_go_proto",
-    ],
     importpath = "github.com/lyft/protoc-gen-validate/validate",
+    proto = ":validate_proto",
     visibility = ["//visibility:public"],
 )
 

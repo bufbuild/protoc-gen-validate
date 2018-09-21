@@ -11,6 +11,7 @@ go_library(
     importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/proxy",
     importpath = "golang.org/x/net/proxy",
     visibility = ["//visibility:public"],
+    deps = ["//vendor/golang.org/x/net/internal/socks:go_default_library"],
 )
 
 go_test(
@@ -20,4 +21,5 @@ go_test(
         "proxy_test.go",
     ],
     embed = [":go_default_library"],
+    deps = ["//vendor/golang.org/x/net/internal/sockstest:go_default_library"],
 )
