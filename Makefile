@@ -55,12 +55,6 @@ lint:
 	# golint -set_exit_status
 	go tool vet -all -shadow -shadowstrict *.go
 
-.PHONY: tests
-tests:
-	# tests validate proto generation
-	bazel build //validate:go_default_library \
-		&& diff bazel-out/k8-fastbuild/bin/validate/linux_amd64_stripped/go_default_library%/github.com/lyft/protoc-gen-validate/validate/validate.pb.go validate/validate.pb.go
-
 gogofast:
 	go build -o $@ vendor/github.com/gogo/protobuf/protoc-gen-gogofast/main.go
 
@@ -134,7 +128,7 @@ tests/harness/cc/cc-harness: tests/harness/cc/harness.cc
 	chmod 0755 $@
 
 .PHONY: ci
-ci: lint build tests testcases harness bazel-harness
+ci: lint build testcases harness bazel-harness
 
 .PHONY: clean
 clean:

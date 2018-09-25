@@ -16,31 +16,30 @@ go_library(
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/executor",
     visibility = ["//visibility:private"],
     deps = [
-        "//tests/harness:harness_go_proto",
-        "//tests/harness/cases:go",
-        "//tests/harness/cases/other_package:go",
+        "//tests/harness/cases/go:go_default_library",
+        "//tests/harness/cases/other_package/go:go_default_library",
         "//tests/harness/go:go_default_library",
+        "//vendor/golang.org/x/net/context:go_default_library",
         "@com_github_golang_protobuf//proto:go_default_library",
         "@com_github_golang_protobuf//ptypes:go_default_library",
-        "@com_github_golang_protobuf//ptypes/any:go_default_library",
         "@com_github_golang_protobuf//ptypes/duration:go_default_library",
         "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
-        "@com_github_golang_protobuf//ptypes/wrappers:go_default_library",
-        "//vendor/golang.org/x/net/context:go_default_library",
+        "@io_bazel_rules_go//proto/wkt:any_go_proto",
+        "@io_bazel_rules_go//proto/wkt:wrappers_go_proto",
     ],
 )
 
 go_binary(
     name = "executor",
     data = ["//tests/harness/cc:cc-harness"] + select({
-      ":windows_x86_64": [
-        "//tests/harness/go/main:go-harness-exe",
-        "//tests/harness/gogo/main:go-harness-exe",
-    ],
-      "//conditions:default": [
-        "//tests/harness/go/main:go-harness",
-        "//tests/harness/gogo/main:go-harness",
-    ]
+        ":windows_x86_64": [
+            "//tests/harness/go/main:go-harness-exe",
+            "//tests/harness/gogo/main:go-harness-exe",
+        ],
+        "//conditions:default": [
+            "//tests/harness/go/main:go-harness",
+            "//tests/harness/gogo/main:go-harness",
+        ],
     }),
     embed = [":go_default_library"],
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/executor",
