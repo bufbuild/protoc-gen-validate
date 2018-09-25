@@ -18,5 +18,5 @@ bazel-*
 /tests/harness/cc/cc-harness
 /tests/harness/cc/cc-harness.exe
 
-/tests/kitchensink/go/
-/tests/kitchensink/gogo/
+/tests/harness/cases/**/*.cc
+/tests/harness/cases/**/*.h

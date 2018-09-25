@@ -1,7 +1,7 @@
 package module
 
 import (
-	pgs "github.com/lyft/protoc-gen-star"
+	"github.com/lyft/protoc-gen-star"
 	"github.com/lyft/protoc-gen-star/lang/go"
 	"github.com/lyft/protoc-gen-validate/templates"
 )
@@ -30,7 +30,7 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 	m.Assert(lang != "", "`lang` parameter must be set")
 
 	tpls := templates.Template(m.Parameters())[lang]
-	m.Assert(tpls != nil, "could not find template for `lang`: ", lang)
+	m.Assert(tpls != nil, "could not find templates for `lang`: ", lang)
 
 	for _, f := range targets {
 		m.Push(f.Name().String())
@@ -41,10 +41,9 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 
 		for _, tpl := range tpls {
 			out := m.ctx.OutputPath(f)
-			if lang != "go" && lang != "gogo" {
-				out = f.InputPath()
-			}
-			out = out.SetExt(".validated." + tpl.Name())
+			out = out.SetExt(".validate." + tpl.Name())
+
+			m.Log(out)
 
 			m.AddGeneratorTemplateFile(out.String(), tpl, f)
 		}

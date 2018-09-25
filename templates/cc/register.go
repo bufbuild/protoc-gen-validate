@@ -7,12 +7,11 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/lyft/protoc-gen-star/lang/go"
-
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
-	pgs "github.com/lyft/protoc-gen-star"
+	"github.com/lyft/protoc-gen-star"
+	"github.com/lyft/protoc-gen-star/lang/go"
 	"github.com/lyft/protoc-gen-validate/templates/shared"
 )
 
@@ -20,6 +19,7 @@ func RegisterModule(tpl *template.Template, params pgs.Parameters) {
 	fns := CCFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
+		"output":        fns.output,
 		"cmt":           pgs.C80,
 		"class":         fns.className,
 		"package":       fns.packageName,
@@ -47,6 +47,7 @@ func RegisterModule(tpl *template.Template, params pgs.Parameters) {
 		"unwrap":        fns.unwrap,
 		"unimplemented": fns.failUnimplemented,
 		"staticVarName": fns.staticVarName,
+		"typ":           fns.Type,
 	})
 	template.Must(tpl.Parse(moduleFileTpl))
 	template.Must(tpl.New("msg").Parse(msgTpl))
@@ -92,8 +93,9 @@ func RegisterHeader(tpl *template.Template, params pgs.Parameters) {
 	fns := CCFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
-		"class": fns.className,
-		"upper": strings.ToUpper,
+		"output": fns.output,
+		"class":  fns.className,
+		"upper":  strings.ToUpper,
 	})
 
 	template.Must(tpl.Parse(headerFileTpl))
@@ -388,4 +390,8 @@ func (fns CCFuncs) failUnimplemented() string {
 
 func (fns CCFuncs) staticVarName(msg pgs.Message) string {
 	return "validator_" + strings.Replace(fns.className(msg), ":", "_", -1)
+}
+
+func (fns CCFuncs) output(file pgs.File, ext string) string {
+	return fns.OutputPath(file).SetExt(ext).String()
 }

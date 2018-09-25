@@ -6,7 +6,7 @@ const enumTpl = `
 		{{ template "in" . }}
 
 		{{ if $r.GetDefinedOnly }}
-			if (!{{ $f.Type.Name.Element }}_IsValid({{ accessor . }})) {
+			if (!{{ (typ $f).Element }}_IsValid({{ accessor . }})) {
 				{{ err . "value must be one of the defined enum values" }}
 			}
 		{{ end }}
