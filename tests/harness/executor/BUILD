@@ -16,8 +16,8 @@ go_library(
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/executor",
     visibility = ["//visibility:private"],
     deps = [
-        "//tests/harness/cases/go:go_default_library",
-        "//tests/harness/cases/other_package/go:go_default_library",
+        "//tests/harness/cases:go",
+        "//tests/harness/cases/other_package:go",
         "//tests/harness/go:go_default_library",
         "//vendor/golang.org/x/net/context:go_default_library",
         "@com_github_golang_protobuf//proto:go_default_library",
