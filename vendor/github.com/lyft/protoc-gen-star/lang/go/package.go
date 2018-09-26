@@ -18,7 +18,9 @@ func (c context) PackageName(node pgs.Node) pgs.Name {
 
 	_, pkg := c.optionPackage(e)
 
-	if ip := c.p.Str("import_path"); ip != "" {
+	// use import_path parameter ONLY if there is no go_package option in the file.
+	if ip := c.p.Str("import_path"); ip != "" &&
+		e.File().Descriptor().GetOptions().GetGoPackage() == "" {
 		pkg = ip
 	}
 

@@ -34,8 +34,8 @@
     ".",
     "lang/go"
   ]
-  revision = "d47af57c91675da0382ae119b87acd82ebd13d1c"
-  version = "v0.4.1"
+  revision = "6a9d0d1ee28a34f19bd0ff2402126393651b5085"
+  version = "v0.4.2"
 
 [[projects]]
   name = "github.com/spf13/afero"

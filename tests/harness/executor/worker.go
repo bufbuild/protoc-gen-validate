@@ -28,6 +28,8 @@ func execTestCase(tc TestCase) (ok, skip bool) {
 		return false, false
 	}
 
+	log.Println(any.TypeUrl)
+
 	b, err := proto.Marshal(&harness.TestCase{Message: any})
 	if err != nil {
 		log.Printf("unable to marshal test case %q - %v", tc.Name, err)
