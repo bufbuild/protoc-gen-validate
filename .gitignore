@@ -4,6 +4,7 @@ bazel-*
 
 /gogofast
 /gogofast.exe
+/protoc-gen-validate
 
 /tests/harness/cases/go
 /tests/harness/cases/gogo
