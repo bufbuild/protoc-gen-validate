@@ -19,35 +19,35 @@ func RegisterModule(tpl *template.Template, params pgs.Parameters) {
 	fns := CCFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
-		"output":        fns.output,
-		"cmt":           pgs.C80,
-		"class":         fns.className,
-		"package":       fns.packageName,
 		"accessor":      fns.accessor,
-		"hasAccessor":   fns.hasAccessor,
+		"byteStr":       fns.byteStr,
+		"class":         fns.className,
+		"cmt":           pgs.C80,
 		"ctype":         fns.cType,
+		"durGt":         fns.durGt,
+		"durLit":        fns.durLit,
+		"durStr":        fns.durStr,
 		"err":           fns.err,
 		"errCause":      fns.errCause,
 		"errIdx":        fns.errIdx,
 		"errIdxCause":   fns.errIdxCause,
-		"lookup":        fns.lookup,
-		"lit":           fns.lit,
-		"isBytes":       fns.isBytes,
-		"byteStr":       fns.byteStr,
-		"oneof":         fns.oneofTypeName,
-		"quote":         fns.quote,
-		"inType":        fns.inType,
+		"hasAccessor":   fns.hasAccessor,
 		"inKey":         fns.inKey,
-		"durLit":        fns.durLit,
-		"durStr":        fns.durStr,
-		"durGt":         fns.durGt,
-		"tsLit":         fns.tsLit,
-		"tsGt":          fns.tsGt,
-		"tsStr":         fns.tsStr,
-		"unwrap":        fns.unwrap,
-		"unimplemented": fns.failUnimplemented,
+		"inType":        fns.inType,
+		"isBytes":       fns.isBytes,
+		"lit":           fns.lit,
+		"lookup":        fns.lookup,
+		"oneof":         fns.oneofTypeName,
+		"output":        fns.output,
+		"package":       fns.packageName,
+		"quote":         fns.quote,
 		"staticVarName": fns.staticVarName,
+		"tsGt":          fns.tsGt,
+		"tsLit":         fns.tsLit,
+		"tsStr":         fns.tsStr,
 		"typ":           fns.Type,
+		"unimplemented": fns.failUnimplemented,
+		"unwrap":        fns.unwrap,
 	})
 	template.Must(tpl.Parse(moduleFileTpl))
 	template.Must(tpl.New("msg").Parse(msgTpl))
@@ -93,8 +93,8 @@ func RegisterHeader(tpl *template.Template, params pgs.Parameters) {
 	fns := CCFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
-		"output": fns.output,
 		"class":  fns.className,
+		"output": fns.output,
 		"upper":  strings.ToUpper,
 	})
 
