@@ -40,8 +40,6 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 		}
 
 		for _, tpl := range tpls {
-			m.Log(m.Parameters())
-			m.Log(m.ctx.PackageName(f))
 			out := m.ctx.OutputPath(f)
 			out = out.SetExt(".validate." + tpl.Name())
 			m.AddGeneratorTemplateFile(out.String(), tpl, f)

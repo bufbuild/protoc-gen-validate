@@ -6,16 +6,16 @@ go_library(
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/gogo/main",
     visibility = ["//visibility:private"],
     deps = [
+        "//tests/harness:harness_gogo_proto",
         "//tests/harness/cases:gogo",
         "//tests/harness/cases/other_package:gogo",
-        "//tests/harness/gogo:go_default_library",
-        "//vendor/github.com/gogo/protobuf/proto:go_default_library",
-        "//vendor/github.com/gogo/protobuf/types:go_default_library",
+        "@com_github_gogo_protobuf//proto:go_default_library",
+        "@com_github_gogo_protobuf//types:go_default_library",
     ],
 )
 
 genrule(
-    name = "go-harness",
+    name = "go-harness-bin",
     srcs = [":main"],
     outs = ["go-harness"],
     cmd = "cp $(SRCS) $@",

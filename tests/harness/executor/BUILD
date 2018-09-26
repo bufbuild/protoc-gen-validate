@@ -18,7 +18,7 @@ go_library(
     deps = [
         "//tests/harness/cases:go",
         "//tests/harness/cases/other_package:go",
-        "//tests/harness/go:go_default_library",
+        "//tests/harness:harness_go_proto",
         "//vendor/golang.org/x/net/context:go_default_library",
         "@com_github_golang_protobuf//proto:go_default_library",
         "@com_github_golang_protobuf//ptypes:go_default_library",
@@ -37,8 +37,8 @@ go_binary(
             "//tests/harness/gogo/main:go-harness-exe",
         ],
         "//conditions:default": [
-            "//tests/harness/go/main:go-harness",
-            "//tests/harness/gogo/main:go-harness",
+            "//tests/harness/go/main:go-harness-bin",
+            "//tests/harness/gogo/main:go-harness-bin",
         ],
     }),
     embed = [":go_default_library"],

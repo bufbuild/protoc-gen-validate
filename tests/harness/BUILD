@@ -15,7 +15,7 @@ proto_library(
 
 go_proto_library(
     name = "harness_go_proto",
-    importpath = "github.com/lyft/protoc-gen-validate/tests/harness",
+    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/go",
     proto = ":harness_proto",
     visibility = ["//visibility:public"],
 )

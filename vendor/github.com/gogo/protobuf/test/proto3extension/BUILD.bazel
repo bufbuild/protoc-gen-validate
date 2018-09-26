@@ -7,7 +7,7 @@ go_library(
     importpath = "github.com/gogo/protobuf/test/proto3extension",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/gogo/protobuf/proto:go_default_library",
         "//vendor/github.com/gogo/protobuf/protoc-gen-gogo/descriptor:go_default_library",
+        "@com_github_gogo_protobuf//proto:go_default_library",
     ],
 )

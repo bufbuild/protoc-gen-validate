@@ -38,6 +38,28 @@ pgv_gogo_proto_library(
 
 pgv_cc_proto_library(
     name = "cc",
-    deps = [":embed_proto"],
     visibility = ["//tests:__subpackages__"],
+    deps = [":embed_proto"],
+)
+
+proto_library(
+    name = "other_package_proto",
+    srcs = ["embed.proto"],
+    visibility = ["//visibility:public"],
+    deps = ["//validate:validate_proto"],
+)
+
+go_proto_library(
+    name = "other_package_go_proto",
+    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/other_package",
+    proto = ":other_package_proto",
+    visibility = ["//visibility:public"],
+    deps = ["//validate:go_default_library"],
+)
+
+go_library(
+    name = "go_default_library",
+    embed = [":other_package_go_proto"],
+    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/other_package",
+    visibility = ["//visibility:public"],
 )
