@@ -6,7 +6,6 @@ import (
 
 	"errors"
 
-	"github.com/golang/protobuf/protoc-gen-go/generator"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
@@ -14,46 +13,40 @@ import (
 func TestPersister_Persist_Unrecognized(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	p := dummyPersister(d)
 
 	p.Persist(nil)
 
-	assert.True(t, d.failed)
+	assert.True(t, d.Failed())
 }
 
 func TestPersister_Persist_GeneratorFile(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	p := dummyPersister(d)
 	fs := afero.NewMemMapFs()
 	p.SetFS(fs)
 
-	p.Persist(GeneratorFile{
-		Name:     "foo",
-		Contents: "bar",
-	})
+	resp := p.Persist(
+		GeneratorFile{
+			Name:     "foo",
+			Contents: "bar",
+		},
+		GeneratorFile{
+			Name:     "quux",
+			Contents: "baz",
+		},
+		GeneratorFile{
+			Name:      "foo",
+			Contents:  "fizz",
+			Overwrite: true,
+		})
 
-	assert.Len(t, p.pgg.response().File, 1)
-	assert.Equal(t, "foo", p.pgg.response().File[0].GetName())
-	assert.Equal(t, "bar", p.pgg.response().File[0].GetContent())
-
-	p.Persist(GeneratorFile{
-		Name:     "foo",
-		Contents: "baz",
-	})
-
-	assert.Len(t, p.pgg.response().File, 2)
-
-	p.Persist(GeneratorFile{
-		Name:      "foo",
-		Contents:  "fizz",
-		Overwrite: true,
-	})
-
-	assert.Len(t, p.pgg.response().File, 2)
-	assert.Equal(t, "fizz", p.pgg.response().File[0].GetContent())
+	assert.Len(t, resp.File, 2)
+	assert.Equal(t, "foo", resp.File[0].GetName())
+	assert.Equal(t, "fizz", resp.File[0].GetContent())
 }
 
 var genTpl = template.Must(template.New("good").Parse("{{ . }}"))
@@ -61,122 +54,106 @@ var genTpl = template.Must(template.New("good").Parse("{{ . }}"))
 func TestPersister_Persist_GeneratorTemplateFile(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	p := dummyPersister(d)
 	fs := afero.NewMemMapFs()
 	p.SetFS(fs)
 
-	p.Persist(GeneratorTemplateFile{
-		Name: "foo",
-		TemplateArtifact: TemplateArtifact{
-			Template: genTpl,
-			Data:     "bar",
+	resp := p.Persist(
+		GeneratorTemplateFile{
+			Name: "foo",
+			TemplateArtifact: TemplateArtifact{
+				Template: genTpl,
+				Data:     "bar",
+			},
 		},
-	})
-
-	assert.Len(t, p.pgg.response().File, 1)
-	assert.Equal(t, "foo", p.pgg.response().File[0].GetName())
-	assert.Equal(t, "bar", p.pgg.response().File[0].GetContent())
-
-	p.Persist(GeneratorTemplateFile{
-		Name: "foo",
-		TemplateArtifact: TemplateArtifact{
-			Template: genTpl,
-			Data:     "baz",
+		GeneratorTemplateFile{
+			Name: "quux",
+			TemplateArtifact: TemplateArtifact{
+				Template: genTpl,
+				Data:     "baz",
+			},
 		},
-	})
-
-	assert.Len(t, p.pgg.response().File, 2)
-
-	p.Persist(GeneratorTemplateFile{
-		Name: "foo",
-		TemplateArtifact: TemplateArtifact{
-			Template: genTpl,
-			Data:     "fizz",
+		GeneratorTemplateFile{
+			Name: "foo",
+			TemplateArtifact: TemplateArtifact{
+				Template: genTpl,
+				Data:     "fizz",
+			},
+			Overwrite: true,
 		},
-		Overwrite: true,
-	})
+	)
 
-	assert.Len(t, p.pgg.response().File, 2)
-	assert.Equal(t, "fizz", p.pgg.response().File[0].GetContent())
+	assert.Len(t, resp.File, 2)
+	assert.Equal(t, "foo", resp.File[0].GetName())
+	assert.Equal(t, "fizz", resp.File[0].GetContent())
 }
 
 func TestPersister_Persist_GeneratorAppend(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	p := dummyPersister(d)
 	fs := afero.NewMemMapFs()
 	p.SetFS(fs)
 
-	p.Persist(
+	resp := p.Persist(
 		GeneratorFile{Name: "foo"},
 		GeneratorFile{Name: "bar"},
+		GeneratorAppend{
+			FileName: "foo",
+			Contents: "baz",
+		},
+		GeneratorAppend{
+			FileName: "bar",
+			Contents: "quux",
+		},
 	)
 
-	p.Persist(GeneratorAppend{
-		FileName: "foo",
-		Contents: "baz",
-	})
+	assert.Len(t, resp.File, 4)
+	assert.Equal(t, "", resp.File[1].GetName())
+	assert.Equal(t, "baz", resp.File[1].GetContent())
+	assert.Equal(t, "", resp.File[3].GetName())
+	assert.Equal(t, "quux", resp.File[3].GetContent())
 
-	assert.Len(t, p.pgg.response().File, 3)
-	assert.Equal(t, "", p.pgg.response().File[1].GetName())
-	assert.Equal(t, "baz", p.pgg.response().File[1].GetContent())
+	p.Persist(GeneratorAppend{FileName: "doesNotExist"})
 
-	p.Persist(GeneratorAppend{
-		FileName: "bar",
-		Contents: "quux",
-	})
-
-	assert.Len(t, p.pgg.response().File, 4)
-	assert.Equal(t, "", p.pgg.response().File[3].GetName())
-	assert.Equal(t, "quux", p.pgg.response().File[3].GetContent())
-
-	p.Persist(GeneratorAppend{
-		FileName: "doesNotExist",
-	})
-
-	assert.True(t, d.failed)
+	assert.True(t, d.Failed())
 }
 
 func TestPersister_Persist_GeneratorTemplateAppend(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	p := dummyPersister(d)
 	fs := afero.NewMemMapFs()
 	p.SetFS(fs)
 
-	p.Persist(
+	resp := p.Persist(
 		GeneratorFile{Name: "foo"},
 		GeneratorFile{Name: "bar"},
+		GeneratorTemplateAppend{
+			FileName: "foo",
+			TemplateArtifact: TemplateArtifact{
+				Template: genTpl,
+				Data:     "baz",
+			},
+		}, GeneratorTemplateAppend{
+			FileName: "bar",
+			TemplateArtifact: TemplateArtifact{
+				Template: genTpl,
+				Data:     "quux",
+			},
+		},
 	)
 
-	p.Persist(GeneratorTemplateAppend{
-		FileName: "foo",
-		TemplateArtifact: TemplateArtifact{
-			Template: genTpl,
-			Data:     "baz",
-		},
-	})
+	assert.Len(t, resp.File, 4)
+	assert.Equal(t, "", resp.File[1].GetName())
+	assert.Equal(t, "baz", resp.File[1].GetContent())
+	assert.Equal(t, "", resp.File[3].GetName())
+	assert.Equal(t, "quux", resp.File[3].GetContent())
 
-	assert.Len(t, p.pgg.response().File, 3)
-	assert.Equal(t, "", p.pgg.response().File[1].GetName())
-	assert.Equal(t, "baz", p.pgg.response().File[1].GetContent())
-
-	p.Persist(GeneratorTemplateAppend{
-		FileName: "bar",
-		TemplateArtifact: TemplateArtifact{
-			Template: genTpl,
-			Data:     "quux",
-		},
-	})
-
-	assert.Len(t, p.pgg.response().File, 4)
-	assert.Equal(t, "", p.pgg.response().File[3].GetName())
-	assert.Equal(t, "quux", p.pgg.response().File[3].GetContent())
-
-	p.Persist(GeneratorTemplateAppend{
+	resp = p.Persist(GeneratorTemplateAppend{
 		FileName: "doesNotExist",
 		TemplateArtifact: TemplateArtifact{
 			Template: genTpl,
@@ -184,38 +161,38 @@ func TestPersister_Persist_GeneratorTemplateAppend(t *testing.T) {
 		},
 	})
 
-	assert.True(t, d.failed)
+	assert.True(t, d.Failed())
 }
 
 func TestPersister_Persist_GeneratorInjection(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	p := dummyPersister(d)
 	fs := afero.NewMemMapFs()
 	p.SetFS(fs)
 
-	p.Persist(GeneratorInjection{
+	resp := p.Persist(GeneratorInjection{
 		FileName:       "foo",
 		InsertionPoint: "bar",
 		Contents:       "baz",
 	})
 
-	assert.Len(t, p.pgg.response().File, 1)
-	assert.Equal(t, "foo", p.pgg.response().File[0].GetName())
-	assert.Equal(t, "bar", p.pgg.response().File[0].GetInsertionPoint())
-	assert.Equal(t, "baz", p.pgg.response().File[0].GetContent())
+	assert.Len(t, resp.File, 1)
+	assert.Equal(t, "foo", resp.File[0].GetName())
+	assert.Equal(t, "bar", resp.File[0].GetInsertionPoint())
+	assert.Equal(t, "baz", resp.File[0].GetContent())
 }
 
 func TestPersister_Persist_GeneratorTemplateInjection(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	p := dummyPersister(d)
 	fs := afero.NewMemMapFs()
 	p.SetFS(fs)
 
-	p.Persist(GeneratorTemplateInjection{
+	resp := p.Persist(GeneratorTemplateInjection{
 		FileName:       "foo",
 		InsertionPoint: "bar",
 		TemplateArtifact: TemplateArtifact{
@@ -224,16 +201,16 @@ func TestPersister_Persist_GeneratorTemplateInjection(t *testing.T) {
 		},
 	})
 
-	assert.Len(t, p.pgg.response().File, 1)
-	assert.Equal(t, "foo", p.pgg.response().File[0].GetName())
-	assert.Equal(t, "bar", p.pgg.response().File[0].GetInsertionPoint())
-	assert.Equal(t, "baz", p.pgg.response().File[0].GetContent())
+	assert.Len(t, resp.File, 1)
+	assert.Equal(t, "foo", resp.File[0].GetName())
+	assert.Equal(t, "bar", resp.File[0].GetInsertionPoint())
+	assert.Equal(t, "baz", resp.File[0].GetContent())
 }
 
 func TestPersister_Persist_CustomFile(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	p := dummyPersister(d)
 	fs := afero.NewMemMapFs()
 	p.SetFS(fs)
@@ -273,7 +250,7 @@ func TestPersister_Persist_CustomFile(t *testing.T) {
 func TestPersister_Persist_CustomTemplateFile(t *testing.T) {
 	t.Parallel()
 
-	d := newMockDebugger(t)
+	d := InitMockDebugger()
 	p := dummyPersister(d)
 	fs := afero.NewMemMapFs()
 	p.SetFS(fs)
@@ -322,7 +299,7 @@ func TestPersister_Persist_CustomTemplateFile(t *testing.T) {
 func TestPersister_AddPostProcessor(t *testing.T) {
 	t.Parallel()
 
-	p := dummyPersister(newMockDebugger(t))
+	p := dummyPersister(InitMockDebugger())
 
 	good := &mockPP{match: true, out: []byte("good")}
 	bad := &mockPP{err: errors.New("should not be called")}
@@ -335,7 +312,6 @@ func TestPersister_AddPostProcessor(t *testing.T) {
 func dummyPersister(d Debugger) *stdPersister {
 	return &stdPersister{
 		Debugger: d,
-		pgg:      mockGeneratorPGG{ProtocGenGo: Wrap(generator.New())},
 		fs:       afero.NewMemMapFs(),
 	}
 }

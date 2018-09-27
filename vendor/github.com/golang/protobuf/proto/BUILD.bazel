@@ -19,6 +19,7 @@ go_library(
         "text.go",
         "text_parser.go",
     ],
+    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/golang/protobuf/proto",
     importpath = "github.com/golang/protobuf/proto",
     visibility = ["//visibility:public"],
 )
@@ -46,8 +47,8 @@ go_test(
     deps = [
         "//vendor/github.com/golang/protobuf/proto/proto3_proto:go_default_library",
         "//vendor/github.com/golang/protobuf/proto/test_proto:go_default_library",
-        "//vendor/golang.org/x/sync/errgroup:go_default_library",
         "@com_github_golang_protobuf//ptypes:go_default_library_gen",
         "@io_bazel_rules_go//proto/wkt:any_go_proto",
+        "@org_golang_x_sync//errgroup:go_default_library",
     ],
 )

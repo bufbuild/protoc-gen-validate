@@ -1,4 +1,4 @@
-package tpl
+package cc
 
 const hostTpl = `
 	func (m {{ .TypeName.Pointer }}) _validateHostname(host string) error {

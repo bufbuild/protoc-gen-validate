@@ -135,9 +135,9 @@ func TestMethod_Imports(t *testing.T) {
 	s.addMethod(m)
 
 	assert.Empty(t, m.Imports())
-	m.in = &msg{parent: &file{pkg: &pkg{name: "not_the_same"}}}
+	m.in = &msg{parent: &file{pkg: &pkg{comments: "not_the_same"}}}
 	assert.Len(t, m.Imports(), 1)
-	m.out = &msg{parent: &file{pkg: &pkg{name: "other_import"}}}
+	m.out = &msg{parent: &file{pkg: &pkg{comments: "other_import"}}}
 	assert.Len(t, m.Imports(), 2)
 }
 
@@ -160,14 +160,23 @@ func TestMethod_Accept(t *testing.T) {
 	assert.Equal(t, 1, v.method)
 }
 
+func TestMethod_ChildAtPath(t *testing.T) {
+	t.Parallel()
+
+	m := &method{}
+
+	assert.Equal(t, m, m.childAtPath(nil))
+	assert.Nil(t, m.childAtPath([]int32{1}))
+}
+
 type mockMethod struct {
 	Method
-	i   []Package
+	i   []File
 	s   Service
 	err error
 }
 
-func (m *mockMethod) Imports() []Package { return m.i }
+func (m *mockMethod) Imports() []File { return m.i }
 
 func (m *mockMethod) setService(s Service) { m.s = s }
 

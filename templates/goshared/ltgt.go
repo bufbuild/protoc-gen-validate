@@ -1,4 +1,4 @@
-package tpl
+package goshared
 
 const ltgtTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 	{{ if $r.Lt }}

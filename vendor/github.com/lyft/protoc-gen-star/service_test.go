@@ -90,7 +90,7 @@ func TestService_Imports(t *testing.T) {
 
 	s := &service{}
 	assert.Empty(t, s.Imports())
-	s.addMethod(&mockMethod{i: []Package{&pkg{}}})
+	s.addMethod(&mockMethod{i: []File{&file{}}})
 	assert.Len(t, s.Imports(), 1)
 }
 
@@ -135,14 +135,23 @@ func TestService_Accept(t *testing.T) {
 	assert.Equal(t, 2, v.method)
 }
 
+func TestService_ChildAtPath(t *testing.T) {
+	t.Parallel()
+
+	s := &service{}
+	assert.Equal(t, s, s.childAtPath(nil))
+	assert.Nil(t, s.childAtPath([]int32{0}))
+	assert.Nil(t, s.childAtPath([]int32{0, 0}))
+}
+
 type mockService struct {
 	Service
-	i   []Package
+	i   []File
 	f   File
 	err error
 }
 
-func (s *mockService) Imports() []Package { return s.i }
+func (s *mockService) Imports() []File { return s.i }
 
 func (s *mockService) setFile(f File) { s.f = f }
 

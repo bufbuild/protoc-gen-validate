@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package names.entities;
+option go_package = "BAD.pack--age.name$";
+
+message UpperCamelCaseMessage {}
+
+message lowerCamelCaseMessage {}
+
+message SCREAMING_SNAKE_CASE {}
+
+message Upper_Snake_Case {}
+
+message lower_snake_case {}
+
+message lowercase {}
+
+message UPPERCASE {}
+
+message _underscore {}
+
+message __DoubleUnderscore {}
+
+message String {} // protected name
+
+message Nested {
+    message Message {
+        message Message {}
+
+        enum Enum { NESTED = 0; }
+    }
+
+    message _underscore {}
+
+    message String {} // protected name
+
+    enum Enum { VALUE = 0; }
+
+    enum lowercase { lower = 0; }
+
+    message lowerMsg {}
+}
+
+enum UpperCamelCaseEnum {
+    SCREAMING_SNAKE_CASE_ENUM_VALUE = 0;
+    lower_snake_case_enum_value = 1;
+    Upper_Snake_Case_Enum_Value = 2;
+    UpperCamelCaseEnumValue = 3;
+    lowerCamelCaseEnumValue = 4;
+}
+
+enum lowerCamelCaseEnum {LCC_Value = 0;}
+
+enum SCREAMING_SNAKE_ENUM {SS_Value = 0;}
+
+enum lower_snake_enum {LS_Value = 0;}
+
+enum Upper_Snake_Enum {US_Value = 0;}
+
+message Fields {
+    bool lower_snake_case = 1;
+    bool Upper_Snake_Case = 2;
+    bool SCREAMING_SNAKE_CASE = 3;
+    bool lowerCamelCase = 4;
+    bool UpperCamelCase = 5;
+    bool string = 6; // protected name
+}
+
+message Oneofs {
+    oneof lower_snake_case {bool LS = 1;}
+
+    oneof Upper_Snake_Case {bool US = 2;}
+
+    oneof SCREAMING_SNAKE_CASE {bool SS = 3;}
+
+    oneof lowerCamelCase {bool LC = 4;}
+
+    oneof UpperCamelCase {bool UC = 5;}
+
+    // protected
+    oneof string {bool S = 6;}
+
+    oneof oneof {
+        bool lower_snake_case_o = 7;
+        bool Upper_Snake_Case_O = 8;
+        bool SCREAMING_SNAKE_CASE_O = 9;
+        bool lowerCamelCaseO = 10;
+        bool UpperCamelCaseO = 11;
+        bool reset = 12; // protected
+    }
+}
+
+service UpperCamelService {}
+
+service lowerCamelService {}
+
+service lower_snake_service {}
+
+service Upper_Snake_Service {}
+
+service SCREAMING_SNAKE_SERVICE {}
+
+service reset {}
+
+service Service {
+    rpc UpperCamel(stream String) returns (String);
+    rpc lowerCamel(String) returns (stream String);
+    rpc lower_snake(stream String) returns (stream String);
+    rpc Upper_Snake(String) returns (String);
+    rpc SCREAMING_SNAKE(String) returns (String);
+    rpc Reset(String) returns (String);
+}

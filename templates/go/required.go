@@ -1,4 +1,4 @@
-package tpl
+package golang
 
 const requiredTpl = `
 	{{ if .Rules.GetRequired }}

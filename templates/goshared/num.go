@@ -1,4 +1,4 @@
-package tpl
+package goshared
 
 const numTpl = `
 	{{ template "const" . }}

@@ -1,4 +1,4 @@
-package tpl
+package cc
 
 const declTpl = `
 extern bool Validate(const {{ class . }}& m, pgv::ValidationMsg* err);

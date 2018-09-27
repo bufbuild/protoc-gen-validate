@@ -9,5 +9,5 @@ go_library(
     importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/golang/protobuf/protoc-gen-go/testdata/imports/test_a_1",
     importpath = "github.com/golang/protobuf/protoc-gen-go/testdata/imports/test_a_1",
     visibility = ["//visibility:public"],
-    deps = ["//vendor/github.com/golang/protobuf/proto:go_default_library"],
+    deps = ["@com_github_golang_protobuf//proto:go_default_library"],
 )

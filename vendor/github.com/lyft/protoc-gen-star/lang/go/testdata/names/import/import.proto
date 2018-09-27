@@ -1,0 +1,4 @@
+syntax="proto3";
+
+package names.import;
+option go_package = "example.com/foo/bar";

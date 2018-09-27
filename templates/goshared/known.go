@@ -1,7 +1,7 @@
-package tpl
+package goshared
 
 const hostTpl = `
-	func (m {{ .TypeName.Pointer }}) _validateHostname(host string) error {
+	func (m {{ (msgTyp .).Pointer }}) _validateHostname(host string) error {
 		s := strings.ToLower(strings.TrimSuffix(host, "."))
 
 		if len(host) > 253 {
@@ -33,7 +33,7 @@ const hostTpl = `
 `
 
 const emailTpl = `
-	func (m {{ .TypeName.Pointer }}) _validateEmail(addr string) error {
+	func (m {{ (msgTyp .).Pointer }}) _validateEmail(addr string) error {
 		a, err := mail.ParseAddress(addr)
 		if err != nil {
 			return err

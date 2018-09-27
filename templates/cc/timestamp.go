@@ -1,4 +1,4 @@
-package tpl
+package cc
 
 const timestampTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 	{{ template "required" . }}

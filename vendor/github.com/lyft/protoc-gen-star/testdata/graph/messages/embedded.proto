@@ -1,0 +1,24 @@
+syntax="proto3";
+package graph.messages;
+
+import "messages/scalars.proto";
+import "google/protobuf/duration.proto";
+
+message Before {}
+
+message Embedded {
+    message NestedBefore {}
+
+    Before local_before = 1;
+    After local_after = 2;
+
+    NestedBefore nested_before = 3;
+    NestedAfter nested_after = 4;
+
+    Scalars external_in_package = 5;
+    google.protobuf.Duration external_3rd_party = 6;
+
+    message NestedAfter {}
+}
+
+message After {}

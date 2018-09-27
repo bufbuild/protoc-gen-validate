@@ -1,9 +1,8 @@
 package pgs
 
 import (
-	"testing"
-
 	"errors"
+	"testing"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
@@ -138,18 +137,46 @@ func TestField_Imports(t *testing.T) {
 	f.addType(&scalarT{})
 	assert.Empty(t, f.Imports())
 
-	f.addType(&mockT{i: []Package{&pkg{}, &pkg{}}})
+	f.addType(&mockT{i: []File{&file{}, &file{}}})
 	assert.Len(t, f.Imports(), 2)
+}
+
+func TestField_Required(t *testing.T) {
+	t.Parallel()
+
+	msg := dummyMsg()
+
+	lbl := descriptor.FieldDescriptorProto_LABEL_REQUIRED
+
+	f := &field{desc: &descriptor.FieldDescriptorProto{Label: &lbl}}
+	f.setMessage(msg)
+
+	assert.False(t, f.Required(), "proto3 messages can never be marked required")
+
+	f.File().(*file).desc.Syntax = proto.String(string(Proto2))
+	assert.True(t, f.Required(), "proto2 + required")
+
+	lbl = descriptor.FieldDescriptorProto_LABEL_OPTIONAL
+	f.desc.Label = &lbl
+	assert.False(t, f.Required(), "proto2 + optional")
+}
+
+func TestField_ChildAtPath(t *testing.T) {
+	t.Parallel()
+
+	f := &field{}
+	assert.Equal(t, f, f.childAtPath(nil))
+	assert.Nil(t, f.childAtPath([]int32{1}))
 }
 
 type mockField struct {
 	Field
-	i   []Package
+	i   []File
 	m   Message
 	err error
 }
 
-func (f *mockField) Imports() []Package { return f.i }
+func (f *mockField) Imports() []File { return f.i }
 
 func (f *mockField) setMessage(m Message) { f.m = m }
 
@@ -166,7 +193,7 @@ func dummyField() *field {
 	str := descriptor.FieldDescriptorProto_TYPE_STRING
 	f := &field{desc: &descriptor.FieldDescriptorProto{Name: proto.String("field"), Type: &str}}
 	m.addField(f)
-	t := &scalarT{name: "string"}
+	t := &scalarT{}
 	f.addType(t)
 	return f
 }

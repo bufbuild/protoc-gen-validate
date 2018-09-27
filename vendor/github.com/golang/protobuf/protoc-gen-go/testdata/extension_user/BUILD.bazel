@@ -7,8 +7,8 @@ go_library(
     importpath = "github.com/golang/protobuf/protoc-gen-go/testdata/extension_user",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/golang/protobuf/protoc-gen-go/testdata/extension_base:go_default_library",
         "//vendor/github.com/golang/protobuf/protoc-gen-go/testdata/extension_extra:go_default_library",
+        "@com_github_golang_protobuf//proto:go_default_library",
     ],
 )

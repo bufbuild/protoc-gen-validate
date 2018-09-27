@@ -598,3 +598,10 @@ func RegisterFile(filename string, fileDescriptor []byte) {
 
 // FileDescriptor returns the compressed FileDescriptorProto for a .proto file.
 func FileDescriptor(filename string) []byte { return protoFiles[filename] }
+
+func EnumerateRegistered() {
+	log.Printf("ENUMERATING %d TYPES", len(protoTypedNils))
+	for k, v := range protoTypedNils {
+		log.Printf("%s => %T", k, v)
+	}
+}

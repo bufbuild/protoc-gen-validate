@@ -3,6 +3,7 @@ package pgs
 import (
 	"testing"
 
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -57,23 +58,21 @@ func TestProtoType_IsNumeric(t *testing.T) {
 	}
 }
 
-func TestProtoType_IsSlice(t *testing.T) {
+func TestProtoType_Proto(t *testing.T) {
 	t.Parallel()
 
-	yes := []ProtoType{BytesT}
+	pt := BytesT.Proto()
+	ptPtr := BytesT.ProtoPtr()
+	assert.Equal(t, descriptor.FieldDescriptorProto_TYPE_BYTES, pt)
+	assert.Equal(t, pt, *ptPtr)
+}
 
-	no := []ProtoType{
-		Int64T, UInt64T, SFixed64, SInt64, Fixed64T,
-		Int32T, UInt32T, SFixed32, SInt32, Fixed32T,
-		DoubleT, FloatT, BoolT, StringT, GroupT,
-		MessageT, EnumT,
-	}
+func TestProtoLabel_Proto(t *testing.T) {
+	t.Parallel()
 
-	for _, pt := range yes {
-		assert.True(t, pt.IsSlice())
-	}
+	pl := Repeated.Proto()
+	plPtr := Repeated.ProtoPtr()
 
-	for _, pt := range no {
-		assert.False(t, pt.IsSlice())
-	}
+	assert.Equal(t, descriptor.FieldDescriptorProto_LABEL_REPEATED, pl)
+	assert.Equal(t, pl, *plPtr)
 }

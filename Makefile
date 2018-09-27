@@ -36,9 +36,18 @@ bazel:
 	bazel build //tests/...
 
 .PHONY: gazelle
-gazelle:
+gazelle: vendor
 	# runs gazelle against the codebase to generate Bazel BUILD files
-	bazel run //:gazelle
+	bazel run //:gazelle -- -go_prefix=github.com/lyft/protoc-gen-validate
+	buildozer 'replace deps //vendor/github.com/golang/protobuf/proto:go_default_library @com_github_golang_protobuf//proto:go_default_library' '//...:%go_library'
+	buildozer 'replace deps @com_github_golang_protobuf//ptypes:go_default_library_gen @com_github_golang_protobuf//ptypes:go_default_library' '//...:%go_library'
+	buildozer 'replace deps @io_bazel_rules_go//proto/wkt:duration_go_proto @com_github_golang_protobuf//ptypes/duration:go_default_library' '//...:%go_library'
+	buildozer 'replace deps @io_bazel_rules_go//proto/wkt:timestamp_go_proto @com_github_golang_protobuf//ptypes/timestamp:go_default_library' '//...:%go_library'
+	buildozer 'replace deps //vendor/github.com/gogo/protobuf/proto:go_default_library @com_github_gogo_protobuf//proto:go_default_library' '//...:%go_library'
+	buildozer 'replace deps //vendor/github.com/gogo/protobuf/types:go_default_library @com_github_gogo_protobuf//types:go_default_library' '//...:%go_library'
+
+vendor:
+	dep ensure -v -update
 
 .PHONY: lint
 lint:
@@ -48,31 +57,11 @@ lint:
 	# golint -set_exit_status
 	go tool vet -all -shadow -shadowstrict *.go
 
-.PHONY: quick
-quick:
-	# runs all tests without the race detector or coverage percentage
-	go test
-
-.PHONY: tests
-tests:
-	# runs all tests against the package with race detection and coverage percentage
-	go test -race -cover
-	# tests validate proto generation
-	bazel build //validate:go_default_library \
-		&& diff bazel-out/k8-fastbuild/bin/validate/linux_amd64_stripped/go_default_library%/github.com/lyft/protoc-gen-validate/validate/validate.pb.go validate/validate.pb.go
-
-.PHONY: cover
-cover:
-	# runs all tests against the package, generating a coverage report and opening it in the browser
-	go test -race -covermode=atomic -coverprofile=cover.out
-	go tool cover -html cover.out -o cover.html
-	open cover.html
-
 gogofast:
 	go build -o $@ vendor/github.com/gogo/protobuf/protoc-gen-gogofast/main.go
 
 .PHONY: harness
-harness: tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.go tests/harness/go/main/go-harness tests/harness/gogo/main/go-harness tests/harness/cc/cc-harness
+harness: testcases tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.go tests/harness/go/main/go-harness tests/harness/gogo/main/go-harness tests/harness/cc/cc-harness
  	# runs the test harness, validating a series of test cases in all supported languages
 	go run ./tests/harness/executor/*.go
 
@@ -80,26 +69,6 @@ harness: tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.go tests/h
 bazel-harness:
 	# runs the test harness via bazel
 	bazel run //tests/harness/executor:executor
-
-.PHONY: kitchensink
-kitchensink: gogofast
-	# generates the kitchensink test protos
-	rm -r tests/kitchensink/go || true
-	mkdir -p tests/kitchensink/go
-	rm -r tests/kitchensink/gogo || true
-	mkdir -p tests/kitchensink/gogo
-	cd tests/kitchensink && \
-	protoc \
-		-I . \
-		-I ../.. \
-		--go_out="${GO_IMPORT}:./go" \
-		--validate_out="lang=go:./go" \
-		--plugin=protoc-gen-gogofast=$(shell pwd)/gogofast \
-		--gogofast_out="${GOGO_IMPORT}:./gogo" \
-		--validate_out="lang=gogo:./gogo" \
-		`find . -name "*.proto"`
-	cd tests/kitchensink/go && go build .
-	cd tests/kitchensink/gogo && go build .
 
 .PHONY: testcases
 testcases: gogofast
@@ -134,12 +103,6 @@ testcases: gogofast
 		--validate_out="lang=gogo:./gogo" \
 		./*.proto
 
-.PHONY: update-vendor
-update-vendor:
-	# updates the vendored dependencies using the Go Dep tool
-	dep ensure -update
-	$(MAKE) gazelle
-
 tests/harness/go/harness.pb.go:
 	# generates the test harness protos
 	cd tests/harness && protoc -I . \
@@ -151,12 +114,10 @@ tests/harness/gogo/harness.pb.go: gogofast
 		--plugin=protoc-gen-gogofast=$(shell pwd)/gogofast \
 		--gogofast_out="${GOGO_IMPORT}:./gogo" harness.proto
 
-.PHONY: tests/harness/go/main/go-harness
 tests/harness/go/main/go-harness:
 	# generates the go-specific test harness
 	go build -o ./tests/harness/go/main/go-harness ./tests/harness/go/main
 
-.PHONY: tests/harness/gogo/main/go-harness
 tests/harness/gogo/main/go-harness:
 	# generates the gogo-specific test harness
 	go build -o ./tests/harness/gogo/main/go-harness ./tests/harness/gogo/main
@@ -169,4 +130,21 @@ tests/harness/cc/cc-harness: tests/harness/cc/harness.cc
 	chmod 0755 $@
 
 .PHONY: ci
-ci: lint build tests kitchensink testcases harness bazel-harness
+ci: lint build testcases harness bazel-harness
+
+.PHONY: clean
+clean:
+	(which bazel && bazel clean) || true
+	rm -f \
+		gogofast \
+		tests/harness/cc/cc-harness \
+		tests/harness/go/main/go-harness \
+		tests/harness/gogo/main/go-harness \
+		tests/harness/gogo/harness.pb.go \
+		tests/harness/gogo/harness.pb.go \
+		tests/harness/go/harness.pb.go
+	rm -rf \
+		tests/harness/cases/go \
+		tests/harness/cases/other_package/go \
+		tests/harness/cases/gogo \
+		tests/harness/cases/other_package/gogo \

@@ -10,7 +10,7 @@ go_library(
     importpath = "github.com/spf13/afero/sftpfs",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/pkg/sftp:go_default_library",
         "//vendor/github.com/spf13/afero:go_default_library",
+        "@com_github_pkg_sftp//:go_default_library",
     ],
 )

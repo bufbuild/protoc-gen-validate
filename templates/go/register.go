@@ -1,13 +1,14 @@
-package tpl
+package golang
 
 import (
 	"text/template"
 
-	shared "github.com/lyft/protoc-gen-validate/templates/goshared"
+	"github.com/lyft/protoc-gen-star"
+	"github.com/lyft/protoc-gen-validate/templates/goshared"
 )
 
-func Register(tpl *template.Template) {
-	shared.Register(tpl)
+func Register(tpl *template.Template, params pgs.Parameters) {
+	goshared.Register(tpl, params)
 	template.Must(tpl.Parse(fileTpl))
 	template.Must(tpl.New("required").Parse(requiredTpl))
 	template.Must(tpl.New("timestamp").Parse(timestampTpl))

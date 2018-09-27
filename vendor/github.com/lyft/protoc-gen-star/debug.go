@@ -1,7 +1,10 @@
 package pgs
 
 import (
+	"bytes"
 	"fmt"
+	"io"
+	"log"
 	"os"
 	"strings"
 )
@@ -66,31 +69,50 @@ type logger interface {
 	Printf(string, ...interface{})
 }
 
-type errFunc func(err error, msgs ...string)
+type errFunc func(err error, msgs ...interface{})
 
-type failFunc func(msgs ...string)
+type failFunc func(msgs ...interface{})
+
+type exitFunc func(code int)
 
 type rootDebugger struct {
 	err       errFunc
 	fail      failFunc
+	exit      exitFunc
 	l         logger
 	logDebugs bool
 }
 
-func initDebugger(g *Generator, l logger) Debugger {
-	return rootDebugger{
-		err:       g.pgg.Error,
-		fail:      g.pgg.Fail,
-		logDebugs: g.debug,
+func initDebugger(d bool, l logger) Debugger {
+	rd := rootDebugger{
+		logDebugs: d,
 		l:         l,
+		exit:      os.Exit,
 	}
+
+	rd.fail = failFunc(rd.defaultFail)
+	rd.err = errFunc(rd.defaultErr)
+
+	return rd
+}
+
+func (d rootDebugger) defaultErr(err error, msg ...interface{}) {
+	if err != nil {
+		d.l.Printf("[error] %s: %v\n", fmt.Sprint(msg...), err)
+		d.exit(1)
+	}
+}
+
+func (d rootDebugger) defaultFail(msg ...interface{}) {
+	d.l.Println(msg...)
+	d.exit(1)
 }
 
 func (d rootDebugger) Log(v ...interface{})                  { d.l.Println(v...) }
 func (d rootDebugger) Logf(format string, v ...interface{})  { d.l.Printf(format, v...) }
 func (d rootDebugger) Fail(v ...interface{})                 { d.fail(fmt.Sprint(v...)) }
 func (d rootDebugger) Failf(format string, v ...interface{}) { d.fail(fmt.Sprintf(format, v...)) }
-func (d rootDebugger) Exit(code int)                         { os.Exit(code) }
+func (d rootDebugger) Exit(code int)                         { d.exit(code) }
 
 func (d rootDebugger) Debug(v ...interface{}) {
 	if d.logDebugs {
@@ -190,5 +212,75 @@ func (d prefixedDebugger) Pop() Debugger {
 	return d.parent
 }
 
-var _ Debugger = rootDebugger{}
-var _ Debugger = prefixedDebugger{}
+// MockDebugger serves as a root Debugger instance for usage in tests. Unlike
+// an actual Debugger, MockDebugger will not exit the program, but will track
+// failures, checked errors, and exit codes.
+type MockDebugger interface {
+	Debugger
+
+	// Output returns a reader of all logged data.
+	Output() io.Reader
+
+	// Failed returns true if Fail or Failf has been called on this debugger or a
+	// descendant of it (via Push).
+	Failed() bool
+
+	// Err returns the error passed to CheckErr.
+	Err() error
+
+	// Exited returns true if this Debugger (or a descendant of it) would have
+	// called os.Exit.
+	Exited() bool
+
+	// ExitCode returns the code this Debugger (or a descendant of it) passed to
+	// os.Exit. If Exited() returns false, this value is meaningless.
+	ExitCode() int
+}
+
+type mockDebugger struct {
+	Debugger
+
+	buf    bytes.Buffer
+	failed bool
+	err    error
+	exited bool
+	code   int
+}
+
+// InitMockDebugger creates a new MockDebugger for usage in tests.
+func InitMockDebugger() MockDebugger {
+	md := &mockDebugger{}
+	d := initDebugger(true, log.New(&md.buf, "", 0)).(rootDebugger)
+
+	d.fail = func(msgs ...interface{}) {
+		md.failed = true
+		d.defaultFail(msgs...)
+	}
+
+	d.err = func(err error, msgs ...interface{}) {
+		if err != nil {
+			md.err = err
+		}
+		d.defaultErr(err, msgs...)
+	}
+
+	d.exit = func(code int) {
+		md.exited = true
+		md.code = code
+	}
+
+	md.Debugger = d
+	return md
+}
+
+func (d *mockDebugger) Output() io.Reader { return &d.buf }
+func (d *mockDebugger) Failed() bool      { return d.failed }
+func (d *mockDebugger) Err() error        { return d.err }
+func (d *mockDebugger) Exited() bool      { return d.exited }
+func (d *mockDebugger) ExitCode() int     { return d.code }
+
+var (
+	_ Debugger     = rootDebugger{}
+	_ Debugger     = prefixedDebugger{}
+	_ MockDebugger = &mockDebugger{}
+)

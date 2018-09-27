@@ -1,4 +1,4 @@
-package tpl
+package cc
 
 const repTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}{{ $typ := inType $f nil }}

@@ -3,6 +3,7 @@ package pgs
 import (
 	"testing"
 
+	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/stretchr/testify/assert"
 )
@@ -29,12 +30,6 @@ func TestScalarE_IsEmbed(t *testing.T) {
 func TestScalarE_IsEnum(t *testing.T) {
 	t.Parallel()
 	assert.False(t, (&scalarE{}).IsEnum())
-}
-
-func TestScalarE_Name(t *testing.T) {
-	t.Parallel()
-	s := &scalarE{name: TypeName("foobar")}
-	assert.Equal(t, s.name, s.Name())
 }
 
 func TestScalarE_Imports(t *testing.T) {
@@ -66,15 +61,18 @@ func TestEnumE_Enum(t *testing.T) {
 func TestEnumE_Imports(t *testing.T) {
 	t.Parallel()
 
-	e := &enumE{scalarE: &scalarE{}, enum: dummyEnum()}
-	f := dummyField()
-	e.typ = f.typ
+	en := dummyEnum()
+	f := dummyFile()
+	en.parent = f
+	e := &enumE{scalarE: &scalarE{}, enum: en}
+	fld := dummyField()
+	e.typ = fld.typ
 
 	assert.Empty(t, e.Imports())
 
-	e.enum.File().setPackage(&pkg{name: "not_the_same"})
+	f.desc.Name = proto.String("some/other/file.proto")
 	assert.Len(t, e.Imports(), 1)
-	assert.Equal(t, e.Enum().Package(), e.Imports()[0])
+	assert.Equal(t, e.Enum().File(), e.Imports()[0])
 }
 
 func TestEmbedE_IsEmbed(t *testing.T) {
@@ -91,13 +89,16 @@ func TestEmbedE_Embed(t *testing.T) {
 func TestEmbedE_Imports(t *testing.T) {
 	t.Parallel()
 
-	e := &embedE{scalarE: &scalarE{}, msg: dummyMsg()}
-	f := dummyField()
-	e.typ = f.typ
+	f := dummyFile()
+	msg := dummyMsg()
+	msg.parent = f
+	e := &embedE{scalarE: &scalarE{}, msg: msg}
+	fld := dummyField()
+	e.typ = fld.typ
 
 	assert.Empty(t, e.Imports())
+	f.desc.Name = proto.String("some/other/file.proto")
 
-	e.Embed().File().setPackage(&pkg{name: "not_the_same"})
 	assert.Len(t, e.Imports(), 1)
-	assert.Equal(t, e.Embed().Package(), e.Imports()[0])
+	assert.Equal(t, e.Embed().File(), e.Imports()[0])
 }

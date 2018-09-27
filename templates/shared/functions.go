@@ -1,8 +1,12 @@
 package shared
 
-import "text/template"
+import (
+	"text/template"
 
-func RegisterFunctions(tpl *template.Template) {
+	"github.com/lyft/protoc-gen-star"
+)
+
+func RegisterFunctions(tpl *template.Template, params pgs.Parameters) {
 	tpl.Funcs(map[string]interface{}{
 		"disabled": Disabled,
 		"required": RequiredOneOf,

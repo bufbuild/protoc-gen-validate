@@ -1,0 +1,13 @@
+syntax="proto3";
+package packages.no_options;
+option go_package="example.com/packages/no_options";
+
+import "targets/fully_qualified/fully_qualified.proto";
+import "targets/unqualified/unqualified.proto";
+import "targets/none/none.proto";
+
+message NoOptions {
+    targets.fully_qualified.FullyQualified fully = 1;
+    targets.unqualified.Unqualified unqualified = 2;
+    targets.none.None none = 3;
+}

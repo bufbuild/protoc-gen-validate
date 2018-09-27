@@ -4,6 +4,7 @@ bazel-*
 
 /gogofast
 /gogofast.exe
+/protoc-gen-validate
 
 /tests/harness/cases/go
 /tests/harness/cases/gogo
@@ -18,5 +19,5 @@ bazel-*
 /tests/harness/cc/cc-harness
 /tests/harness/cc/cc-harness.exe
 
-/tests/kitchensink/go/
-/tests/kitchensink/gogo/
+/tests/harness/cases/**/*.cc
+/tests/harness/cases/**/*.h

@@ -1,4 +1,4 @@
-package tpl
+package goshared
 
 const inTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 	{{ if $r.In }}

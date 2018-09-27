@@ -2,60 +2,63 @@ package pgs
 
 import (
 	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/generator"
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
 // File describes the contents of a single proto file.
 type File interface {
 	ParentEntity
 
-	// InputPath returns the input FilePath of the generated Go code. This is
-	// equivalent to the value returned by Name.
+	// InputPath returns the input FilePath. This is equivalent to the value
+	// returned by Name.
 	InputPath() FilePath
 
-	// OutputPath returns the output filepath of the generated Go code
-	OutputPath() FilePath
-
 	// Descriptor returns the underlying descriptor for the proto file
-	Descriptor() *generator.FileDescriptor
+	Descriptor() *descriptor.FileDescriptorProto
 
-	// Services returns the top-level services from this proto file.
+	// Services returns the services from this proto file.
 	Services() []Service
+
+	// SyntaxSourceCodeInfo returns the comment info attached to the `syntax`
+	// stanza of the file. This method is an alias of the SourceCodeInfo method.
+	SyntaxSourceCodeInfo() SourceCodeInfo
+
+	// PackageSourceCodeInfo returns the comment info attached to the `package`
+	// stanza of the file.
+	PackageSourceCodeInfo() SourceCodeInfo
 
 	setPackage(p Package)
 
 	addService(s Service)
 
-	lookupComments(name string) string
+	addPackageSourceCodeInfo(info SourceCodeInfo)
 }
 
 type file struct {
-	desc        *generator.FileDescriptor
-	pkg         Package
-	outputPath  FilePath
-	enums       []Enum
-	msgs        []Message
-	srvs        []Service
-	buildTarget bool
-	comments    map[string]string
+	desc                    *descriptor.FileDescriptorProto
+	pkg                     Package
+	enums                   []Enum
+	msgs                    []Message
+	srvs                    []Service
+	buildTarget             bool
+	syntaxInfo, packageInfo SourceCodeInfo
 }
 
-func (f *file) Name() Name                            { return Name(f.desc.GetName()) }
-func (f *file) FullyQualifiedName() string            { return "." + f.desc.GetPackage() }
-func (f *file) Syntax() Syntax                        { return Syntax(f.desc.GetSyntax()) }
-func (f *file) Package() Package                      { return f.pkg }
-func (f *file) File() File                            { return f }
-func (f *file) BuildTarget() bool                     { return f.buildTarget }
-func (f *file) Comments() string                      { return "" }
-func (f *file) Descriptor() *generator.FileDescriptor { return f.desc }
-func (f *file) InputPath() FilePath                   { return FilePath(f.Name().String()) }
-func (f *file) OutputPath() FilePath                  { return f.outputPath }
-func (f *file) MapEntries() (me []Message)            { return nil }
+func (f *file) Name() Name                                  { return Name(f.desc.GetName()) }
+func (f *file) FullyQualifiedName() string                  { return "." + f.desc.GetPackage() }
+func (f *file) Syntax() Syntax                              { return Syntax(f.desc.GetSyntax()) }
+func (f *file) Package() Package                            { return f.pkg }
+func (f *file) File() File                                  { return f }
+func (f *file) BuildTarget() bool                           { return f.buildTarget }
+func (f *file) Descriptor() *descriptor.FileDescriptorProto { return f.desc }
+func (f *file) InputPath() FilePath                         { return FilePath(f.Name().String()) }
+func (f *file) MapEntries() (me []Message)                  { return nil }
+func (f *file) SourceCodeInfo() SourceCodeInfo              { return f.SyntaxSourceCodeInfo() }
+func (f *file) SyntaxSourceCodeInfo() SourceCodeInfo        { return f.syntaxInfo }
+func (f *file) PackageSourceCodeInfo() SourceCodeInfo       { return f.packageInfo }
 
 func (f *file) Enums() []Enum {
-	es := make([]Enum, len(f.enums))
-	copy(es, f.enums)
-	return es
+	return f.enums
 }
 
 func (f *file) AllEnums() []Enum {
@@ -67,9 +70,7 @@ func (f *file) AllEnums() []Enum {
 }
 
 func (f *file) Messages() []Message {
-	msgs := make([]Message, len(f.msgs))
-	copy(msgs, f.msgs)
-	return msgs
+	return f.msgs
 }
 
 func (f *file) AllMessages() []Message {
@@ -81,12 +82,10 @@ func (f *file) AllMessages() []Message {
 }
 
 func (f *file) Services() []Service {
-	s := make([]Service, len(f.srvs))
-	copy(s, f.srvs)
-	return s
+	return f.srvs
 }
 
-func (f *file) Imports() (i []Package) {
+func (f *file) Imports() (i []File) {
 	for _, m := range f.AllMessages() {
 		i = append(i, m.Imports()...)
 	}
@@ -149,4 +148,35 @@ func (f *file) addService(s Service) {
 
 func (f *file) addMapEntry(m Message) { panic("cannot add map entry directly to file") }
 
-func (f *file) lookupComments(name string) string { return f.comments[name] }
+func (f *file) childAtPath(path []int32) Entity {
+	switch {
+	case len(path) == 0:
+		return f
+	case len(path)%2 == 1: // all declaration paths are multiples of two
+		return nil
+	}
+
+	var child Entity
+	switch path[0] {
+	case messageTypePath:
+		child = f.msgs[path[1]]
+	case enumTypePath:
+		child = f.enums[path[1]]
+	case servicePath:
+		child = f.srvs[path[1]]
+	default:
+		return nil
+	}
+
+	return child.childAtPath(path[2:])
+}
+
+func (f *file) addSourceCodeInfo(info SourceCodeInfo) {
+	f.syntaxInfo = info
+}
+
+func (f *file) addPackageSourceCodeInfo(info SourceCodeInfo) {
+	f.packageInfo = info
+}
+
+var _ File = (*file)(nil)

@@ -18,13 +18,13 @@ type Method interface {
 	// Input returns the Message representing the input type for this.
 	Input() Message
 
-	// Output returns the Message representing this output type for this.
+	// Output returns the Message representing the output type for this.
 	Output() Message
 
-	// ClientStreaming indicates if this method allows clients to stream inputs
+	// ClientStreaming indicates if this method allows clients to stream inputs.
 	ClientStreaming() bool
 
-	// ServerStreaming indicates if this method allows servers to stream outputs
+	// ServerStreaming indicates if this method allows servers to stream outputs.
 	ServerStreaming() bool
 
 	setService(Service)
@@ -36,7 +36,7 @@ type method struct {
 
 	in, out Message
 
-	comments string
+	info SourceCodeInfo
 }
 
 func (m *method) Name() Name                                    { return Name(m.desc.GetName()) }
@@ -45,7 +45,7 @@ func (m *method) Syntax() Syntax                                { return m.servi
 func (m *method) Package() Package                              { return m.service.Package() }
 func (m *method) File() File                                    { return m.service.File() }
 func (m *method) BuildTarget() bool                             { return m.service.BuildTarget() }
-func (m *method) Comments() string                              { return m.comments }
+func (m *method) SourceCodeInfo() SourceCodeInfo                { return m.info }
 func (m *method) Descriptor() *descriptor.MethodDescriptorProto { return m.desc }
 func (m *method) Service() Service                              { return m.service }
 func (m *method) Input() Message                                { return m.in }
@@ -54,14 +54,14 @@ func (m *method) ClientStreaming() bool                         { return m.desc.
 func (m *method) ServerStreaming() bool                         { return m.desc.GetServerStreaming() }
 func (m *method) BiDirStreaming() bool                          { return m.ClientStreaming() && m.ServerStreaming() }
 
-func (m *method) Imports() (i []Package) {
-	mine := m.Package().GoName()
+func (m *method) Imports() (i []File) {
+	mine := m.File().Name()
 
-	if input := m.Input().Package(); mine != input.GoName() {
+	if input := m.Input().File(); mine != input.Name() {
 		i = append(i, input)
 	}
 
-	if output := m.Output().Package(); mine != output.GoName() {
+	if output := m.Output().File(); mine != output.Name() {
 		i = append(i, output)
 	}
 
@@ -82,3 +82,14 @@ func (m *method) accept(v Visitor) (err error) {
 }
 
 func (m *method) setService(s Service) { m.service = s }
+
+func (m *method) childAtPath(path []int32) Entity {
+	if len(path) == 0 {
+		return m
+	}
+	return nil
+}
+
+func (m *method) addSourceCodeInfo(info SourceCodeInfo) { m.info = info }
+
+var m Method = (*method)(nil)

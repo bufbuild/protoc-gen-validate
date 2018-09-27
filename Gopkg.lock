@@ -4,9 +4,7 @@
 [[projects]]
   name = "github.com/gogo/protobuf"
   packages = [
-    "gogoproto",
     "proto",
-    "protoc-gen-gogo/descriptor",
     "sortkeys",
     "types"
   ]
@@ -27,14 +25,17 @@
     "ptypes/timestamp",
     "ptypes/wrappers"
   ]
-  revision = "b4deda0973fb4c70b50d226b1af49f3da59f5265"
-  version = "v1.1.0"
+  revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
+  version = "v1.2.0"
 
 [[projects]]
   name = "github.com/lyft/protoc-gen-star"
-  packages = ["."]
-  revision = "f3b83fca61817e55058744eb1a3c8e2e95a0dada"
-  version = "v0.3.7"
+  packages = [
+    ".",
+    "lang/go"
+  ]
+  revision = "6a9d0d1ee28a34f19bd0ff2402126393651b5085"
+  version = "v0.4.2"
 
 [[projects]]
   name = "github.com/spf13/afero"
@@ -42,23 +43,16 @@
     ".",
     "mem"
   ]
-  revision = "bb8f1927f2a9d3ab41c9340aa034f6b803f4359c"
-  version = "v1.0.2"
+  revision = "d40851caa0d747393da1ffb28f7f9d8b4eeffebd"
+  version = "v1.1.2"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
-  revision = "f5dfe339be1d06f81b22525fe34671ee7d2c8904"
+  revision = "26e67e76b6c3f6ce91f7c52def5af501b4e0f3a2"
 
 [[projects]]
-  branch = "master"
-  name = "golang.org/x/sync"
-  packages = ["errgroup"]
-  revision = "fd80eb99c8f653c847d294a001bdf2a3a6f768f5"
-
-[[projects]]
-  branch = "master"
   name = "golang.org/x/text"
   packages = [
     "internal/gen",
@@ -68,11 +62,12 @@
     "unicode/cldr",
     "unicode/norm"
   ]
-  revision = "4e4a3210bb54bb31f6ab2cdca2edcc0b50c420c1"
+  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
+  version = "v0.3.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "81f9fa6b249daa4cd03277d7b1fb76ad70758c91e793ba6016cfc1152507a6da"
+  inputs-digest = "30429e2d2aabdf549b83088f57af2023efae5f9c5a44adb1faa89d862d0ced23"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -1,4 +1,4 @@
-package tpl
+package goshared
 
 const repTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
@@ -27,7 +27,7 @@ const repTpl = `
 		{{ lookup $f "Unique" }} := {{ if isBytes $f.Type.Element -}}
 			make(map[string]struct{}, len({{ accessor . }}))
 		{{ else -}}
-			make(map[{{ $f.Type.Element.Name }}]struct{}, len({{ accessor . }}))
+			make(map[{{ (typ $f).Element }}]struct{}, len({{ accessor . }}))
 		{{ end -}}
 	{{ end }}
 

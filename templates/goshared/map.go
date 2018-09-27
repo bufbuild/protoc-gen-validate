@@ -1,4 +1,4 @@
-package tpl
+package goshared
 
 const mapTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}

@@ -1,0 +1,27 @@
+syntax="proto3";
+package graph.nested;
+
+message Foo {
+    Bar x = 1; // usage before declaration
+
+    // nested message
+    message Bar {
+        Baz a = 1; // usage before declaration
+
+        // doubly nested enum
+        enum Baz {VALUE = 0;}
+        Baz b = 2; // usage after declaration
+
+        // doubly nested message
+        message Quux {}
+        Quux c = 3;
+    }
+
+    Bar y = 2; // usage after declaration
+
+    // same name, different scope
+    enum Baz {VALUE = 0;}
+    Baz shallow = 3;
+
+    Bar.Baz deep = 4; // usage of deeply nested child enum
+}

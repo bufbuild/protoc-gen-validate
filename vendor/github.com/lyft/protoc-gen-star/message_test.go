@@ -4,16 +4,17 @@ import (
 	"errors"
 	"testing"
 
+	desc "github.com/golang/protobuf/descriptor"
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
-	"github.com/golang/protobuf/protoc-gen-go/generator"
+	"github.com/golang/protobuf/ptypes/any"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMsg_Name(t *testing.T) {
 	t.Parallel()
 
-	m := &msg{rawDesc: &descriptor.DescriptorProto{Name: proto.String("msg")}}
+	m := &msg{desc: &descriptor.DescriptorProto{Name: proto.String("msg")}}
 
 	assert.Equal(t, "msg", m.Name().String())
 }
@@ -21,18 +22,11 @@ func TestMsg_Name(t *testing.T) {
 func TestMsg_FullyQualifiedName(t *testing.T) {
 	t.Parallel()
 
-	m := &msg{rawDesc: &descriptor.DescriptorProto{Name: proto.String("msg")}}
+	m := &msg{desc: &descriptor.DescriptorProto{Name: proto.String("msg")}}
 	f := dummyFile()
 	f.addMessage(m)
 
 	assert.Equal(t, f.FullyQualifiedName()+".msg", m.FullyQualifiedName())
-}
-
-func TestMsg_TypeName(t *testing.T) {
-	t.Parallel()
-
-	m := dummyMsg()
-	assert.Equal(t, m.Name().String(), m.TypeName().String())
 }
 
 func TestMsg_Syntax(t *testing.T) {
@@ -82,8 +76,8 @@ func TestMsg_BuildTarget(t *testing.T) {
 func TestMsg_Descriptor(t *testing.T) {
 	t.Parallel()
 
-	m := &msg{genDesc: &generator.Descriptor{}}
-	assert.Equal(t, m.genDesc, m.Descriptor())
+	m := &msg{desc: &descriptor.DescriptorProto{}}
+	assert.Equal(t, m.desc, m.Descriptor())
 }
 
 func TestMsg_Parent(t *testing.T) {
@@ -99,10 +93,10 @@ func TestMsg_Parent(t *testing.T) {
 func TestMsg_IsMapEntry(t *testing.T) {
 	t.Parallel()
 
-	m := &msg{rawDesc: &descriptor.DescriptorProto{}}
+	m := &msg{desc: &descriptor.DescriptorProto{}}
 	assert.False(t, m.IsMapEntry())
 
-	m.rawDesc.Options = &descriptor.MessageOptions{
+	m.desc.Options = &descriptor.MessageOptions{
 		MapEntry: proto.Bool(true),
 	}
 	assert.True(t, m.IsMapEntry())
@@ -222,7 +216,7 @@ func TestMsg_OneOfs(t *testing.T) {
 
 func TestMsg_Extension(t *testing.T) {
 	// cannot be parallel
-	m := &msg{rawDesc: &descriptor.DescriptorProto{}}
+	m := &msg{desc: &descriptor.DescriptorProto{}}
 	assert.NotPanics(t, func() { m.Extension(nil, nil) })
 }
 
@@ -299,18 +293,48 @@ func TestMsg_Imports(t *testing.T) {
 	m := &msg{}
 	assert.Empty(t, m.Imports())
 
-	m.addField(&mockField{i: []Package{&pkg{}, &pkg{}}})
+	m.addField(&mockField{i: []File{&file{}, &file{}}})
 	assert.Len(t, m.Imports(), 2)
+}
+
+func TestMsg_ChildAtPath(t *testing.T) {
+	t.Parallel()
+
+	m := &msg{}
+	assert.Equal(t, m, m.childAtPath(nil))
+	assert.Nil(t, m.childAtPath([]int32{1}))
+	assert.Nil(t, m.childAtPath([]int32{999, 456}))
+}
+
+func TestMsg_WellKnownType(t *testing.T) {
+	fd, md := desc.ForMessage(&any.Any{})
+	p := &pkg{fd: fd}
+	f := &file{desc: fd}
+	m := &msg{desc: md}
+	f.addMessage(m)
+	p.addFile(f)
+
+	assert.True(t, m.IsWellKnown())
+	assert.Equal(t, AnyWKT, m.WellKnownType())
+
+	m.desc.Name = proto.String("Foobar")
+	assert.False(t, m.IsWellKnown())
+	assert.Equal(t, UnknownWKT, m.WellKnownType())
+
+	m.desc.Name = proto.String("Any")
+	f.desc.Package = proto.String("fizz.buzz")
+	assert.False(t, m.IsWellKnown())
+	assert.Equal(t, UnknownWKT, m.WellKnownType())
 }
 
 type mockMessage struct {
 	Message
-	i   []Package
+	i   []File
 	p   ParentEntity
 	err error
 }
 
-func (m *mockMessage) Imports() []Package { return m.i }
+func (m *mockMessage) Imports() []File { return m.i }
 
 func (m *mockMessage) setParent(p ParentEntity) { m.p = p }
 
@@ -326,9 +350,8 @@ func dummyMsg() *msg {
 	f := dummyFile()
 
 	m := &msg{
-		rawDesc: &descriptor.DescriptorProto{Name: proto.String("message")},
+		desc: &descriptor.DescriptorProto{Name: proto.String("message")},
 	}
-	m.genDesc = &generator.Descriptor{DescriptorProto: m.rawDesc}
 
 	f.addMessage(m)
 	return m

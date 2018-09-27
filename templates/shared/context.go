@@ -26,8 +26,8 @@ type RuleContext struct {
 
 type Gogo struct {
 	Nullable    bool
-	Stdduration bool
-	Stdtime     bool
+	StdDuration bool
+	StdTime     bool
 }
 
 func rulesContext(f pgs.Field) (out RuleContext, err error) {
@@ -35,8 +35,8 @@ func rulesContext(f pgs.Field) (out RuleContext, err error) {
 
 	out.Gogo.Nullable = true
 	f.Extension(gogoproto.E_Nullable, &out.Gogo.Nullable)
-	f.Extension(gogoproto.E_Stdduration, &out.Gogo.Stdduration)
-	f.Extension(gogoproto.E_Stdtime, &out.Gogo.Stdtime)
+	f.Extension(gogoproto.E_Stdduration, &out.Gogo.StdDuration)
+	f.Extension(gogoproto.E_Stdtime, &out.Gogo.StdTime)
 
 	var rules validate.FieldRules
 	if _, err = f.Extension(validate.E_Rules, &rules); err != nil {
@@ -127,12 +127,7 @@ func Render(tpl *template.Template) func(ctx RuleContext) (string, error) {
 	}
 }
 
-type ruleTarget interface {
-	IsEmbed() bool
-	Name() pgs.TypeName
-}
-
-func resolveRules(typ ruleTarget, rules *validate.FieldRules) (string, proto.Message, bool) {
+func resolveRules(typ interface{ IsEmbed() bool }, rules *validate.FieldRules) (ruleType string, rule proto.Message, wrapped bool) {
 	switch r := rules.GetType().(type) {
 	case *validate.FieldRules_Float:
 		return "float", r.Float, typ.IsEmbed()

@@ -1,0 +1,6 @@
+syntax="proto3";
+
+package names.package;
+option go_package = "my_package";
+
+message Package {}

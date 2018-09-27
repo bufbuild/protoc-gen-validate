@@ -11,10 +11,10 @@ go_library(
     importpath = "github.com/golang/protobuf/protoc-gen-go/testdata/imports",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/golang/protobuf/proto:go_default_library",
         "//vendor/github.com/golang/protobuf/protoc-gen-go/testdata/imports/fmt:go_default_library",
         "//vendor/github.com/golang/protobuf/protoc-gen-go/testdata/imports/test_a_1:go_default_library",
         "//vendor/github.com/golang/protobuf/protoc-gen-go/testdata/imports/test_a_2:go_default_library",
         "//vendor/github.com/golang/protobuf/protoc-gen-go/testdata/imports/test_b_1:go_default_library",
+        "@com_github_golang_protobuf//proto:go_default_library",
     ],
 )

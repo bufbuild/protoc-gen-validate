@@ -13,10 +13,8 @@ import (
 func TestFile_Name(t *testing.T) {
 	t.Parallel()
 
-	f := &file{desc: &generator.FileDescriptor{
-		FileDescriptorProto: &descriptor.FileDescriptorProto{
-			Name: proto.String("foobar"),
-		},
+	f := &file{desc: &descriptor.FileDescriptorProto{
+		Name: proto.String("foobar"),
 	}}
 
 	assert.Equal(t, Name("foobar"), f.Name())
@@ -25,8 +23,8 @@ func TestFile_Name(t *testing.T) {
 func TestFile_FullyQualifiedName(t *testing.T) {
 	t.Parallel()
 
-	f := &file{desc: &generator.FileDescriptor{
-		FileDescriptorProto: &descriptor.FileDescriptorProto{Package: proto.String("foo")},
+	f := &file{desc: &descriptor.FileDescriptorProto{
+		Package: proto.String("foo"),
 	}}
 
 	assert.Equal(t, ".foo", f.FullyQualifiedName())
@@ -35,11 +33,7 @@ func TestFile_FullyQualifiedName(t *testing.T) {
 func TestFile_Syntax(t *testing.T) {
 	t.Parallel()
 
-	f := &file{desc: &generator.FileDescriptor{
-		FileDescriptorProto: &descriptor.FileDescriptorProto{
-			Syntax: proto.String("proto2"),
-		},
-	}}
+	f := &file{desc: &descriptor.FileDescriptorProto{}}
 
 	assert.Equal(t, Proto2, f.Syntax())
 }
@@ -47,14 +41,14 @@ func TestFile_Syntax(t *testing.T) {
 func TestFile_Package(t *testing.T) {
 	t.Parallel()
 
-	f := &file{pkg: &pkg{importPath: "fizz/buzz"}}
+	f := &file{pkg: &pkg{comments: "fizz/buzz"}}
 	assert.Equal(t, f.pkg, f.Package())
 }
 
 func TestFile_File(t *testing.T) {
 	t.Parallel()
 
-	f := &file{outputPath: "foobar"}
+	f := &file{buildTarget: true}
 	assert.Equal(t, f, f.File())
 }
 
@@ -70,22 +64,15 @@ func TestFile_BuildTarget(t *testing.T) {
 func TestFile_Descriptor(t *testing.T) {
 	t.Parallel()
 
-	f := &file{desc: &generator.FileDescriptor{}}
+	f := &file{desc: &descriptor.FileDescriptorProto{}}
 	assert.Equal(t, f.desc, f.Descriptor())
 }
 
 func TestFile_InputPath(t *testing.T) {
 	t.Parallel()
 
-	f := &file{desc: &generator.FileDescriptor{FileDescriptorProto: &descriptor.FileDescriptorProto{Name: proto.String("foo.bar")}}}
+	f := &file{desc: &descriptor.FileDescriptorProto{Name: proto.String("foo.bar")}}
 	assert.Equal(t, "foo.bar", f.InputPath().String())
-}
-
-func TestFile_OutputPath(t *testing.T) {
-	t.Parallel()
-
-	f := &file{outputPath: "foobar"}
-	assert.Equal(t, "foobar", f.OutputPath().String())
 }
 
 func TestFile_Enums(t *testing.T) {
@@ -171,8 +158,8 @@ func TestFile_Imports(t *testing.T) {
 	t.Parallel()
 
 	m := &msg{}
-	m.addMessage(&mockMessage{i: []Package{&pkg{}}, Message: &msg{}})
-	svc := &mockService{i: []Package{&pkg{}}, Service: &service{}}
+	m.addMessage(&mockMessage{i: []File{&file{}}, Message: &msg{}})
+	svc := &mockService{i: []File{&file{}}, Service: &service{}}
 
 	f := &file{}
 	assert.Empty(t, f.Imports())
@@ -242,7 +229,7 @@ func TestFile_Extension(t *testing.T) {
 
 	assert.NotPanics(t, func() {
 		(&file{
-			desc: &generator.FileDescriptor{FileDescriptorProto: &descriptor.FileDescriptorProto{}},
+			desc: &descriptor.FileDescriptorProto{},
 		}).Extension(nil, nil)
 	})
 }
@@ -273,17 +260,19 @@ func (f *mockFile) accept(v Visitor) error {
 func dummyFile() *file {
 	pkg := dummyPkg()
 	f := &file{
-		pkg:        pkg,
-		outputPath: "output/path.pb.go",
-		desc: &generator.FileDescriptor{
-			FileDescriptorProto: &descriptor.FileDescriptorProto{
-				Package: proto.String(pkg.ProtoName().String()),
-				Syntax:  proto.String("proto3"),
-				Name:    proto.String("file.proto"),
-			},
+		pkg: pkg,
+		desc: &descriptor.FileDescriptorProto{
+			Package: proto.String(pkg.ProtoName().String()),
+			Syntax:  proto.String(string(Proto3)),
+			Name:    proto.String("file.proto"),
 		},
 	}
 	pkg.addFile(f)
 
 	return f
+}
+
+func dummyGenFile() (*file, *generator.FileDescriptor) {
+	f := dummyFile()
+	return f, &generator.FileDescriptor{FileDescriptorProto: f.desc}
 }
