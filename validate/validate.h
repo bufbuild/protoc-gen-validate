@@ -5,22 +5,10 @@
 #include <stdexcept>
 #include <string>
 #include <typeinfo>
-
-#include <google/protobuf/message.h>
-#include <google/protobuf/util/time_util.h>
-
-// It looks like one of the above protobuf headers includes windows.h. This
-// causes GetMessage to be defined to GetMessageA or GetMessageW, interfering
-// with the protobuf code
-#if defined(WIN32) && defined(GetMessage)
-#undef GetMessage
-#endif
+#include <unordered_map>
 
 namespace pgv {
 using std::string;
-
-namespace protobuf = google::protobuf;
-namespace protobuf_wkt = google::protobuf;
 
 class UnimplementedException : public std::runtime_error {
 public:
@@ -32,13 +20,13 @@ using ValidationMsg = std::string;
 
 class BaseValidator {
 protected:
-  static std::map<size_t, BaseValidator*> validators;
+  static std::unordered_map<size_t, BaseValidator*> validators;
 };
 
 #if !defined(WIN32)
-std::map<size_t, BaseValidator*> __attribute__((weak)) BaseValidator::validators;
+std::unordered_map<size_t, BaseValidator*> __attribute__((weak)) BaseValidator::validators;
 #else
-__declspec(selectany) std::map<size_t, BaseValidator*> BaseValidator::validators;
+__declspec(selectany) std::unordered_map<size_t, BaseValidator*> BaseValidator::validators;
 #endif
 
 template <typename T>
