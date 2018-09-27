@@ -42,12 +42,12 @@ def pgv_cc_proto_library(
         name,
         deps=[],
         cc_deps=[],
+        copts=[],
         **kargs):
     """Bazel rule to create a C++ protobuf validation library from proto source files
     Args:
       name: the name of the pgv_cc_proto_library.
-      deps: proto_library rules that contains the necessary .proto files. Note that this
-             must include @com_lyft_protoc_gen_validate//validate:validate_proto
+      deps: proto_library rules that contains the necessary .proto files.
       cc_deps: C++ dependencies of the protos being compiled. Likely cc_proto_library or pgv_cc_proto_library
       **kargs: other keyword arguments that are passed to cc_library.
     """
@@ -66,6 +66,10 @@ def pgv_cc_proto_library(
             "@com_lyft_protoc_gen_validate//validate:validate_cc",
             "@com_google_protobuf//:protobuf",
         ],
+        copts = copts + select({
+                "@com_lyft_protoc_gen_validate//bazel:windows_x86_64": ["-DWIN32"],
+                "//conditions:default": [],
+        }),
         alwayslink=1,
         **kargs)
 

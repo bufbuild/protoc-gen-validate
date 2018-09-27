@@ -40,7 +40,7 @@ namespace {
 
 using tests::harness::TestCase;
 using tests::harness::TestResult;
-using pgv::protobuf_wkt::Any;
+using google::protobuf::Any;
 
 std::ostream& operator<<(std::ostream& out, const TestResult& result) {
   out << "valid: " << result.valid() << " reason: '" << result.reason() << "'"
