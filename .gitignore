@@ -24,4 +24,4 @@ bazel-*
 
 /java/.idea
 /java/*.iml
-/java/target
+/java/**/target
