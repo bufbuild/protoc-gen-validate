@@ -21,3 +21,7 @@ bazel-*
 
 /tests/harness/cases/**/*.cc
 /tests/harness/cases/**/*.h
+
+/java/.idea
+/java/*.iml
+/java/target
