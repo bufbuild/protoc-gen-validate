@@ -21,6 +21,35 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 
 	template.Must(tpl.Parse(fileTpl))
 	template.Must(tpl.New("msg").Parse(msgTpl))
+
+	template.Must(tpl.New("none").Parse(notImplementedTpl))
+	template.Must(tpl.New("float").Parse(notImplementedTpl))
+	template.Must(tpl.New("double").Parse(notImplementedTpl))
+	template.Must(tpl.New("int32").Parse(notImplementedTpl))
+	template.Must(tpl.New("int64").Parse(notImplementedTpl))
+	template.Must(tpl.New("uint32").Parse(notImplementedTpl))
+	template.Must(tpl.New("uint64").Parse(notImplementedTpl))
+	template.Must(tpl.New("sint32").Parse(notImplementedTpl))
+	template.Must(tpl.New("sint64").Parse(notImplementedTpl))
+	template.Must(tpl.New("fixed32").Parse(notImplementedTpl))
+	template.Must(tpl.New("fixed64").Parse(notImplementedTpl))
+	template.Must(tpl.New("sfixed32").Parse(notImplementedTpl))
+	template.Must(tpl.New("sfixed64").Parse(notImplementedTpl))
+
+	template.Must(tpl.New("bool").Parse(notImplementedTpl))
+	template.Must(tpl.New("string").Parse(notImplementedTpl))
+	template.Must(tpl.New("bytes").Parse(notImplementedTpl))
+
+	template.Must(tpl.New("any").Parse(notImplementedTpl))
+	template.Must(tpl.New("enum").Parse(notImplementedTpl))
+	template.Must(tpl.New("message").Parse(notImplementedTpl))
+	template.Must(tpl.New("repeated").Parse(notImplementedTpl))
+	template.Must(tpl.New("map").Parse(notImplementedTpl))
+
+	template.Must(tpl.New("required").Parse(notImplementedTpl))
+	template.Must(tpl.New("timestamp").Parse(notImplementedTpl))
+	template.Must(tpl.New("duration").Parse(notImplementedTpl))
+	template.Must(tpl.New("wrapper").Parse(notImplementedTpl))
 }
 
 type javaFuncs struct{ pgsgo.Context }
@@ -52,7 +81,7 @@ func (fns javaFuncs) javaPackage(file pgs.File) pgs.Name {
 func (fns javaFuncs) qualifiedName(entity pgs.Entity) pgs.Name {
 	file, isFile := entity.(pgs.File)
 	if isFile {
-		return fns.javaPackage(file) + "." + fns.classNameFile(file)
+		return fns.javaPackage(file) + "." + classNameFile(file)
 	}
 
 	message, isMessage := entity.(pgs.Message)

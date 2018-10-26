@@ -16,7 +16,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <protoc.version>3.5.1</protoc.version>
+        <re2j.version>1.2</re2j.version>
+        <commons.validator.version>1.6</commons.validator.version>
 
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
