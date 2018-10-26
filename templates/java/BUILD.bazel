@@ -3,9 +3,12 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
+        "bool.go",
         "file.go",
         "msg.go",
+        "none.go",
         "register.go",
+        "unimplemented.go",
     ],
     importpath = "github.com/lyft/protoc-gen-validate/templates/java",
     visibility = ["//visibility:public"],
