@@ -14,7 +14,9 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	fns := javaFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
+		"accessor":      fns.accessor,
 		"classNameFile": classNameFile,
+		"simpleName":    fns.Name,
 		"qualifiedName": fns.qualifiedName,
 		"javaPackage":   fns.javaPackage,
 	})
@@ -22,7 +24,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.Parse(fileTpl))
 	template.Must(tpl.New("msg").Parse(msgTpl))
 
-	template.Must(tpl.New("none").Parse(notImplementedTpl))
+	template.Must(tpl.New("none").Parse(noneTpl))
 	template.Must(tpl.New("float").Parse(notImplementedTpl))
 	template.Must(tpl.New("double").Parse(notImplementedTpl))
 	template.Must(tpl.New("int32").Parse(notImplementedTpl))
@@ -36,7 +38,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("sfixed32").Parse(notImplementedTpl))
 	template.Must(tpl.New("sfixed64").Parse(notImplementedTpl))
 
-	template.Must(tpl.New("bool").Parse(notImplementedTpl))
+	template.Must(tpl.New("bool").Parse(boolTpl))
 	template.Must(tpl.New("string").Parse(notImplementedTpl))
 	template.Must(tpl.New("bytes").Parse(notImplementedTpl))
 
@@ -152,4 +154,9 @@ func appendOuterClassName(outerClassName string, file pgs.File) string {
 	} else {
 		return outerClassName
 	}
+}
+
+func (fns javaFuncs) accessor(field pgs.Field) string {
+	fieldName := strcase.ToCamel(field.Name().String())
+	return "get" + fieldName + "()"
 }
