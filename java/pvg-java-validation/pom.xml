@@ -41,9 +41,6 @@
                 <configuration>
                     <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
                     <protoSourceRoot>../../</protoSourceRoot>
-                    <additionalProtoPathElements>
-                        <additionalProtoPathElement>../../validate/</additionalProtoPathElement>
-                    </additionalProtoPathElements>
                 </configuration>
                 <executions>
                     <execution>
@@ -56,6 +53,7 @@
                                 <include>tests/harness/harness.proto</include>
                                 <include>tests/harness/cases/*.proto</include>
                                 <include>tests/harness/cases/other_package/*.proto</include>
+                                <include>validate/*.proto</include>
                             </includes>
                         </configuration>
                     </execution>
@@ -65,13 +63,13 @@
                             <goal>compile-custom</goal>
                         </goals>
                         <configuration>
+                            <pluginParameter>lang=java</pluginParameter>
                             <includes>
                                 <include>tests/harness/cases/*.proto</include>
                                 <include>tests/harness/cases/other_package/*.proto</include>
                             </includes>
                             <pluginId>java-pvg</pluginId>
                             <pluginExecutable>${env.HOME}/go/bin/protoc-gen-validate</pluginExecutable>
-                            <pluginParameter>lang=java</pluginParameter>
                         </configuration>
                     </execution>
                 </executions>

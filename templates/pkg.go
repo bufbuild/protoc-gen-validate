@@ -4,6 +4,7 @@ import (
 	"text/template"
 
 	"github.com/lyft/protoc-gen-star"
+	"github.com/lyft/protoc-gen-star/lang/go"
 	"github.com/lyft/protoc-gen-validate/templates/cc"
 	"github.com/lyft/protoc-gen-validate/templates/go"
 	"github.com/lyft/protoc-gen-validate/templates/gogo"
@@ -12,6 +13,7 @@ import (
 )
 
 type RegisterFn func(tpl *template.Template, params pgs.Parameters)
+type FilePathFn func(f pgs.File, ctx pgsgo.Context, tpl *template.Template) pgs.FilePath
 
 func makeTemplate(ext string, fn RegisterFn, params pgs.Parameters) *template.Template {
 	tpl := template.New(ext)
@@ -26,5 +28,18 @@ func Template(params pgs.Parameters) map[string][]*template.Template {
 		"go":   {makeTemplate("go", golang.Register, params)},
 		"gogo": {makeTemplate("go", gogo.Register, params)},
 		"java": {makeTemplate("java", java.Register, params)},
+	}
+}
+
+func FilePathFor(tpl *template.Template) FilePathFn {
+	switch tpl.Name() {
+	case "java":
+		return java.JavaFilePath
+	default:
+		return func(f pgs.File, ctx pgsgo.Context, tpl *template.Template) pgs.FilePath {
+			out := ctx.OutputPath(f)
+			out = out.SetExt(".validate." + tpl.Name())
+			return out
+		}
 	}
 }
