@@ -137,8 +137,15 @@ func (fns CCFuncs) hasAccessor(ctx shared.RuleContext) string {
 		fns.methodName(ctx.Field.Name()))
 }
 
+func (fns CCFuncs) classBaseName(msg pgs.Message) string {
+	if m, ok := msg.Parent().(pgs.Message); ok {
+		return fmt.Sprintf("%s_%s", fns.classBaseName(m), msg.Name().String())
+	}
+	return msg.Name().String()
+}
+
 func (fns CCFuncs) className(msg pgs.Message) string {
-	return fns.packageName(msg) + "::" + fns.Name(msg).String()
+	return fns.packageName(msg) + "::" + fns.classBaseName(msg)
 }
 
 func (fns CCFuncs) packageName(msg pgs.Message) string {

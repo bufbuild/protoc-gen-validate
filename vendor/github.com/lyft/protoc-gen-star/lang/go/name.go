@@ -45,7 +45,21 @@ func (c context) Name(node pgs.Node) pgs.Name {
 }
 
 func (c context) OneofOption(field pgs.Field) pgs.Name {
-	return pgs.Name(joinNames(c.Name(field.Message()), c.Name(field)))
+	n := pgs.Name(joinNames(c.Name(field.Message()), c.Name(field)))
+
+	for _, msg := range field.Message().Messages() {
+		if c.Name(msg) == n {
+			return n + "_"
+		}
+	}
+
+	for _, en := range field.Message().Enums() {
+		if c.Name(en) == n {
+			return n + "_"
+		}
+	}
+
+	return n
 }
 
 func (c context) ServerName(s pgs.Service) pgs.Name {
