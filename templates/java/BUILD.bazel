@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "file.go",
+        "register.go",
+    ],
+    importpath = "github.com/lyft/protoc-gen-validate/templates/java",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/iancoleman/strcase:go_default_library",
+        "//vendor/github.com/lyft/protoc-gen-star:go_default_library",
+        "//vendor/github.com/lyft/protoc-gen-star/lang/go:go_default_library",
+        "@com_github_golang_protobuf//ptypes:go_default_library",
+        "@com_github_golang_protobuf//ptypes/duration:go_default_library",
+        "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
+    ],
+)
