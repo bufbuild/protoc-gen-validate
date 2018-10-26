@@ -272,3 +272,13 @@ func TestModuleBase_OverwriteCustomTemplateFile(t *testing.T) {
 		},
 	}, arts[0])
 }
+
+func TestModuleBase_AddError(t *testing.T) {
+	t.Parallel()
+
+	m := new(ModuleBase)
+	m.AddError("bohoo")
+	arts := m.Artifacts()
+	assert.Len(t, arts, 1)
+	assert.Equal(t, GeneratorError{Message: "bohoo"}, arts[0])
+}

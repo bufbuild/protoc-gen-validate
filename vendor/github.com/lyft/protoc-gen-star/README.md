@@ -304,7 +304,7 @@ For developing on PG*, you should install the package within the `GOPATH`. PG* u
 
 ```sh
 go get -u github.com/lyft/protoc-gen-star
-cd $GOPATH/github.com/lyft/protoc-gen-star
+cd $GOPATH/src/github.com/lyft/protoc-gen-star
 make vendor
 ```
 

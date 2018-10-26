@@ -88,6 +88,13 @@ message Oneofs {
         bool UpperCamelCaseO = 11;
         bool reset = 12; // protected
     }
+
+    message SomeMsg {}
+    enum SomeEnum { VALUE = 0; }
+    oneof some_msg_oneof {
+        SomeMsg some_msg = 13;
+        SomeEnum some_enum = 14;
+    }
 }
 
 service UpperCamelService {}
@@ -110,3 +117,8 @@ service Service {
     rpc SCREAMING_SNAKE(String) returns (String);
     rpc Reset(String) returns (String);
 }
+
+message MsgWith3dInside {}
+
+message MsgEndsWith3d {}
+

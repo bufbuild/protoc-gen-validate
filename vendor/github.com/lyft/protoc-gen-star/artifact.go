@@ -310,3 +310,13 @@ func cleanGeneratorFileName(name string) (string, error) {
 
 	return name, nil
 }
+
+// GeneratorError Artifacts are strings describing errors that happened in the
+// code generation, but have not been fatal. They'll be used to populate the
+// CodeGeneratorResponse's `error` field. Since that field is a string, multiple
+// GeneratorError Artifacts will be concatenated.
+type GeneratorError struct {
+	Artifact
+
+	Message string
+}

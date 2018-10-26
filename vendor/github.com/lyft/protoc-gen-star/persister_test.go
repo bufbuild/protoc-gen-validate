@@ -315,3 +315,41 @@ func dummyPersister(d Debugger) *stdPersister {
 		fs:       afero.NewMemMapFs(),
 	}
 }
+
+func TestPersister_Persist_GeneratorError(t *testing.T) {
+	t.Parallel()
+
+	cases := map[string]struct {
+		input  []Artifact
+		output string
+	}{
+		"no errors": {
+			[]Artifact{},
+			"",
+		},
+		"one error": {
+			[]Artifact{GeneratorError{Message: "something went wrong"}},
+			"something went wrong",
+		},
+		"two errors": {
+			[]Artifact{
+				GeneratorError{Message: "something went wrong"},
+				GeneratorError{Message: "something else went wrong, too"},
+			},
+			"something went wrong; something else went wrong, too",
+		},
+	}
+	for desc, tc := range cases {
+		t.Run(desc, func(t *testing.T) {
+			d := InitMockDebugger()
+			p := dummyPersister(d)
+			fs := afero.NewMemMapFs()
+			p.SetFS(fs)
+
+			resp := p.Persist(tc.input...)
+
+			assert.Len(t, resp.File, 0)
+			assert.Equal(t, tc.output, resp.GetError())
+		})
+	}
+}
