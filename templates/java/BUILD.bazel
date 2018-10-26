@@ -4,6 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "file.go",
+        "msg.go",
         "register.go",
     ],
     importpath = "github.com/lyft/protoc-gen-validate/templates/java",

@@ -14,39 +14,54 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	fns := javaFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
-		"className":   fns.className,
-		"javaPackage": fns.javaPackage,
+		"classNameFile": classNameFile,
+		"qualifiedName": fns.qualifiedName,
+		"javaPackage":   fns.javaPackage,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
+	template.Must(tpl.New("msg").Parse(msgTpl))
 }
+
+type javaFuncs struct{ pgsgo.Context }
 
 func JavaFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) pgs.FilePath {
 	fullPath := ctx.OutputPath(f)
 
-	fileName := strings.TrimSuffix(ctx.OutputPath(f).Base(), ".pb.go")
-	fileName = toJavaClassName(fileName)
+	fileName := classNameFile(f).String()
 	fileName += "Validator.java"
 
 	return fullPath.SetBase(fileName)
 }
 
-type javaFuncs struct{ pgsgo.Context }
+func classNameFile(file pgs.File) pgs.Name {
+	protoName := pgs.FilePath(file.Name().String()).BaseName()
 
-func (fns javaFuncs) className(file pgs.File) pgs.Name {
-	return pgs.Name(toJavaClassName(pgs.FilePath(file.Name().String()).BaseName()))
+	className := makeInvalidClassnameCharactersUnderscores(protoName)
+	className = strcase.ToCamel(strcase.ToSnake(className))
+	className = upperCaseAfterNumber(className)
+	className = appendOuterClassName(className, file)
+
+	return pgs.Name(className)
 }
 
 func (fns javaFuncs) javaPackage(file pgs.File) pgs.Name {
 	return file.Package().ProtoName()
 }
 
-func toJavaClassName(protoName string) string {
-	className := makeInvalidClassnameCharactersUnderscores(protoName)
-	className = strcase.ToCamel(strcase.ToSnake(className))
-	className = upperCaseAfterNumber(className)
+func (fns javaFuncs) qualifiedName(entity pgs.Entity) pgs.Name {
+	file, isFile := entity.(pgs.File)
+	if isFile {
+		return fns.javaPackage(file) + "." + fns.classNameFile(file)
+	}
 
-	return className
+	message, isMessage := entity.(pgs.Message)
+	if isMessage && message.Parent() != nil {
+		// recurse
+		return pgs.Name(fns.qualifiedName(message.Parent()) + "." + pgs.Name(entity.Name()))
+	}
+
+	return pgs.Name(entity.Name())
 }
 
 // Replace invalid identifier characters with an underscore
@@ -80,4 +95,32 @@ func upperCaseAfterNumber(name string) string {
 		p = c
 	}
 	return sb.String()
+}
+
+func appendOuterClassName(outerClassName string, file pgs.File) string {
+	conflict := false
+
+	for _, enum := range file.Enums() {
+		if enum.Name().String() == outerClassName {
+			conflict = true
+		}
+	}
+
+	for _, message := range file.Messages() {
+		if message.Name().String() == outerClassName {
+			conflict = true
+		}
+	}
+
+	for _, service := range file.Services() {
+		if service.Name().String() == outerClassName {
+			conflict = true
+		}
+	}
+
+	if conflict {
+		return outerClassName + "OuterClass"
+	} else {
+		return outerClassName
+	}
 }
