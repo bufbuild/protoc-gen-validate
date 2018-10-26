@@ -57,6 +57,8 @@ func TestName(t *testing.T) {
 		{"_underscore", "XUnderscore"},
 		{"__DoubleUnderscore", "X_DoubleUnderscore"},
 		{"String", "String"},
+		{"MsgWith3dInside", "MsgWith3DInside"},
+		{"MsgEndsWith3d", "MsgEndsWith3D"},
 
 		// Nested Messages
 		{"Nested.Message", "Nested_Message"},
@@ -159,6 +161,8 @@ func TestContext_OneofOption(t *testing.T) {
 		{"lowerCamelCaseO", "Oneofs_LowerCamelCaseO"},
 		{"UpperCamelCaseO", "Oneofs_UpperCamelCaseO"},
 		{"reset", "Oneofs_Reset_"},
+		{"some_msg", "Oneofs_SomeMsg_"},
+		{"some_enum", "Oneofs_SomeEnum_"},
 	}
 
 	for _, test := range tests {

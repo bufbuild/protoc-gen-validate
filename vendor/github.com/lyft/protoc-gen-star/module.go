@@ -256,4 +256,11 @@ func (m *ModuleBase) OverwriteCustomTemplateFile(name string, tpl Template, data
 	})
 }
 
+// AddError adds a string to the `errors` field of the created
+// CodeGeneratorResponse. Multiple calls to AddError will cause the errors to
+// be concatenated (separated by "; ").
+func (m *ModuleBase) AddError(message string) {
+	m.AddArtifact(GeneratorError{Message: message})
+}
+
 var _ Module = (*ModuleBase)(nil)

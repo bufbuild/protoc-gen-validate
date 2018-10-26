@@ -3,6 +3,7 @@ package pgs
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/plugin"
@@ -83,6 +84,12 @@ func (p *stdPersister) Persist(arts ...Artifact) *plugin_go.CodeGeneratorRespons
 				a.Overwrite,
 				a.Perms,
 			)
+		case GeneratorError:
+			if resp.Error == nil {
+				resp.Error = proto.String(a.Message)
+				continue
+			}
+			resp.Error = proto.String(strings.Join([]string{resp.GetError(), a.Message}, "; "))
 		default:
 			p.Failf("unrecognized artifact type: %T", a)
 		}
