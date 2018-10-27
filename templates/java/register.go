@@ -1,6 +1,7 @@
 package java
 
 import (
+	"fmt"
 	"strings"
 	"text/template"
 	"unicode"
@@ -14,29 +15,33 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	fns := javaFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
-		"accessor":      fns.accessor,
-		"classNameFile": classNameFile,
-		"simpleName":    fns.Name,
-		"qualifiedName": fns.qualifiedName,
-		"javaPackage":   fns.javaPackage,
+		"accessor":                 fns.accessor,
+		"classNameFile":            classNameFile,
+		"simpleName":               fns.Name,
+		"qualifiedName":            fns.qualifiedName,
+		"javaPackage":              fns.javaPackage,
+		"javaTypeFor":              fns.javaTypeFor,
+		"javaTypeLiteralSuffixFor": fns.javaTypeLiteralSuffixFor,
+		"sprintf":                  fmt.Sprintf,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
 	template.Must(tpl.New("msg").Parse(msgTpl))
 
 	template.Must(tpl.New("none").Parse(noneTpl))
-	template.Must(tpl.New("float").Parse(notImplementedTpl))
-	template.Must(tpl.New("double").Parse(notImplementedTpl))
-	template.Must(tpl.New("int32").Parse(notImplementedTpl))
-	template.Must(tpl.New("int64").Parse(notImplementedTpl))
-	template.Must(tpl.New("uint32").Parse(notImplementedTpl))
-	template.Must(tpl.New("uint64").Parse(notImplementedTpl))
-	template.Must(tpl.New("sint32").Parse(notImplementedTpl))
-	template.Must(tpl.New("sint64").Parse(notImplementedTpl))
-	template.Must(tpl.New("fixed32").Parse(notImplementedTpl))
-	template.Must(tpl.New("fixed64").Parse(notImplementedTpl))
-	template.Must(tpl.New("sfixed32").Parse(notImplementedTpl))
-	template.Must(tpl.New("sfixed64").Parse(notImplementedTpl))
+
+	template.Must(tpl.New("float").Parse(numTpl))
+	template.Must(tpl.New("double").Parse(numTpl))
+	template.Must(tpl.New("int32").Parse(numTpl))
+	template.Must(tpl.New("int64").Parse(numTpl))
+	template.Must(tpl.New("uint32").Parse(numTpl))
+	template.Must(tpl.New("uint64").Parse(numTpl))
+	template.Must(tpl.New("sint32").Parse(numTpl))
+	template.Must(tpl.New("sint64").Parse(numTpl))
+	template.Must(tpl.New("fixed32").Parse(numTpl))
+	template.Must(tpl.New("fixed64").Parse(numTpl))
+	template.Must(tpl.New("sfixed32").Parse(numTpl))
+	template.Must(tpl.New("sfixed64").Parse(numTpl))
 
 	template.Must(tpl.New("bool").Parse(boolTpl))
 	template.Must(tpl.New("string").Parse(notImplementedTpl))
@@ -159,4 +164,36 @@ func appendOuterClassName(outerClassName string, file pgs.File) string {
 func (fns javaFuncs) accessor(field pgs.Field) string {
 	fieldName := strcase.ToCamel(field.Name().String())
 	return "get" + fieldName + "()"
+}
+
+func (fns javaFuncs) javaTypeFor(f pgs.Field) string {
+	switch f.Type().ProtoType() {
+	case pgs.Int32T, pgs.UInt32T, pgs.SInt32, pgs.Fixed32T, pgs.SFixed32:
+		return "int"
+	case pgs.Int64T, pgs.UInt64T, pgs.SInt64, pgs.Fixed64T, pgs.SFixed64:
+		return "long"
+	case pgs.DoubleT:
+		return "double"
+	case pgs.FloatT:
+		return "float"
+	case pgs.BoolT:
+		return "boolean"
+	case pgs.StringT:
+		return "String"
+	case pgs.BytesT:
+		return "com.google.protobuf.ByteString"
+	default:
+		return "Object"
+	}
+}
+
+func (fns javaFuncs) javaTypeLiteralSuffixFor(f pgs.Field) string {
+	switch f.Type().ProtoType() {
+	case pgs.Int64T, pgs.UInt64T, pgs.SInt64, pgs.Fixed64T, pgs.SFixed64:
+		return "L"
+	case pgs.FloatT:
+		return "F"
+	default:
+		return ""
+	}
 }

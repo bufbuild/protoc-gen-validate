@@ -1,7 +1,7 @@
 package com.lyft.pgv;
 
-public final class BoolValidation {
-    private BoolValidation() { }
+public final class BooleanValidation {
+    private BooleanValidation() { }
 
     public static void constant(String field, boolean value, boolean expected) throws ValidationException {
         if (value != expected) {
