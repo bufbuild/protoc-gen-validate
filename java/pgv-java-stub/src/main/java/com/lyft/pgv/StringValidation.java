@@ -1,0 +1,147 @@
+package com.lyft.pgv;
+
+import java.util.Arrays;
+
+import org.apache.commons.validator.routines.DomainValidator;
+import org.apache.commons.validator.routines.InetAddressValidator;
+import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.commons.validator.routines.RegexValidator;
+import org.apache.commons.validator.routines.UrlValidator;
+
+public final class StringValidation {
+    private StringValidation() { }
+
+    public static void constant(String field, String value, String expected) throws ValidationException {
+        if (!value.equals(expected)) {
+            throw new ValidationException(field, "value must equal " + expected);
+        }
+    }
+
+    public static void in(String field, String value, String[] set) throws ValidationException {
+        for (String str : set) {
+            if (value.equals(str)) {
+                return;
+            }
+        }
+
+        throw new ValidationException(field, "value must be in " + Arrays.toString(set));
+    }
+
+    public static void notIn(String field, String value, String[] set) throws ValidationException {
+        for (String str : set) {
+            if (value.equals(str)) {
+                throw new ValidationException(field, "value must not be in " + Arrays.toString(set));
+            }
+        }
+    }
+
+    public static void length(String field, String value, int expected) throws ValidationException {
+        if (value.length() != expected) {
+                throw new ValidationException(field, "length must be " + expected);
+        }
+    }
+
+    public static void minLength(String field, String value, int expected) throws ValidationException {
+        if (value.length() < expected) {
+                throw new ValidationException(field, "length must be at least " + expected);
+        }
+    }
+
+    public static void maxLength(String field, String value, int expected) throws ValidationException {
+        if (value.length() > expected) {
+                throw new ValidationException(field, "length must be at maximum " + expected);
+        }
+    }
+
+    public static void lenBytes(String field, String value, int expected) throws ValidationException {
+        if (value.getBytes().length != expected) {
+                throw new ValidationException(field, "bytes length must be " + expected);
+        }
+    }
+
+    public static void minBytes(String field, String value, int expected) throws ValidationException {
+        if (value.getBytes().length < expected) {
+                throw new ValidationException(field, "bytes length must be at least " + expected);
+        }
+    }
+
+    public static void maxBytes(String field, String value, int expected) throws ValidationException {
+        if (value.getBytes().length > expected) {
+                throw new ValidationException(field, "bytes length must be at maximum " + expected);
+        }
+    }
+
+    public static void pattern(String field, String value, String pattern) throws ValidationException {
+      RegexValidator validator = new RegexValidator(pattern);
+      if (!validator.isValid(value)) {
+               throw new ValidationException(field, "must match pattern " + pattern);
+      }
+    }
+
+    public static void prefix(String field, String value, String prefix) throws ValidationException {
+      if (!value.startsWith(prefix)) {
+               throw new ValidationException(field, "should start with " + prefix);
+      }
+    }
+
+    public static void contains(String field, String value, String contains) throws ValidationException {
+      if (!value.contains(contains)) {
+               throw new ValidationException(field, "should contain " + contains);
+      }
+    }
+
+    public static void suffix(String field, String value, String suffix) throws ValidationException {
+      if (!value.endsWith(suffix)) {
+               throw new ValidationException(field, "should end with " + suffix);
+      }
+    }
+
+    public static void email(String field, String value, String email) throws ValidationException {
+      EmailValidator emailValidator = EmailValidator.getInstance();
+      if (!emailValidator.isValid(email)) {
+               throw new ValidationException(field, "should be valid email " + email);
+      }
+    }
+
+    public static void hostName(String field, String value, String host) throws ValidationException {
+      DomainValidator domainValidator = DomainValidator.getInstance();
+      if (!domainValidator.isValid(host)) {
+               throw new ValidationException(field, "should be valid host " + host);
+      }
+    }
+
+    public static void ip(String field, String value, String ip) throws ValidationException {
+      InetAddressValidator ipValidator = InetAddressValidator.getInstance();
+      if (!ipValidator.isValid(ip)) {
+               throw new ValidationException(field, "should be valid ip address " + ip);
+      }
+    }
+
+    public static void ipv4(String field, String value, String ipv4) throws ValidationException {
+      InetAddressValidator ipValidator = InetAddressValidator.getInstance();
+      if (!ipValidator.isValidInet4Address(ipv4)) {
+               throw new ValidationException(field, "should be valid ipv4 address " + ipv4);
+      }
+    }
+
+    public static void ipv6(String field, String value, String ipv6) throws ValidationException {
+      InetAddressValidator ipValidator = InetAddressValidator.getInstance();
+      if (!ipValidator.isValidInet6Address(ipv6)) {
+               throw new ValidationException(field, "should be valid ipv6 address " + ipv6);
+      }
+    }
+
+    public static void uri(String field, String value, String uri) throws ValidationException {
+      UrlValidator urlValidator = UrlValidator.getInstance();
+      if (!urlValidator.isValid(uri)) {
+               throw new ValidationException(field, "should be valid uri " + uri);
+      }
+    }
+
+    public static void uriRef(String field, String value, String uri) throws ValidationException {
+      UrlValidator urlValidator = UrlValidator.getInstance();
+      if (!urlValidator.isValid(uri)) {
+               throw new ValidationException(field, "should be valid uri ref " + uri);
+      }
+    }
+}
