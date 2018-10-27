@@ -2,13 +2,14 @@ package java
 
 import (
 	"fmt"
+	"html"
 	"strings"
 	"text/template"
 	"unicode"
 
 	"github.com/iancoleman/strcase"
 	"github.com/lyft/protoc-gen-star"
-	"github.com/lyft/protoc-gen-star/lang/go"
+  "github.com/lyft/protoc-gen-star/lang/go"
 )
 
 func Register(tpl *template.Template, params pgs.Parameters) {
@@ -17,12 +18,13 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	tpl.Funcs(map[string]interface{}{
 		"accessor":                 fns.accessor,
 		"classNameFile":            classNameFile,
-		"simpleName":               fns.Name,
-		"qualifiedName":            fns.qualifiedName,
+		"escapeString":             html.EscapeString,
 		"javaPackage":              fns.javaPackage,
 		"javaTypeFor":              fns.javaTypeFor,
 		"javaTypeLiteralSuffixFor": fns.javaTypeLiteralSuffixFor,
 		"sprintf":                  fmt.Sprintf,
+		"simpleName":               fns.Name,
+		"qualifiedName":            fns.qualifiedName,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
@@ -44,7 +46,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("sfixed64").Parse(numTpl))
 
 	template.Must(tpl.New("bool").Parse(boolTpl))
-	template.Must(tpl.New("string").Parse(notImplementedTpl))
+	template.Must(tpl.New("string").Parse(stringTpl))
 	template.Must(tpl.New("bytes").Parse(notImplementedTpl))
 
 	template.Must(tpl.New("any").Parse(notImplementedTpl))
