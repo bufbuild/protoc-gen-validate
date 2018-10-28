@@ -4,6 +4,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "bool.go",
+        "bytes.go",
         "file.go",
         "msg.go",
         "none.go",
