@@ -5,8 +5,8 @@ import java.util.Arrays;
 import org.apache.commons.validator.routines.DomainValidator;
 import org.apache.commons.validator.routines.InetAddressValidator;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.apache.commons.validator.routines.RegexValidator;
 import org.apache.commons.validator.routines.UrlValidator;
+import com.google.re2j.*;
 
 public final class StringValidation {
     private StringValidation() { }
@@ -72,8 +72,8 @@ public final class StringValidation {
     }
 
     public static void pattern(String field, String value, String pattern) throws ValidationException {
-      RegexValidator validator = new RegexValidator(pattern);
-      if (!validator.isValid(value)) {
+      Pattern p = Pattern.compile(pattern);
+      if (!p.matches(value)) {
                throw new ValidationException(field, "must match pattern " + pattern);
       }
     }

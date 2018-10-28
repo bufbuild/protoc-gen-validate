@@ -27,6 +27,13 @@ const numTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			}
 {{- end -}}
 {{- if $r.NotIn }}
-			com.lyft.pgv.NumericValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, new {{ javaTypeFor $f }}[]{ 0 });
+			{
+				{{ javaTypeFor $f }}[] set = new {{ javaTypeFor $f }}[]{
+					{{- range $r.NotIn -}}
+						{{- sprintf "%v" . -}}{{ javaTypeLiteralSuffixFor $f }},
+					{{- end -}}
+				};
+				com.lyft.pgv.NumericValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
+			}
 {{- end -}}
 `

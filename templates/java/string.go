@@ -8,14 +8,21 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			{
 				{{ javaTypeFor $f }}[] set = new {{ javaTypeFor $f }}[]{
 					{{- range $r.In -}}
-						"{{- sprintf "%v" . -}}"{{ javaTypeLiteralSuffixFor $f }},
+						"{{- sprintf "%v" . -}}",
 					{{- end -}}
 				};
 				com.lyft.pgv.StringValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
 			}
 {{- end -}}
 {{- if $r.NotIn }}
-			com.lyft.pgv.StringValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, new {{ javaTypeFor $f }}[]{ });
+			{
+				{{ javaTypeFor $f }}[] set = new {{ javaTypeFor $f }}[]{
+					{{- range $r.NotIn -}}
+						"{{- sprintf "%v" . -}}",
+					{{- end -}}
+				};
+				com.lyft.pgv.StringValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
+			}
 {{- end -}}
 {{- if $r.Len }}
 			com.lyft.pgv.StringValidation.length("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ $r.GetLen }});
