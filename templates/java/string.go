@@ -45,24 +45,24 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			com.lyft.pgv.StringValidation.suffix("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, "{{ $r.GetSuffix }}");
 {{- end -}}
 {{- if $r.GetEmail }}
-			com.lyft.pgv.StringValidation.email("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, "{{ $r.GetEmail }}");
+			com.lyft.pgv.StringValidation.email("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }});
 {{- end -}}
 {{- if $r.GetHostname }}
-			com.lyft.pgv.StringValidation.hostName("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, "{{ $r.GetHostname }}");
+			com.lyft.pgv.StringValidation.hostName("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }});
 {{- end -}}
 {{- if $r.GetIp }}
-			com.lyft.pgv.StringValidation.ip("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, "{{ $r.GetIp }}");
+			com.lyft.pgv.StringValidation.ip("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }});
 {{- end -}}
 {{- if $r.GetIpv4 }}
-			com.lyft.pgv.StringValidation.ipv4("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, "{{ $r.GetIpv4 }}");
+			com.lyft.pgv.StringValidation.ipv4("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }});
 {{- end -}}
 {{- if $r.GetIpv6 }}
-			com.lyft.pgv.StringValidation.ipv6("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, "{{ $r.GetIpv6 }}");
+			com.lyft.pgv.StringValidation.ipv6("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }});
 {{- end -}}
 {{- if $r.GetUri }}
-			com.lyft.pgv.StringValidation.uri("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, "{{ $r.GetUri }}");
+			com.lyft.pgv.StringValidation.uri("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }});
 {{- end -}}
 {{- if $r.GetUri }}
-			com.lyft.pgv.StringValidation.uriRef("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, "{{ $r.GetUriRef }}");
+			com.lyft.pgv.StringValidation.uriRef("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }});
 {{- end -}}
 `

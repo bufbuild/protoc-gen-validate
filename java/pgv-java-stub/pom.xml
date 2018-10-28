@@ -28,5 +28,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+           <groupId>com.google.protobuf</groupId>
+           <artifactId>protobuf-java</artifactId>
+           <version>${google.protobuf.version}</version>
+       </dependency>
     </dependencies>
 </project>

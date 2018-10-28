@@ -2,7 +2,6 @@ package java
 
 import (
 	"fmt"
-	"html"
 	"strings"
 	"text/template"
 	"unicode"
@@ -18,7 +17,6 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	tpl.Funcs(map[string]interface{}{
 		"accessor":                 fns.accessor,
 		"classNameFile":            classNameFile,
-		"escapeString":             html.EscapeString,
 		"javaPackage":              fns.javaPackage,
 		"javaTypeFor":              fns.javaTypeFor,
 		"javaTypeLiteralSuffixFor": fns.javaTypeLiteralSuffixFor,
@@ -47,7 +45,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 
 	template.Must(tpl.New("bool").Parse(boolTpl))
 	template.Must(tpl.New("string").Parse(stringTpl))
-	template.Must(tpl.New("bytes").Parse(notImplementedTpl))
+	template.Must(tpl.New("bytes").Parse(bytesTpl))
 
 	template.Must(tpl.New("any").Parse(notImplementedTpl))
 	template.Must(tpl.New("enum").Parse(notImplementedTpl))

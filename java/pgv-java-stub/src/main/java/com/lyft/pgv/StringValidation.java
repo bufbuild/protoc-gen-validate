@@ -96,52 +96,52 @@ public final class StringValidation {
       }
     }
 
-    public static void email(String field, String value, String email) throws ValidationException {
+    public static void email(String field, String value) throws ValidationException {
       EmailValidator emailValidator = EmailValidator.getInstance();
-      if (!emailValidator.isValid(email)) {
-               throw new ValidationException(field, "should be valid email " + email);
+      if (!emailValidator.isValid(value)) {
+               throw new ValidationException(field, "should be valid email " + value);
       }
     }
 
-    public static void hostName(String field, String value, String host) throws ValidationException {
+    public static void hostName(String field, String value) throws ValidationException {
       DomainValidator domainValidator = DomainValidator.getInstance();
-      if (!domainValidator.isValid(host)) {
-               throw new ValidationException(field, "should be valid host " + host);
+      if (!domainValidator.isValid(value)) {
+               throw new ValidationException(field, "should be valid host " + value);
       }
     }
 
-    public static void ip(String field, String value, String ip) throws ValidationException {
+    public static void ip(String field, String value) throws ValidationException {
       InetAddressValidator ipValidator = InetAddressValidator.getInstance();
-      if (!ipValidator.isValid(ip)) {
-               throw new ValidationException(field, "should be valid ip address " + ip);
+      if (!ipValidator.isValid(value)) {
+               throw new ValidationException(field, "should be valid ip address " + value);
       }
     }
 
-    public static void ipv4(String field, String value, String ipv4) throws ValidationException {
+    public static void ipv4(String field, String value) throws ValidationException {
       InetAddressValidator ipValidator = InetAddressValidator.getInstance();
-      if (!ipValidator.isValidInet4Address(ipv4)) {
-               throw new ValidationException(field, "should be valid ipv4 address " + ipv4);
+      if (!ipValidator.isValidInet4Address(value)) {
+               throw new ValidationException(field, "should be valid ipv4 address " + value);
       }
     }
 
-    public static void ipv6(String field, String value, String ipv6) throws ValidationException {
+    public static void ipv6(String field, String value) throws ValidationException {
       InetAddressValidator ipValidator = InetAddressValidator.getInstance();
-      if (!ipValidator.isValidInet6Address(ipv6)) {
-               throw new ValidationException(field, "should be valid ipv6 address " + ipv6);
+      if (!ipValidator.isValidInet6Address(value)) {
+               throw new ValidationException(field, "should be valid ipv6 address " + value);
       }
     }
 
-    public static void uri(String field, String value, String uri) throws ValidationException {
+    public static void uri(String field, String value) throws ValidationException {
       UrlValidator urlValidator = UrlValidator.getInstance();
-      if (!urlValidator.isValid(uri)) {
-               throw new ValidationException(field, "should be valid uri " + uri);
+      if (!urlValidator.isValid(value)) {
+               throw new ValidationException(field, "should be valid uri " + value);
       }
     }
 
-    public static void uriRef(String field, String value, String uri) throws ValidationException {
+    public static void uriRef(String field, String value) throws ValidationException {
       UrlValidator urlValidator = UrlValidator.getInstance();
-      if (!urlValidator.isValid(uri)) {
-               throw new ValidationException(field, "should be valid uri ref " + uri);
+      if (!urlValidator.isValid(value)) {
+               throw new ValidationException(field, "should be valid uri ref " + value);
       }
     }
 }
