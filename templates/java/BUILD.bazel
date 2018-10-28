@@ -9,6 +9,7 @@ go_library(
         "none.go",
         "num.go",
         "register.go",
+        "string.go",
         "unimplemented.go",
     ],
     importpath = "github.com/lyft/protoc-gen-validate/templates/java",
