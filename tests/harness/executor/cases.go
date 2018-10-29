@@ -914,6 +914,9 @@ var enumCases = []TestCase{
 	{"enum alias - not in - valid", &cases.EnumAliasNotIn{Val: cases.TestEnumAlias_ALPHA}, true},
 	{"enum alias - not in - invalid", &cases.EnumAliasNotIn{Val: cases.TestEnumAlias_B}, false},
 	{"enum alias - not in - invalid (alias)", &cases.EnumAliasNotIn{Val: cases.TestEnumAlias_BETA}, false},
+
+	{"enum external - defined_only - valid", &cases.EnumExternal{Val: other_package.Enumerated_VALUE}, true},
+	{"enum external - defined_only - invalid", &cases.EnumExternal{Val: math.MaxInt32}, false},
 }
 
 var messageCases = []TestCase{
