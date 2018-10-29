@@ -14,6 +14,7 @@ go_library(
         "register.go",
         "required.go",
         "string.go",
+        "timestamp.go"
         "unimplemented.go",
     ],
     importpath = "github.com/lyft/protoc-gen-validate/templates/java",
