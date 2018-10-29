@@ -43,7 +43,7 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			com.lyft.pgv.StringValidation.maxBytes("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ $r.GetMaxLen }});
 {{- end -}}
 {{- if $r.Pattern }}
-			com.lyft.pgv.StringValidation.pattern("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ rawPrint $r.GetPattern }});
+			com.lyft.pgv.StringValidation.pattern("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ javaStringEscape $r.GetPattern }});
 {{- end -}}
 {{- if $r.Prefix }}
 			com.lyft.pgv.StringValidation.prefix("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, "{{ $r.GetPrefix }}");

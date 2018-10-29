@@ -1,10 +1,10 @@
 package com.lyft.pgv;
 
 import java.util.Arrays;
-import java.util.List;
 
 public final class NumericValidation {
-    private NumericValidation() { }
+    private NumericValidation() {
+    }
 
     /* INT Validation */
 
@@ -207,5 +207,4 @@ public final class NumericValidation {
             }
         }
     }
-
 }

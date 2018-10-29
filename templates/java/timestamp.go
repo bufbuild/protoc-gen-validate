@@ -19,12 +19,12 @@ const timestampTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			com.lyft.pgv.TimestampValidation.greaterThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ tsLit $r.Gte }});
 {{- end -}}
 {{- if $r.LtNow }}
-			com.lyft.pgv.TimestampValidation.lessThanNow("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }});
+			com.lyft.pgv.TimestampValidation.lessThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, com.lyft.pgv.TimestampValidation.currentTimestamp());
 {{- end -}}
 {{- if $r.GtNow }}
-			com.lyft.pgv.TimestampValidation.greaterThanNow("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }});
+			com.lyft.pgv.TimestampValidation.greaterThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, com.lyft.pgv.TimestampValidation.currentTimestamp());
 {{- end -}}
 {{- if $r.Within }}
-			com.lyft.pgv.TimestampValidation.Within("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ $r.Within }});
+			com.lyft.pgv.TimestampValidation.within("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ durLit $r.Within }}, com.lyft.pgv.TimestampValidation.currentTimestamp());
 {{- end -}}
 `

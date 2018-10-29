@@ -10,7 +10,7 @@ import (
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/iancoleman/strcase"
 	"github.com/lyft/protoc-gen-star"
-  "github.com/lyft/protoc-gen-star/lang/go"
+	"github.com/lyft/protoc-gen-star/lang/go"
 	"github.com/lyft/protoc-gen-validate/templates/shared"
 )
 
@@ -24,6 +24,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"rawPrint":                 fns.rawPrint,
 		"fieldName":                fns.fieldName,
 		"javaPackage":              fns.javaPackage,
+		"javaStringEscape":         fns.javaStringEscape,
 		"javaTypeFor":              fns.javaTypeFor,
 		"javaTypeLiteralSuffixFor": fns.javaTypeLiteralSuffixFor,
 		"hasAccessor":              fns.hasAccessor,
@@ -175,7 +176,7 @@ func (fns javaFuncs) accessor(field pgs.Field) string {
 }
 
 func (fns javaFuncs) rawPrint(instr string) string {
-	return fmt.Sprintf("%#v",instr)
+	return fmt.Sprintf("%#v", instr)
 }
 
 func (fns javaFuncs) hasAccessor(ctx shared.RuleContext) string {
@@ -183,7 +184,7 @@ func (fns javaFuncs) hasAccessor(ctx shared.RuleContext) string {
 		return "true"
 	}
 	fiedlName := strcase.ToCamel(ctx.Field.Name().String())
-	return "proto.has" +  fiedlName + "()"
+	return "proto.has" + fiedlName + "()"
 }
 
 func (fns javaFuncs) fieldName(ctx shared.RuleContext) string {
@@ -220,6 +221,14 @@ func (fns javaFuncs) javaTypeLiteralSuffixFor(f pgs.Field) string {
 	default:
 		return ""
 	}
+}
+
+func (fns javaFuncs) javaStringEscape(s string) string {
+	s = fns.rawPrint(s)
+	s = s[1 : len(s)-1]
+	s = strings.Replace(s, "\\", "\\\\", -1)
+	s = strings.Replace(s, "\"", "\\\"", -1)
+	return "\"" + s + "\""
 }
 
 func (fns javaFuncs) durLit(dur *duration.Duration) string {

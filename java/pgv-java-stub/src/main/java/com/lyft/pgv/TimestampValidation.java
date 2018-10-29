@@ -1,6 +1,8 @@
 package com.lyft.pgv;
 
+import com.google.protobuf.Duration;
 import com.google.protobuf.Timestamp;
+import com.google.protobuf.util.Durations;
 import com.google.protobuf.util.Timestamps;
 
 public final class TimestampValidation {
@@ -36,34 +38,21 @@ public final class TimestampValidation {
         }
     }
 
-    public static void lessThanNow(String field, Timestamp value) throws ValidationException {
-        if (Timestamps.compare(value, currentTimestamp()) < 0) {
-            throw new ValidationException(field, "value must be less than current time  " + value);
+    public static void within(String field, Timestamp value, Duration duration, Timestamp when) throws ValidationException {
+        Duration between = Timestamps.between(when, value);
+        if (Long.compare(Math.abs(Durations.toNanos(between)), Math.abs(Durations.toNanos(duration))) == 1) {
+            throw new ValidationException(field, "value must be within " + Durations.toString(duration) + " of " + Timestamps.toString(when));
         }
     }
 
-    public static void greaterThanNow(String field, Timestamp value) throws ValidationException {
-        if (Timestamps.compare(value, currentTimestamp()) < 0) {
-            throw new ValidationException(field, "value must be greater than current time  " + value);
-        }
-    }
-
-    public static void withIn(String field, Timestamp value, long within) throws ValidationException {
-        if (Math.abs(currentTimestamp().getSeconds() - value.getSeconds()) > within) {
-            throw new ValidationException(field, "value must be within  " + within);
-        }
-    }
-
-    public static Timestamp toTimestamp(long seconds, long nanos) {
-      return Timestamp.newBuilder()
-      .setSeconds(seconds)
-      .setNanos((int)nanos)
-      .build();
+    public static Timestamp toTimestamp(long seconds, int nanos) {
+        return Timestamp.newBuilder()
+                .setSeconds(seconds)
+                .setNanos(nanos)
+                .build();
     }
 
     public static Timestamp currentTimestamp() {
-      return Timestamp.newBuilder()
-      .setSeconds(System.currentTimeMillis()/1000)
-      .build();
+        return Timestamps.fromMillis(System.currentTimeMillis());
     }
 }

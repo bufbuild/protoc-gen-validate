@@ -10,6 +10,9 @@ const bytesTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.MaxLen }}
 			com.lyft.pgv.BytesValidation.maxLength("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ $r.GetMaxLen }});
 {{- end -}}
+{{- if $r.Pattern }}
+			com.lyft.pgv.BytesValidation.pattern("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ javaStringEscape $r.GetPattern }});
+{{- end -}}
 {{- if $r.Prefix }}
 			com.lyft.pgv.BytesValidation.prefix("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, "{{ $r.GetPrefix }}");
 {{- end -}}
