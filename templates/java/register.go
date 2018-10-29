@@ -7,6 +7,7 @@ import (
 	"unicode"
 
 	"github.com/golang/protobuf/ptypes/duration"
+	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/iancoleman/strcase"
 	"github.com/lyft/protoc-gen-star"
   "github.com/lyft/protoc-gen-star/lang/go"
@@ -28,6 +29,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"hasAccessor":              fns.hasAccessor,
 		"sprintf":                  fmt.Sprintf,
 		"simpleName":               fns.Name,
+		"tsLit":                    fns.tsLit,
 		"qualifiedName":            fns.qualifiedName,
 	})
 
@@ -60,7 +62,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("map").Parse(notImplementedTpl))
 
 	template.Must(tpl.New("required").Parse(requiredTpl))
-	template.Must(tpl.New("timestamp").Parse(notImplementedTpl))
+	template.Must(tpl.New("timestamp").Parse(timestampTpl))
 	template.Must(tpl.New("duration").Parse(durationTpl))
 	template.Must(tpl.New("wrapper").Parse(notImplementedTpl))
 }
@@ -224,4 +226,10 @@ func (fns javaFuncs) durLit(dur *duration.Duration) string {
 	return fmt.Sprintf(
 		"com.lyft.pgv.DurationValidation.toDuration(%d,%d)",
 		dur.GetSeconds(), dur.GetNanos())
+}
+
+func (fns javaFuncs) tsLit(ts *timestamp.Timestamp) string {
+	return fmt.Sprintf(
+		"com.lyft.pgv.TimestampValidation.toTimestamp(%d,%d)",
+		ts.GetSeconds(), ts.GetNanos())
 }
