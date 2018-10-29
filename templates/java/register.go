@@ -6,9 +6,11 @@ import (
 	"text/template"
 	"unicode"
 
+	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/iancoleman/strcase"
 	"github.com/lyft/protoc-gen-star"
   "github.com/lyft/protoc-gen-star/lang/go"
+	"github.com/lyft/protoc-gen-validate/templates/shared"
 )
 
 func Register(tpl *template.Template, params pgs.Parameters) {
@@ -17,9 +19,11 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	tpl.Funcs(map[string]interface{}{
 		"accessor":                 fns.accessor,
 		"classNameFile":            classNameFile,
+		"durLit":                   fns.durLit,
 		"javaPackage":              fns.javaPackage,
 		"javaTypeFor":              fns.javaTypeFor,
 		"javaTypeLiteralSuffixFor": fns.javaTypeLiteralSuffixFor,
+		"hasAccessor":              fns.hasAccessor,
 		"sprintf":                  fmt.Sprintf,
 		"simpleName":               fns.Name,
 		"qualifiedName":            fns.qualifiedName,
@@ -53,9 +57,9 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("repeated").Parse(notImplementedTpl))
 	template.Must(tpl.New("map").Parse(notImplementedTpl))
 
-	template.Must(tpl.New("required").Parse(notImplementedTpl))
+	template.Must(tpl.New("required").Parse(requiredTpl))
 	template.Must(tpl.New("timestamp").Parse(notImplementedTpl))
-	template.Must(tpl.New("duration").Parse(notImplementedTpl))
+	template.Must(tpl.New("duration").Parse(durationTpl))
 	template.Must(tpl.New("wrapper").Parse(notImplementedTpl))
 }
 
@@ -166,6 +170,15 @@ func (fns javaFuncs) accessor(field pgs.Field) string {
 	return "get" + fieldName + "()"
 }
 
+func (fns javaFuncs) hasAccessor(ctx shared.RuleContext) string {
+	if ctx.AccessorOverride != "" {
+		return "true"
+	}
+	return fmt.Sprintf(
+		"m.has_%s()",
+		ctx.Field.Name());
+}
+
 func (fns javaFuncs) javaTypeFor(f pgs.Field) string {
 	switch f.Type().ProtoType() {
 	case pgs.Int32T, pgs.UInt32T, pgs.SInt32, pgs.Fixed32T, pgs.SFixed32:
@@ -196,4 +209,10 @@ func (fns javaFuncs) javaTypeLiteralSuffixFor(f pgs.Field) string {
 	default:
 		return ""
 	}
+}
+
+func (fns javaFuncs) durLit(dur *duration.Duration) string {
+	return fmt.Sprintf(
+		"com.lyft.pgv.DurationValidation.toDuration(%d,%d)",
+		dur.GetSeconds(), dur.GetNanos())
 }
