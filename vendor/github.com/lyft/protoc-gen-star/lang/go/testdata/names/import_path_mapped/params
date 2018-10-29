@@ -1,1 +1,1 @@
-Mnames/import_path_mapped/import_path_mapped.proto=github.com/foo/bar,import_path=github.com/fizz/buzz
+Mimport_path_mapped.proto=github.com/foo/bar,import_path=github.com/fizz/buzz

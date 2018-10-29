@@ -24,6 +24,7 @@ func TestPackageName(t *testing.T) {
 		{"import_path", "_package"},          // import_path param used if no go_package option
 		{"mapped", "unaffected"},             // M mapped params are ignored for build targets
 		{"import_path_mapped", "go_package"}, // mixed import_path and M parameters should lose to go_package
+		{"transitive_package", "foobar"},     // go_option gets picked up from other files if present
 	}
 
 	for _, test := range tests {

@@ -4,7 +4,7 @@
 
 [[constraint]]
   name = "github.com/lyft/protoc-gen-star"
-  version = "0.4.3"
+  version = "0.4.4"
 
 [[constraint]]
   branch = "master"

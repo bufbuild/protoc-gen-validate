@@ -65,7 +65,7 @@ func (c context) optionPackage(e pgs.Entity) (path, pkg string) {
 	}
 
 	// check if there's a go_package option specified
-	pkg = e.File().Descriptor().GetOptions().GetGoPackage()
+	pkg = c.resolveGoPackageOption(e)
 	path = e.File().InputPath().Dir().String()
 
 	if pkg == "" {
@@ -95,4 +95,22 @@ func (c context) optionPackage(e pgs.Entity) (path, pkg string) {
 	pkg = nonAlphaNumPattern.ReplaceAllString(pkg, "_")
 
 	return
+}
+
+func (c context) resolveGoPackageOption(e pgs.Entity) string {
+	// attempt to get it from the current file
+	if pkg := e.File().Descriptor().GetOptions().GetGoPackage(); pkg != "" {
+		return pkg
+	}
+
+	// protoc-gen-go will use the go_package option from _any_ file in the same
+	// execution since it's assumed that all the files are in the same Go
+	// package. PG* will only verify this against files in the same proto package
+	for _, f := range e.Package().Files() {
+		if pkg := f.Descriptor().GetOptions().GetGoPackage(); pkg != "" {
+			return pkg
+		}
+	}
+
+	return ""
 }

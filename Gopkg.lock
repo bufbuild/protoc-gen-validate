@@ -34,8 +34,8 @@
     ".",
     "lang/go"
   ]
-  revision = "2a4874b2def53736ccf1f75fd48546c09c658959"
-  version = "v0.4.3"
+  revision = "95ca57a4ef989c084ed1a5a58810d2b34a28cf72"
+  version = "v0.4.4"
 
 [[projects]]
   name = "github.com/spf13/afero"
@@ -50,7 +50,7 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
-  revision = "9b4f9f5ad5197c79fd623a3638e70d8b26cef344"
+  revision = "c44066c5c816ec500d459a2a324a753f78531ae0"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -68,6 +68,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "0703cad49c2817a552ee72bf928a608e883f77f65a04e60a8d61a882b2087482"
+  inputs-digest = "64d19afa87ef4ac27f2c796d73d1566bcad2862fe2b71a91d0b194e2770126e5"
   solver-name = "gps-cdcl"
   solver-version = 1
