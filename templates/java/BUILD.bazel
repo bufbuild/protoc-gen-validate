@@ -19,6 +19,7 @@ go_library(
     importpath = "github.com/lyft/protoc-gen-validate/templates/java",
     visibility = ["//visibility:public"],
     deps = [
+        "//templates/shared:go_default_library",
         "//vendor/github.com/iancoleman/strcase:go_default_library",
         "//vendor/github.com/lyft/protoc-gen-star:go_default_library",
         "//vendor/github.com/lyft/protoc-gen-star/lang/go:go_default_library",
