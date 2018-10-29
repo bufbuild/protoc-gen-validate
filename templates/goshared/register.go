@@ -18,31 +18,33 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	fns := goSharedFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
-		"accessor":    fns.accessor,
-		"byteStr":     fns.byteStr,
-		"cmt":         pgs.C80,
-		"durGt":       fns.durGt,
-		"durLit":      fns.durLit,
-		"durStr":      fns.durStr,
-		"err":         fns.err,
-		"errCause":    fns.errCause,
-		"errIdx":      fns.errIdx,
-		"errIdxCause": fns.errIdxCause,
-		"errname":     fns.errName,
-		"inKey":       fns.inKey,
-		"inType":      fns.inType,
-		"isBytes":     fns.isBytes,
-		"lit":         fns.lit,
-		"lookup":      fns.lookup,
-		"msgTyp":      fns.msgTyp,
-		"name":        fns.Name,
-		"oneof":       fns.oneofTypeName,
-		"pkg":         fns.PackageName,
-		"tsGt":        fns.tsGt,
-		"tsLit":       fns.tsLit,
-		"tsStr":       fns.tsStr,
-		"typ":         fns.Type,
-		"unwrap":      fns.unwrap,
+		"accessor":      fns.accessor,
+		"byteStr":       fns.byteStr,
+		"cmt":           pgs.C80,
+		"durGt":         fns.durGt,
+		"durLit":        fns.durLit,
+		"durStr":        fns.durStr,
+		"err":           fns.err,
+		"errCause":      fns.errCause,
+		"errIdx":        fns.errIdx,
+		"errIdxCause":   fns.errIdxCause,
+		"errname":       fns.errName,
+		"inKey":         fns.inKey,
+		"inType":        fns.inType,
+		"isBytes":       fns.isBytes,
+		"lit":           fns.lit,
+		"lookup":        fns.lookup,
+		"msgTyp":        fns.msgTyp,
+		"name":          fns.Name,
+		"oneof":         fns.oneofTypeName,
+		"pkg":           fns.PackageName,
+		"tsGt":          fns.tsGt,
+		"tsLit":         fns.tsLit,
+		"tsStr":         fns.tsStr,
+		"typ":           fns.Type,
+		"unwrap":        fns.unwrap,
+		"externalEnums": fns.externalEnums,
+		"enumPackages":  fns.enumPackages,
 	})
 
 	template.Must(tpl.New("msg").Parse(msgTpl))
@@ -283,4 +285,28 @@ func (fns goSharedFuncs) unwrap(ctx shared.RuleContext, name string) (shared.Rul
 
 func (fns goSharedFuncs) msgTyp(message pgs.Message) pgsgo.TypeName {
 	return pgsgo.TypeName(fns.Name(message))
+}
+
+func (fns goSharedFuncs) externalEnums(file pgs.File) []pgs.Enum {
+	var out []pgs.Enum
+
+	for _, msg := range file.AllMessages() {
+		for _, fld := range msg.Fields() {
+			if en := fld.Type().Enum(); fld.Type().IsEnum() && en.Package().ProtoName() != fld.Package().ProtoName() {
+				out = append(out, en)
+			}
+		}
+	}
+
+	return out
+}
+
+func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.FilePath]pgs.Name {
+	out := make(map[pgs.FilePath]pgs.Name, len(enums))
+
+	for _, en := range enums {
+		out[fns.ImportPath(en)] = fns.PackageName(en)
+	}
+
+	return out
 }
