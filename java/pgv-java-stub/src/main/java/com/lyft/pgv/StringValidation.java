@@ -1,14 +1,13 @@
 package com.lyft.pgv;
 
+import com.google.re2j.Pattern;
+import org.apache.commons.validator.routines.DomainValidator;
+import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.commons.validator.routines.InetAddressValidator;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-
-import org.apache.commons.validator.routines.DomainValidator;
-import org.apache.commons.validator.routines.InetAddressValidator;
-import org.apache.commons.validator.routines.EmailValidator;
-import org.apache.commons.validator.routines.UrlValidator;
-import com.google.re2j.*;
 
 public final class StringValidation {
     private StringValidation() {

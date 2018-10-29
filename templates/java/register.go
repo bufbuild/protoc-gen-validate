@@ -19,6 +19,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 
 	tpl.Funcs(map[string]interface{}{
 		"accessor":                 fns.accessor,
+		"byteArrayLit":             fns.byteArrayLit,
 		"classNameFile":            classNameFile,
 		"durLit":                   fns.durLit,
 		"rawPrint":                 fns.rawPrint,
@@ -229,6 +230,17 @@ func (fns javaFuncs) javaStringEscape(s string) string {
 	s = strings.Replace(s, "\\", "\\\\", -1)
 	s = strings.Replace(s, "\"", "\\\"", -1)
 	return "\"" + s + "\""
+}
+
+func (fns javaFuncs) byteArrayLit(bytes []uint8) string {
+	var sb strings.Builder
+	sb.WriteString("new byte[]{")
+	for _, b := range bytes {
+		sb.WriteString(fmt.Sprintf("(byte)%#x,", b))
+	}
+	sb.WriteString("}")
+
+	return sb.String()
 }
 
 func (fns javaFuncs) durLit(dur *duration.Duration) string {

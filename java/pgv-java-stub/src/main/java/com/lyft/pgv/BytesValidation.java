@@ -1,10 +1,10 @@
 package com.lyft.pgv;
 
+import com.google.common.primitives.Bytes;
 import com.google.protobuf.ByteString;
-
 import com.google.re2j.Pattern;
-import org.apache.commons.validator.routines.InetAddressValidator;
-import org.apache.commons.validator.routines.UrlValidator;
+
+import java.util.Arrays;
 
 public final class BytesValidation {
     private BytesValidation() {
@@ -34,21 +34,21 @@ public final class BytesValidation {
         }
     }
 
-    public static void prefix(String field, ByteString value, String prefix) throws ValidationException {
-        if (!value.startsWith(ByteString.copyFrom(prefix.getBytes()))) {
-            throw new ValidationException(field, "should start with " + prefix);
+    public static void prefix(String field, ByteString value, byte[] prefix) throws ValidationException {
+        if (!value.startsWith(ByteString.copyFrom(prefix))) {
+            throw new ValidationException(field, "should start with " + Arrays.toString(prefix));
         }
     }
 
-    public static void contains(String field, ByteString value, String contains) throws ValidationException {
-        if (!value.toStringUtf8().contains(contains)) {
-            throw new ValidationException(field, "should contain " + contains);
+    public static void contains(String field, ByteString value, byte[] contains) throws ValidationException {
+        if (Bytes.indexOf(value.toByteArray(), contains) == -1) {
+            throw new ValidationException(field, "should contain " + Arrays.toString(contains));
         }
     }
 
-    public static void suffix(String field, ByteString value, String suffix) throws ValidationException {
-        if (!value.endsWith(ByteString.copyFrom(suffix.getBytes()))) {
-            throw new ValidationException(field, "should end with " + suffix);
+    public static void suffix(String field, ByteString value, byte[] suffix) throws ValidationException {
+        if (!value.endsWith(ByteString.copyFrom(suffix))) {
+            throw new ValidationException(field, "should end with " + Arrays.toString(suffix));
         }
     }
 
@@ -74,6 +74,24 @@ public final class BytesValidation {
     public static void ipv6(String field, ByteString value) throws ValidationException {
         if (value.toByteArray().length != 16) {
             throw new ValidationException(field, "should be valid ipv6 address " + value);
+        }
+    }
+
+    public static void in(String field, ByteString value, ByteString[] set) throws ValidationException {
+        for (ByteString bs : set) {
+            if (value.equals(bs)) {
+                return;
+            }
+        }
+
+        throw new ValidationException(field, "value must be in " + Arrays.toString(set));
+    }
+
+    public static void notIn(String field, ByteString value, ByteString[] set) throws ValidationException {
+        for (ByteString bs : set) {
+            if (value.equals(bs)) {
+                throw new ValidationException(field, "value must not be in " + Arrays.toString(set));
+            }
         }
     }
 }

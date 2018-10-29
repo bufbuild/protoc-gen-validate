@@ -58,25 +58,25 @@ public class BytesValidationTest {
     @Test
     public void prefixWorks() throws ValidationException {
         // Match
-        BytesValidation.prefix("x", ByteString.copyFromUtf8("Hello World"), "Hello");
+        BytesValidation.prefix("x", ByteString.copyFromUtf8("Hello World"), "Hello".getBytes());
         // No Match
-        assertThatThrownBy(() -> BytesValidation.prefix("x", ByteString.copyFromUtf8("Hello World"), "Bananas")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> BytesValidation.prefix("x", ByteString.copyFromUtf8("Hello World"), "Bananas".getBytes())).isInstanceOf(ValidationException.class);
     }
 
     @Test
     public void containsWorks() throws ValidationException {
         // Match
-        BytesValidation.contains("x", ByteString.copyFromUtf8("Hello World"), "o W");
+        BytesValidation.contains("x", ByteString.copyFromUtf8("Hello World"), "o W".getBytes());
         // No Match
-        assertThatThrownBy(() -> BytesValidation.contains("x", ByteString.copyFromUtf8("Hello World"), "Bananas")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> BytesValidation.contains("x", ByteString.copyFromUtf8("Hello World"), "Bananas".getBytes())).isInstanceOf(ValidationException.class);
     }
 
     @Test
     public void suffixWorks() throws ValidationException {
         // Match
-        BytesValidation.suffix("x", ByteString.copyFromUtf8("Hello World"), "World");
+        BytesValidation.suffix("x", ByteString.copyFromUtf8("Hello World"), "World".getBytes());
         // No Match
-        assertThatThrownBy(() -> BytesValidation.suffix("x", ByteString.copyFromUtf8("Hello World"), "Bananas")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> BytesValidation.suffix("x", ByteString.copyFromUtf8("Hello World"), "Bananas".getBytes())).isInstanceOf(ValidationException.class);
     }
 
     @Test
@@ -104,5 +104,23 @@ public class BytesValidationTest {
         // No Match
         assertThatThrownBy(() -> BytesValidation.ipv6("x", ByteString.copyFrom(InetAddress.getByName("192.168.0.1").getAddress()))).isInstanceOf(ValidationException.class);
         assertThatThrownBy(() -> BytesValidation.ipv6("x", ByteString.copyFromUtf8("BANANAS!"))).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
+    public void inWorks() throws ValidationException {
+        ByteString[] set = new ByteString[]{ByteString.copyFromUtf8("foo"), ByteString.copyFromUtf8("bar")};
+        // In
+        BytesValidation.in("x", ByteString.copyFromUtf8("foo"), set);
+        // Not In
+        assertThatThrownBy(() -> BytesValidation.in("x", ByteString.copyFromUtf8("baz"), set)).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
+    public void notInWorks() throws ValidationException {
+        ByteString[] set = new ByteString[]{ByteString.copyFromUtf8("foo"), ByteString.copyFromUtf8("bar")};
+        // In
+        assertThatThrownBy(() -> BytesValidation.notIn("x", ByteString.copyFromUtf8("foo"), set)).isInstanceOf(ValidationException.class);
+        // Not In
+        BytesValidation.notIn("x", ByteString.copyFromUtf8("baz"), set);
     }
 }
