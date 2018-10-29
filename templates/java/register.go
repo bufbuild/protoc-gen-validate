@@ -20,6 +20,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"accessor":                 fns.accessor,
 		"classNameFile":            classNameFile,
 		"durLit":                   fns.durLit,
+		"fieldName":                fns.fieldName,
 		"javaPackage":              fns.javaPackage,
 		"javaTypeFor":              fns.javaTypeFor,
 		"javaTypeLiteralSuffixFor": fns.javaTypeLiteralSuffixFor,
@@ -174,9 +175,12 @@ func (fns javaFuncs) hasAccessor(ctx shared.RuleContext) string {
 	if ctx.AccessorOverride != "" {
 		return "true"
 	}
-	return fmt.Sprintf(
-		"m.has_%s()",
-		ctx.Field.Name());
+	fiedlName := strcase.ToCamel(ctx.Field.Name().String())
+	return "proto.has" +  fiedlName + "()"
+}
+
+func (fns javaFuncs) fieldName(ctx shared.RuleContext) string {
+	return ctx.Field.Name().String()
 }
 
 func (fns javaFuncs) javaTypeFor(f pgs.Field) string {
