@@ -20,6 +20,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"accessor":                 fns.accessor,
 		"classNameFile":            classNameFile,
 		"durLit":                   fns.durLit,
+		"rawPrint":                 fns.rawPrint,
 		"fieldName":                fns.fieldName,
 		"javaPackage":              fns.javaPackage,
 		"javaTypeFor":              fns.javaTypeFor,
@@ -169,6 +170,10 @@ func appendOuterClassName(outerClassName string, file pgs.File) string {
 func (fns javaFuncs) accessor(field pgs.Field) string {
 	fieldName := strcase.ToCamel(field.Name().String())
 	return "get" + fieldName + "()"
+}
+
+func (fns javaFuncs) rawPrint(instr string) string {
+	return fmt.Sprintf("%#v",instr)
 }
 
 func (fns javaFuncs) hasAccessor(ctx shared.RuleContext) string {
