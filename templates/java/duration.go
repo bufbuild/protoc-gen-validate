@@ -18,4 +18,24 @@ const durationTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Gte }}
 			com.lyft.pgv.DurationValidation.greaterThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ durLit $r.Gte }});
 {{- end -}}
+{{- if $r.In }}
+			{
+				com.google.protobuf.Duration[] set = new com.google.protobuf.Duration[]{
+					{{- range $r.In }}
+					{{ durLit . }},
+					{{- end }}
+				};
+				com.lyft.pgv.DurationValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
+			}
+{{- end -}}
+{{- if $r.NotIn }}
+			{
+				com.google.protobuf.Duration[] set = new com.google.protobuf.Duration[]{
+					{{- range $r.NotIn }}
+					{{ durLit . }},
+					{{- end }}
+				};
+				com.lyft.pgv.DurationValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
+			}
+{{- end -}}
 `

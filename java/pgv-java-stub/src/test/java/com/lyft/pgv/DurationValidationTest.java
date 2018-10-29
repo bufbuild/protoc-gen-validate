@@ -1,5 +1,6 @@
 package com.lyft.pgv;
 
+import com.google.protobuf.Duration;
 import com.google.protobuf.util.Durations;
 import org.junit.Test;
 
@@ -52,5 +53,23 @@ public class DurationValidationTest {
         DurationValidation.greaterThanOrEqual("x", Durations.fromSeconds(10), Durations.fromSeconds(10));
         // Greater
         DurationValidation.greaterThanOrEqual("x", Durations.fromSeconds(20), Durations.fromSeconds(10));
+    }
+
+    @Test
+    public void inWorks() throws ValidationException {
+        Duration[] set = new Duration[]{DurationValidation.toDuration(1, 0), DurationValidation.toDuration(2, 0)};
+        // In
+        DurationValidation.in("x", DurationValidation.toDuration(1, 0), set);
+        // Not In
+        assertThatThrownBy(() -> DurationValidation.in("x", DurationValidation.toDuration(3, 0), set)).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
+    public void notInWorks() throws ValidationException {
+        Duration[] set = new Duration[]{DurationValidation.toDuration(1, 0), DurationValidation.toDuration(2, 0)};
+        // In
+        assertThatThrownBy(() -> DurationValidation.notIn("x", DurationValidation.toDuration(1, 0), set)).isInstanceOf(ValidationException.class);
+        // Not In
+        DurationValidation.notIn("x", DurationValidation.toDuration(3, 0), set);
     }
 }

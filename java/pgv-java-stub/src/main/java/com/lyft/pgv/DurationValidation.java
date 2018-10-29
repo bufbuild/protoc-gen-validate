@@ -3,6 +3,8 @@ package com.lyft.pgv;
 import com.google.protobuf.Duration;
 import com.google.protobuf.util.Durations;
 
+import java.util.Arrays;
+
 public final class DurationValidation {
     private DurationValidation() {
     }
@@ -34,6 +36,24 @@ public final class DurationValidation {
     public static void greaterThanOrEqual(String field, Duration value, Duration greaterThan) throws ValidationException {
         if (Durations.compare(value, greaterThan) < 0) {
             throw new ValidationException(field, "value must be greater than or equal  " + greaterThan);
+        }
+    }
+
+    public static void in(String field, Duration value, Duration[] set) throws ValidationException {
+        for (Duration str : set) {
+            if (value.equals(str)) {
+                return;
+            }
+        }
+
+        throw new ValidationException(field, "value must be in " + Arrays.toString(set));
+    }
+
+    public static void notIn(String field, Duration value, Duration[] set) throws ValidationException {
+        for (Duration str : set) {
+            if (value.equals(str)) {
+                throw new ValidationException(field, "value must not be in " + Arrays.toString(set));
+            }
         }
     }
 
