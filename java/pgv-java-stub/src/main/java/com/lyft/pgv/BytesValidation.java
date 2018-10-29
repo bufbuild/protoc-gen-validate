@@ -8,6 +8,12 @@ import org.apache.commons.validator.routines.UrlValidator;
 public final class BytesValidation {
     private BytesValidation() { }
 
+    public static void constant(String field, ByteString value, ByteString expected) throws ValidationException {
+        if (!value.equals(expected)) {
+            throw new ValidationException(field, "value must equal " + expected);
+        }
+    }
+
     public static void length(String field, ByteString value, int expected) throws ValidationException {
         if (value.size() != expected) {
                 throw new ValidationException(field, "length must be " + expected);

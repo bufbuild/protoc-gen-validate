@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "bool.go",
         "bytes.go",
+        "enum.go",
         "file.go",
         "msg.go",
         "none.go",
