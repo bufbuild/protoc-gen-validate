@@ -12,6 +12,7 @@ go_library(
         "none.go",
         "num.go",
         "register.go",
+        "required.go",
         "string.go",
         "unimplemented.go",
     ],
