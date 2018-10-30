@@ -181,6 +181,9 @@ func appendOuterClassName(outerClassName string, file pgs.File) string {
 
 func (fns javaFuncs) accessor(field pgs.Field) string {
 	fieldName := strcase.ToCamel(field.Name().String())
+	if field.Type().IsMap() {
+		fieldName += "Map"
+	}
 	return "get" + fieldName + "()"
 }
 
