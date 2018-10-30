@@ -14,6 +14,19 @@ import (
 	"github.com/lyft/protoc-gen-validate/templates/shared"
 )
 
+func RegisterIndex(tpl *template.Template, params pgs.Parameters) {
+	fns := javaFuncs{pgsgo.InitContext(params)}
+
+	tpl.Funcs(map[string]interface{}{
+		"classNameFile": classNameFile,
+		"javaPackage":   fns.javaPackage,
+		"simpleName":    fns.Name,
+		"qualifiedName": fns.qualifiedName,
+	})
+
+	template.Must(tpl.Parse(fileIndexTpl))
+}
+
 func Register(tpl *template.Template, params pgs.Parameters) {
 	fns := javaFuncs{pgsgo.InitContext(params)}
 

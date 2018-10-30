@@ -29,6 +29,7 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 	lang := m.Parameters().Str(langParam)
 	m.Assert(lang != "", "`lang` parameter must be set")
 
+	// Process file-level templates
 	tpls := templates.Template(m.Parameters())[lang]
 	m.Assert(tpls != nil, "could not find templates for `lang`: ", lang)
 
@@ -45,6 +46,19 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 		}
 
 		m.Pop()
+	}
+
+	// Process index-level templates
+	mtpls := templates.IndexTemplate(m.Parameters())[lang]
+	if mtpls != nil {
+		files := []pgs.File{}
+		for _, f := range targets {
+			files = append(files, f)
+		}
+
+		for _, mtpl := range mtpls {
+			m.AddGeneratorTemplateFile(mtpl.Name(), mtpl, files)
+		}
 	}
 
 	return m.Artifacts()
