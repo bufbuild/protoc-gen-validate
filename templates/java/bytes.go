@@ -32,23 +32,19 @@ const bytesTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			com.lyft.pgv.BytesValidation.ipv6("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }});
 {{- end -}}
 {{- if $r.In }}
-			{
-				com.google.protobuf.ByteString[] set = new com.google.protobuf.ByteString[]{
-					{{- range $r.In }}
+			com.google.protobuf.ByteString[] set = new com.google.protobuf.ByteString[]{
+				{{- range $r.In }}
 					com.google.protobuf.ByteString.copyFrom({{ byteArrayLit . }}),
-					{{- end }}
-				};
-				com.lyft.pgv.BytesValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
-			}
+				{{- end }}
+			};
+			com.lyft.pgv.BytesValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
 {{- end -}}
 {{- if $r.NotIn }}
-			{
-				com.google.protobuf.ByteString[] set = new com.google.protobuf.ByteString[]{
-					{{- range $r.NotIn }}
+			com.google.protobuf.ByteString[] set = new com.google.protobuf.ByteString[]{
+				{{- range $r.NotIn }}
 					com.google.protobuf.ByteString.copyFrom({{ byteArrayLit . }}),
-					{{- end }}
-				};
-				com.lyft.pgv.BytesValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
-			}
+				{{- end }}
+			};
+			com.lyft.pgv.BytesValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
 {{- end -}}
 `
