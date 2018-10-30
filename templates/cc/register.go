@@ -404,9 +404,12 @@ func (fns CCFuncs) output(file pgs.File, ext string) string {
 }
 
 func (fns CCFuncs) Type(f pgs.Field) pgsgo.TypeName {
+	typ := fns.Context.Type(f)
+
 	if f.Type().IsEnum() {
-		return pgsgo.TypeName(pgsgo.PGGUpperCamelCase(f.Type().Enum().Name()))
+		parts := strings.Split(typ.String(), ".")
+		typ = pgsgo.TypeName(parts[len(parts)-1])
 	}
 
-	return fns.Context.Type(f)
+	return typ
 }
