@@ -20,6 +20,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	tpl.Funcs(map[string]interface{}{
 		"accessor":                 fns.accessor,
 		"byteArrayLit":             fns.byteArrayLit,
+		"camelCase":                fns.camelCase,
 		"classNameFile":            classNameFile,
 		"durLit":                   fns.durLit,
 		"rawPrint":                 fns.rawPrint,
@@ -29,6 +30,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"javaTypeFor":              fns.javaTypeFor,
 		"javaTypeLiteralSuffixFor": fns.javaTypeLiteralSuffixFor,
 		"hasAccessor":              fns.hasAccessor,
+		"oneof":                    fns.oneofTypeName,
 		"sprintf":                  fmt.Sprintf,
 		"simpleName":               fns.Name,
 		"tsLit":                    fns.tsLit,
@@ -240,6 +242,10 @@ func (fns javaFuncs) javaStringEscape(s string) string {
 	return "\"" + s + "\""
 }
 
+func (fns javaFuncs) camelCase(name pgs.Name) string {
+	return strcase.ToCamel(name.String())
+}
+
 func (fns javaFuncs) byteArrayLit(bytes []uint8) string {
 	var sb strings.Builder
 	sb.WriteString("new byte[]{")
@@ -261,4 +267,10 @@ func (fns javaFuncs) tsLit(ts *timestamp.Timestamp) string {
 	return fmt.Sprintf(
 		"com.lyft.pgv.TimestampValidation.toTimestamp(%d,%d)",
 		ts.GetSeconds(), ts.GetNanos())
+}
+
+func (fns javaFuncs) oneofTypeName(f pgs.Field) pgsgo.TypeName {
+	return pgsgo.TypeName(fmt.Sprintf("%s",
+		pgsgo.PGGUpperCamelCase(f.Name()),
+	))
 }
