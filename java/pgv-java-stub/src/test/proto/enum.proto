@@ -7,3 +7,7 @@ enum TestEnum {
     ONE  = 1;
     TWO  = 2;
 }
+
+message Outer {
+    string val = 1;
+}

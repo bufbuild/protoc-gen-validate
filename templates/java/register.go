@@ -59,7 +59,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 
 	template.Must(tpl.New("any").Parse(notImplementedTpl))
 	template.Must(tpl.New("enum").Parse(enumTpl))
-	template.Must(tpl.New("message").Parse(notImplementedTpl))
+	template.Must(tpl.New("message").Parse(messageTpl))
 	template.Must(tpl.New("repeated").Parse(notImplementedTpl))
 	template.Must(tpl.New("map").Parse(notImplementedTpl))
 
