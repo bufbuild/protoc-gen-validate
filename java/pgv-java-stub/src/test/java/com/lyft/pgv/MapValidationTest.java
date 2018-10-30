@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class MapValidationTest {
     @Test
     public void minWorks() throws ValidationException {
-        Map<String,String> map = new HashMap<String,String>();
+        Map<String,String> map = new HashMap<>();
         map.put("1", "ONE");
         map.put("2", "TWO");
 
@@ -22,7 +22,7 @@ public class MapValidationTest {
 
     @Test
     public void maxWorks() throws ValidationException {
-        Map<String,String> map = new HashMap<String,String>();
+        Map<String,String> map = new HashMap<>();
         map.put("1", "ONE");
         map.put("2", "TWO");
 
@@ -34,7 +34,7 @@ public class MapValidationTest {
 
     @Test
     public void noSparseWorks() throws ValidationException {
-        Map<String,String> map = new HashMap<String,String>();
+        Map<String,String> map = new HashMap<>();
         map.put("1", "ONE");
         map.put("2", null);
 

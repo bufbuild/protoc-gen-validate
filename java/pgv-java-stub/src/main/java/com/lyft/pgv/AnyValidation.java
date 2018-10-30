@@ -9,13 +9,13 @@ public final class AnyValidation {
     }
 
     public static void in(String field, Any value, String[] set) throws ValidationException {
-      for (String typeUrl : set) {
-          if (value.getTypeUrl().equals(typeUrl)) {
-              return;
-          }
-      }
+        for (String typeUrl : set) {
+            if (value.getTypeUrl().equals(typeUrl)) {
+                return;
+            }
+        }
 
-      throw new ValidationException(field, "value must be of type " + Arrays.toString(set));
+        throw new ValidationException(field, "value must be of type " + Arrays.toString(set));
     }
 
     public static void notIn(String field, Any value, String[] set) throws ValidationException {
