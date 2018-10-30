@@ -17,19 +17,23 @@ const numTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			com.lyft.pgv.NumericValidation.greaterThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ $r.GetGte }});
 {{- end -}}
 {{- if $r.In }}
-			{{ javaTypeFor $f }}[] set = new {{ javaTypeFor $f }}[]{
-				{{- range $r.In -}}
-					{{- sprintf "%v" . -}}{{ javaTypeLiteralSuffixFor $f }},
-				{{- end -}}
-			};
-			com.lyft.pgv.NumericValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
+			{
+				{{ javaTypeFor $f }}[] set = new {{ javaTypeFor $f }}[]{
+					{{- range $r.In -}}
+						{{- sprintf "%v" . -}}{{ javaTypeLiteralSuffixFor $f }},
+					{{- end -}}
+				};
+				com.lyft.pgv.NumericValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
+			}
 {{- end -}}
 {{- if $r.NotIn }}
-			{{ javaTypeFor $f }}[] set = new {{ javaTypeFor $f }}[]{
-				{{- range $r.NotIn -}}
-					 {{- sprintf "%v" . -}}{{ javaTypeLiteralSuffixFor $f }},
-				{{- end -}}
-			};
-			com.lyft.pgv.NumericValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
+			{
+				{{ javaTypeFor $f }}[] set = new {{ javaTypeFor $f }}[]{
+					{{- range $r.NotIn -}}
+						{{- sprintf "%v" . -}}{{ javaTypeLiteralSuffixFor $f }},
+					{{- end -}}
+				};
+				com.lyft.pgv.NumericValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
+			}
 {{- end -}}
 `
