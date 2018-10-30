@@ -48,6 +48,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"simpleName":               fns.Name,
 		"tsLit":                    fns.tsLit,
 		"qualifiedName":            fns.qualifiedName,
+		"isOfMessageType":          fns.isOfMessageType,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
@@ -217,7 +218,8 @@ func (fns javaFuncs) fieldName(ctx shared.RuleContext) string {
 }
 
 func (fns javaFuncs) javaTypeFor(f pgs.Field) string {
-	switch f.Type().ProtoType() {
+	t := f.Type()
+	switch t.ProtoType() {
 	case pgs.Int32T, pgs.UInt32T, pgs.SInt32, pgs.Fixed32T, pgs.SFixed32:
 		return "int"
 	case pgs.Int64T, pgs.UInt64T, pgs.SInt64, pgs.Fixed64T, pgs.SFixed64:
@@ -234,6 +236,16 @@ func (fns javaFuncs) javaTypeFor(f pgs.Field) string {
 		return "com.google.protobuf.ByteString"
 	case pgs.EnumT:
 		return fns.qualifiedName(f.Type().Enum()).String()
+	case pgs.MessageT:
+		if t.IsEmbed() {
+			return fns.qualifiedName(t.Embed()).String()
+		}
+		if t.IsRepeated() {
+			if t.ProtoType() == pgs.MessageT {
+				return fns.qualifiedName(t.Element().Embed()).String()
+			}
+		}
+		return "Object"
 	default:
 		return "Object"
 	}
@@ -289,4 +301,8 @@ func (fns javaFuncs) oneofTypeName(f pgs.Field) pgsgo.TypeName {
 	return pgsgo.TypeName(fmt.Sprintf("%s",
 		pgsgo.PGGUpperCamelCase(f.Name()),
 	))
+}
+
+func (fns javaFuncs) isOfMessageType(f pgs.Field) bool {
+	return f.Type().ProtoType() == pgs.MessageT
 }

@@ -7,12 +7,12 @@ package com.lyft.pgv;
 public final class ValidatorIndex {
 	private ValidatorIndex() { }
 
-	private static final java.util.Map<java.lang.Class, com.lyft.pgv.Validator> INDEX = new java.util.HashMap<>();
+	private static final java.util.Map<java.lang.Class, com.lyft.pgv.Validator> VALIDATOR_INDEX = new java.util.HashMap<>();
 
 	static {
 		{{ range . -}}{{- $file := . -}}
 		{{- range .AllMessages -}}{{- $message := . -}}
-		INDEX.put({{ qualifiedName $message }}.class, new {{javaPackage $file}}.{{ classNameFile $file }}Validator.{{ simpleName $message }}Validator());
+		VALIDATOR_INDEX.put({{ qualifiedName $message }}.class, new {{javaPackage $file}}.{{ classNameFile $file }}Validator.{{ simpleName $message }}Validator());
 		{{ end -}}{{ end }}
 	}
 
@@ -23,7 +23,13 @@ public final class ValidatorIndex {
 		}
 	};
 
-	public static <T> com.lyft.pgv.Validator<T> validatorFor(java.lang.Class<T> clazz) {
-		return INDEX.getOrDefault(clazz, ALWAYS_VALID);
+	@SuppressWarnings("unchecked")
+	public static <T> com.lyft.pgv.Validator<T> validatorFor(java.lang.Class clazz) {
+		return VALIDATOR_INDEX.getOrDefault(clazz, ALWAYS_VALID);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> com.lyft.pgv.Validator<T> validatorFor(Object instance) {
+		return validatorFor(instance == null ? null : instance.getClass());
 	}
 }`
