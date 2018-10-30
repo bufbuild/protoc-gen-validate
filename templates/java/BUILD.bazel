@@ -3,11 +3,13 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
+        "any.go",
         "bool.go",
         "bytes.go",
         "duration.go",
         "enum.go",
         "file.go",
+        "map.go",
         "message.go",
         "msg.go",
         "none.go",
