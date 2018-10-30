@@ -1,7 +1,7 @@
 package java
 
 const durationTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
-{{ template "required" . }}
+{{- template "required" . -}}
 
 {{- if $r.Const }}
 			com.lyft.pgv.DurationValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ durLit $r.GetConst }});

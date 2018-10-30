@@ -5,12 +5,12 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class MessageValidationTest {
+public class RequiredValidationTest {
     @Test
     public void requiredWorks() throws ValidationException {
         // Present
-        MessageValidation.required("x", Enum.Outer.getDefaultInstance());
+        RequiredValidation.required("x", Enum.Outer.getDefaultInstance());
         // Absent
-        assertThatThrownBy(() -> MessageValidation.required("x", null)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> RequiredValidation.required("x", null)).isInstanceOf(ValidationException.class);
     }
 }

@@ -1,9 +1,7 @@
 package java
 
-const requiredTpl = `
-	{{- if .Rules.GetRequired -}}
-			if (!{{ hasAccessor . }}) {
-				throw new com.lyft.pgv.ValidationException("{{ fieldName . }}", "value is required ");
-			}
+const requiredTpl = `{{ $f := .Field }}
+	{{- if .Rules.GetRequired }}
+			com.lyft.pgv.RequiredValidation.required("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }});
 	{{- end -}}
 `

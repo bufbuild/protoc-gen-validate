@@ -1,7 +1,7 @@
 package java
 
 const timestampTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
-{{ template "required" . }}
+{{- template "required" . -}}
 
 {{- if $r.Const }}
 			com.lyft.pgv.TimestampValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ tsLit $r.GetConst }});
