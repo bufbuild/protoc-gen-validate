@@ -1,32 +1,28 @@
 package com.lyft.pgv;
 
+import com.google.protobuf.ProtocolMessageEnum;
+
 import java.util.Arrays;
 
 public final class EnumValidation {
     private EnumValidation() {
     }
 
-    public static void constant(String field, Object value, Object expected) throws ValidationException {
+    public static void constant(String field, ProtocolMessageEnum value, ProtocolMessageEnum expected) throws ValidationException {
         if (!value.equals(expected)) {
             throw new ValidationException(field, "value must equal " + expected);
         }
     }
 
-    public static void definedOnly(String field, Object value) throws ValidationException {
-        Object[] enumValues = value.getClass().getEnumConstants();
-        if (enumValues != null) {
-            for (Object enumValue : enumValues) {
-                if (((Enum) value).name().equals(enumValue)) {
-                    return;
-                }
-            }
+    public static void definedOnly(String field, ProtocolMessageEnum value) throws ValidationException {
+        if (value.toString().equals("UNRECOGNIZED")) {
+            throw new ValidationException(field, "value is not a defined Enum value " + value);
         }
-        throw new ValidationException(field, "value is not a defined Enum value " + value);
     }
 
-    public static void in(String field, Object value, Object[] enumValues) throws ValidationException {
+    public static void in(String field, ProtocolMessageEnum value, ProtocolMessageEnum[] enumValues) throws ValidationException {
         if (enumValues != null) {
-            for (Object enumValue : enumValues) {
+            for (ProtocolMessageEnum enumValue : enumValues) {
                 if (value.equals(enumValue)) {
                     return;
                 }
@@ -36,10 +32,10 @@ public final class EnumValidation {
         throw new ValidationException(field, "value must be in " + Arrays.toString(enumValues));
     }
 
-    public static void notIn(String field, Object value, Object[] enumValues) throws ValidationException {
+    public static void notIn(String field, ProtocolMessageEnum value, ProtocolMessageEnum[] enumValues) throws ValidationException {
         if (enumValues != null) {
-            for (Object enumValue : enumValues) {
-                if (!value.equals(enumValue)) {
+            for (ProtocolMessageEnum enumValue : enumValues) {
+                if (value.equals(enumValue)) {
                     throw new ValidationException(field, "value must not be in " + Arrays.toString(enumValues));
                 }
             }

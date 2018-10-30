@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package com.lyft.pvg.cases;
+
+enum TestEnum {
+    ZERO = 0;
+    ONE  = 1;
+    TWO  = 2;
+}

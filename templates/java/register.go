@@ -107,6 +107,12 @@ func (fns javaFuncs) qualifiedName(entity pgs.Entity) pgs.Name {
 		return pgs.Name(fns.qualifiedName(message.Parent()) + "." + pgs.Name(entity.Name()))
 	}
 
+	enum, isEnum := entity.(pgs.Enum)
+	if isEnum && enum.Parent() != nil {
+		// recurse
+		return pgs.Name(fns.qualifiedName(enum.Parent()) + "." + pgs.Name(entity.Name()))
+	}
+
 	return pgs.Name(entity.Name())
 }
 
@@ -208,6 +214,8 @@ func (fns javaFuncs) javaTypeFor(f pgs.Field) string {
 		return "String"
 	case pgs.BytesT:
 		return "com.google.protobuf.ByteString"
+	case pgs.EnumT:
+		return fns.qualifiedName(f.Type().Enum()).String()
 	default:
 		return "Object"
 	}
