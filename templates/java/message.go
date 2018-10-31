@@ -1,11 +1,11 @@
 package java
 
 const messageTpl = `{{ $f := .Field }}{{ $r := .Rules }}
-	{{- if $r.GetSkip -}}
-		// skipping validation for {{ $f.Name }}
-	{{ else -}}
+	{{- if $r.GetSkip }}
+			// skipping validation for {{ $f.Name }}
+	{{- else -}}
 		{{- template "required" . }}
-		{{- if (isOfMessageType $f) -}}
+		{{- if (isOfMessageType $f) }}
 			// Validate {{ $f.Name }}
 			com.lyft.pgv.ValidatorIndex.validatorFor(proto.{{ accessor $f }}).assertValid(proto.{{ accessor $f }});
 		{{- end -}}

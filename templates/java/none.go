@@ -1,3 +1,4 @@
 package java
 
-const noneTpl = `// no validation rules for {{ simpleName .Field }}`
+const noneTpl = `// no validation rules for {{ simpleName .Field }}
+`
