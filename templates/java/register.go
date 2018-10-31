@@ -19,7 +19,7 @@ func RegisterIndex(tpl *template.Template, params pgs.Parameters) {
 
 	tpl.Funcs(map[string]interface{}{
 		"classNameFile": classNameFile,
-		"javaPackage":   fns.javaPackage,
+		"javaPackage":   javaPackage,
 		"simpleName":    fns.Name,
 		"qualifiedName": fns.qualifiedName,
 	})
@@ -38,7 +38,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"durLit":                   fns.durLit,
 		"rawPrint":                 fns.rawPrint,
 		"fieldName":                fns.fieldName,
-		"javaPackage":              fns.javaPackage,
+		"javaPackage":              javaPackage,
 		"javaStringEscape":         fns.javaStringEscape,
 		"javaTypeFor":              fns.javaTypeFor,
 		"javaTypeLiteralSuffixFor": fns.javaTypeLiteralSuffixFor,
@@ -90,15 +90,21 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 type javaFuncs struct{ pgsgo.Context }
 
 func JavaFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) pgs.FilePath {
-	fullPath := ctx.OutputPath(f)
+	fullPath := pgs.FilePath(strings.Replace(javaPackage(f), ".", "/", -1))
 
-	fileName := classNameFile(f).String()
+	fileName := classNameFile(f)
 	fileName += "Validator.java"
 
 	return fullPath.SetBase(fileName)
 }
 
-func classNameFile(file pgs.File) pgs.Name {
+func classNameFile(file pgs.File) string {
+	// Explicit outer class name overrides implicit name
+	options := file.Descriptor().GetOptions()
+	if options != nil && !options.GetJavaMultipleFiles() && options.JavaOuterClassname != nil {
+		return options.GetJavaOuterClassname()
+	}
+
 	protoName := pgs.FilePath(file.Name().String()).BaseName()
 
 	className := makeInvalidClassnameCharactersUnderscores(protoName)
@@ -106,32 +112,37 @@ func classNameFile(file pgs.File) pgs.Name {
 	className = upperCaseAfterNumber(className)
 	className = appendOuterClassName(className, file)
 
-	return pgs.Name(className)
+	return className
 }
 
-func (fns javaFuncs) javaPackage(file pgs.File) pgs.Name {
-	return file.Package().ProtoName()
+func javaPackage(file pgs.File) string {
+	// Explicit java package overrides implicit package
+	options := file.Descriptor().GetOptions()
+	if options != nil && options.JavaPackage != nil {
+		return options.GetJavaPackage()
+	}
+	return file.Package().ProtoName().String()
 }
 
-func (fns javaFuncs) qualifiedName(entity pgs.Entity) pgs.Name {
+func (fns javaFuncs) qualifiedName(entity pgs.Entity) string {
 	file, isFile := entity.(pgs.File)
 	if isFile {
-		return fns.javaPackage(file) + "." + classNameFile(file)
+		return javaPackage(file) + "." + classNameFile(file)
 	}
 
 	message, isMessage := entity.(pgs.Message)
 	if isMessage && message.Parent() != nil {
 		// recurse
-		return pgs.Name(fns.qualifiedName(message.Parent()) + "." + pgs.Name(entity.Name()))
+		return fns.qualifiedName(message.Parent()) + "." + entity.Name().String()
 	}
 
 	enum, isEnum := entity.(pgs.Enum)
 	if isEnum && enum.Parent() != nil {
 		// recurse
-		return pgs.Name(fns.qualifiedName(enum.Parent()) + "." + pgs.Name(entity.Name()))
+		return fns.qualifiedName(enum.Parent()) + "." + entity.Name().String()
 	}
 
-	return pgs.Name(entity.Name())
+	return entity.Name().String()
 }
 
 // Replace invalid identifier characters with an underscore
@@ -247,14 +258,14 @@ func (fns javaFuncs) javaTypeFor(f pgs.Field) string {
 	case pgs.BytesT:
 		return "com.google.protobuf.ByteString"
 	case pgs.EnumT:
-		return fns.qualifiedName(f.Type().Enum()).String()
+		return fns.qualifiedName(f.Type().Enum())
 	case pgs.MessageT:
 		if t.IsEmbed() {
-			return fns.qualifiedName(t.Embed()).String()
+			return fns.qualifiedName(t.Embed())
 		}
 		if t.IsRepeated() {
 			if t.ProtoType() == pgs.MessageT {
-				return fns.qualifiedName(t.Element().Embed()).String()
+				return fns.qualifiedName(t.Element().Embed())
 			}
 		}
 		return "Object"
