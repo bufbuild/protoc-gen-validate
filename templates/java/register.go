@@ -127,7 +127,15 @@ func javaPackage(file pgs.File) string {
 func (fns javaFuncs) qualifiedName(entity pgs.Entity) string {
 	file, isFile := entity.(pgs.File)
 	if isFile {
-		return javaPackage(file) + "." + classNameFile(file)
+		name := javaPackage(file)
+		if file.Descriptor().GetOptions() != nil {
+			if !file.Descriptor().GetOptions().GetJavaMultipleFiles() {
+				name += ("." + classNameFile(file))
+			}
+		} else {
+			name += ("." + classNameFile(file))
+		}
+		return name
 	}
 
 	message, isMessage := entity.(pgs.Message)
