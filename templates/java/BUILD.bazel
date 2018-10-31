@@ -15,6 +15,7 @@ go_library(
         "msg.go",
         "none.go",
         "num.go",
+        "oneof.go",
         "register.go",
         "required.go",
         "string.go",

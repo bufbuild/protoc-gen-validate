@@ -78,6 +78,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("message").Parse(messageTpl))
 	template.Must(tpl.New("repeated").Parse(notImplementedTpl))
 	template.Must(tpl.New("map").Parse(mapTpl))
+	template.Must(tpl.New("oneOf").Parse(oneOfTpl))
 
 	template.Must(tpl.New("required").Parse(requiredTpl))
 	template.Must(tpl.New("timestamp").Parse(timestampTpl))
