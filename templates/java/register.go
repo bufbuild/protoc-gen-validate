@@ -49,6 +49,8 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"tsLit":                    fns.tsLit,
 		"qualifiedName":            fns.qualifiedName,
 		"isOfMessageType":          fns.isOfMessageType,
+		"wrappedAccessor":          fns.wrappedAccessor,
+		"unwrap":                   fns.unwrap,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
@@ -83,7 +85,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("required").Parse(requiredTpl))
 	template.Must(tpl.New("timestamp").Parse(timestampTpl))
 	template.Must(tpl.New("duration").Parse(durationTpl))
-	template.Must(tpl.New("wrapper").Parse(notImplementedTpl))
+	template.Must(tpl.New("wrapper").Parse(wrapperTpl))
 }
 
 type javaFuncs struct{ pgsgo.Context }
@@ -192,6 +194,17 @@ func appendOuterClassName(outerClassName string, file pgs.File) string {
 	} else {
 		return outerClassName
 	}
+}
+
+func (fns javaFuncs) wrappedAccessor(ctx shared.RuleContext) string {
+	if ctx.AccessorOverride != "" {
+		return ctx.AccessorOverride
+	}
+	fieldName := strcase.ToCamel(ctx.Field.Name().String())
+	if ctx.Field.Type().IsMap() {
+		fieldName += "Map"
+	}
+	return "get" + fieldName + "()"
 }
 
 func (fns javaFuncs) accessor(field pgs.Field) string {
@@ -306,4 +319,14 @@ func (fns javaFuncs) oneofTypeName(f pgs.Field) pgsgo.TypeName {
 
 func (fns javaFuncs) isOfMessageType(f pgs.Field) bool {
 	return f.Type().ProtoType() == pgs.MessageT
+}
+
+func (fns javaFuncs) unwrap(ctx shared.RuleContext) (shared.RuleContext, error) {
+	ctx, err := ctx.Unwrap("wrapped")
+	if err != nil {
+		return ctx, err
+	}
+	ctx.AccessorOverride = fmt.Sprintf("%s.get%s()", fns.accessor(ctx.Field),
+		fns.camelCase(ctx.Field.Type().Embed().Fields()[0].Name()))
+	return ctx, nil
 }

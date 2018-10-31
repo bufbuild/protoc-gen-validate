@@ -2,19 +2,19 @@ package java
 
 const numTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Const }}
-			com.lyft.pgv.NumericValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ $r.GetConst }});
+			com.lyft.pgv.NumericValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, {{ $r.GetConst }});
 {{- end -}}
 {{- if $r.Lt }}
-			com.lyft.pgv.NumericValidation.lessThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ $r.GetLt }});
+			com.lyft.pgv.NumericValidation.lessThan("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, {{ $r.GetLt }});
 {{- end -}}
 {{- if $r.Lte }}
-			com.lyft.pgv.NumericValidation.lessThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ $r.GetLte }});
+			com.lyft.pgv.NumericValidation.lessThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, {{ $r.GetLte }});
 {{- end -}}
 {{- if $r.Gt }}
-			com.lyft.pgv.NumericValidation.greaterThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ $r.GetGt }});
+			com.lyft.pgv.NumericValidation.greaterThan("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, {{ $r.GetGt }});
 {{- end -}}
 {{- if $r.Gte }}
-			com.lyft.pgv.NumericValidation.greaterThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, {{ $r.GetGte }});
+			com.lyft.pgv.NumericValidation.greaterThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, {{ $r.GetGte }});
 {{- end -}}
 {{- if $r.In }}
 			{
@@ -23,7 +23,7 @@ const numTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 						{{- sprintf "%v" . -}}{{ javaTypeLiteralSuffixFor $f }},
 					{{- end -}}
 				};
-				com.lyft.pgv.NumericValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
+				com.lyft.pgv.NumericValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, set);
 			}
 {{- end -}}
 {{- if $r.NotIn }}
@@ -33,7 +33,7 @@ const numTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 						{{- sprintf "%v" . -}}{{ javaTypeLiteralSuffixFor $f }},
 					{{- end -}}
 				};
-				com.lyft.pgv.NumericValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
+				com.lyft.pgv.NumericValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, set);
 			}
 {{- end -}}
 `

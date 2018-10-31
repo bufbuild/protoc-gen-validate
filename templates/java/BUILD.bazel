@@ -21,6 +21,7 @@ go_library(
         "string.go",
         "timestamp.go",
         "unimplemented.go",
+        "wrapper.go",
     ],
     importpath = "github.com/lyft/protoc-gen-validate/templates/java",
     visibility = ["//visibility:public"],
