@@ -307,9 +307,7 @@ func (fns javaFuncs) tsLit(ts *timestamp.Timestamp) string {
 }
 
 func (fns javaFuncs) oneofTypeName(f pgs.Field) pgsgo.TypeName {
-	return pgsgo.TypeName(fmt.Sprintf("%s",
-		pgsgo.PGGUpperCamelCase(f.Name()),
-	))
+	return pgsgo.TypeName(fmt.Sprintf("%s", strings.ToUpper(f.Name().String())))
 }
 
 func (fns javaFuncs) isOfMessageType(f pgs.Field) bool {
