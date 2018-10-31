@@ -19,6 +19,7 @@ func RegisterIndex(tpl *template.Template, params pgs.Parameters) {
 
 	tpl.Funcs(map[string]interface{}{
 		"classNameFile": classNameFile,
+		"importsPvg":    importsPvg,
 		"javaPackage":   javaPackage,
 		"simpleName":    fns.Name,
 		"qualifiedName": fns.qualifiedName,
@@ -89,13 +90,28 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 
 type javaFuncs struct{ pgsgo.Context }
 
-func JavaFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) pgs.FilePath {
+func JavaFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.FilePath {
+	// Don't generate validators for files that don't import PGV
+	if !importsPvg(f) {
+		return nil
+	}
+
 	fullPath := pgs.FilePath(strings.Replace(javaPackage(f), ".", "/", -1))
 
 	fileName := classNameFile(f)
 	fileName += "Validator.java"
 
-	return fullPath.SetBase(fileName)
+	fullPath = fullPath.SetBase(fileName)
+	return &fullPath
+}
+
+func importsPvg(f pgs.File) bool {
+	for _, dep := range f.Descriptor().Dependency {
+		if strings.HasSuffix(dep, "validate.proto") {
+			return true
+		}
+	}
+	return false
 }
 
 func classNameFile(file pgs.File) string {

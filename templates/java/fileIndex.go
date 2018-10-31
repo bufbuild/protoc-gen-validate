@@ -10,10 +10,10 @@ public final class ValidatorIndex {
 	private static final java.util.Map<java.lang.Class, com.lyft.pgv.Validator> VALIDATOR_INDEX = new java.util.HashMap<>();
 
 	static {
-		{{ range . -}}{{- $file := . -}}
+		{{ range . -}}{{- $file := . -}}{{- if importsPvg $file }}
 		{{- range .AllMessages -}}{{- $message := . -}}
 		VALIDATOR_INDEX.put({{ qualifiedName $message }}.class, new {{javaPackage $file}}.{{ classNameFile $file }}Validator.{{ simpleName $message }}Validator());
-		{{ end -}}{{ end }}
+		{{ end -}}{{- end -}}{{- end }}
 	}
 
 	private static final Validator<Object> ALWAYS_VALID = new Validator<Object>() {

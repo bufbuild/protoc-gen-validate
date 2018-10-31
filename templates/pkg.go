@@ -13,7 +13,7 @@ import (
 )
 
 type RegisterFn func(tpl *template.Template, params pgs.Parameters)
-type FilePathFn func(f pgs.File, ctx pgsgo.Context, tpl *template.Template) pgs.FilePath
+type FilePathFn func(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.FilePath
 
 func makeTemplate(ext string, fn RegisterFn, params pgs.Parameters) *template.Template {
 	tpl := template.New(ext)
@@ -42,10 +42,10 @@ func FilePathFor(tpl *template.Template) FilePathFn {
 	case "java":
 		return java.JavaFilePath
 	default:
-		return func(f pgs.File, ctx pgsgo.Context, tpl *template.Template) pgs.FilePath {
+		return func(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.FilePath {
 			out := ctx.OutputPath(f)
 			out = out.SetExt(".validate." + tpl.Name())
-			return out
+			return &out
 		}
 	}
 }

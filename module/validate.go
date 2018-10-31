@@ -42,7 +42,9 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 
 		for _, tpl := range tpls {
 			out := templates.FilePathFor(tpl)(f, m.ctx, tpl)
-			m.AddGeneratorTemplateFile(out.String(), tpl, f)
+			if out != nil {
+				m.AddGeneratorTemplateFile(out.String(), tpl, f)
+			}
 		}
 
 		m.Pop()
