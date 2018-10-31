@@ -207,6 +207,8 @@ func (fns javaFuncs) fieldAccessor(f pgs.Field) string {
 	if f.Type().IsMap() {
 		fieldName += "Map"
 	}
+
+	fieldName = upperCaseAfterNumber(fieldName)
 	return fmt.Sprintf("get%s()", fieldName)
 }
 
@@ -219,6 +221,7 @@ func (fns javaFuncs) hasAccessor(ctx shared.RuleContext) string {
 		return "true"
 	}
 	fiedlName := strcase.ToCamel(ctx.Field.Name().String())
+	fiedlName = upperCaseAfterNumber(fiedlName)
 	return "proto.has" + fiedlName + "()"
 }
 
