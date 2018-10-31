@@ -96,13 +96,10 @@ func JavaFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.Fi
 		return nil
 	}
 
-	fullPath := pgs.FilePath(strings.Replace(javaPackage(f), ".", "/", -1))
-
-	fileName := classNameFile(f)
-	fileName += "Validator.java"
-
-	fullPath = fullPath.SetBase(fileName)
-	return &fullPath
+	fullPath := strings.Replace(javaPackage(f), ".", "/", -1)
+	fileName := classNameFile(f) + "Validator.java"
+	filePath := pgs.JoinPaths(fullPath, fileName)
+	return &filePath
 }
 
 func importsPvg(f pgs.File) bool {
