@@ -2,6 +2,6 @@ package java
 
 const requiredTpl = `{{ $f := .Field }}
 	{{- if .Rules.GetRequired }}
-			com.lyft.pgv.RequiredValidation.required("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }});
+			com.lyft.pgv.RequiredValidation.required("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }});
 	{{- end -}}
 `

@@ -10,7 +10,7 @@ const anyTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 					"{{ . }}",
 					{{- end }}
 				};
-				com.lyft.pgv.AnyValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
+				com.lyft.pgv.AnyValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, set);
 			}
 	{{- end -}}
 	{{- if $r.NotIn }}
@@ -20,7 +20,7 @@ const anyTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 					"{{ . }}",
 					{{- end }}
 				};
-				com.lyft.pgv.AnyValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor $f }}, set);
+				com.lyft.pgv.AnyValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, set);
 			}
 	{{- end -}}
 `

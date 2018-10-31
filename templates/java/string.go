@@ -2,7 +2,7 @@ package java
 
 const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Const }}
-			com.lyft.pgv.StringValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, "{{ $r.GetConst }}");
+			com.lyft.pgv.StringValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, "{{ $r.GetConst }}");
 {{- end -}}
 {{- if $r.In }}
 			{
@@ -11,7 +11,7 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 						"{{- sprintf "%v" . -}}",
 					{{- end -}}
 				};
-				com.lyft.pgv.StringValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, set);
+				com.lyft.pgv.StringValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, set);
 			}
 {{- end -}}
 {{- if $r.NotIn }}
@@ -21,58 +21,58 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 						"{{- sprintf "%v" . -}}",
 					{{- end -}}
 				};
-				com.lyft.pgv.StringValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, set);
+				com.lyft.pgv.StringValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, set);
 			}
 {{- end -}}
 {{- if $r.Len }}
-			com.lyft.pgv.StringValidation.length("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, {{ $r.GetLen }});
+			com.lyft.pgv.StringValidation.length("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetLen }});
 {{- end -}}
 {{- if $r.MinLen }}
-			com.lyft.pgv.StringValidation.minLength("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, {{ $r.GetMinLen }});
+			com.lyft.pgv.StringValidation.minLength("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetMinLen }});
 {{- end -}}
 {{- if $r.MaxLen }}
-			com.lyft.pgv.StringValidation.maxLength("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, {{ $r.GetMaxLen }});
+			com.lyft.pgv.StringValidation.maxLength("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetMaxLen }});
 {{- end -}}
 {{- if $r.LenBytes }}
-			com.lyft.pgv.StringValidation.lenBytes("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, {{ $r.GetLen }});
+			com.lyft.pgv.StringValidation.lenBytes("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetLen }});
 {{- end -}}
 {{- if $r.MinBytes }}
-			com.lyft.pgv.StringValidation.minBytes("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, {{ $r.GetMinLen }});
+			com.lyft.pgv.StringValidation.minBytes("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetMinLen }});
 {{- end -}}
 {{- if $r.MaxBytes }}
-			com.lyft.pgv.StringValidation.maxBytes("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, {{ $r.GetMaxLen }});
+			com.lyft.pgv.StringValidation.maxBytes("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetMaxLen }});
 {{- end -}}
 {{- if $r.Pattern }}
-			com.lyft.pgv.StringValidation.pattern("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, {{ javaStringEscape $r.GetPattern }});
+			com.lyft.pgv.StringValidation.pattern("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ javaStringEscape $r.GetPattern }});
 {{- end -}}
 {{- if $r.Prefix }}
-			com.lyft.pgv.StringValidation.prefix("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, "{{ $r.GetPrefix }}");
+			com.lyft.pgv.StringValidation.prefix("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, "{{ $r.GetPrefix }}");
 {{- end -}}
 {{- if $r.Contains }}
-			com.lyft.pgv.StringValidation.contains("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, "{{ $r.GetContains }}");
+			com.lyft.pgv.StringValidation.contains("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, "{{ $r.GetContains }}");
 {{- end -}}
 {{- if $r.Suffix }}
-			com.lyft.pgv.StringValidation.suffix("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }}, "{{ $r.GetSuffix }}");
+			com.lyft.pgv.StringValidation.suffix("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, "{{ $r.GetSuffix }}");
 {{- end -}}
 {{- if $r.GetEmail }}
-			com.lyft.pgv.StringValidation.email("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }});
+			com.lyft.pgv.StringValidation.email("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }});
 {{- end -}}
 {{- if $r.GetHostname }}
-			com.lyft.pgv.StringValidation.hostName("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }});
+			com.lyft.pgv.StringValidation.hostName("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }});
 {{- end -}}
 {{- if $r.GetIp }}
-			com.lyft.pgv.StringValidation.ip("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }});
+			com.lyft.pgv.StringValidation.ip("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }});
 {{- end -}}
 {{- if $r.GetIpv4 }}
-			com.lyft.pgv.StringValidation.ipv4("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }});
+			com.lyft.pgv.StringValidation.ipv4("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }});
 {{- end -}}
 {{- if $r.GetIpv6 }}
-			com.lyft.pgv.StringValidation.ipv6("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }});
+			com.lyft.pgv.StringValidation.ipv6("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }});
 {{- end -}}
 {{- if $r.GetUri }}
-			com.lyft.pgv.StringValidation.uri("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }});
+			com.lyft.pgv.StringValidation.uri("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }});
 {{- end -}}
 {{- if $r.GetUri }}
-			com.lyft.pgv.StringValidation.uriRef("{{ $f.FullyQualifiedName }}", proto.{{ wrappedAccessor . }});
+			com.lyft.pgv.StringValidation.uriRef("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }});
 {{- end -}}
 `
