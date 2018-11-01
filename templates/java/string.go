@@ -1,28 +1,33 @@
 package java
 
+const stringConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
+{{- if $r.In }}
+		private final {{ javaTypeFor $f }}[] {{ constantName $f "In" }} = new {{ javaTypeFor $f }}[]{
+			{{- range $r.In -}}
+				"{{- sprintf "%v" . -}}",
+			{{- end -}}
+		};
+{{- end -}}
+{{- if $r.NotIn }}
+		private final {{ javaTypeFor $f }}[] {{ constantName $f "NotIn" }} = new {{ javaTypeFor $f }}[]{
+			{{- range $r.NotIn -}}
+				"{{- sprintf "%v" . -}}",
+			{{- end -}}
+		};
+{{- end -}}
+{{- if $r.Pattern }}
+		com.google.re2j.Pattern {{ constantName $f "Pattern" }} = com.google.re2j.Pattern.compile({{ javaStringEscape $r.GetPattern }});
+{{- end -}}`
+
 const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Const }}
 			com.lyft.pgv.StringValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, "{{ $r.GetConst }}");
 {{- end -}}
 {{- if $r.In }}
-			{
-				{{ javaTypeFor $f }}[] set = new {{ javaTypeFor $f }}[]{
-					{{- range $r.In -}}
-						"{{- sprintf "%v" . -}}",
-					{{- end -}}
-				};
-				com.lyft.pgv.StringValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, set);
-			}
+			com.lyft.pgv.StringValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "In" }});
 {{- end -}}
 {{- if $r.NotIn }}
-			{
-				{{ javaTypeFor $f }}[] set = new {{ javaTypeFor $f }}[]{
-					{{- range $r.NotIn -}}
-						"{{- sprintf "%v" . -}}",
-					{{- end -}}
-				};
-				com.lyft.pgv.StringValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, set);
-			}
+			com.lyft.pgv.StringValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "NotIn" }});
 {{- end -}}
 {{- if $r.Len }}
 			com.lyft.pgv.StringValidation.length("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetLen }});
@@ -43,7 +48,7 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			com.lyft.pgv.StringValidation.maxBytes("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetMaxLen }});
 {{- end -}}
 {{- if $r.Pattern }}
-			com.lyft.pgv.StringValidation.pattern("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ javaStringEscape $r.GetPattern }});
+			com.lyft.pgv.StringValidation.pattern("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Pattern" }});
 {{- end -}}
 {{- if $r.Prefix }}
 			com.lyft.pgv.StringValidation.prefix("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, "{{ $r.GetPrefix }}");

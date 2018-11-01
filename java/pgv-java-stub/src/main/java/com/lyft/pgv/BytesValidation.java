@@ -52,10 +52,9 @@ public final class BytesValidation {
         }
     }
 
-    public static void pattern(String field, ByteString value, String pattern) throws ValidationException {
-        Pattern p = Pattern.compile(pattern);
+    public static void pattern(String field, ByteString value, Pattern p) throws ValidationException {
         if (!p.matches(value.toStringUtf8())) {
-            throw new ValidationException(field, "must match pattern " + pattern);
+            throw new ValidationException(field, "must match pattern " + p.pattern());
         }
     }
 

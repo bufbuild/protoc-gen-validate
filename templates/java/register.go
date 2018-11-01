@@ -1,6 +1,7 @@
 package java
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 	"text/template"
@@ -50,7 +51,10 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"tsLit":                    fns.tsLit,
 		"qualifiedName":            fns.qualifiedName,
 		"isOfMessageType":          fns.isOfMessageType,
+		"isOfStringType":           fns.isOfStringType,
 		"unwrap":                   fns.unwrap,
+		"renderConstants":          fns.renderConstants(tpl),
+		"constantName":             fns.constantName,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
@@ -59,24 +63,40 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("none").Parse(noneTpl))
 
 	template.Must(tpl.New("float").Parse(numTpl))
+	template.Must(tpl.New("floatConst").Parse(numConstTpl))
 	template.Must(tpl.New("double").Parse(numTpl))
+	template.Must(tpl.New("doubleConst").Parse(numConstTpl))
 	template.Must(tpl.New("int32").Parse(numTpl))
+	template.Must(tpl.New("int32Const").Parse(numConstTpl))
 	template.Must(tpl.New("int64").Parse(numTpl))
+	template.Must(tpl.New("int64Const").Parse(numConstTpl))
 	template.Must(tpl.New("uint32").Parse(numTpl))
+	template.Must(tpl.New("uint32Const").Parse(numConstTpl))
 	template.Must(tpl.New("uint64").Parse(numTpl))
+	template.Must(tpl.New("uint64Const").Parse(numConstTpl))
 	template.Must(tpl.New("sint32").Parse(numTpl))
+	template.Must(tpl.New("sint32Const").Parse(numConstTpl))
 	template.Must(tpl.New("sint64").Parse(numTpl))
+	template.Must(tpl.New("sint64Const").Parse(numConstTpl))
 	template.Must(tpl.New("fixed32").Parse(numTpl))
+	template.Must(tpl.New("fixed32Const").Parse(numConstTpl))
 	template.Must(tpl.New("fixed64").Parse(numTpl))
+	template.Must(tpl.New("fixed64Const").Parse(numConstTpl))
 	template.Must(tpl.New("sfixed32").Parse(numTpl))
+	template.Must(tpl.New("sfixed32Const").Parse(numConstTpl))
 	template.Must(tpl.New("sfixed64").Parse(numTpl))
+	template.Must(tpl.New("sfixed64Const").Parse(numConstTpl))
 
 	template.Must(tpl.New("bool").Parse(boolTpl))
 	template.Must(tpl.New("string").Parse(stringTpl))
+	template.Must(tpl.New("stringConst").Parse(stringConstTpl))
 	template.Must(tpl.New("bytes").Parse(bytesTpl))
+	template.Must(tpl.New("bytesConst").Parse(bytesConstTpl))
 
 	template.Must(tpl.New("any").Parse(anyTpl))
+	template.Must(tpl.New("anyConst").Parse(anyConstTpl))
 	template.Must(tpl.New("enum").Parse(enumTpl))
+	template.Must(tpl.New("enumConst").Parse(enumConstTpl))
 	template.Must(tpl.New("message").Parse(messageTpl))
 	template.Must(tpl.New("repeated").Parse(notImplementedTpl))
 	template.Must(tpl.New("map").Parse(mapTpl))
@@ -84,7 +104,9 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 
 	template.Must(tpl.New("required").Parse(requiredTpl))
 	template.Must(tpl.New("timestamp").Parse(timestampTpl))
+	template.Must(tpl.New("timestampConst").Parse(timestampConstTpl))
 	template.Must(tpl.New("duration").Parse(durationTpl))
+	template.Must(tpl.New("durationConst").Parse(durationConstTpl))
 	template.Must(tpl.New("wrapper").Parse(wrapperTpl))
 }
 
@@ -349,6 +371,10 @@ func (fns javaFuncs) isOfMessageType(f pgs.Field) bool {
 	return f.Type().ProtoType() == pgs.MessageT
 }
 
+func (fns javaFuncs) isOfStringType(f pgs.Field) bool {
+	return f.Type().ProtoType() == pgs.StringT
+}
+
 func (fns javaFuncs) unwrap(ctx shared.RuleContext) (shared.RuleContext, error) {
 	ctx, err := ctx.Unwrap("wrapped")
 	if err != nil {
@@ -357,4 +383,28 @@ func (fns javaFuncs) unwrap(ctx shared.RuleContext) (shared.RuleContext, error) 
 	ctx.AccessorOverride = fmt.Sprintf("%s.get%s()", fns.fieldAccessor(ctx.Field),
 		fns.camelCase(ctx.Field.Type().Embed().Fields()[0].Name()))
 	return ctx, nil
+}
+
+func (fns javaFuncs) renderConstants(tpl *template.Template) func(ctx shared.RuleContext) (string, error) {
+	return func(ctx shared.RuleContext) (string, error) {
+		var b bytes.Buffer
+		var err error
+
+		hasConstTemplate := false
+		for _, t := range tpl.Templates() {
+			if t.Name() == ctx.Typ+"Const" {
+				hasConstTemplate = true
+			}
+		}
+
+		if hasConstTemplate {
+			err = tpl.ExecuteTemplate(&b, ctx.Typ+"Const", ctx)
+		}
+
+		return b.String(), err
+	}
+}
+
+func (fns javaFuncs) constantName(f pgs.Field, rule string) string {
+	return strcase.ToScreamingSnake("$" + f.Name().String() + rule)
 }

@@ -73,10 +73,9 @@ public final class StringValidation {
         }
     }
 
-    public static void pattern(String field, String value, String pattern) throws ValidationException {
-        Pattern p = Pattern.compile(pattern);
+    public static void pattern(String field, String value, Pattern p) throws ValidationException {
         if (!p.matches(value)) {
-            throw new ValidationException(field, "must match pattern " + pattern);
+            throw new ValidationException(field, "must match pattern " + p.pattern());
         }
     }
 

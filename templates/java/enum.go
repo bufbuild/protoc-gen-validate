@@ -1,5 +1,21 @@
 package java
 
+const enumConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
+{{- if $r.In }}
+		private final {{ javaTypeFor $f }}[] {{ constantName $f "In" }} = new {{ javaTypeFor $f }}[]{
+			{{- range $r.In }}
+			{{ javaTypeFor $f }}.forNumber({{- sprintf "%v" . -}}),
+			{{- end }}
+		};
+{{- end -}}
+{{- if $r.NotIn }}
+		private final {{ javaTypeFor $f }}[] {{ constantName $f "NotIn" }} = new {{ javaTypeFor $f }}[]{
+			{{- range $r.NotIn }}
+			{{ javaTypeFor $f }}.forNumber({{- sprintf "%v" . -}}),
+			{{- end }}
+		};
+{{- end -}}`
+
 const enumTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Const }}
 			com.lyft.pgv.EnumValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, 
@@ -9,23 +25,9 @@ const enumTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			com.lyft.pgv.EnumValidation.definedOnly("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }});
 {{- end -}}
 {{- if $r.In }}
-			{
-				{{ javaTypeFor $f }}[] set = new {{ javaTypeFor $f }}[]{
-					{{- range $r.In }}
-					{{ javaTypeFor $f }}.forNumber({{- sprintf "%v" . -}}),
-					{{- end }}
-				};
-				com.lyft.pgv.EnumValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, set);
-			}
+			com.lyft.pgv.EnumValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "In" }});
 {{- end -}}
 {{- if $r.NotIn }}
-			{
-				{{ javaTypeFor $f }}[] set = new {{ javaTypeFor $f }}[]{
-					{{- range $r.NotIn }}
-					{{ javaTypeFor $f }}.forNumber({{- sprintf "%v" . -}}),
-					{{- end }}
-				};
-				com.lyft.pgv.EnumValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, set);
-			}
+			com.lyft.pgv.EnumValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "NotIn" }});
 {{- end -}}
 `

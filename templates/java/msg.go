@@ -5,6 +5,10 @@ const msgTpl = `
 	 * Validates {@code {{ simpleName . }}} protobuf objects.
 	 */
 	public static class {{ simpleName . }}Validator extends com.lyft.pgv.Validator<{{ qualifiedName . }}> {
+		{{- range .NonOneOfFields }}
+			{{ renderConstants (context .) }}
+		{{ end }}
+
 		public void assertValid({{ qualifiedName . }} proto) throws com.lyft.pgv.ValidationException {
 		{{ if disabled . }}
 			// Validate is disabled for {{ simpleName . }}
