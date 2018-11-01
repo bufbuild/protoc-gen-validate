@@ -4,6 +4,7 @@ package tests.harness.cases;
 option go_package = "cases";
 
 import "validate/validate.proto";
+import "tests/harness/cases/other_package/embed.proto";
 
 enum TestEnum {
     ZERO = 0;
@@ -35,4 +36,6 @@ message EnumIn      { TestEnum val = 1 [(validate.rules).enum = { in: [0, 2]}];}
 message EnumAliasIn { TestEnumAlias val = 1 [(validate.rules).enum = { in: [0, 2]}];}
 
 message EnumNotIn      { TestEnum val = 1 [(validate.rules).enum = { not_in: [1]}];}
-message EnumAliasNotIn { TestEnumAlias val = 1 [(validate.rules).enum = { not_in: [1]}];}
+message EnumAliasNotIn { TestEnumAlias val = 1 [(validate.rules).enum = { not_in: [1]}]; }
+
+message EnumExternal { other_package.Embed.Enumerated val = 1 [(validate.rules).enum.defined_only = true]; }

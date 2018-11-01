@@ -148,7 +148,7 @@ func (fns CCFuncs) className(msg pgs.Message) string {
 	return fns.packageName(msg) + "::" + fns.classBaseName(msg)
 }
 
-func (fns CCFuncs) packageName(msg pgs.Message) string {
+func (fns CCFuncs) packageName(msg pgs.Entity) string {
 	return strings.Join(msg.Package().ProtoName().Split(), "::")
 }
 
@@ -401,4 +401,15 @@ func (fns CCFuncs) staticVarName(msg pgs.Message) string {
 
 func (fns CCFuncs) output(file pgs.File, ext string) string {
 	return fns.OutputPath(file).SetExt(ext).String()
+}
+
+func (fns CCFuncs) Type(f pgs.Field) pgsgo.TypeName {
+	typ := fns.Context.Type(f)
+
+	if f.Type().IsEnum() {
+		parts := strings.Split(typ.String(), ".")
+		typ = pgsgo.TypeName(parts[len(parts)-1])
+	}
+
+	return typ
 }

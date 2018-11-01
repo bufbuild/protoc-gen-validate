@@ -99,8 +99,8 @@ testcases: gogofast
 		--go_out="Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go,${GO_IMPORT}:./go" \
 		--plugin=protoc-gen-gogofast=$(shell pwd)/gogofast \
 		--gogofast_out="Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/gogo,${GOGO_IMPORT}:./gogo" \
-		--validate_out="lang=go:./go" \
-		--validate_out="lang=gogo:./gogo" \
+		--validate_out="lang=go,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go:./go" \
+		--validate_out="lang=gogo,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/gogo:./gogo" \
 		./*.proto
 
 tests/harness/go/harness.pb.go:

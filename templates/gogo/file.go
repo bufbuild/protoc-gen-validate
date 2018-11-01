@@ -18,6 +18,10 @@ import (
 	"unicode/utf8"
 
 	"github.com/gogo/protobuf/types"
+
+	{{ range $path, $pkg := enumPackages (externalEnums .) }}
+		{{ $pkg }} "{{ $path }}"
+	{{ end }}
 )
 
 // ensure the imports are used
@@ -33,6 +37,10 @@ var (
 	_ = (*url.URL)(nil)
 	_ = (*mail.Address)(nil)
 	_ = types.DynamicAny{}
+
+	{{ range (externalEnums .) }}
+		_ = {{ pkg . }}.{{ name . }}(0)
+	{{ end }}
 )
 
 {{ range .AllMessages }}
