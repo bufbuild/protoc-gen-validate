@@ -42,6 +42,9 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 
 		for _, tpl := range tpls {
 			out := templates.FilePathFor(tpl)(f, m.ctx, tpl)
+			// A nil path means no output should be generated for this file - as controlled by
+			// implementation-specific FilePathFor implementations.
+			// Ex: Don't generate Java validators for files that don't reference PGV.
 			if out != nil {
 				m.AddGeneratorTemplateFile(out.String(), tpl, f)
 			}
