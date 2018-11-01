@@ -11,6 +11,7 @@
         <module>pgv-java-stub</module>
         <module>pgv-java-validation</module>
         <module>pgv-java-grpc</module>
+        <module>pgv-java-demo</module>
     </modules>
 
     <packaging>pom</packaging>
