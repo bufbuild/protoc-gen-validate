@@ -8,12 +8,6 @@ public final class EnumValidation {
     private EnumValidation() {
     }
 
-    public static void constant(String field, ProtocolMessageEnum value, ProtocolMessageEnum expected) throws ValidationException {
-        if (!value.equals(expected)) {
-            throw new ValidationException(field, "value must equal " + expected);
-        }
-    }
-
     public static void definedOnly(String field, ProtocolMessageEnum value) throws ValidationException {
         if (value.toString().equals("UNRECOGNIZED")) {
             throw new ValidationException(field, "value is not a defined Enum value " + value);

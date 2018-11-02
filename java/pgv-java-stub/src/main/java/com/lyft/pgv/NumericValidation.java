@@ -8,12 +8,6 @@ public final class NumericValidation {
 
     /* INT Validation */
 
-    public static void constant(String field, int value, int expected) throws ValidationException {
-        if (value != expected) {
-            throw new ValidationException(field, "value must equal " + expected);
-        }
-    }
-
     public static void lessThan(String field, int value, int limit) throws ValidationException {
         if (!(value < limit)) {
             throw new ValidationException(field, "value must be less than " + limit);
@@ -57,12 +51,6 @@ public final class NumericValidation {
     }
 
     /* LONG Validation */
-
-    public static void constant(String field, long value, long expected) throws ValidationException {
-        if (value != expected) {
-            throw new ValidationException(field, "value must equal " + expected);
-        }
-    }
 
     public static void lessThan(String field, long value, long limit) throws ValidationException {
         if (!(value < limit)) {
@@ -109,12 +97,6 @@ public final class NumericValidation {
 
     /* FLOAT Validation */
 
-    public static void constant(String field, float value, float expected) throws ValidationException {
-        if (value != expected) {
-            throw new ValidationException(field, "value must equal " + expected);
-        }
-    }
-
     public static void lessThan(String field, float value, float limit) throws ValidationException {
         if (!(value < limit)) {
             throw new ValidationException(field, "value must be less than " + limit);
@@ -159,12 +141,6 @@ public final class NumericValidation {
 
 
     /* DOUBLE Validation */
-
-    public static void constant(String field, double value, double expected) throws ValidationException {
-        if (value != expected) {
-            throw new ValidationException(field, "value must equal " + expected);
-        }
-    }
 
     public static void lessThan(String field, double value, double limit) throws ValidationException {
         if (!(value < limit)) {

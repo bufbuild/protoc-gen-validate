@@ -2,5 +2,5 @@ package java
 
 const boolTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Const }}
-			com.lyft.pgv.BooleanValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetConst }});
+			com.lyft.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetConst }});
 {{- end }}`

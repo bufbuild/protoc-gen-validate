@@ -18,7 +18,7 @@ const enumConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 
 const enumTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Const }}
-			com.lyft.pgv.EnumValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, 
+			com.lyft.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, 
 				{{ javaTypeFor $f }}.forNumber({{ $r.GetConst }}));
 {{- end -}}
 {{- if $r.GetDefinedOnly }}

@@ -7,14 +7,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class EnumValidationTest {
     @Test
-    public void constantWorks() throws ValidationException {
-        // Equals
-        EnumValidation.constant("x", Enum.TestEnum.ONE, Enum.TestEnum.ONE);
-        // Not Equals
-        assertThatThrownBy(() -> EnumValidation.constant("x", Enum.TestEnum.ONE, Enum.TestEnum.TWO)).isInstanceOf(ValidationException.class);
-    }
-
-    @Test
     public void definedOnlyWorks() throws ValidationException {
         // Defined
         EnumValidation.definedOnly("x", Enum.TestEnum.ONE);

@@ -10,14 +10,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class TimestampValidationTest {
     @Test
-    public void constantWorks() throws ValidationException {
-        // Equal
-        TimestampValidation.constant("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(10));
-        // Not Equal
-        assertThatThrownBy(() -> TimestampValidation.constant("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(20))).isInstanceOf(ValidationException.class);
-    }
-
-    @Test
     public void lessThanWorks() throws ValidationException {
         // Less
         TimestampValidation.lessThan("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(20));

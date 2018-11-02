@@ -8,12 +8,6 @@ import com.google.protobuf.util.Timestamps;
 public final class TimestampValidation {
     private TimestampValidation() { }
 
-    public static void constant(String field, Timestamp value, Timestamp expected) throws ValidationException {
-        if (Timestamps.compare(value, expected) != 0) {
-            throw new ValidationException(field, "value must equal " + expected);
-        }
-    }
-
     public static void lessThan(String field, Timestamp value, Timestamp lessThan) throws ValidationException {
         if (Timestamps.compare(value, lessThan) >= 0 ) {
             throw new ValidationException(field, "value must be less than " + lessThan);

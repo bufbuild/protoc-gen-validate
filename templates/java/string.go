@@ -21,7 +21,7 @@ const stringConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 
 const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Const }}
-			com.lyft.pgv.StringValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, "{{ $r.GetConst }}");
+			com.lyft.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, "{{ $r.GetConst }}");
 {{- end -}}
 {{- if $r.In }}
 			com.lyft.pgv.StringValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "In" }});

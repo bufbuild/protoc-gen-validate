@@ -18,7 +18,7 @@ const numConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 
 const numTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Const }}
-			com.lyft.pgv.NumericValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetConst }});
+			com.lyft.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetConst }});
 {{- end -}}
 {{- if $r.Lt }}
 			com.lyft.pgv.NumericValidation.lessThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetLt }});

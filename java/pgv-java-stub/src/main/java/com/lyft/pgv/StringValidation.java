@@ -13,12 +13,6 @@ public final class StringValidation {
     private StringValidation() {
     }
 
-    public static void constant(String field, String value, String expected) throws ValidationException {
-        if (!value.equals(expected)) {
-            throw new ValidationException(field, "value must equal " + expected);
-        }
-    }
-
     public static void in(String field, String value, String[] set) throws ValidationException {
         for (String str : set) {
             if (value.equals(str)) {

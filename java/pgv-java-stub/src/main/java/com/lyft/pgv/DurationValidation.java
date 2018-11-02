@@ -9,12 +9,6 @@ public final class DurationValidation {
     private DurationValidation() {
     }
 
-    public static void constant(String field, Duration value, Duration expected) throws ValidationException {
-        if (Durations.compare(value, expected) != 0) {
-            throw new ValidationException(field, "value must equal " + expected);
-        }
-    }
-
     public static void lessThan(String field, Duration value, Duration lessThan) throws ValidationException {
         if (Durations.compare(value, lessThan) >= 0) {
             throw new ValidationException(field, "value must be less than " + lessThan);

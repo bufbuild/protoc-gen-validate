@@ -24,7 +24,7 @@ const timestampTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- template "required" . -}}
 
 {{- if $r.Const }}
-			com.lyft.pgv.TimestampValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Const" }});
+			com.lyft.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Const" }});
 {{- end -}}
 {{- if $r.Lt }}
 			com.lyft.pgv.TimestampValidation.lessThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Lt" }});

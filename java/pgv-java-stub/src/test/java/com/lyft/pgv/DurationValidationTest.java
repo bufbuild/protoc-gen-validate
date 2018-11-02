@@ -8,14 +8,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class DurationValidationTest {
     @Test
-    public void constantWorks() throws ValidationException {
-        // Equal
-        DurationValidation.constant("x", Durations.fromSeconds(10), Durations.fromSeconds(10));
-        // Not Equal
-        assertThatThrownBy(() -> DurationValidation.constant("x", Durations.fromSeconds(10), Durations.fromSeconds(20))).isInstanceOf(ValidationException.class);
-    }
-
-    @Test
     public void lessThanWorks() throws ValidationException {
         // Less
         DurationValidation.lessThan("x", Durations.fromSeconds(10), Durations.fromSeconds(20));

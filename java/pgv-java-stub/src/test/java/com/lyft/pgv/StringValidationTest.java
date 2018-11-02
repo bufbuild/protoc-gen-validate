@@ -1,18 +1,11 @@
 package com.lyft.pgv;
 
+import com.google.re2j.Pattern;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class StringValidationTest {
-    @Test
-    public void constantWorks() throws ValidationException {
-        // Equals
-        StringValidation.constant("x", "foo", "foo");
-        // Not Equals
-        assertThatThrownBy(() -> StringValidation.constant("x", "foo", "bar")).isInstanceOf(ValidationException.class);
-    }
-
     @Test
     public void inWorks() throws ValidationException {
         String[] set = new String[]{"foo", "bar"};
@@ -93,10 +86,11 @@ public class StringValidationTest {
 
     @Test
     public void patternWorks() throws ValidationException {
+        Pattern p = Pattern.compile("a*b*");
         // Match
-        StringValidation.pattern("x", "aaabbb", "a*b*");
+        StringValidation.pattern("x", "aaabbb", p);
         // No Match
-        assertThatThrownBy(() -> StringValidation.pattern("x", "aaabbbccc", "a*b*")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.pattern("x", "aaabbbccc", p)).isInstanceOf(ValidationException.class);
     }
 
     @Test

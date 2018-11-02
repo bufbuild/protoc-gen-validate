@@ -1,6 +1,7 @@
 package com.lyft.pgv;
 
 import com.google.protobuf.ByteString;
+import com.google.re2j.Pattern;
 import org.junit.Test;
 
 import java.net.InetAddress;
@@ -9,14 +10,6 @@ import java.net.UnknownHostException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class BytesValidationTest {
-    @Test
-    public void constantWorks() throws ValidationException {
-        // Equals
-        BytesValidation.constant("x", ByteString.copyFromUtf8("foo"), ByteString.copyFromUtf8("foo"));
-        // Not Equals
-        assertThatThrownBy(() -> BytesValidation.constant("x", ByteString.copyFromUtf8("foo"), ByteString.copyFromUtf8("bar"))).isInstanceOf(ValidationException.class);
-    }
-
     @Test
     public void lengthWorks() throws ValidationException {
         // Short
@@ -49,10 +42,11 @@ public class BytesValidationTest {
 
     @Test
     public void patternWorks() throws ValidationException {
+        Pattern p = Pattern.compile("^[\\x00-\\x7F]+$");
         // Match
-        BytesValidation.pattern("x", ByteString.copyFromUtf8("aaabbb"), "^[\\x00-\\x7F]+$"); // non-empty, ASCII byte sequence
+        BytesValidation.pattern("x", ByteString.copyFromUtf8("aaabbb"), p); // non-empty, ASCII byte sequence
         // No Match
-        assertThatThrownBy(() -> BytesValidation.pattern("x", ByteString.copyFromUtf8("aaañbbb"), "^[\\x00-\\x7F]+$")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> BytesValidation.pattern("x", ByteString.copyFromUtf8("aaañbbb"), p)).isInstanceOf(ValidationException.class);
     }
 
     @Test
