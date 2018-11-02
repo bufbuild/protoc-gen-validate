@@ -27,22 +27,22 @@ const timestampTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			com.lyft.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Const" }});
 {{- end -}}
 {{- if $r.Lt }}
-			com.lyft.pgv.TimestampValidation.lessThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Lt" }});
+			com.lyft.pgv.ComparativeValidation.lessThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Lt" }}, com.google.protobuf.util.Timestamps.comparator());
 {{- end -}}
 {{- if $r.Lte }}
-			com.lyft.pgv.TimestampValidation.lessThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Lte" }});
+			com.lyft.pgv.ComparativeValidation.lessThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Lte" }}, com.google.protobuf.util.Timestamps.comparator());
 {{- end -}}
 {{- if $r.Gt }}
-			com.lyft.pgv.TimestampValidation.greaterThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Gt" }});
+			com.lyft.pgv.ComparativeValidation.greaterThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Gt" }}, com.google.protobuf.util.Timestamps.comparator());
 {{- end -}}
 {{- if $r.Gte }}
-			com.lyft.pgv.TimestampValidation.greaterThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Gte" }});
+			com.lyft.pgv.ComparativeValidation.greaterThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Gte" }}, com.google.protobuf.util.Timestamps.comparator());
 {{- end -}}
 {{- if $r.LtNow }}
-			com.lyft.pgv.TimestampValidation.lessThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, com.lyft.pgv.TimestampValidation.currentTimestamp());
+			com.lyft.pgv.ComparativeValidation.lessThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, com.lyft.pgv.TimestampValidation.currentTimestamp(), com.google.protobuf.util.Timestamps.comparator());
 {{- end -}}
 {{- if $r.GtNow }}
-			com.lyft.pgv.TimestampValidation.greaterThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, com.lyft.pgv.TimestampValidation.currentTimestamp());
+			com.lyft.pgv.ComparativeValidation.greaterThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, com.lyft.pgv.TimestampValidation.currentTimestamp(), com.google.protobuf.util.Timestamps.comparator());
 {{- end -}}
 {{- if $r.Within }}
 			com.lyft.pgv.TimestampValidation.within("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Within" }}, com.lyft.pgv.TimestampValidation.currentTimestamp());

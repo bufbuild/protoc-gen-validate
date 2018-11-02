@@ -8,30 +8,6 @@ public final class NumericValidation {
 
     /* INT Validation */
 
-    public static void lessThan(String field, int value, int limit) throws ValidationException {
-        if (!(value < limit)) {
-            throw new ValidationException(field, "value must be less than " + limit);
-        }
-    }
-
-    public static void lessThanOrEqual(String field, int value, int limit) throws ValidationException {
-        if (!(value <= limit)) {
-            throw new ValidationException(field, "value must be less than or equal to " + limit);
-        }
-    }
-
-    public static void greaterThan(String field, int value, int limit) throws ValidationException {
-        if (!(value > limit)) {
-            throw new ValidationException(field, "value must be greater than " + limit);
-        }
-    }
-
-    public static void greaterThanOrEqual(String field, int value, int limit) throws ValidationException {
-        if (!(value <= limit)) {
-            throw new ValidationException(field, "value must be greater than or equal to " + limit);
-        }
-    }
-
     public static void in(String field, int value, int[] set) throws ValidationException {
         for (int i : set) {
             if (value == i) {
@@ -51,30 +27,6 @@ public final class NumericValidation {
     }
 
     /* LONG Validation */
-
-    public static void lessThan(String field, long value, long limit) throws ValidationException {
-        if (!(value < limit)) {
-            throw new ValidationException(field, "value must be less than " + limit);
-        }
-    }
-
-    public static void lessThanOrEqual(String field, long value, long limit) throws ValidationException {
-        if (!(value <= limit)) {
-            throw new ValidationException(field, "value must be less than or equal to " + limit);
-        }
-    }
-
-    public static void greaterThan(String field, long value, long limit) throws ValidationException {
-        if (!(value > limit)) {
-            throw new ValidationException(field, "value must be greater than " + limit);
-        }
-    }
-
-    public static void greaterThanOrEqual(String field, long value, long limit) throws ValidationException {
-        if (!(value <= limit)) {
-            throw new ValidationException(field, "value must be greater than or equal to " + limit);
-        }
-    }
 
     public static void in(String field, long value, long[] set) throws ValidationException {
         for (long i : set) {
@@ -97,30 +49,6 @@ public final class NumericValidation {
 
     /* FLOAT Validation */
 
-    public static void lessThan(String field, float value, float limit) throws ValidationException {
-        if (!(value < limit)) {
-            throw new ValidationException(field, "value must be less than " + limit);
-        }
-    }
-
-    public static void lessThanOrEqual(String field, float value, float limit) throws ValidationException {
-        if (!(value <= limit)) {
-            throw new ValidationException(field, "value must be less than or equal to " + limit);
-        }
-    }
-
-    public static void greaterThan(String field, float value, float limit) throws ValidationException {
-        if (!(value > limit)) {
-            throw new ValidationException(field, "value must be greater than " + limit);
-        }
-    }
-
-    public static void greaterThanOrEqual(String field, float value, float limit) throws ValidationException {
-        if (!(value <= limit)) {
-            throw new ValidationException(field, "value must be greater than or equal to " + limit);
-        }
-    }
-
     public static void in(String field, float value, float[] set) throws ValidationException {
         for (float i : set) {
             if (value == i) {
@@ -141,30 +69,6 @@ public final class NumericValidation {
 
 
     /* DOUBLE Validation */
-
-    public static void lessThan(String field, double value, double limit) throws ValidationException {
-        if (!(value < limit)) {
-            throw new ValidationException(field, "value must be less than " + limit);
-        }
-    }
-
-    public static void lessThanOrEqual(String field, double value, double limit) throws ValidationException {
-        if (!(value <= limit)) {
-            throw new ValidationException(field, "value must be less than or equal to " + limit);
-        }
-    }
-
-    public static void greaterThan(String field, double value, double limit) throws ValidationException {
-        if (!(value > limit)) {
-            throw new ValidationException(field, "value must be greater than " + limit);
-        }
-    }
-
-    public static void greaterThanOrEqual(String field, double value, double limit) throws ValidationException {
-        if (!(value <= limit)) {
-            throw new ValidationException(field, "value must be greater than or equal to " + limit);
-        }
-    }
 
     public static void in(String field, double value, double[] set) throws ValidationException {
         for (double i : set) {

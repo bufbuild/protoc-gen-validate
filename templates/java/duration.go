@@ -38,16 +38,16 @@ const durationTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			com.lyft.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Const" }});
 {{- end -}}
 {{- if $r.Lt }}
-			com.lyft.pgv.DurationValidation.lessThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Lt" }});
+			com.lyft.pgv.ComparativeValidation.lessThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Lt" }}, com.google.protobuf.util.Durations.comparator());
 {{- end -}}
 {{- if $r.Lte }}
-			com.lyft.pgv.DurationValidation.lessThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Lte" }});
+			com.lyft.pgv.ComparativeValidation.lessThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Lte" }}, com.google.protobuf.util.Durations.comparator());
 {{- end -}}
 {{- if $r.Gt }}
-			com.lyft.pgv.DurationValidation.greaterThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Gt" }});
+			com.lyft.pgv.ComparativeValidation.greaterThan("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Gt" }}, com.google.protobuf.util.Durations.comparator());
 {{- end -}}
 {{- if $r.Gte }}
-			com.lyft.pgv.DurationValidation.greaterThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Gte" }});
+			com.lyft.pgv.ComparativeValidation.greaterThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Gte" }}, com.google.protobuf.util.Durations.comparator());
 {{- end -}}
 {{- if $r.In }}
 			com.lyft.pgv.DurationValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "In" }});

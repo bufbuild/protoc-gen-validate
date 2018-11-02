@@ -323,6 +323,8 @@ func (fns javaFuncs) javaTypeLiteralSuffixFor(f pgs.Field) string {
 		return "L"
 	case pgs.FloatT:
 		return "F"
+	case pgs.DoubleT:
+		return "D"
 	default:
 		return ""
 	}

@@ -10,41 +10,41 @@ public class DurationValidationTest {
     @Test
     public void lessThanWorks() throws ValidationException {
         // Less
-        DurationValidation.lessThan("x", Durations.fromSeconds(10), Durations.fromSeconds(20));
+        ComparativeValidation.lessThan("x", Durations.fromSeconds(10), Durations.fromSeconds(20), Durations.comparator());
         // Equal
-        assertThatThrownBy(() -> DurationValidation.lessThan("x", Durations.fromSeconds(10), Durations.fromSeconds(10))).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> ComparativeValidation.lessThan("x", Durations.fromSeconds(10), Durations.fromSeconds(10), Durations.comparator())).isInstanceOf(ValidationException.class);
         // Greater
-        assertThatThrownBy(() -> DurationValidation.lessThan("x", Durations.fromSeconds(20), Durations.fromSeconds(10))).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> ComparativeValidation.lessThan("x", Durations.fromSeconds(20), Durations.fromSeconds(10), Durations.comparator())).isInstanceOf(ValidationException.class);
     }
 
     @Test
     public void lessThanOrEqualsWorks() throws ValidationException {
         // Less
-        DurationValidation.lessThanOrEqual("x", Durations.fromSeconds(10), Durations.fromSeconds(20));
+        ComparativeValidation.lessThanOrEqual("x", Durations.fromSeconds(10), Durations.fromSeconds(20), Durations.comparator());
         // Equal
-        DurationValidation.lessThanOrEqual("x", Durations.fromSeconds(10), Durations.fromSeconds(10));
+        ComparativeValidation.lessThanOrEqual("x", Durations.fromSeconds(10), Durations.fromSeconds(10), Durations.comparator());
         // Greater
-        assertThatThrownBy(() -> DurationValidation.lessThanOrEqual("x", Durations.fromSeconds(20), Durations.fromSeconds(10))).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> ComparativeValidation.lessThanOrEqual("x", Durations.fromSeconds(20), Durations.fromSeconds(10), Durations.comparator())).isInstanceOf(ValidationException.class);
     }
 
     @Test
     public void greaterThanWorks() throws ValidationException {
         // Less
-        assertThatThrownBy(() -> DurationValidation.greaterThan("x", Durations.fromSeconds(10), Durations.fromSeconds(20))).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> ComparativeValidation.greaterThan("x", Durations.fromSeconds(10), Durations.fromSeconds(20), Durations.comparator())).isInstanceOf(ValidationException.class);
         // Equal
-        assertThatThrownBy(() -> DurationValidation.greaterThan("x", Durations.fromSeconds(10), Durations.fromSeconds(10))).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> ComparativeValidation.greaterThan("x", Durations.fromSeconds(10), Durations.fromSeconds(10), Durations.comparator())).isInstanceOf(ValidationException.class);
         // Greater
-        DurationValidation.greaterThan("x", Durations.fromSeconds(20), Durations.fromSeconds(10));
+        ComparativeValidation.greaterThan("x", Durations.fromSeconds(20), Durations.fromSeconds(10), Durations.comparator());
     }
 
     @Test
     public void greaterThanOrEqualsWorks() throws ValidationException {
         // Less
-        assertThatThrownBy(() -> DurationValidation.greaterThanOrEqual("x", Durations.fromSeconds(10), Durations.fromSeconds(20))).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> ComparativeValidation.greaterThanOrEqual("x", Durations.fromSeconds(10), Durations.fromSeconds(20), Durations.comparator())).isInstanceOf(ValidationException.class);
         // Equal
-        DurationValidation.greaterThanOrEqual("x", Durations.fromSeconds(10), Durations.fromSeconds(10));
+        ComparativeValidation.greaterThanOrEqual("x", Durations.fromSeconds(10), Durations.fromSeconds(10), Durations.comparator());
         // Greater
-        DurationValidation.greaterThanOrEqual("x", Durations.fromSeconds(20), Durations.fromSeconds(10));
+        ComparativeValidation.greaterThanOrEqual("x", Durations.fromSeconds(20), Durations.fromSeconds(10), Durations.comparator());
     }
 
     @Test

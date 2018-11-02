@@ -12,41 +12,41 @@ public class TimestampValidationTest {
     @Test
     public void lessThanWorks() throws ValidationException {
         // Less
-        TimestampValidation.lessThan("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(20));
+        ComparativeValidation.lessThan("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(20), Timestamps.comparator());
         // Equal
-        assertThatThrownBy(() -> TimestampValidation.lessThan("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(10))).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> ComparativeValidation.lessThan("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(10), Timestamps.comparator())).isInstanceOf(ValidationException.class);
         // Greater
-        assertThatThrownBy(() -> TimestampValidation.lessThan("x", Timestamps.fromSeconds(20), Timestamps.fromSeconds(10))).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> ComparativeValidation.lessThan("x", Timestamps.fromSeconds(20), Timestamps.fromSeconds(10), Timestamps.comparator())).isInstanceOf(ValidationException.class);
     }
 
     @Test
     public void lessThanOrEqualsWorks() throws ValidationException {
         // Less
-        TimestampValidation.lessThanOrEqual("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(20));
+        ComparativeValidation.lessThanOrEqual("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(20), Timestamps.comparator());
         // Equal
-        TimestampValidation.lessThanOrEqual("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(10));
+        ComparativeValidation.lessThanOrEqual("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(10), Timestamps.comparator());
         // Greater
-        assertThatThrownBy(() -> TimestampValidation.lessThanOrEqual("x", Timestamps.fromSeconds(20), Timestamps.fromSeconds(10))).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> ComparativeValidation.lessThanOrEqual("x", Timestamps.fromSeconds(20), Timestamps.fromSeconds(10), Timestamps.comparator())).isInstanceOf(ValidationException.class);
     }
 
     @Test
     public void greaterThanWorks() throws ValidationException {
         // Less
-        assertThatThrownBy(() -> TimestampValidation.greaterThan("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(20))).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> ComparativeValidation.greaterThan("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(20), Timestamps.comparator())).isInstanceOf(ValidationException.class);
         // Equal
-        assertThatThrownBy(() -> TimestampValidation.greaterThan("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(10))).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> ComparativeValidation.greaterThan("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(10), Timestamps.comparator())).isInstanceOf(ValidationException.class);
         // Greater
-        TimestampValidation.greaterThan("x", Timestamps.fromSeconds(20), Timestamps.fromSeconds(10));
+        ComparativeValidation.greaterThan("x", Timestamps.fromSeconds(20), Timestamps.fromSeconds(10), Timestamps.comparator());
     }
 
     @Test
     public void greaterThanOrEqualsWorks() throws ValidationException {
         // Less
-        assertThatThrownBy(() -> TimestampValidation.greaterThanOrEqual("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(20))).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> ComparativeValidation.greaterThanOrEqual("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(20), Timestamps.comparator())).isInstanceOf(ValidationException.class);
         // Equal
-        TimestampValidation.greaterThanOrEqual("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(10));
+        ComparativeValidation.greaterThanOrEqual("x", Timestamps.fromSeconds(10), Timestamps.fromSeconds(10), Timestamps.comparator());
         // Greater
-        TimestampValidation.greaterThanOrEqual("x", Timestamps.fromSeconds(20), Timestamps.fromSeconds(10));
+        ComparativeValidation.greaterThanOrEqual("x", Timestamps.fromSeconds(20), Timestamps.fromSeconds(10), Timestamps.comparator());
     }
 
     @Test
