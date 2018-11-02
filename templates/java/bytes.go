@@ -1,6 +1,9 @@
 package java
 
 const bytesConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
+{{- if $r.Const }}
+		private final com.google.protobuf.ByteString {{ constantName $f "Const" }} = com.google.protobuf.ByteString.copyFrom({{ byteArrayLit $r.GetConst }});
+{{- end -}}
 {{- if $r.In }}
 		private final com.google.protobuf.ByteString[] {{ constantName $f "In" }} = new com.google.protobuf.ByteString[]{
 			{{- range $r.In }}
@@ -29,6 +32,9 @@ const bytesConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- end -}}`
 
 const bytesTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
+{{- if $r.Const }}
+			com.lyft.pgv.BytesValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "Const" }});
+{{- end -}}
 {{- if $r.Len }}
 			com.lyft.pgv.BytesValidation.length("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetLen }});
 {{- end -}}
