@@ -66,9 +66,9 @@ const bytesTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			com.lyft.pgv.BytesValidation.ipv6("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }});
 {{- end -}}
 {{- if $r.In }}
-			com.lyft.pgv.BytesValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "In" }});
+			com.lyft.pgv.CollectiveValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "In" }});
 {{- end -}}
 {{- if $r.NotIn }}
-			com.lyft.pgv.BytesValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "NotIn" }});
+			com.lyft.pgv.CollectiveValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "NotIn" }});
 {{- end -}}
 `

@@ -69,22 +69,4 @@ public final class BytesValidation {
             throw new ValidationException(field, "should be valid ipv6 address " + value);
         }
     }
-
-    public static void in(String field, ByteString value, ByteString[] set) throws ValidationException {
-        for (ByteString bs : set) {
-            if (value.equals(bs)) {
-                return;
-            }
-        }
-
-        throw new ValidationException(field, "value must be in " + Arrays.toString(set));
-    }
-
-    public static void notIn(String field, ByteString value, ByteString[] set) throws ValidationException {
-        for (ByteString bs : set) {
-            if (value.equals(bs)) {
-                throw new ValidationException(field, "value must not be in " + Arrays.toString(set));
-            }
-        }
-    }
 }

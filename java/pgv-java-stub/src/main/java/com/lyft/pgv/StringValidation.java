@@ -7,28 +7,9 @@ import org.apache.commons.validator.routines.InetAddressValidator;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 
 public final class StringValidation {
     private StringValidation() {
-    }
-
-    public static void in(String field, String value, String[] set) throws ValidationException {
-        for (String str : set) {
-            if (value.equals(str)) {
-                return;
-            }
-        }
-
-        throw new ValidationException(field, "value must be in " + Arrays.toString(set));
-    }
-
-    public static void notIn(String field, String value, String[] set) throws ValidationException {
-        for (String str : set) {
-            if (value.equals(str)) {
-                throw new ValidationException(field, "value must not be in " + Arrays.toString(set));
-            }
-        }
     }
 
     public static void length(String field, String value, int expected) throws ValidationException {

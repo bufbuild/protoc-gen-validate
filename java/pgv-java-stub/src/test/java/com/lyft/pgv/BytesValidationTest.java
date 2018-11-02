@@ -104,17 +104,17 @@ public class BytesValidationTest {
     public void inWorks() throws ValidationException {
         ByteString[] set = new ByteString[]{ByteString.copyFromUtf8("foo"), ByteString.copyFromUtf8("bar")};
         // In
-        BytesValidation.in("x", ByteString.copyFromUtf8("foo"), set);
+        CollectiveValidation.in("x", ByteString.copyFromUtf8("foo"), set);
         // Not In
-        assertThatThrownBy(() -> BytesValidation.in("x", ByteString.copyFromUtf8("baz"), set)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> CollectiveValidation.in("x", ByteString.copyFromUtf8("baz"), set)).isInstanceOf(ValidationException.class);
     }
 
     @Test
     public void notInWorks() throws ValidationException {
         ByteString[] set = new ByteString[]{ByteString.copyFromUtf8("foo"), ByteString.copyFromUtf8("bar")};
         // In
-        assertThatThrownBy(() -> BytesValidation.notIn("x", ByteString.copyFromUtf8("foo"), set)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> CollectiveValidation.notIn("x", ByteString.copyFromUtf8("foo"), set)).isInstanceOf(ValidationException.class);
         // Not In
-        BytesValidation.notIn("x", ByteString.copyFromUtf8("baz"), set);
+        CollectiveValidation.notIn("x", ByteString.copyFromUtf8("baz"), set);
     }
 }

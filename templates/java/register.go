@@ -287,15 +287,15 @@ func (fns javaFuncs) javaTypeFor(f pgs.Field) string {
 	t := f.Type()
 	switch t.ProtoType() {
 	case pgs.Int32T, pgs.UInt32T, pgs.SInt32, pgs.Fixed32T, pgs.SFixed32:
-		return "int"
+		return "Integer"
 	case pgs.Int64T, pgs.UInt64T, pgs.SInt64, pgs.Fixed64T, pgs.SFixed64:
-		return "long"
+		return "Long"
 	case pgs.DoubleT:
-		return "double"
+		return "Double"
 	case pgs.FloatT:
-		return "float"
+		return "Float"
 	case pgs.BoolT:
-		return "boolean"
+		return "Boolean"
 	case pgs.StringT:
 		return "String"
 	case pgs.BytesT:
@@ -311,10 +311,8 @@ func (fns javaFuncs) javaTypeFor(f pgs.Field) string {
 				return fns.qualifiedName(t.Element().Embed())
 			}
 		}
-		return "Object"
-	default:
-		return "Object"
 	}
+	return "Object"
 }
 
 func (fns javaFuncs) javaTypeLiteralSuffixFor(f pgs.Field) string {
@@ -325,9 +323,21 @@ func (fns javaFuncs) javaTypeLiteralSuffixFor(f pgs.Field) string {
 		return "F"
 	case pgs.DoubleT:
 		return "D"
-	default:
-		return ""
 	}
+
+	emb := f.Type().Embed()
+	if emb != nil && emb.IsWellKnown() {
+		switch emb.WellKnownType() {
+		case pgs.Int64ValueWKT, pgs.UInt64ValueWKT:
+			return "L"
+		case pgs.FloatValueWKT:
+			return "F"
+		case pgs.DoubleValueWKT:
+			return "D"
+		}
+	}
+
+	return ""
 }
 
 func (fns javaFuncs) javaStringEscape(s string) string {
@@ -355,7 +365,7 @@ func (fns javaFuncs) byteArrayLit(bytes []uint8) string {
 
 func (fns javaFuncs) durLit(dur *duration.Duration) string {
 	return fmt.Sprintf(
-		"com.lyft.pgv.DurationValidation.toDuration(%d,%d)",
+		"com.lyft.pgv.TimestampValidation.toDuration(%d,%d)",
 		dur.GetSeconds(), dur.GetNanos())
 }
 

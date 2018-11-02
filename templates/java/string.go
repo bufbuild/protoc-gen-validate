@@ -24,10 +24,10 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			com.lyft.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, "{{ $r.GetConst }}");
 {{- end -}}
 {{- if $r.In }}
-			com.lyft.pgv.StringValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "In" }});
+			com.lyft.pgv.CollectiveValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "In" }});
 {{- end -}}
 {{- if $r.NotIn }}
-			com.lyft.pgv.StringValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "NotIn" }});
+			com.lyft.pgv.CollectiveValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "NotIn" }});
 {{- end -}}
 {{- if $r.Len }}
 			com.lyft.pgv.StringValidation.length("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetLen }});

@@ -12,10 +12,10 @@ public class AnyValidationTest {
         String[] set = new String[]{"type.googleapis.com/google.protobuf.Duration"};
 
         // In
-        AnyValidation.in("x", Any.newBuilder().setTypeUrl("type.googleapis.com/google.protobuf.Duration").build(), set);
+        CollectiveValidation.in("x", Any.newBuilder().setTypeUrl("type.googleapis.com/google.protobuf.Duration").build().getTypeUrl(), set);
 
         // Not In
-        assertThatThrownBy(() -> AnyValidation.in("x", Any.newBuilder().setTypeUrl("junk").build(), set)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> CollectiveValidation.in("x", Any.newBuilder().setTypeUrl("junk").build().getTypeUrl(), set)).isInstanceOf(ValidationException.class);
     }
 
     @Test
@@ -23,9 +23,9 @@ public class AnyValidationTest {
         String[] set = new String[]{"type.googleapis.com/google.protobuf.Duration"};
 
         // In
-        assertThatThrownBy(() -> AnyValidation.notIn("x", Any.newBuilder().setTypeUrl("type.googleapis.com/google.protobuf.Duration").build(), set)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> CollectiveValidation.notIn("x", Any.newBuilder().setTypeUrl("type.googleapis.com/google.protobuf.Duration").build().getTypeUrl(), set)).isInstanceOf(ValidationException.class);
 
         // Not In
-        AnyValidation.notIn("x", Any.newBuilder().setTypeUrl("junk").build(), set);
+        CollectiveValidation.notIn("x", Any.newBuilder().setTypeUrl("junk").build().getTypeUrl(), set);
     }
 }

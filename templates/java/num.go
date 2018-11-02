@@ -33,9 +33,9 @@ const numTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			com.lyft.pgv.ComparativeValidation.greaterThanOrEqual("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ $r.GetGte }}{{ javaTypeLiteralSuffixFor $f }}, java.util.Comparator.naturalOrder());
 {{- end -}}
 {{- if $r.In }}
-			com.lyft.pgv.NumericValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "In" }});
+			com.lyft.pgv.CollectiveValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "In" }});
 {{- end -}}
 {{- if $r.NotIn }}
-			com.lyft.pgv.NumericValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "NotIn" }});
+			com.lyft.pgv.CollectiveValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "NotIn" }});
 {{- end -}}
 `

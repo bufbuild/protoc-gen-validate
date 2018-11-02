@@ -25,9 +25,9 @@ const enumTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			com.lyft.pgv.EnumValidation.definedOnly("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }});
 {{- end -}}
 {{- if $r.In }}
-			com.lyft.pgv.EnumValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "In" }});
+			com.lyft.pgv.CollectiveValidation.in("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "In" }});
 {{- end -}}
 {{- if $r.NotIn }}
-			com.lyft.pgv.EnumValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "NotIn" }});
+			com.lyft.pgv.CollectiveValidation.notIn("{{ $f.FullyQualifiedName }}", proto.{{ accessor . }}, {{ constantName $f "NotIn" }});
 {{- end -}}
 `

@@ -21,9 +21,9 @@ public class EnumValidationTest {
                 Enum.TestEnum.forNumber(2),
         };
         // In
-        EnumValidation.in("x", Enum.TestEnum.TWO, set);
+        CollectiveValidation.in("x", Enum.TestEnum.TWO, set);
         // Not In
-        assertThatThrownBy(() -> EnumValidation.in("x", Enum.TestEnum.ONE, set)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> CollectiveValidation.in("x", Enum.TestEnum.ONE, set)).isInstanceOf(ValidationException.class);
     }
 
     @Test
@@ -33,8 +33,8 @@ public class EnumValidationTest {
                 Enum.TestEnum.forNumber(2),
         };
         // In
-        assertThatThrownBy(() -> EnumValidation.notIn("x", Enum.TestEnum.TWO, set)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> CollectiveValidation.notIn("x", Enum.TestEnum.TWO, set)).isInstanceOf(ValidationException.class);
         // Not In
-        EnumValidation.notIn("x", Enum.TestEnum.ONE, set);
+        CollectiveValidation.notIn("x", Enum.TestEnum.ONE, set);
     }
 }

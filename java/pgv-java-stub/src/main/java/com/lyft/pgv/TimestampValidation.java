@@ -22,6 +22,13 @@ public final class TimestampValidation {
                 .build();
     }
 
+    public static Duration toDuration(long seconds, long nanos) {
+        return Duration.newBuilder()
+                .setSeconds(seconds)
+                .setNanos((int) nanos)
+                .build();
+    }
+
     public static Timestamp currentTimestamp() {
         return Timestamps.fromMillis(System.currentTimeMillis());
     }

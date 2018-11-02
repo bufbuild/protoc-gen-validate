@@ -49,19 +49,19 @@ public class DurationValidationTest {
 
     @Test
     public void inWorks() throws ValidationException {
-        Duration[] set = new Duration[]{DurationValidation.toDuration(1, 0), DurationValidation.toDuration(2, 0)};
+        Duration[] set = new Duration[]{TimestampValidation.toDuration(1, 0), TimestampValidation.toDuration(2, 0)};
         // In
-        DurationValidation.in("x", DurationValidation.toDuration(1, 0), set);
+        CollectiveValidation.in("x", TimestampValidation.toDuration(1, 0), set);
         // Not In
-        assertThatThrownBy(() -> DurationValidation.in("x", DurationValidation.toDuration(3, 0), set)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> CollectiveValidation.in("x", TimestampValidation.toDuration(3, 0), set)).isInstanceOf(ValidationException.class);
     }
 
     @Test
     public void notInWorks() throws ValidationException {
-        Duration[] set = new Duration[]{DurationValidation.toDuration(1, 0), DurationValidation.toDuration(2, 0)};
+        Duration[] set = new Duration[]{TimestampValidation.toDuration(1, 0), TimestampValidation.toDuration(2, 0)};
         // In
-        assertThatThrownBy(() -> DurationValidation.notIn("x", DurationValidation.toDuration(1, 0), set)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> CollectiveValidation.notIn("x", TimestampValidation.toDuration(1, 0), set)).isInstanceOf(ValidationException.class);
         // Not In
-        DurationValidation.notIn("x", DurationValidation.toDuration(3, 0), set);
+        CollectiveValidation.notIn("x", TimestampValidation.toDuration(3, 0), set);
     }
 }
