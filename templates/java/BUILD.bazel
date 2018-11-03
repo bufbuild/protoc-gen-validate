@@ -17,6 +17,7 @@ go_library(
         "num.go",
         "oneof.go",
         "register.go",
+        "repeated.go",
         "required.go",
         "string.go",
         "timestamp.go",

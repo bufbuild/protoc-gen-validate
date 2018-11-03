@@ -98,7 +98,8 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("enum").Parse(enumTpl))
 	template.Must(tpl.New("enumConst").Parse(enumConstTpl))
 	template.Must(tpl.New("message").Parse(messageTpl))
-	template.Must(tpl.New("repeated").Parse(notImplementedTpl))
+	template.Must(tpl.New("repeated").Parse(repeatedTpl))
+	template.Must(tpl.New("repeatedConst").Parse(repeatedConstTpl))
 	template.Must(tpl.New("map").Parse(mapTpl))
 	template.Must(tpl.New("oneOf").Parse(oneOfTpl))
 
@@ -261,9 +262,12 @@ func (fns javaFuncs) fieldAccessor(f pgs.Field) string {
 	if f.Type().IsMap() {
 		fieldName += "Map"
 	}
+	if f.Type().IsRepeated() {
+		fieldName += "List"
+	}
 
 	fieldName = upperCaseAfterNumber(fieldName)
-	return fmt.Sprintf("get%s()", fieldName)
+	return fmt.Sprintf("proto.get%s()", fieldName)
 }
 
 func (fns javaFuncs) rawPrint(instr string) string {
@@ -304,7 +308,20 @@ func (fns javaFuncs) javaTypeFor(f pgs.Field) string {
 		return fns.qualifiedName(f.Type().Enum())
 	case pgs.MessageT:
 		if t.IsEmbed() {
-			return fns.qualifiedName(t.Embed())
+			embed := t.Embed()
+			// TODO: Map more WKTs as needed
+			if embed.IsWellKnown() {
+				switch embed.WellKnownType() {
+				case pgs.AnyWKT:
+					return "String"
+				case pgs.DurationWKT:
+					return "com.google.protobuf.Duration"
+				case pgs.TimestampWKT:
+					return "com.google.protobuf.Timestamp"
+				}
+			}
+
+			return fns.qualifiedName(embed)
 		}
 		if t.IsRepeated() {
 			if t.ProtoType() == pgs.MessageT {
