@@ -46,4 +46,60 @@ public class ComparativeValidationTest {
         // Greater than
         ComparativeValidation.greaterThanOrEqual("x", 20, 10, Comparator.naturalOrder());
     }
+
+    @Test
+    public void betweenInclusiveWorks() throws ValidationException {
+        // Lower outside
+        assertThatThrownBy(() -> ComparativeValidation.between("x", 5, 10, true, 20, true, Comparator.naturalOrder())).isInstanceOf(ValidationException.class);
+        // Lower bound
+        ComparativeValidation.between("x", 10, 10, true, 20, true, Comparator.naturalOrder());
+        // Inside
+        ComparativeValidation.between("x", 15, 10, true, 20, true, Comparator.naturalOrder());
+        // Upper bound
+        ComparativeValidation.between("x", 20, 10, true, 20, true, Comparator.naturalOrder());
+        // Upper outside
+        assertThatThrownBy(() -> ComparativeValidation.between("x", 25, 10, true, 20, true, Comparator.naturalOrder())).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
+    public void betweenExclusiveWorks() throws ValidationException {
+        // Lower outside
+        assertThatThrownBy(() -> ComparativeValidation.between("x", 5, 10, false, 20, false, Comparator.naturalOrder())).isInstanceOf(ValidationException.class);
+        // Lower bound
+        assertThatThrownBy(() -> ComparativeValidation.between("x", 10, 10, false, 20, false, Comparator.naturalOrder())).isInstanceOf(ValidationException.class);
+        // Inside
+        ComparativeValidation.between("x", 15, 10, false, 20, false, Comparator.naturalOrder());
+        // Upper bound
+        assertThatThrownBy(() -> ComparativeValidation.between("x", 20, 10, false, 20, false, Comparator.naturalOrder())).isInstanceOf(ValidationException.class);
+        // Upper outside
+        assertThatThrownBy(() -> ComparativeValidation.between("x", 25, 10, false, 20, false, Comparator.naturalOrder())).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
+    public void outsideInclusiveWorks() throws ValidationException {
+        // Lower outside
+        ComparativeValidation.outside("x", 5, 10, true, 20, true, Comparator.naturalOrder());
+        // Lower bound
+        assertThatThrownBy(() -> ComparativeValidation.outside("x", 10, 10, true, 20, true, Comparator.naturalOrder())).isInstanceOf(ValidationException.class);
+        // Inside
+        assertThatThrownBy(() -> ComparativeValidation.outside("x", 15, 10, true, 20, true, Comparator.naturalOrder())).isInstanceOf(ValidationException.class);
+        // Upper bound
+        assertThatThrownBy(() -> ComparativeValidation.outside("x", 20, 10, true, 20, true, Comparator.naturalOrder())).isInstanceOf(ValidationException.class);
+        // Upper outside
+        ComparativeValidation.outside("x", 25, 10, true, 20, true, Comparator.naturalOrder());
+    }
+
+    @Test
+    public void outsideExclusiveWorks() throws ValidationException {
+        // Lower outside
+        ComparativeValidation.outside("x", 5, 10, false, 20, false, Comparator.naturalOrder());
+        // Lower bound
+        ComparativeValidation.outside("x", 10, 10, false, 20, false, Comparator.naturalOrder());
+        // Inside
+        assertThatThrownBy(() -> ComparativeValidation.outside("x", 15, 10, false, 20, false, Comparator.naturalOrder())).isInstanceOf(ValidationException.class);
+        // Upper bound
+        ComparativeValidation.outside("x", 20, 10, false, 20, false, Comparator.naturalOrder());
+        // Upper outside
+        ComparativeValidation.outside("x", 25, 10, false, 20, false, Comparator.naturalOrder());
+    }
 }
