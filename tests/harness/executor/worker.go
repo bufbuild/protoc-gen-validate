@@ -34,7 +34,7 @@ func execTestCase(tc TestCase) (ok, skip bool) {
 		return false, false
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
 
 	wg := new(sync.WaitGroup)

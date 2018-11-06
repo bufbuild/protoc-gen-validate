@@ -38,7 +38,6 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"camelCase":                fns.camelCase,
 		"classNameFile":            classNameFile,
 		"durLit":                   fns.durLit,
-		"rawPrint":                 fns.rawPrint,
 		"fieldName":                fns.fieldName,
 		"javaPackage":              javaPackage,
 		"javaStringEscape":         fns.javaStringEscape,
@@ -270,10 +269,6 @@ func (fns javaFuncs) fieldAccessor(f pgs.Field) string {
 	return fmt.Sprintf("proto.get%s()", fieldName)
 }
 
-func (fns javaFuncs) rawPrint(instr string) string {
-	return fmt.Sprintf("%#v", instr)
-}
-
 func (fns javaFuncs) hasAccessor(ctx shared.RuleContext) string {
 	if ctx.AccessorOverride != "" {
 		return "true"
@@ -358,11 +353,13 @@ func (fns javaFuncs) javaTypeLiteralSuffixFor(f pgs.Field) string {
 }
 
 func (fns javaFuncs) javaStringEscape(s string) string {
-	s = fns.rawPrint(s)
+	s = fmt.Sprintf("%q", s)
 	s = s[1 : len(s)-1]
+	s = strings.Replace(s, "\\u00", "\\x", -1)
 	s = strings.Replace(s, "\\", "\\\\", -1)
 	s = strings.Replace(s, "\"", "\\\"", -1)
 	return "\"" + s + "\""
+	return s
 }
 
 func (fns javaFuncs) camelCase(name pgs.Name) string {
