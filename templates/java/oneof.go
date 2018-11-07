@@ -1,5 +1,9 @@
 package java
 
+const oneOfConstTpl = `
+{{ range .Fields }}{{ renderConstants (context .) }}{{ end }}
+`
+
 const oneOfTpl = `
 			switch (proto.get{{camelCase .Name }}Case()) {
 				{{ range .Fields -}}

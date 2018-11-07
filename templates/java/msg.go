@@ -8,6 +8,9 @@ const msgTpl = `
 		{{- range .NonOneOfFields }}
 			{{ renderConstants (context .) }}
 		{{ end }}
+		{{ range .OneOfs }}
+			{{ template "oneOfConst" . }}
+		{{ end }}
 
 		public void assertValid({{ qualifiedName . }} proto) throws com.lyft.pgv.ValidationException {
 		{{ if disabled . }}

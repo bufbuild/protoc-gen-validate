@@ -30,6 +30,23 @@ public final class ComparativeValidation {
         }
     }
 
+    public static <T> void range(String field, T value, T lt, T lte, T gt, T gte, Comparator<T> comparator) throws ValidationException {
+        T ltx = first(lt, lte);
+        boolean ltxInc = lte != null;
+
+        T gtx = first(gt, gte);
+        boolean gtxInc = gte != null;
+
+        // Inverting the values of lt(e) and gt(e) is valid and creates an exclusive range.
+        // {gte:30, lt: 40} => x must be in the range [30, 40)
+        // {lt:30, gte:40} => x must be outside the range [30, 40)
+        if (lte(comparator.compare(gtx, ltx))) {
+            between(field, value, gtx, gtxInc, ltx, ltxInc, comparator);
+        } else {
+            outside(field, value, ltx, !ltxInc, gtx, !gtxInc, comparator);
+        }
+    }
+
     public static <T> void between(String field, T value, T lower, boolean lowerInclusive, T upper, boolean upperInclusive, Comparator<T> comparator) throws ValidationException {
         if (!between(value, lower, lowerInclusive, upper, upperInclusive, comparator)) {
             throw new ValidationException(field, value.toString() + " must be in the range " + range(lower, lowerInclusive, upper, upperInclusive));
@@ -65,5 +82,9 @@ public final class ComparativeValidation {
 
     private static boolean gte(int comparatorResult) {
         return comparatorResult >= 0;
+    }
+
+    private static <T> T first(T lhs, T rhs) {
+        return lhs != null ? lhs : rhs;
     }
 }

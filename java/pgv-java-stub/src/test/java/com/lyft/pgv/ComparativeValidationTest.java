@@ -102,4 +102,19 @@ public class ComparativeValidationTest {
         // Upper outside
         ComparativeValidation.outside("x", 25, 10, false, 20, false, Comparator.naturalOrder());
     }
+
+    @Test
+    public void rangeChoosesCorrectly() throws ValidationException {
+        // {gte:30, lt: 40} => x must be in the range [30, 40)
+        // In between range
+        ComparativeValidation.range("x", 35, 40, null, null, 30, Comparator.naturalOrder());
+        // Outside between range
+        assertThatThrownBy(() -> ComparativeValidation.range("x", 10, 40, null, null, 30, Comparator.naturalOrder())).isInstanceOf(ValidationException.class);
+
+        // {lt:30, gte:40} => x must be outside the range [30, 40)
+        // In outside range
+        assertThatThrownBy(() -> ComparativeValidation.range("x", 35, 30, null, null, 40, Comparator.naturalOrder())).isInstanceOf(ValidationException.class);
+        // Outside outside range
+        ComparativeValidation.range("x", 10, 30, null, null, 40, Comparator.naturalOrder());
+    }
 }

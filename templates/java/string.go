@@ -77,7 +77,7 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.GetUri }}
 			com.lyft.pgv.StringValidation.uri("{{ $f.FullyQualifiedName }}", {{ accessor . }});
 {{- end -}}
-{{- if $r.GetUri }}
+{{- if $r.GetUriRef }}
 			com.lyft.pgv.StringValidation.uriRef("{{ $f.FullyQualifiedName }}", {{ accessor . }});
 {{- end -}}
 `

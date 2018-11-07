@@ -101,6 +101,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("repeatedConst").Parse(repeatedConstTpl))
 	template.Must(tpl.New("map").Parse(mapTpl))
 	template.Must(tpl.New("oneOf").Parse(oneOfTpl))
+	template.Must(tpl.New("oneOfConst").Parse(oneOfConstTpl))
 
 	template.Must(tpl.New("required").Parse(requiredTpl))
 	template.Must(tpl.New("timestamp").Parse(timestampTpl))
@@ -108,6 +109,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("duration").Parse(durationTpl))
 	template.Must(tpl.New("durationConst").Parse(durationConstTpl))
 	template.Must(tpl.New("wrapper").Parse(wrapperTpl))
+	template.Must(tpl.New("wrapperConst").Parse(wrapperConstTpl))
 }
 
 type javaFuncs struct{ pgsgo.Context }
@@ -313,6 +315,14 @@ func (fns javaFuncs) javaTypeFor(f pgs.Field) string {
 					return "com.google.protobuf.Duration"
 				case pgs.TimestampWKT:
 					return "com.google.protobuf.Timestamp"
+				case pgs.Int32ValueWKT, pgs.UInt32ValueWKT:
+					return "Integer"
+				case pgs.Int64ValueWKT, pgs.UInt64ValueWKT:
+					return "Long"
+				case pgs.DoubleValueWKT:
+					return "Double"
+				case pgs.FloatValueWKT:
+					return "Float"
 				}
 			}
 
@@ -432,5 +442,5 @@ func (fns javaFuncs) renderConstants(tpl *template.Template) func(ctx shared.Rul
 }
 
 func (fns javaFuncs) constantName(f pgs.Field, rule string) string {
-	return strcase.ToScreamingSnake("$" + f.Name().String() + rule)
+	return strcase.ToScreamingSnake(f.Name().String() + "_" + rule)
 }
