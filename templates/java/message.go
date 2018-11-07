@@ -7,7 +7,7 @@ const messageTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 		{{- template "required" . }}
 		{{- if (isOfMessageType $f) }}
 			// Validate {{ $f.Name }}
-			com.lyft.pgv.GeneratedValidatorIndex.validatorFor({{ accessor . }}).assertValid({{ accessor . }});
+			if ({{ hasAccessor . }}) com.lyft.pgv.GeneratedValidatorIndex.validatorFor({{ accessor . }}).assertValid({{ accessor . }});
 		{{- end -}}
 	{{- end -}}
 `

@@ -1,12 +1,14 @@
 package com.lyft.pgv.validation;
 
 import com.google.common.base.Throwables;
+import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.Message;
 import com.lyft.pgv.GeneratedValidatorIndex;
 import com.lyft.pgv.ValidationException;
 import tests.harness.Harness;
 import tests.harness.cases.*;
 import tests.harness.cases.other_package.EmbedOuterClass;
+import validate.Validate;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -32,7 +34,10 @@ public class JavaHarness {
                     EmbedOuterClass.getDescriptor().toProto()
             ));
 
-            Harness.TestCase testCase = Harness.TestCase.parseFrom(System.in);
+            ExtensionRegistry registry = ExtensionRegistry.newInstance();
+            Validate.registerAllExtensions(registry);
+
+            Harness.TestCase testCase = Harness.TestCase.parseFrom(System.in, registry);
             Message message = typeMap.unpackAny(testCase.getMessage());
             GeneratedValidatorIndex.validatorFor(message).assertValid(message);
 
