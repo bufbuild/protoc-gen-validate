@@ -11,9 +11,8 @@ const repeatedTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- end -}}
 {{- if $r.GetUnique }}
 			com.lyft.pgv.RepeatedValidation.unique("{{ $f.FullyQualifiedName }}", {{ accessor . }});
-{{- end -}}
-{{- if $r.GetItems }}
+{{- end }}
 			com.lyft.pgv.RepeatedValidation.forEach({{ accessor . }}, item -> {
-				{{- render (.Elem "item" "") }}
+				{{ render (.Elem "item" "") }}
 			});
-{{- end -}}`
+`
