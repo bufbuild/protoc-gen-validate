@@ -26,6 +26,9 @@ const timestampTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Const }}
 			com.lyft.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName $f "Const" }});
 {{- end -}}
+{{- if and (or $r.Lt $r.Lte) (or $r.Gt $r.Gte)}}
+			com.lyft.pgv.ComparativeValidation.range("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ if $r.Lt }}{{ constantName $f "Lt" }}{{ else }}null{{ end }}, {{ if $r.Lte }}{{ constantName $f "Lte" }}{{ else }}null{{ end }}, {{ if $r.Gt }}{{ constantName $f "Gt" }}{{ else }}null{{ end }}, {{ if $r.Gte }}{{ constantName $f "Gte" }}{{ else }}null{{ end }}, com.google.protobuf.util.Timestamps.comparator());
+{{- else -}}
 {{- if $r.Lt }}
 			com.lyft.pgv.ComparativeValidation.lessThan("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName $f "Lt" }}, com.google.protobuf.util.Timestamps.comparator());
 {{- end -}}
@@ -37,6 +40,7 @@ const timestampTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- end -}}
 {{- if $r.Gte }}
 			com.lyft.pgv.ComparativeValidation.greaterThanOrEqual("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName $f "Gte" }}, com.google.protobuf.util.Timestamps.comparator());
+{{- end -}}
 {{- end -}}
 {{- if $r.LtNow }}
 			com.lyft.pgv.ComparativeValidation.lessThan("{{ $f.FullyQualifiedName }}", {{ accessor . }}, com.lyft.pgv.TimestampValidation.currentTimestamp(), com.google.protobuf.util.Timestamps.comparator());
