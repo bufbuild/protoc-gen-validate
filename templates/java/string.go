@@ -39,13 +39,13 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			com.lyft.pgv.StringValidation.maxLength("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMaxLen }});
 {{- end -}}
 {{- if $r.LenBytes }}
-			com.lyft.pgv.StringValidation.lenBytes("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetLen }});
+			com.lyft.pgv.StringValidation.lenBytes("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetLenBytes }});
 {{- end -}}
 {{- if $r.MinBytes }}
-			com.lyft.pgv.StringValidation.minBytes("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMinLen }});
+			com.lyft.pgv.StringValidation.minBytes("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMinBytes }});
 {{- end -}}
 {{- if $r.MaxBytes }}
-			com.lyft.pgv.StringValidation.maxBytes("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMaxLen }});
+			com.lyft.pgv.StringValidation.maxBytes("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMaxBytes }});
 {{- end -}}
 {{- if $r.Pattern }}
 			com.lyft.pgv.StringValidation.pattern("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName $f "Pattern" }});

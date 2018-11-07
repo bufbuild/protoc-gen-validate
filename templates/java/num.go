@@ -33,7 +33,7 @@ const numConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 
 const numTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Const }}
-			com.lyft.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetConst }});
+			com.lyft.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName $f "Const" }});
 {{- end -}}
 {{- if and (or $r.Lt $r.Lte) (or $r.Gt $r.Gte)}}
 			com.lyft.pgv.ComparativeValidation.range("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ if $r.Lt }}{{ constantName $f "Lt" }}{{ else }}null{{ end }}, {{ if $r.Lte }}{{ constantName $f "Lte" }}{{ else }}null{{ end }}, {{ if $r.Gt }}{{ constantName $f "Gt" }}{{ else }}null{{ end }}, {{ if $r.Gte }}{{ constantName $f "Gte" }}{{ else }}null{{ end }}, java.util.Comparator.naturalOrder());
