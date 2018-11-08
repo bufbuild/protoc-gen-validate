@@ -94,6 +94,13 @@ public class StringValidationTest {
     }
 
     @Test
+    public void patternWorks2() throws ValidationException {
+        Pattern p = Pattern.compile("\\* \\\\ \\w");
+        // Match
+        StringValidation.pattern("x", "* \\ x", p);
+    }
+
+    @Test
     public void prefixWorks() throws ValidationException {
         // Match
         StringValidation.prefix("x", "Hello World", "Hello");
@@ -121,6 +128,7 @@ public class StringValidationTest {
     public void emailWorks() throws ValidationException {
         // Match
         StringValidation.email("x", "foo@bar.com");
+        StringValidation.email("x", "John Smith <foo@bar.com>");
         // No Match
         assertThatThrownBy(() -> StringValidation.email("x", "bar.bar.bar")).isInstanceOf(ValidationException.class);
     }
@@ -131,6 +139,7 @@ public class StringValidationTest {
         StringValidation.hostName("x", "google.com");
         // No Match
         assertThatThrownBy(() -> StringValidation.hostName("x", "bananas.bananas")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.hostName("x", "你好.com")).isInstanceOf(ValidationException.class);
     }
 
     @Test

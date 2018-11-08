@@ -365,11 +365,11 @@ func (fns javaFuncs) javaTypeLiteralSuffixFor(f pgs.Field) string {
 func (fns javaFuncs) javaStringEscape(s string) string {
 	s = fmt.Sprintf("%q", s)
 	s = s[1 : len(s)-1]
-	s = strings.Replace(s, "\\u00", "\\x", -1)
-	s = strings.Replace(s, "\\", "\\\\", -1)
-	s = strings.Replace(s, "\"", "\\\"", -1)
-	return "\"" + s + "\""
-	return s
+	s = strings.Replace(s, `\u00`, `\x`, -1)
+	s = strings.Replace(s, `\x`, `\\x`, -1)
+	// s = strings.Replace(s, `\`, `\\`, -1)
+	s = strings.Replace(s, `"`, `\"`, -1)
+	return `"` + s + `"`
 }
 
 func (fns javaFuncs) camelCase(name pgs.Name) string {
