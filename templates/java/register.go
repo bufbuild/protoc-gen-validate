@@ -100,6 +100,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("repeated").Parse(repeatedTpl))
 	template.Must(tpl.New("repeatedConst").Parse(repeatedConstTpl))
 	template.Must(tpl.New("map").Parse(mapTpl))
+	template.Must(tpl.New("mapConst").Parse(mapConstTpl))
 	template.Must(tpl.New("oneOf").Parse(oneOfTpl))
 	template.Must(tpl.New("oneOfConst").Parse(oneOfConstTpl))
 
@@ -441,6 +442,6 @@ func (fns javaFuncs) renderConstants(tpl *template.Template) func(ctx shared.Rul
 	}
 }
 
-func (fns javaFuncs) constantName(f pgs.Field, rule string) string {
-	return strcase.ToScreamingSnake(f.Name().String() + "_" + rule)
+func (fns javaFuncs) constantName(ctx shared.RuleContext, rule string) string {
+	return strcase.ToScreamingSnake(ctx.Field.Name().String() + "_" + ctx.Index + "_" + rule)
 }

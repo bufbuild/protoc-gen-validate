@@ -1,5 +1,6 @@
 package com.lyft.pgv;
 
+import java.util.Collection;
 import java.util.Map;
 
 public final class MapValidation {
@@ -19,12 +20,24 @@ public final class MapValidation {
     }
 
     public static void noSparse(String field, Map value) throws ValidationException {
-        for (Object key : value.keySet()) {
-            if (value.get(key) == null) {
-                throw new ValidationException(field, "value cannot be sparse, all pairs must be non null ");
-            }
-        }
+        throw new UnimplementedException(field, "no_sparse validation is not implemented for Java because protobuf maps cannot be sparse in java");
+//        for (Object key : value.keySet()) {
+//            System.err.println("Key:" + key + " Value:" + value.getOrDefault(key, null));
+//
+//            if (value.getOrDefault(key, null) == null) {
+//                throw new ValidationException(field, "value cannot be sparse, all pairs must be non null ");
+//            }
+//        }
     }
 
-    // TODO: Key and Value validation
+    @FunctionalInterface
+    public interface MapValidator<T> {
+        void accept(T val) throws ValidationException;
+    }
+
+    public static <T> void validateParts(Collection<T> vals, MapValidator<T> validator) throws ValidationException {
+       for (T val : vals) {
+           validator.accept(val);
+       }
+    }
 }

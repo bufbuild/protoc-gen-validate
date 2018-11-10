@@ -4,6 +4,7 @@ import com.google.common.base.Throwables;
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.Message;
 import com.lyft.pgv.GeneratedValidatorIndex;
+import com.lyft.pgv.UnimplementedException;
 import com.lyft.pgv.ValidationException;
 import tests.harness.Harness;
 import tests.harness.cases.*;
@@ -42,6 +43,8 @@ public class JavaHarness {
             GeneratedValidatorIndex.validatorFor(message).assertValid(message);
 
             writeResult(Harness.TestResult.newBuilder().setValid(true).build());
+        } catch (UnimplementedException ex) {
+            writeResult(Harness.TestResult.newBuilder().setValid(false).setAllowFailure(true).setReason(ex.getMessage()).build());
         } catch (ValidationException ex) {
             writeResult(Harness.TestResult.newBuilder().setValid(false).setReason(ex.getMessage()).build());
         } catch (Throwable ex) {
