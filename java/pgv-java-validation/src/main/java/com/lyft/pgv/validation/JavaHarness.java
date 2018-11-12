@@ -51,6 +51,7 @@ public class JavaHarness {
             writeResult(Harness.TestResult.newBuilder().setValid(false).setError(true).setReason(Throwables.getStackTraceAsString(ex)).build());
         }
 
+        System.out.flush();
         System.exit(0);
     }
 

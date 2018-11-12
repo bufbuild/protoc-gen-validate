@@ -61,7 +61,7 @@ gogofast:
 	go build -o $@ vendor/github.com/gogo/protobuf/protoc-gen-gogofast/main.go
 
 .PHONY: harness
-harness: testcases tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.go tests/harness/go/main/go-harness tests/harness/gogo/main/go-harness tests/harness/cc/cc-harness
+harness: testcases tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.go tests/harness/go/main/go-harness tests/harness/gogo/main/go-harness tests/harness/cc/cc-harness tests/harness/java/java-harness
  	# runs the test harness, validating a series of test cases in all supported languages
 	go run ./tests/harness/executor/*.go
 
@@ -128,6 +128,10 @@ tests/harness/cc/cc-harness: tests/harness/cc/harness.cc
 	bazel build //tests/harness/cc:cc-harness
 	cp bazel-bin/tests/harness/cc/cc-harness $@
 	chmod 0755 $@
+
+tests/harness/java/java-harness:
+	# generates the Java-specific test harness
+	mvn -q -f java/pom.xml package
 
 .PHONY: ci
 ci: lint build testcases harness bazel-harness

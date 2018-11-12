@@ -18,10 +18,10 @@ import (
 )
 
 var Harnesses = []Harness{
-	// InitHarness("tests/harness/go/main/go-harness"),
-	// InitHarness("tests/harness/gogo/main/go-harness"),
-	// InitHarness("tests/harness/cc/cc-harness"),
-	InitHarness("java", "-jar", "/Users/rmichela/go/src/github.com/lyft/protoc-gen-validate/java/pgv-java-validation/target/java-harness.jar"),
+	InitHarness("tests/harness/go/main/go-harness"),
+	InitHarness("tests/harness/gogo/main/go-harness"),
+	InitHarness("tests/harness/cc/cc-harness"),
+	InitHarness("java", "-jar", "java/pgv-java-validation/target/java-harness.jar"),
 }
 
 type Harness struct {
