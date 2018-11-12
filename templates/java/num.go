@@ -2,29 +2,29 @@ package java
 
 const numConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Const }}
-		private final {{ javaTypeFor $f}} {{ constantName . "Const" }} = {{ $r.GetConst }}{{ javaTypeLiteralSuffixFor $f }};
+		private final {{ javaTypeFor .}} {{ constantName . "Const" }} = {{ $r.GetConst }}{{ javaTypeLiteralSuffixFor $f }};
 {{- end -}}
 {{- if $r.Lt }}
-		private final {{ javaTypeFor $f}} {{ constantName . "Lt" }} = {{ $r.GetLt }}{{ javaTypeLiteralSuffixFor $f }};
+		private final {{ javaTypeFor .}} {{ constantName . "Lt" }} = {{ $r.GetLt }}{{ javaTypeLiteralSuffixFor $f }};
 {{- end -}}
 {{- if $r.Lte }}
-		private final {{ javaTypeFor $f}} {{ constantName . "Lte" }} = {{ $r.GetLte }}{{ javaTypeLiteralSuffixFor $f }};
+		private final {{ javaTypeFor .}} {{ constantName . "Lte" }} = {{ $r.GetLte }}{{ javaTypeLiteralSuffixFor $f }};
 {{- end -}}
 {{- if $r.Gt }}
-		private final {{ javaTypeFor $f}} {{ constantName . "Gt" }} = {{ $r.GetGt }}{{ javaTypeLiteralSuffixFor $f }};
+		private final {{ javaTypeFor .}} {{ constantName . "Gt" }} = {{ $r.GetGt }}{{ javaTypeLiteralSuffixFor $f }};
 {{- end -}}
 {{- if $r.Gte }}
-		private final {{ javaTypeFor $f}} {{ constantName . "Gte" }} = {{ $r.GetGte }}{{ javaTypeLiteralSuffixFor $f }};
+		private final {{ javaTypeFor .}} {{ constantName . "Gte" }} = {{ $r.GetGte }}{{ javaTypeLiteralSuffixFor $f }};
 {{- end -}}
 {{- if $r.In }}
-		private final {{ javaTypeFor $f }}[] {{ constantName . "In" }} = new {{ javaTypeFor $f }}[]{
+		private final {{ javaTypeFor . }}[] {{ constantName . "In" }} = new {{ javaTypeFor . }}[]{
 			{{- range $r.In -}}
 				{{- sprintf "%v" . -}}{{ javaTypeLiteralSuffixFor $f }},
 			{{- end -}}
 		};
 {{- end -}}
 {{- if $r.NotIn }}
-		private final {{ javaTypeFor $f }}[] {{ constantName . "NotIn" }} = new {{ javaTypeFor $f }}[]{
+		private final {{ javaTypeFor . }}[] {{ constantName . "NotIn" }} = new {{ javaTypeFor . }}[]{
 			{{- range $r.NotIn -}}
 				{{- sprintf "%v" . -}}{{ javaTypeLiteralSuffixFor $f }},
 			{{- end -}}

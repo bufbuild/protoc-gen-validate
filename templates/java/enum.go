@@ -1,17 +1,17 @@
 package java
 
-const enumConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
+const enumConstTpl = `{{ $ctx := . }}{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.In }}
-		private final {{ javaTypeFor $f }}[] {{ constantName . "In" }} = new {{ javaTypeFor $f }}[]{
+		private final {{ javaTypeFor . }}[] {{ constantName . "In" }} = new {{ javaTypeFor . }}[]{
 			{{- range $r.In }}
-			{{ javaTypeFor $f }}.forNumber({{- sprintf "%v" . -}}),
+			{{ javaTypeFor $ctx }}.forNumber({{- sprintf "%v" . -}}),
 			{{- end }}
 		};
 {{- end -}}
 {{- if $r.NotIn }}
-		private final {{ javaTypeFor $f }}[] {{ constantName . "NotIn" }} = new {{ javaTypeFor $f }}[]{
+		private final {{ javaTypeFor . }}[] {{ constantName . "NotIn" }} = new {{ javaTypeFor . }}[]{
 			{{- range $r.NotIn }}
-			{{ javaTypeFor $f }}.forNumber({{- sprintf "%v" . -}}),
+			{{ javaTypeFor $ctx }}.forNumber({{- sprintf "%v" . -}}),
 			{{- end }}
 		};
 {{- end -}}`
@@ -19,7 +19,7 @@ const enumConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 const enumTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Const }}
 			com.lyft.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", {{ accessor . }}, 
-				{{ javaTypeFor $f }}.forNumber({{ $r.GetConst }}));
+				{{ javaTypeFor . }}.forNumber({{ $r.GetConst }}));
 {{- end -}}
 {{- if $r.GetDefinedOnly }}
 			com.lyft.pgv.EnumValidation.definedOnly("{{ $f.FullyQualifiedName }}", {{ accessor . }});

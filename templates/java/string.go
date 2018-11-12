@@ -2,14 +2,14 @@ package java
 
 const stringConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.In }}
-		private final {{ javaTypeFor $f }}[] {{ constantName . "In" }} = new {{ javaTypeFor $f }}[]{
+		private final {{ javaTypeFor . }}[] {{ constantName . "In" }} = new {{ javaTypeFor . }}[]{
 			{{- range $r.In -}}
 				"{{- sprintf "%v" . -}}",
 			{{- end -}}
 		};
 {{- end -}}
 {{- if $r.NotIn }}
-		private final {{ javaTypeFor $f }}[] {{ constantName . "NotIn" }} = new {{ javaTypeFor $f }}[]{
+		private final {{ javaTypeFor . }}[] {{ constantName . "NotIn" }} = new {{ javaTypeFor . }}[]{
 			{{- range $r.NotIn -}}
 				"{{- sprintf "%v" . -}}",
 			{{- end -}}

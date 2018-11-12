@@ -285,9 +285,56 @@ func (fns javaFuncs) fieldName(ctx shared.RuleContext) string {
 	return ctx.Field.Name().String()
 }
 
-func (fns javaFuncs) javaTypeFor(f pgs.Field) string {
-	t := f.Type()
-	switch t.ProtoType() {
+func (fns javaFuncs) javaTypeFor(ctx shared.RuleContext) string {
+	t := ctx.Field.Type()
+
+	// Map key and value types
+	if t.IsMap() {
+		switch ctx.AccessorOverride {
+		case "key":
+			return fns.javaTypeForProtoType(t.Key().ProtoType())
+		case "value":
+			return fns.javaTypeForProtoType(t.Element().ProtoType())
+		}
+	}
+
+	if t.IsEmbed() {
+		if embed := t.Embed(); embed.IsWellKnown() {
+			switch embed.WellKnownType() {
+			case pgs.AnyWKT:
+				return "String"
+			case pgs.DurationWKT:
+				return "com.google.protobuf.Duration"
+			case pgs.TimestampWKT:
+				return "com.google.protobuf.Timestamp"
+			case pgs.Int32ValueWKT, pgs.UInt32ValueWKT:
+				return "Integer"
+			case pgs.Int64ValueWKT, pgs.UInt64ValueWKT:
+				return "Long"
+			case pgs.DoubleValueWKT:
+				return "Double"
+			case pgs.FloatValueWKT:
+				return "Float"
+			}
+		}
+	}
+
+	if t.IsRepeated() {
+		if t.ProtoType() == pgs.MessageT {
+			return fns.qualifiedName(t.Element().Embed())
+		}
+	}
+
+	if t.IsEnum() {
+		return fns.qualifiedName(t.Enum())
+	}
+
+	return fns.javaTypeForProtoType(t.ProtoType())
+}
+
+func (fns javaFuncs) javaTypeForProtoType(t pgs.ProtoType) string {
+
+	switch t {
 	case pgs.Int32T, pgs.UInt32T, pgs.SInt32, pgs.Fixed32T, pgs.SFixed32:
 		return "Integer"
 	case pgs.Int64T, pgs.UInt64T, pgs.SInt64, pgs.Fixed64T, pgs.SFixed64:
@@ -302,40 +349,9 @@ func (fns javaFuncs) javaTypeFor(f pgs.Field) string {
 		return "String"
 	case pgs.BytesT:
 		return "com.google.protobuf.ByteString"
-	case pgs.EnumT:
-		return fns.qualifiedName(f.Type().Enum())
-	case pgs.MessageT:
-		if t.IsEmbed() {
-			embed := t.Embed()
-			// TODO: Map more WKTs as needed
-			if embed.IsWellKnown() {
-				switch embed.WellKnownType() {
-				case pgs.AnyWKT:
-					return "String"
-				case pgs.DurationWKT:
-					return "com.google.protobuf.Duration"
-				case pgs.TimestampWKT:
-					return "com.google.protobuf.Timestamp"
-				case pgs.Int32ValueWKT, pgs.UInt32ValueWKT:
-					return "Integer"
-				case pgs.Int64ValueWKT, pgs.UInt64ValueWKT:
-					return "Long"
-				case pgs.DoubleValueWKT:
-					return "Double"
-				case pgs.FloatValueWKT:
-					return "Float"
-				}
-			}
-
-			return fns.qualifiedName(embed)
-		}
-		if t.IsRepeated() {
-			if t.ProtoType() == pgs.MessageT {
-				return fns.qualifiedName(t.Element().Embed())
-			}
-		}
+	default:
+		return "Object"
 	}
-	return "Object"
 }
 
 func (fns javaFuncs) javaTypeLiteralSuffixFor(f pgs.Field) string {
