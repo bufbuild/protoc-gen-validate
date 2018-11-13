@@ -71,7 +71,7 @@
                                 <include>tests/harness/cases/other_package/*.proto</include>
                             </includes>
                             <pluginId>java-pgv</pluginId>
-                            <pluginExecutable>${env.HOME}/go/bin/protoc-gen-validate</pluginExecutable>
+                            <pluginExecutable>${env.GOPATH}/bin/protoc-gen-validate</pluginExecutable>
                         </configuration>
                     </execution>
 
@@ -90,12 +90,11 @@
                         <configuration>
                             <pluginParameter>lang=java</pluginParameter>
                             <pluginId>java-pgv</pluginId>
-                            <pluginExecutable>${env.HOME}/go/bin/protoc-gen-validate</pluginExecutable>
+                            <pluginExecutable>${env.GOPATH}/bin/protoc-gen-validate</pluginExecutable>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
