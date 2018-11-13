@@ -9,6 +9,7 @@ import org.apache.commons.validator.routines.InetAddressValidator;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 
 public final class StringValidation {
     private StringValidation() {
@@ -33,19 +34,19 @@ public final class StringValidation {
     }
 
     public static void lenBytes(String field, String value, int expected) throws ValidationException {
-        if (value.getBytes().length != expected) {
+        if (value.getBytes(Charset.forName("UTF-8")).length != expected) {
             throw new ValidationException(field, "\"" + value +  "\" bytes length must be " + expected);
         }
     }
 
     public static void minBytes(String field, String value, int expected) throws ValidationException {
-        if (value.getBytes().length < expected) {
+        if (value.getBytes(Charset.forName("UTF-8")).length < expected) {
             throw new ValidationException(field, "\"" + value +  "\" bytes length must be at least " + expected);
         }
     }
 
     public static void maxBytes(String field, String value, int expected) throws ValidationException {
-        if (value.getBytes().length > expected) {
+        if (value.getBytes(Charset.forName("UTF-8")).length > expected) {
             throw new ValidationException(field, "\"" + value +  "\" bytes length must be at maximum " + expected);
         }
     }

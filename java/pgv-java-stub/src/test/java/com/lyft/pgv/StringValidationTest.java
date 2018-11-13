@@ -58,6 +58,7 @@ public class StringValidationTest {
     public void lengthBytesWorks() throws ValidationException {
         // Short
         assertThatThrownBy(() -> StringValidation.lenBytes("x", "ñįö", 8)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.lenBytes("x", "ñįö", 8)).isInstanceOf(ValidationException.class);
         // Same
         StringValidation.lenBytes("x", "ñįöxx", 8);
         // Long
@@ -70,6 +71,7 @@ public class StringValidationTest {
         assertThatThrownBy(() -> StringValidation.minBytes("x", "ñįö", 8)).isInstanceOf(ValidationException.class);
         // Same
         StringValidation.minBytes("x", "ñįöxx", 8);
+        StringValidation.minBytes("x", "你好", 4);
         // Long
         StringValidation.minBytes("x", "ñįöxxxx", 8);
     }
