@@ -10,7 +10,7 @@ public final class EnumValidation {
 
     public static void definedOnly(String field, ProtocolMessageEnum value) throws ValidationException {
         if (value.toString().equals("UNRECOGNIZED")) {
-            throw new ValidationException(field, "value is not a defined Enum value " + value);
+            throw new ValidationException(field, value, "value is not a defined Enum value " + value);
         }
     }
 }

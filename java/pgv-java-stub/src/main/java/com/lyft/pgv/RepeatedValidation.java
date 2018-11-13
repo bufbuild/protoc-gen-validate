@@ -10,13 +10,13 @@ public final class RepeatedValidation {
 
     public static <T> void minItems(String field, List<T> values, int expected) throws ValidationException {
         if (values.size() < expected) {
-            throw new ValidationException(field, "must have at least " + expected + " items");
+            throw new ValidationException(field, values, "must have at least " + expected + " items");
         }
     }
 
     public static <T> void maxItems(String field, List<T> values, int expected) throws ValidationException {
         if (values.size() > expected) {
-            throw new ValidationException(field, "must have at most " + expected + " items");
+            throw new ValidationException(field, values, "must have at most " + expected + " items");
         }
     }
 
@@ -25,7 +25,7 @@ public final class RepeatedValidation {
         for (T value : values) {
             // Abort at the first sign of a duplicate
             if (!seen.add(value)) {
-                throw new ValidationException(field, "must have all unique values");
+                throw new ValidationException(field, values, "must have all unique values");
             }
         }
     }

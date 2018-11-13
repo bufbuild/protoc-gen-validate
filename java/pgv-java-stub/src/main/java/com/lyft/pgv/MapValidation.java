@@ -9,13 +9,13 @@ public final class MapValidation {
 
     public static void min(String field, Map value, int expected) throws ValidationException {
         if (Math.min(value.size(), expected) != expected) {
-            throw new ValidationException(field, "value size must be at least " + expected);
+            throw new ValidationException(field, value, "value size must be at least " + expected);
         }
     }
 
     public static void max(String field, Map value, int expected) throws ValidationException {
         if (Math.max(value.size(), expected) != expected) {
-            throw new ValidationException(field, "value size must not exceed " + expected);
+            throw new ValidationException(field, value, "value size must not exceed " + expected);
         }
     }
 
