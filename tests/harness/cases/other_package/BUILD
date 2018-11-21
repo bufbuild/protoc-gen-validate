@@ -7,6 +7,7 @@ load(
     "pgv_go_proto_library",
     "pgv_gogo_proto_library",
     "pgv_cc_proto_library",
+    "pgv_java_proto_library",
 )
 
 proto_library(
@@ -62,4 +63,10 @@ go_library(
     embed = [":other_package_go_proto"],
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/other_package",
     visibility = ["//visibility:public"],
+)
+
+pgv_java_proto_library(
+    name = "java",
+    visibility = ["//visibility:public"],
+    deps = [":embed_proto"],
 )
