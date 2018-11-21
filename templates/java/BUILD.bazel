@@ -9,7 +9,6 @@ go_library(
         "duration.go",
         "enum.go",
         "file.go",
-        "fileIndex.go",
         "map.go",
         "message.go",
         "msg.go",

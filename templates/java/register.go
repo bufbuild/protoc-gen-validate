@@ -25,8 +25,6 @@ func RegisterIndex(tpl *template.Template, params pgs.Parameters) {
 		"simpleName":    fns.Name,
 		"qualifiedName": fns.qualifiedName,
 	})
-
-	template.Must(tpl.Parse(fileIndexTpl))
 }
 
 func Register(tpl *template.Template, params pgs.Parameters) {

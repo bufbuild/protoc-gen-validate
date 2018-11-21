@@ -22,12 +22,6 @@ func makeTemplate(ext string, fn RegisterFn, params pgs.Parameters) *template.Te
 	return tpl
 }
 
-func IndexTemplate(params pgs.Parameters) map[string][]*template.Template {
-	return map[string][]*template.Template{
-		"java": {makeTemplate("com/lyft/pgv/GeneratedValidatorIndex.java", java.RegisterIndex, params)},
-	}
-}
-
 func Template(params pgs.Parameters) map[string][]*template.Template {
 	return map[string][]*template.Template{
 		"cc":   {makeTemplate("h", cc.RegisterHeader, params), makeTemplate("cc", cc.RegisterModule, params)},
