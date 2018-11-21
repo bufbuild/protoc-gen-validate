@@ -16,6 +16,7 @@ def _proto_path(proto):
         path = path[1:]
     return path
 
+# TODO(akonradi): merge this with the Java impl below.
 def _protoc_gen_validate_impl(ctx):
   """Generate protos using protoc-gen-validate plugin"""
   protos = []
@@ -59,6 +60,43 @@ def _protoc_gen_validate_impl(ctx):
       files=depset(out_files)
   )
 
+def _protoc_gen_validate_java_impl(ctx):
+  """Generate protos using protoc-gen-validate plugin"""
+  protos = []
+  for dep in ctx.attr.deps:
+    protos += [f for f in dep.proto.direct_sources]
+
+  out_file = ctx.actions.declare_file(ctx.label.name + ".validate.srcjar")
+
+  dir_out = ctx.genfiles_dir.path
+  if ctx.label.workspace_root:
+    dir_out += ("/"+ctx.label.workspace_root)
+
+  args = [
+    "--java_out="+dir_out,
+    "--plugin=protoc-gen-validate="+ctx.executable._plugin.path,
+    "--validate_out=lang=java:"+ dir_out,
+  ]
+
+  tds = depset([], transitive = [dep.proto.transitive_descriptor_sets for dep in ctx.attr.deps])
+  descriptor_args = [ds.path for ds in tds]
+
+  if len(descriptor_args) != 0:
+    args += ["--descriptor_set_in=%s" % ctx.configuration.host_path_separator.join(descriptor_args)]
+
+  ctx.actions.run_shell(
+      outputs=[out_file],
+      inputs=protos + tds.to_list() + [ctx.executable._plugin, ctx.executable._protoc],
+      command = ctx.executable._protoc.path + " $@ && (cd " + dir_out + " && find -name \*.java | xargs jar cf " + out_file.path[len(dir_out) + 1:] + ")",
+      arguments=args + [_proto_path(proto) for proto in protos],
+      mnemonic="ProtoGenValidateJavaGenerate",
+      use_default_shell_env=True,
+  )
+
+  return struct(
+      files=depset([out_file])
+  )
+
 cc_proto_gen_validate = rule(
     attrs = {
         "deps": attr.label_list(
@@ -81,4 +119,28 @@ cc_proto_gen_validate = rule(
       },
     output_to_genfiles = True,
     implementation = _protoc_gen_validate_impl,
+)
+
+java_proto_gen_validate = rule(
+    attrs = {
+        "deps": attr.label_list(
+            mandatory = True,
+            providers = ["proto"],
+        ),
+
+        "_protoc": attr.label(
+            cfg = "host",
+            default = Label("@com_google_protobuf//:protoc"),
+            executable = True,
+            single_file = True,
+        ),
+        "_plugin": attr.label(
+            cfg = "host",
+            default = Label("@com_lyft_protoc_gen_validate//:protoc-gen-validate"),
+            allow_files = True,
+            executable = True,
+        ),
+      },
+    output_to_genfiles = True,
+    implementation = _protoc_gen_validate_java_impl,
 )
