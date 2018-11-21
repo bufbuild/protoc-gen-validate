@@ -41,3 +41,9 @@ cc_library(
     hdrs = ["validate.h"],
     visibility = ["//visibility:public"],
 )
+
+java_proto_library(
+    name = "validate_java",
+    deps = [":validate_proto"],
+    visibility=["//visibility:public"],
+)
