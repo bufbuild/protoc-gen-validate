@@ -13,15 +13,15 @@ import (
 	harness "github.com/lyft/protoc-gen-validate/tests/harness/go"
 )
 
-func Work(wg *sync.WaitGroup, in <-chan TestCase, out chan<- TestResult) {
+func Work(wg *sync.WaitGroup, in <-chan TestCase, out chan<- TestResult, goFlag bool, gogoFlag bool, ccFlag bool, javaFlag bool) {
 	for tc := range in {
-		ok, skip := execTestCase(tc)
+		ok, skip := execTestCase(tc, goFlag, gogoFlag, ccFlag, javaFlag)
 		out <- TestResult{ok, skip}
 	}
 	wg.Done()
 }
 
-func execTestCase(tc TestCase) (ok, skip bool) {
+func execTestCase(tc TestCase, goFlag bool, gogoFlag bool, ccFlag bool, javaFlag bool) (ok, skip bool) {
 	any, err := ptypes.MarshalAny(tc.Message)
 	if err != nil {
 		log.Printf("unable to convert test case %q to Any - %v", tc.Name, err)
@@ -37,13 +37,15 @@ func execTestCase(tc TestCase) (ok, skip bool) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
+	harnesses := Harnesses(goFlag, gogoFlag, ccFlag, javaFlag)
+
 	wg := new(sync.WaitGroup)
-	wg.Add(len(Harnesses))
+	wg.Add(len(harnesses))
 
-	errs := make(chan error, len(Harnesses))
-	skips := make(chan string, len(Harnesses))
+	errs := make(chan error, len(harnesses))
+	skips := make(chan string, len(harnesses))
 
-	for _, h := range Harnesses {
+	for _, h := range harnesses {
 		h := h
 		go func() {
 			defer wg.Done()
