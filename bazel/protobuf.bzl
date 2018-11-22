@@ -91,7 +91,7 @@ def _protoc_gen_validate_java_impl(ctx):
       protos=protos,
       out_files=[out_file],
       protoc_args=args,
-      package_command="(cd " + dir_out + " && find -name \*.java | xargs jar cf " + jar_path + ")"
+      package_command="(cd " + dir_out + " && find . -name \*.java | xargs jar cf " + jar_path + ")"
   )
 
 
