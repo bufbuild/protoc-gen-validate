@@ -43,7 +43,7 @@ public class ValidatingServerInterceptorTest {
                 return new Validator<T>() {
                     @Override
                     public void assertValid(T proto) throws ValidationException {
-                        throw new ValidationException("one", "is invalid");
+                        throw new ValidationException("one", "", "is invalid");
                     }
                 };
             }
@@ -54,6 +54,6 @@ public class ValidatingServerInterceptorTest {
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel());
         assertThatThrownBy(() -> stub.sayHello(Hello.HelloRequest.newBuilder().setName("World").build()))
             .isInstanceOf(StatusRuntimeException.class)
-            .hasMessage("INVALID_ARGUMENT: one: is invalid");
+            .hasMessage("INVALID_ARGUMENT: one: is invalid - Got ");
     }
 }
