@@ -131,7 +131,7 @@ tests/harness/cc/cc-harness: tests/harness/cc/harness.cc
 
 tests/harness/java/java-harness:
 	# generates the Java-specific test harness
-	mvn -q -f java/pom.xml package -DskipTests
+	mvn -q -f java/pom.xml clean package -DskipTests
 
 .PHONY: ci
 ci: lint build testcases harness bazel-harness
