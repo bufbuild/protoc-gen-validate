@@ -28,3 +28,6 @@ bazel-*
 /java/**/target
 /java/**/*.class
 .vscode
+.project
+.classpath
+.settings
