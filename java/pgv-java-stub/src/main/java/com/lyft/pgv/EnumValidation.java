@@ -4,6 +4,9 @@ import com.google.protobuf.ProtocolMessageEnum;
 
 import java.util.Arrays;
 
+/**
+ * {@code EnumValidation} implements PGV validation for protobuf enumerated types.
+ */
 public final class EnumValidation {
     private EnumValidation() {
     }

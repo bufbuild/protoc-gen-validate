@@ -4,6 +4,10 @@ import com.lyft.pgv.ValidationException;
 import com.lyft.pgv.ValidatorIndex;
 import io.grpc.*;
 
+/**
+ * {@code ValidatingClientInterceptor} is a gRPC {@code ClientInterceptor} that validates outbound gRPC messages before
+ * transmission. Non-compliant messages result in an {@code INVALID_ARGUMENT} status exception.
+ */
 public class ValidatingClientInterceptor implements ClientInterceptor {
     private final ValidatorIndex index;
 

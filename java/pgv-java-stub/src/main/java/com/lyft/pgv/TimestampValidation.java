@@ -5,6 +5,9 @@ import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Durations;
 import com.google.protobuf.util.Timestamps;
 
+/**
+ * {@code TimestampValidation} implements PGV validation for protobuf {@code Timestamp} fields.
+ */
 public final class TimestampValidation {
     private TimestampValidation() { }
 
@@ -15,6 +18,9 @@ public final class TimestampValidation {
         }
     }
 
+    /**
+     * Converts {@code seconds} and {@code nanos} to a protobuf {@code Timestamp}.
+     */
     public static Timestamp toTimestamp(long seconds, int nanos) {
         return Timestamp.newBuilder()
                 .setSeconds(seconds)
@@ -22,6 +28,9 @@ public final class TimestampValidation {
                 .build();
     }
 
+    /**
+     * Converts {@code seconds} and {@code nanos} to a protobuf {@code Duration}.
+     */
     public static Duration toDuration(long seconds, long nanos) {
         return Duration.newBuilder()
                 .setSeconds(seconds)

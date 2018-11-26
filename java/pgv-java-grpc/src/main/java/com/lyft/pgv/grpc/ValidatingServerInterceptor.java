@@ -6,6 +6,10 @@ import io.grpc.*;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * {@code ValidatingServerInterceptor} is a gRPC {@code ServerInterceptor} that validates inbound gRPC messages before
+ * processing. Non-compliant messages result in an {@code INVALID_ARGUMENT} status response.
+ */
 public class ValidatingServerInterceptor implements ServerInterceptor {
     private final ValidatorIndex index;
 

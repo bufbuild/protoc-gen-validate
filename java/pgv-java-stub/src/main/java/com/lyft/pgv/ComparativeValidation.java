@@ -2,6 +2,9 @@ package com.lyft.pgv;
 
 import java.util.Comparator;
 
+/**
+ * {@code ComparativeValidation} implements PGV validation rules for ordering relationships.
+ */
 public final class ComparativeValidation {
     private ComparativeValidation() {
     }

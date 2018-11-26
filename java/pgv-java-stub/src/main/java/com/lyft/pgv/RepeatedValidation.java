@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * {@code RepeatedValidation} implements PGV validators for collection-type validators.
+ */
 public final class RepeatedValidation {
     private RepeatedValidation() {
     }

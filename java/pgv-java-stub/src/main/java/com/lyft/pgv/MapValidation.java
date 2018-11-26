@@ -3,6 +3,9 @@ package com.lyft.pgv;
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * {@code MapValidation} implements PGV validation for protobuf {@code Map} fields.
+ */
 public final class MapValidation {
     private MapValidation() {
     }
@@ -20,14 +23,7 @@ public final class MapValidation {
     }
 
     public static void noSparse(String field, Map value) throws ValidationException {
-        throw new UnimplementedException(field, "no_sparse validation is not implemented for Java because protobuf maps cannot be sparse in java");
-//        for (Object key : value.keySet()) {
-//            System.err.println("Key:" + key + " Value:" + value.getOrDefault(key, null));
-//
-//            if (value.getOrDefault(key, null) == null) {
-//                throw new ValidationException(field, "value cannot be sparse, all pairs must be non null ");
-//            }
-//        }
+        throw new UnimplementedException(field, "no_sparse validation is not implemented for Java because protobuf maps cannot be sparse in Java");
     }
 
     @FunctionalInterface

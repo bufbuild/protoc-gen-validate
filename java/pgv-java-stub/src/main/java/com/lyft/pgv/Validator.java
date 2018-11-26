@@ -1,5 +1,9 @@
 package com.lyft.pgv;
 
+/**
+ * {@code Validator} is the base class for all generated PGV validators.
+ * @param <T>
+ */
 public abstract class Validator<T> {
     /**
      * Asserts validation rules on a protobuf object.

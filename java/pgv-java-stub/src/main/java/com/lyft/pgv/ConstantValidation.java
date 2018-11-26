@@ -1,5 +1,8 @@
 package com.lyft.pgv;
 
+/**
+ * {@code ConstantValidation} implements PVG validators for constant values.
+ */
 public final class ConstantValidation {
     private ConstantValidation() {
     }

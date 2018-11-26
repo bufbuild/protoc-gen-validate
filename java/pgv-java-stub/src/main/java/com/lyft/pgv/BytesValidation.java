@@ -6,6 +6,9 @@ import com.google.re2j.Pattern;
 
 import java.util.Arrays;
 
+/**
+ * {@code BytesValidation} implements PGV validators for protobuf {@code Byte} fields.
+ */
 public final class BytesValidation {
     private BytesValidation() {
     }

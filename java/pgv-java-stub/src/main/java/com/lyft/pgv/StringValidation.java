@@ -11,6 +11,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 
+/**
+ * {@code StringValidation} implements PGV validation for protobuf {@code String} fields.
+ */
 public final class StringValidation {
     private StringValidation() {
     }
