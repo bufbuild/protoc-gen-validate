@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <string>
 #include <typeinfo>
+#include <typeindex>
 #include <unordered_map>
 
 namespace pgv {
@@ -20,26 +21,23 @@ using ValidationMsg = std::string;
 
 class BaseValidator {
 protected:
-  static std::unordered_map<size_t, BaseValidator*> validators;
+  static std::unordered_map<std::type_index, BaseValidator*>& validators() {
+    static auto* validator_map = new std::unordered_map<std::type_index, BaseValidator*>();
+    return *validator_map;
+  }
 };
-
-#if !defined(WIN32)
-std::unordered_map<size_t, BaseValidator*> __attribute__((weak)) BaseValidator::validators;
-#else
-__declspec(selectany) std::unordered_map<size_t, BaseValidator*> BaseValidator::validators;
-#endif
 
 template <typename T>
 class Validator : public BaseValidator {
 public:
   Validator(std::function<bool(const T&, ValidationMsg*)> check) : check_(check)
   {
-    validators[typeid(T).hash_code()] = this;
+    validators()[std::type_index(typeid(T))] = this;
   }
 
   static bool CheckMessage(const T& m, ValidationMsg* err)
   {
-    auto val = static_cast<Validator<T>*>(validators[typeid(T).hash_code()]);
+    auto val = static_cast<Validator<T>*>(validators()[std::type_index(typeid(T))]);
     if (val) {
       return val->check_(m, err);
     }
