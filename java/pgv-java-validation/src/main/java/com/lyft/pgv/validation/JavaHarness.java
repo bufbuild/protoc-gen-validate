@@ -3,7 +3,7 @@ package com.lyft.pgv.validation;
 import com.google.common.base.Throwables;
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.Message;
-import com.lyft.pgv.GeneratedValidatorIndex;
+import com.lyft.pgv.ReflectiveValidatorIndex;
 import com.lyft.pgv.UnimplementedException;
 import com.lyft.pgv.ValidationException;
 import tests.harness.Harness;
@@ -40,7 +40,7 @@ public class JavaHarness {
 
             Harness.TestCase testCase = Harness.TestCase.parseFrom(System.in, registry);
             Message message = typeMap.unpackAny(testCase.getMessage());
-            GeneratedValidatorIndex.validatorFor(message).assertValid(message);
+            ReflectiveValidatorIndex.validatorFor(message).assertValid(message);
 
             writeResult(Harness.TestResult.newBuilder().setValid(true).build());
         } catch (UnimplementedException ex) {

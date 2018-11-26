@@ -23,4 +23,11 @@ public abstract class Validator<T> {
             return false;
         }
     }
+
+    public static Validator ALWAYS_VALID = new Validator() {
+        @Override
+        public void assertValid(Object proto) {
+            // Do nothing. Always valid.
+        }
+    };
 }
