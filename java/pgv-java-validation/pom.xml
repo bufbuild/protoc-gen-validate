@@ -11,6 +11,10 @@
 
     <artifactId>pgv-java-validation</artifactId>
 
+    <properties>
+        <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.lyft.protoc-gen-validate</groupId>
