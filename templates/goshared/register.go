@@ -292,7 +292,7 @@ func (fns goSharedFuncs) externalEnums(file pgs.File) []pgs.Enum {
 
 	for _, msg := range file.AllMessages() {
 		for _, fld := range msg.Fields() {
-			if en := fld.Type().Enum(); fld.Type().IsEnum() && en.Package().ProtoName() != fld.Package().ProtoName() {
+			if en := fld.Type().Enum(); fld.Type().IsEnum() && en.Package().ProtoName() != fld.Package().ProtoName() && fns.PackageName(en) != fns.PackageName(fld) {
 				out = append(out, en)
 			}
 		}
