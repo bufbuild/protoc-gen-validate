@@ -63,12 +63,12 @@ gogofast:
 .PHONY: harness
 harness: testcases tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.go tests/harness/go/main/go-harness tests/harness/gogo/main/go-harness tests/harness/cc/cc-harness
  	# runs the test harness, validating a series of test cases in all supported languages
-	go run ./tests/harness/executor/*.go
+	go run ./tests/harness/executor/*.go -go -gogo -cc
 
 .PHONY: bazel-harness
 bazel-harness:
 	# runs the test harness via bazel
-	bazel run //tests/harness/executor:executor
+	bazel run //tests/harness/executor:executor -- -go -gogo -cc -java
 
 .PHONY: testcases
 testcases: gogofast
@@ -129,8 +129,12 @@ tests/harness/cc/cc-harness: tests/harness/cc/harness.cc
 	cp bazel-bin/tests/harness/cc/cc-harness $@
 	chmod 0755 $@
 
+tests/harness/java/java-harness:
+	# generates the Java-specific test harness
+	mvn -q -f java/pom.xml clean package -DskipTests
+
 .PHONY: ci
-ci: lint build testcases harness bazel-harness
+ci: lint build testcases bazel-harness
 
 .PHONY: clean
 clean:

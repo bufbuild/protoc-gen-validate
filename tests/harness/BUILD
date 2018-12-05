@@ -42,6 +42,12 @@ cc_proto_library(
     ],
 )
 
+java_proto_library(
+    name = "harness_java_proto",
+    visibility = ["//visibility:public"],
+    deps = [":harness_proto"],
+)
+
 go_library(
     name = "go_default_library",
     embed = [":harness_go_proto"],

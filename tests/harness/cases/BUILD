@@ -7,6 +7,7 @@ load(
     "pgv_gogo_proto_library",
     "pgv_go_proto_library",
     "pgv_cc_proto_library",
+    "pgv_java_proto_library",
 )
 
 proto_library(
@@ -72,4 +73,13 @@ pgv_cc_proto_library(
         "//tests/harness/cases/other_package:cc",
     ],
     visibility = ["//tests:__subpackages__"],
+)
+
+pgv_java_proto_library(
+    name = "java",
+    deps = [":cases_proto"],
+    visibility = ["//visibility:public"],
+    java_deps = [
+        "//tests/harness/cases/other_package:java",
+    ],
 )

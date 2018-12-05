@@ -29,6 +29,7 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 	lang := m.Parameters().Str(langParam)
 	m.Assert(lang != "", "`lang` parameter must be set")
 
+	// Process file-level templates
 	tpls := templates.Template(m.Parameters())[lang]
 	m.Assert(tpls != nil, "could not find templates for `lang`: ", lang)
 
@@ -40,9 +41,13 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 		}
 
 		for _, tpl := range tpls {
-			out := m.ctx.OutputPath(f)
-			out = out.SetExt(".validate." + tpl.Name())
-			m.AddGeneratorTemplateFile(out.String(), tpl, f)
+			out := templates.FilePathFor(tpl)(f, m.ctx, tpl)
+			// A nil path means no output should be generated for this file - as controlled by
+			// implementation-specific FilePathFor implementations.
+			// Ex: Don't generate Java validators for files that don't reference PGV.
+			if out != nil {
+				m.AddGeneratorTemplateFile(out.String(), tpl, f)
+			}
 		}
 
 		m.Pop()

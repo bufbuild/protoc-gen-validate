@@ -21,3 +21,13 @@ bazel-*
 
 /tests/harness/cases/**/*.cc
 /tests/harness/cases/**/*.h
+
+/java/.idea
+/java/**/.project
+/java/**/*.iml
+/java/**/target
+/java/**/*.class
+.vscode
+.project
+.classpath
+.settings
