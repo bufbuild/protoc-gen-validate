@@ -3,9 +3,9 @@ package com.lyft.pgv;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * {@code ReflectiveValidatorIndex} uses reflection to discover {@link Validator} implementations as needed at
- * runtime for a type. If no validator can be found for {@code type}, a default {@code ALWAYS_VALID} validator will
- * be used.
+ * {@code ReflectiveValidatorIndex} uses reflection to discover {@link Validator} implementations lazily the first
+ * time a type is validated. If no validator can be found for {@code type}, a default {@code ALWAYS_VALID} validator
+ * will be used.
  */
 public final class ReflectiveValidatorIndex implements ValidatorIndex {
     private ReflectiveValidatorIndex() {
