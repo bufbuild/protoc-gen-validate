@@ -78,7 +78,13 @@ make build
 
 ### Parameters
 
-- **`lang`**: specify the target language to generate. Currently, the only supported option is `go`. Support for `python` and `cpp` is planned.
+- **`lang`**: specify the target language to generate. Currently, the only supported options are: 
+  - `go`
+  - `gogo` for [gogo proto](https://github.com/gogo/protobuf)
+  - `cc` for c++ (partially implemented)
+  - `java`
+
+Support for `python` is planned.
 
 ### Examples
 
@@ -124,6 +130,8 @@ Gogo support has the following limitations:
 ## Constraint Rules
 
 [The provided constraints](validate/validate.proto) are modeled largerly after those in JSON Schema. PGV rules can be mixed for the same field; the plugin ensures the rules applied to a field cannot contradict before code generation.
+
+Check the [constraint rule comparison matrix](rule_comparison.md) for language-specific constraint capabilities.
 
 ### Numerics
 
