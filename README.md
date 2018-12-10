@@ -80,7 +80,7 @@ make build
 
 - **`lang`**: specify the target language to generate. Currently, the only supported options are: 
   - `go`
-  - `gogo` for [gogo proto](https://github.com/gogo/protobuf)
+  - `gogo` for [gogo proto](https://github.com/gogo/protobuf) (experimental)
   - `cc` for c++ (partially implemented)
   - `java`
 
@@ -126,6 +126,53 @@ Gogo support has the following limitations:
 - `gogoproto.stdduration` is supported on fields;
 - `gogoproto.stdtime` is supported on fields;
 
+#### Java
+
+Java generation is integrated with the existing protobuf toolchain for java projects. For Maven projects, add the following to your pom.xml.
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.lyft.protoc-gen-validate</groupId>
+        <artifactId>pgv-java-stub</artifactId>
+        <version>${pgv.version}</version>
+    </dependency>
+</dependencies>
+
+<build>
+    <extensions>
+        <extension>
+            <groupId>kr.motd.maven</groupId>
+            <artifactId>os-maven-plugin</artifactId>
+            <version>1.4.1.Final</version>
+        </extension>
+    </extensions>
+    <plugins>
+        <plugin>
+            <groupId>org.xolstice.maven.plugins</groupId>
+            <artifactId>protobuf-maven-plugin</artifactId>
+            <version>0.5.0</version>
+            <configuration>
+                <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
+            </configuration>
+                <execution>
+                    <id>protoc-java-pgv</id>
+                    <goals>
+                        <goal>compile-custom</goal>
+                    </goals>
+                    <configuration>
+                        <pluginParameter>lang=java</pluginParameter>
+                        <pluginId>java-pgv</pluginId>
+                        <pluginArtifact>com.lyft.protoc-gen-validate:pgv:${pgv.version}:exe:${os.detected.classifier}</pluginArtifact>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+``` 
+
+Gradle projects follow a similar pattern.
 
 ## Constraint Rules
 
