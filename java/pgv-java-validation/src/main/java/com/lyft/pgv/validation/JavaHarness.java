@@ -9,7 +9,7 @@ import com.lyft.pgv.ValidationException;
 import tests.harness.Harness;
 import tests.harness.cases.*;
 import tests.harness.cases.other_package.EmbedOuterClass;
-import validate.Validate;
+import com.lyft.pgv.validate.Validate;
 
 import java.io.IOException;
 import java.util.Arrays;
