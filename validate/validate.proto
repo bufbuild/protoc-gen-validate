@@ -2,6 +2,7 @@ syntax = "proto2";
 package validate;
 
 option go_package = "github.com/lyft/protoc-gen-validate/validate";
+option java_package = "com.lyft.pgv.validate";
 
 import "google/protobuf/descriptor.proto";
 import "google/protobuf/duration.proto";
