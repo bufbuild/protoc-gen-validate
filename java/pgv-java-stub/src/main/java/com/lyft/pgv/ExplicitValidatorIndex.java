@@ -22,6 +22,6 @@ public class ExplicitValidatorIndex implements ValidatorIndex {
 
     @SuppressWarnings("unchecked")
     public <T> Validator<T> validatorFor(Class clazz) {
-        return VALIDATOR_INDEX.computeIfAbsent(clazz, c -> Validator.ALWAYS_VALID);
+        return VALIDATOR_INDEX.getOrDefault(clazz, Validator.ALWAYS_VALID);
     }
 }
