@@ -58,7 +58,6 @@
                                 <include>tests/harness/harness.proto</include>
                                 <include>tests/harness/cases/*.proto</include>
                                 <include>tests/harness/cases/other_package/*.proto</include>
-                                <include>validate/*.proto</include>
                             </includes>
                         </configuration>
                     </execution>

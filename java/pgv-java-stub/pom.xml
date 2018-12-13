@@ -41,6 +41,15 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>../..</directory>
+                <includes>
+                    <include>validate/validate.proto</include>
+                </includes>
+            </resource>
+        </resources>
+
         <extensions>
             <extension>
                 <groupId>kr.motd.maven</groupId>
@@ -48,15 +57,33 @@
                 <version>1.4.1.Final</version>
             </extension>
         </extensions>
+
         <plugins>
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.5.0</version>
                 <configuration>
-                    <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
+                    <!--
+                     ~ Embed generated validate.proto classes for all Protobuf 3.x versions. This is safe because
+                     ~ Protobuf guarantees API stability for all 3.x version.
+                     ~ https://github.com/protocolbuffers/protobuf/blob/17cc42a45aeab0f78a137fa6be6c36095db32e58/CHANGES.txt#L107-L122
+                    -->
+                    <protocArtifact>com.google.protobuf:protoc:3.0.0:exe:${os.detected.classifier}</protocArtifact>
                 </configuration>
                 <executions>
+                    <execution>
+                        <id>protoc-java-pgv</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <protoSourceRoot>../../</protoSourceRoot>
+                            <includes>
+                                <include>validate/*.proto</include>
+                            </includes>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>protoc-java</id>
                         <goals>
