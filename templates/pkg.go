@@ -33,6 +33,10 @@ func Template(params pgs.Parameters) map[string][]*template.Template {
 
 func FilePathFor(tpl *template.Template) FilePathFn {
 	switch tpl.Name() {
+	case "h":
+		return cc.CcFilePath
+	case "cc":
+		return cc.CcFilePath
 	case "java":
 		return java.JavaFilePath
 	default:
