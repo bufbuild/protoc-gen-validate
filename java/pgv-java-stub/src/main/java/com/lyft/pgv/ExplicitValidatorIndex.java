@@ -7,7 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * for {@code type}, a default {@code ALWAYS_VALID} validator will be used.
  */
 public class ExplicitValidatorIndex implements ValidatorIndex {
-    private final ConcurrentHashMap<Class, ValidatorImpl> VALIDATOR_INDEX = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Class, ValidatorImpl> VALIDATOR_IMPL_INDEX = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Class, Validator> VALIDATOR_INDEX = new ConcurrentHashMap<>();
 
     /**
      * Adds a {@link Validator} to the set of known validators.
@@ -16,13 +17,14 @@ public class ExplicitValidatorIndex implements ValidatorIndex {
      * @return this
      */
     public <T> ExplicitValidatorIndex add(Class<T> forType, ValidatorImpl<T> validator) {
-        VALIDATOR_INDEX.put(forType, validator);
+        VALIDATOR_IMPL_INDEX.put(forType, validator);
         return this;
     }
 
     @SuppressWarnings("unchecked")
     public <T> Validator<T> validatorFor(Class clazz) {
-        ValidatorImpl impl = VALIDATOR_INDEX.getOrDefault(clazz, ValidatorImpl.ALWAYS_VALID);
-        return proto -> impl.assertValid(proto, ExplicitValidatorIndex.this);
+        return VALIDATOR_INDEX.computeIfAbsent(clazz, c ->
+                proto -> VALIDATOR_IMPL_INDEX.getOrDefault(c, ValidatorImpl.ALWAYS_VALID)
+                        .assertValid(proto, ExplicitValidatorIndex.this));
     }
 }
