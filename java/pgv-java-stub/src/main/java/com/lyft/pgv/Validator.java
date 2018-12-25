@@ -11,7 +11,7 @@ public abstract class Validator<T> {
      * @param proto the protobuf object to validate.
      * @throws ValidationException with the first validation error encountered.
      */
-    public abstract void assertValid(T proto) throws ValidationException;
+    public abstract void assertValid(T proto, ValidatorIndex index) throws ValidationException;
 
     /**
      * Checks validation rules on a protobuf object.
@@ -19,9 +19,9 @@ public abstract class Validator<T> {
      * @param proto the protobuf object to validate.
      * @return {@code true} if all rules are valid, {@code false} if not.
      */
-    public boolean isValid(T proto) {
+    public boolean isValid(T proto, ValidatorIndex index) {
         try {
-            assertValid(proto);
+            assertValid(proto, index);
             return true;
         } catch (com.lyft.pgv.ValidationException ex) {
             return false;
@@ -30,7 +30,7 @@ public abstract class Validator<T> {
 
     public static Validator ALWAYS_VALID = new Validator() {
         @Override
-        public void assertValid(Object proto) {
+        public void assertValid(Object proto, ValidatorIndex index) {
             // Do nothing. Always valid.
         }
     };

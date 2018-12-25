@@ -43,7 +43,7 @@ public class ValidatingClientInterceptorTest {
             public <T> Validator<T> validatorFor(Class clazz) {
                 return new Validator<T>() {
                     @Override
-                    public void assertValid(T proto) throws ValidationException {
+                    public void assertValid(T proto, ValidatorIndex index) throws ValidationException {
                         throw new ValidationException("one", "", "is invalid");
                     }
                 };

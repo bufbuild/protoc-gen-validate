@@ -12,7 +12,7 @@ const msgTpl = `
 			{{ template "oneOfConst" . }}
 		{{ end }}
 
-		public void assertValid({{ qualifiedName . }} proto) throws com.lyft.pgv.ValidationException {
+		public void assertValid({{ qualifiedName . }} proto, com.lyft.pgv.ValidatorIndex index) throws com.lyft.pgv.ValidationException {
 		{{ if disabled . }}
 			// Validate is disabled for {{ simpleName . }}
 			return;

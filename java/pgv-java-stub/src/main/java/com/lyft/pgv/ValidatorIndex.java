@@ -6,15 +6,19 @@ package com.lyft.pgv;
 public interface ValidatorIndex {
     <T> Validator<T> validatorFor(Class clazz);
 
+    /**
+     * Retuns the validator for {@code <T>}, or {@code ALWAYS_VALID} if not found.
+     */
+    @SuppressWarnings("unchecked")
+    default <T> Validator<T> validatorFor(Object instance) {
+        return validatorFor(instance == null ? null : instance.getClass());
+    }
+
     ValidatorIndex ALWAYS_VALID = new ValidatorIndex() {
         @Override
+        @SuppressWarnings("unchecked")
         public <T> Validator<T> validatorFor(Class clazz) {
-            return new Validator<T>() {
-                @Override
-                public void assertValid(T proto) throws ValidationException {
-                    // it's valid
-                }
-            };
+            return Validator.ALWAYS_VALID;
         }
     };
 }
