@@ -28,7 +28,7 @@ public class ValidatingServerInterceptor implements ServerInterceptor {
             @Override
             public void onMessage(ReqT message) {
                 try {
-                    index.validatorFor(message.getClass()).assertValid(message, index);
+                    index.validatorFor(message.getClass()).assertValid(message);
                     super.onMessage(message);
                 } catch (ValidationException ex) {
                     Status status = Status.INVALID_ARGUMENT.withDescription(ex.getMessage());

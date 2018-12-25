@@ -40,11 +40,8 @@ public class ValidatingServerInterceptorTest {
         ValidatingServerInterceptor interceptor = new ValidatingServerInterceptor(new ValidatorIndex() {
             @Override
             public <T> Validator<T> validatorFor(Class clazz) {
-                return new Validator<T>() {
-                    @Override
-                    public void assertValid(T proto, ValidatorIndex index) throws ValidationException {
-                        throw new ValidationException("one", "", "is invalid");
-                    }
+                return proto -> {
+                    throw new ValidationException("one", "", "is invalid");
                 };
             }
         });

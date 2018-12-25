@@ -42,7 +42,7 @@ public class JavaHarness {
             Harness.TestCase testCase = Harness.TestCase.parseFrom(System.in, registry);
             Message message = typeMap.unpackAny(testCase.getMessage());
             ValidatorIndex validatorIndex = new ReflectiveValidatorIndex();
-            validatorIndex.validatorFor(message).assertValid(message, validatorIndex);
+            validatorIndex.validatorFor(message).assertValid(message);
 
             writeResult(Harness.TestResult.newBuilder().setValid(true).build());
         } catch (UnimplementedException ex) {

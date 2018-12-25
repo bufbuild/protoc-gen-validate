@@ -21,7 +21,7 @@ public class ValidatingClientInterceptor implements ClientInterceptor {
             @Override
             public void sendMessage(ReqT message) {
                 try {
-                    index.validatorFor(message.getClass()).assertValid(message, index);
+                    index.validatorFor(message.getClass()).assertValid(message);
                     super.sendMessage(message);
                 } catch (ValidationException ex) {
                     Status status = Status.INVALID_ARGUMENT.withDescription(ex.getMessage());

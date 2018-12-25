@@ -7,7 +7,7 @@ const messageTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 		{{- template "required" . }}
 		{{- if (isOfMessageType $f) }}
 			// Validate {{ $f.Name }}
-			if ({{ hasAccessor . }}) index.validatorFor({{ accessor . }}).assertValid({{ accessor . }}, index);
+			if ({{ hasAccessor . }}) index.validatorFor({{ accessor . }}).assertValid({{ accessor . }});
 		{{- end -}}
 	{{- end -}}
 `

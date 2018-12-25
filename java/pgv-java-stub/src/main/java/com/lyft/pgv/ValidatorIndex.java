@@ -3,7 +3,11 @@ package com.lyft.pgv;
 /**
  * {@code ValidatorIndex} defines the entry point for finding {@link Validator} instances for a given type.
  */
+@FunctionalInterface
 public interface ValidatorIndex {
+    /**
+     * Retuns the validator for {@code clazz}, or {@code ALWAYS_VALID} if not found.
+     */
     <T> Validator<T> validatorFor(Class clazz);
 
     /**

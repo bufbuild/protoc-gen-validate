@@ -4,7 +4,7 @@ const msgTpl = `
 	/**
 	 * Validates {@code {{ simpleName . }}} protobuf objects.
 	 */
-	public static class {{ simpleName . }}Validator extends com.lyft.pgv.Validator<{{ qualifiedName . }}> {
+	public static class {{ simpleName . }}Validator implements com.lyft.pgv.ValidatorImpl<{{ qualifiedName . }}> {
 		{{- range .NonOneOfFields }}
 			{{ renderConstants (context .) }}
 		{{ end }}
