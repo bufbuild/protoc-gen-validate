@@ -105,6 +105,12 @@ func RegisterHeader(tpl *template.Template, params pgs.Parameters) {
 // TODO(rodaine): break pgsgo dependency here (with equivalent pgscc subpackage)
 type CCFuncs struct{ pgsgo.Context }
 
+func CcFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.FilePath {
+	out := pgs.FilePath(f.Name().String())
+	out = out.SetExt(".pb.validate." + tpl.Name())
+	return &out
+}
+
 func (fns CCFuncs) methodName(name interface{}) string {
 	nameStr := fmt.Sprintf("%s", name)
 	switch nameStr {
@@ -400,7 +406,7 @@ func (fns CCFuncs) staticVarName(msg pgs.Message) string {
 }
 
 func (fns CCFuncs) output(file pgs.File, ext string) string {
-	return fns.OutputPath(file).SetExt(ext).String()
+	return pgs.FilePath(file.Name().String()).SetExt(".pb" + ext).String()
 }
 
 func (fns CCFuncs) Type(f pgs.Field) pgsgo.TypeName {
