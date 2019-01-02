@@ -4,28 +4,34 @@ const mapTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 
 	{{ if $r.GetMinPairs }}
-		{{ unimplemented }}
-		{{/*
+		{
+		const auto size = {{ accessor . }}.size();
 		{{ if eq $r.GetMinPairs $r.GetMaxPairs }}
-			if len({{ accessor . }}) != {{ $r.GetMinPairs }} {
-				return {{ err . "value must contain exactly " $r.GetMinPairs " pair(s)" }}
+			if (size != {{ $r.GetMinPairs }}) {
+				{{ err . "value must contain exactly " $r.GetMinPairs " pair(s)" }}
 			}
 		{{ else if $r.MaxPairs }}
-			if l := len({{ accessor . }}); l < {{ $r.GetMinPairs }} || l > {{ $r.GetMaxPairs }} {
-			 	return {{ err . "value must contain between " $r.GetMinPairs " and " $r.GetMaxPairs " pairs, inclusive" }}
+			if (size < {{ $r.GetMinPairs }} || size > {{ $r.GetMaxPairs }}) {
+				{{ err . "value must contain between " $r.GetMinPairs " and " $r.GetMaxPairs " pairs, inclusive" }}
 			}
 		{{ else }}
-			if len({{ accessor . }}) < {{ $r.GetMinPairs }} {
-				return {{ err . "value must contain at least " $r.GetMinPairs " pair(s)" }}
+			if (size < {{ $r.GetMinPairs }}) {
+				{{ err . "value must contain at least " $r.GetMinPairs " pair(s)" }}
 			}
 		{{ end }}
+	}
 	{{ else if $r.MaxPairs }}
-		if len({{ accessor . }}) > {{ $r.GetMaxPairs }} {
-			return {{ err . "value must contain no more than " $r.GetMaxPairs " pair(s)" }}
+		{
+		const auto size = {{ accessor . }}.size();
+		if (size > {{ $r.GetMaxPairs }}) {
+			{{ err . "value must contain no more than " $r.GetMaxPairs " pair(s)" }}
 		}
+	}
 	{{ end }}
 
 	{{ if or $r.GetNoSparse (ne (.Elem "" "").Typ "none") (ne (.Key "" "").Typ "none") }}
+		{{ unimplemented }}
+		{{/*
 		for key, val := range {{ accessor . }} {
 			_ = key
 
