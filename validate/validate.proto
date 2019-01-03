@@ -556,6 +556,14 @@ message StringRules {
 
         // WellKnownRegex specifies a common well known pattern defined as a regex.
         KnownRegex well_known_regex = 24;
+
+        // DateTime specifies that the field must be a valid DateTime as defined
+        // by RFC 3339
+        bool date_time = 26;
+
+        // OptionalDateTime specifies that the field must be either empty or a 
+        // valid DateTime as defined by RFC 3339
+        bool optional_date_time = 27;
     }
 
   // This applies to regexes HTTP_HEADER_NAME and HTTP_HEADER_VALUE to enable
