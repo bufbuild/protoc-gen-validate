@@ -96,12 +96,12 @@ def pgv_java_proto_library(
         name = name,
         srcs = [name + "_validate"],
         deps = java_deps + [
-            "//validate:validate_java",
+            "@com_lyft_protoc_gen_validate//validate:validate_java",
             "@com_google_re2j//jar",
             "@com_google_protobuf//:protobuf_java",
             "@com_google_protobuf//:protobuf_java_util",
-            "//java/pgv-java-stub/src/main/java/com/lyft/pgv",
-            "//java/pgv-java-validation/src/main/java/com/lyft/pgv",
+            "@com_lyft_protoc_gen_validate//java/pgv-java-stub/src/main/java/com/lyft/pgv",
+            "@com_lyft_protoc_gen_validate//java/pgv-java-validation/src/main/java/com/lyft/pgv",
         ],
         **kwargs
     )
