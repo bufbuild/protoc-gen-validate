@@ -6,16 +6,17 @@
 
     <groupId>com.lyft.protoc-gen-validate</groupId>
     <artifactId>pgv-java</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <modules>
         <module>pgv-java-stub</module>
         <module>pgv-java-validation</module>
         <module>pgv-java-grpc</module>
+        <module>pgv-artifacts</module>
     </modules>
 
     <packaging>pom</packaging>
 
-    <name>protoc-gen-validate</name>
+    <name>PGV-Java Parent</name>
     <description>Protoc plugin to generate protobuf message validators.</description>
     <url>https://github.com/lyft/protoc-gen-validate</url>
 
