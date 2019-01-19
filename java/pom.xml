@@ -6,7 +6,7 @@
 
     <groupId>com.lyft.protoc-gen-validate</groupId>
     <artifactId>pgv-java</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <modules>
         <module>pgv-java-stub</module>
         <module>pgv-java-validation</module>
