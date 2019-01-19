@@ -1,6 +1,7 @@
 These steps are for releasing the Java components of PGV:
 - pgv-java-stub
 - pgv-java-grpc
+- pgv-artifacts
 
 # Steps
 1. Setup a pgp key
