@@ -8,11 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * will be used.
  */
 public final class ReflectiveValidatorIndex implements ValidatorIndex {
-    private ReflectiveValidatorIndex() {
-    }
-
-    private static final ReflectiveValidatorIndex INSTANCE = new ReflectiveValidatorIndex();
-
     private final ConcurrentHashMap<Class, Validator> VALIDATOR_INDEX = new ConcurrentHashMap<>();
 
     /**
@@ -31,7 +26,7 @@ public final class ReflectiveValidatorIndex implements ValidatorIndex {
     }
 
     @SuppressWarnings("unchecked")
-    private static Validator reflectiveValidatorFor(Class clazz) throws ReflectiveOperationException {
+    private Validator reflectiveValidatorFor(Class clazz) throws ReflectiveOperationException {
         Class enclosingClass = clazz;
         while (enclosingClass.getEnclosingClass() != null) {
             enclosingClass = enclosingClass.getEnclosingClass();
@@ -39,14 +34,8 @@ public final class ReflectiveValidatorIndex implements ValidatorIndex {
 
         String validatorClassName = enclosingClass.getName() + "Validator";
         Class validatorClass = clazz.getClassLoader().loadClass(validatorClassName);
-        return (Validator) validatorClass.getDeclaredMethod("validatorFor", Class.class).invoke(null, clazz);
-    }
+        ValidatorImpl impl = (ValidatorImpl) validatorClass.getDeclaredMethod("validatorFor", Class.class).invoke(null, clazz);
 
-    /**
-     * Retuns the validator for {@code <T>}, or {@code ALWAYS_VALID} if not found.
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> Validator<T> validatorFor(Object instance) {
-        return INSTANCE.validatorFor(instance == null ? null : instance.getClass());
+        return proto -> impl.assertValid(proto, ReflectiveValidatorIndex.this);
     }
 }
