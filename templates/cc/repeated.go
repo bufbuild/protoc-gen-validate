@@ -45,7 +45,7 @@ const repTpl = `
 
 	{{ if or $r.GetUnique (ne (.Elem "" "").Typ "none") }}
 		for (int i = 0; i < {{ accessor . }}.size(); i++) {
-			const {{ $typ }}& item = {{ accessor . }}.Get(i);
+			const auto& item = {{ accessor . }}.Get(i);
 			(void)item;
 
 			{{ if $r.GetUnique }}
