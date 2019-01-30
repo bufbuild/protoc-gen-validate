@@ -10,8 +10,8 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
-	"github.com/lyft/protoc-gen-star"
-	"github.com/lyft/protoc-gen-star/lang/go"
+	pgs "github.com/lyft/protoc-gen-star"
+	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
 	"github.com/lyft/protoc-gen-validate/templates/shared"
 )
 
@@ -143,15 +143,20 @@ func (fns CCFuncs) hasAccessor(ctx shared.RuleContext) string {
 		fns.methodName(ctx.Field.Name()))
 }
 
-func (fns CCFuncs) classBaseName(msg pgs.Message) string {
-	if m, ok := msg.Parent().(pgs.Message); ok {
-		return fmt.Sprintf("%s_%s", fns.classBaseName(m), msg.Name().String())
-	}
-	return msg.Name().String()
+type childEntity interface {
+	pgs.Entity
+	Parent() pgs.ParentEntity
 }
 
-func (fns CCFuncs) className(msg pgs.Message) string {
-	return fns.packageName(msg) + "::" + fns.classBaseName(msg)
+func (fns CCFuncs) classBaseName(ent childEntity) string {
+	if m, ok := ent.Parent().(pgs.Message); ok {
+		return fmt.Sprintf("%s_%s", fns.classBaseName(m), ent.Name().String())
+	}
+	return ent.Name().String()
+}
+
+func (fns CCFuncs) className(ent childEntity) string {
+	return fns.packageName(ent) + "::" + fns.classBaseName(ent)
 }
 
 func (fns CCFuncs) packageName(msg pgs.Entity) string {
