@@ -57,6 +57,14 @@ err = p.Validate() // err: nil
 
 ## Usage
 
+### Dependencies
+
+- `go` toolchain (≥ v1.7)
+- `protoc` compiler in `$PATH`
+- `protoc-gen-validate` in `$PATH`
+- official language-specific plugin for target language(s)
+- **Only `proto3` syntax is currently supported.** `proto2` syntax support is planned.
+
 ### Installation
 
 Installing PGV can currently only be done from source:
@@ -68,13 +76,6 @@ go get -d github.com/lyft/protoc-gen-validate
 # installs PGV into $GOPATH/bin
 make build
 ```
-
-### Dependencies
-
-- `protoc` compiler in `$PATH`
-- `protoc-gen-validate` in `$PATH`
-- official language-specific plugin for target language(s)
-- **Only `proto3` syntax is currently supported.** `proto2` syntax support is planned.
 
 ### Parameters
 
