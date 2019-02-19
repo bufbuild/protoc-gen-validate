@@ -320,6 +320,8 @@ func (fns javaFuncs) javaTypeFor(ctx shared.RuleContext) string {
 	if t.IsRepeated() {
 		if t.ProtoType() == pgs.MessageT {
 			return fns.qualifiedName(t.Element().Embed())
+		} else if t.ProtoType() == pgs.EnumT {
+			return fns.qualifiedName(t.Element().Enum())
 		}
 	}
 
