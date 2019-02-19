@@ -66,12 +66,8 @@
   digest = "1:b001b57f383ecbebb54c3916ca6b8be129a6486d3dbf2dfc722cbb0a0b2a8679"
   name = "golang.org/x/net"
   packages = ["context"]
-<<<<<<< HEAD
   pruneopts = ""
   revision = "9b4f9f5ad5197c79fd623a3638e70d8b26cef344"
-=======
-  revision = "c44066c5c816ec500d459a2a324a753f78531ae0"
->>>>>>> master
 
 [[projects]]
   digest = "1:5acd3512b047305d49e8763eef7ba423901e85d5dd2fd1e71778a0ea8de10bd4"
@@ -91,7 +87,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-<<<<<<< HEAD
   input-imports = [
     "github.com/gogo/protobuf/proto",
     "github.com/gogo/protobuf/types",
@@ -107,8 +102,6 @@
     "github.com/lyft/protoc-gen-star/lang/go",
     "golang.org/x/net/context",
   ]
-=======
   inputs-digest = "64d19afa87ef4ac27f2c796d73d1566bcad2862fe2b71a91d0b194e2770126e5"
->>>>>>> master
   solver-name = "gps-cdcl"
   solver-version = 1
