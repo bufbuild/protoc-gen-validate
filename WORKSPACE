@@ -39,7 +39,7 @@ bind(
     actual = "@six_archive//:six",
 )
 
-new_http_archive(
+http_archive(
     name = "six_archive",
     build_file = "@com_google_protobuf//:six.BUILD",
     sha256 = "105f8d68616f8248e24bf0e9372ef04d3cc10104f1980f54d57b2ce73a5ad56a",
