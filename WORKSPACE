@@ -9,8 +9,8 @@ http_archive(
 )
 http_archive(
     name = "bazel_gazelle",
-    url = "https://github.com/bazelbuild/bazel-gazelle/releases/download/0.14.0/bazel-gazelle-0.14.0.tar.gz",
-    sha256 = "c0a5739d12c6d05b6c1ad56f2200cb0b57c5a70e03ebd2f7b87ce88cabf09c7b",
+    url = "https://github.com/bazelbuild/bazel-gazelle/releases/download/0.16.0/bazel-gazelle-0.16.0.tar.gz",
+    sha256 = "7949fc6cc17b5b191103e97481cf8889217263acf52e00b560683413af204fcb",
 )
 # TODO: use released version of protobuf that includes commit
 # fa252ec2a54acb24ddc87d48fed1ecfd458445fd. This works around the issue
