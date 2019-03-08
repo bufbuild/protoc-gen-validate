@@ -47,10 +47,10 @@ err = p.Validate() // err: Name must match pattern '^[^\d\s]+( [^\d\s]+)*$'
 p.Name = "Protocol Buffer"
 
 err = p.Validate() // err: Home is required
-p.Location = &Location{37.7, 999}
+p.Home = &Location{37.7, 999}
 
 err = p.Validate() // err: Home.Lng must be within [-180, 180]
-p.Location.Lng = -122.4
+p.Home.Lng = -122.4
 
 err = p.Validate() // err: nil
 ```
