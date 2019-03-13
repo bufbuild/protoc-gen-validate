@@ -48,6 +48,12 @@ java_proto_library(
     deps = [":harness_proto"],
 )
 
+py_proto_library(
+    name = "harness_python_proto",
+    visibility = ["//visibility:public"],
+    deps = [":harness_proto"],
+)
+
 go_library(
     name = "go_default_library",
     embed = [":harness_go_proto"],
