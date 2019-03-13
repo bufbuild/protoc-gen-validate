@@ -3,7 +3,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 # gazelle:exclude harness.pb.go
 
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
-load("@com_google_protobuf//:protobuf.bzl", "py_proto_library")
+load("@org_pubref_rules_protobuf//python:rules.bzl", "py_proto_library")
+
 proto_library(
     name = "harness_proto",
     srcs = ["harness.proto"],
@@ -51,10 +52,7 @@ java_proto_library(
 py_proto_library(
     name = "harness_python_proto",
     visibility = ["//visibility:public"],
-    srcs = ["harness.proto"],
-    deps = [
-            "@com_google_protobuf_py//:protobuf_python",
-    ],
+    protos = ["harness.proto"],
 )
 
 go_library(
