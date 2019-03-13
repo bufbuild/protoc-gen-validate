@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 # gazelle:exclude harness.pb.go
 
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
-
+load("@com_google_protobuf//:protobuf.bzl", "py_proto_library")
 proto_library(
     name = "harness_proto",
     srcs = ["harness.proto"],
