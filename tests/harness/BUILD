@@ -51,7 +51,10 @@ java_proto_library(
 py_proto_library(
     name = "harness_python_proto",
     visibility = ["//visibility:public"],
-    deps = [":harness_proto"],
+    srcs = ["harness.proto"],
+    deps = [
+            "@com_google_protobuf_py//:protobuf_python",
+    ],
 )
 
 go_library(
