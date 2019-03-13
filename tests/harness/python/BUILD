@@ -1,4 +1,5 @@
 py_binary(
-    name = "python_harness",
+    name = "python-harness",
     srcs = ["harness.py"],
+    main = "harness.py",
 )
