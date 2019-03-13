@@ -8,6 +8,7 @@ load(
     "pgv_go_proto_library",
     "pgv_cc_proto_library",
     "pgv_java_proto_library",
+    "pgv_python_proto_library",
 )
 
 proto_library(
@@ -88,5 +89,14 @@ pgv_java_proto_library(
     java_deps = [
         ":cases_java_proto",
         "//tests/harness/cases/other_package:java",
+    ],
+)
+
+pgv_python_proto_library(
+    name = "python",
+    deps = [":cases_proto"],
+    visibility = ["//visibility:public"],
+    python_deps = [
+        "//tests/harness/cases/other_package:python",
     ],
 )
