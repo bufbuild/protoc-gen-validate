@@ -1,5 +1,6 @@
 import sys
 
+import python-proto
 if __name__ == "__main__":
     print("python test harness running")
     lines = sys.stdin.readlines()
