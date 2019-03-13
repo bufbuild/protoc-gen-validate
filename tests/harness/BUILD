@@ -1,7 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 # gazelle:exclude harness.pb.go
-
+load("@com_google_protobuf//:protobuf.bzl", "py_proto_library")
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 
 proto_library(
@@ -52,5 +52,14 @@ go_library(
     name = "go_default_library",
     embed = [":harness_go_proto"],
     importpath = "github.com/lyft/protoc-gen-validate/tests/harness",
+    visibility = ["//visibility:public"],
+)
+
+py_proto_library(
+    name = "python-harness-proto",
+    srcs = ["harness.proto"],
+    protoc = "@com_google_protobuf//:protoc",
+    default_runtime = "@com_google_protobuf//:protobuf_python",
+    deps = ["@com_google_protobuf//:protobuf_python"],
     visibility = ["//visibility:public"],
 )
