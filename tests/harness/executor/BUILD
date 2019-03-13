@@ -40,6 +40,7 @@ go_binary(
             "//tests/harness/go/main:go-harness-bin",
             "//tests/harness/gogo/main:go-harness-bin",
             "//tests/harness/java:java-harness",
+            "//tests/harness/python:python-harness",
         ],
     }),
     embed = [":go_default_library"],

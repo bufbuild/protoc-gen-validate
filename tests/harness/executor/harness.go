@@ -17,7 +17,7 @@ import (
 	"golang.org/x/net/context"
 )
 
-func Harnesses(goFlag bool, gogoFlag bool, ccFlag bool, javaFlag bool) []Harness {
+func Harnesses(goFlag bool, gogoFlag bool, ccFlag bool, javaFlag bool, pythonFlag bool) []Harness {
 	harnesses := make([]Harness, 0)
 	if goFlag {
 		harnesses = append(harnesses, InitHarness("tests/harness/go/main/go-harness"))
@@ -30,6 +30,9 @@ func Harnesses(goFlag bool, gogoFlag bool, ccFlag bool, javaFlag bool) []Harness
 	}
 	if javaFlag {
 		harnesses = append(harnesses, InitHarness("tests/harness/java/java-harness"))
+	}
+	if pythonFlag {
+		harnesses = append(harnesses, InitHarness("tests/harness/python/python-harness"))
 	}
 	return harnesses
 }
