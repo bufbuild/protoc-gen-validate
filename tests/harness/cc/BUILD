@@ -11,7 +11,7 @@ POSIX_C_OPTS = [
     "-Wnon-virtual-dtor",
     "-Woverloaded-virtual",
     "-Wold-style-cast",
-    "-std=c++11",
+    "-std=c++14",
 ]
 
 config_setting(
