@@ -127,7 +127,7 @@ def pgv_python_proto_library(
     native.python_library(
         name = name,
         srcs = [name + "_validate"],
-        deps = java_deps + [
+        deps = python_deps + [
             "@com_lyft_protoc_gen_validate//validate:validate_java",
             "@com_google_re2j//jar",
             "@com_google_protobuf//:protobuf_java",
