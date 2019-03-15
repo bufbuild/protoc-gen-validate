@@ -8,6 +8,7 @@ load(
     "pgv_gogo_proto_library",
     "pgv_cc_proto_library",
     "pgv_java_proto_library",
+    "pgv_python_proto_library",
 )
 
 proto_library(
@@ -67,6 +68,12 @@ go_library(
 
 pgv_java_proto_library(
     name = "java",
+    visibility = ["//visibility:public"],
+    deps = [":embed_proto"],
+)
+
+pgv_python_proto_library(
+    name = "python",
     visibility = ["//visibility:public"],
     deps = [":embed_proto"],
 )

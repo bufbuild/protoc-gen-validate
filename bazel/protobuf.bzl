@@ -91,6 +91,38 @@ def _protoc_gen_validate_java_impl(ctx):
         package_command = "(cd " + dir_out + " && find . -name \*.java | xargs jar cf " + jar_path + ")",
     )
 
+def _protoc_python_output_files(proto_file_sources):
+    python_srcs = []
+
+    for p in proto_file_sources:
+        basename = p.basename[:-len(".proto")]
+
+        python_srcs.append(basename + ".pb.py")
+        python_srcs.append(basename + ".pb.validate.py")
+
+def _protoc_gen_validate_python_impl(ctx):
+    """Generate Python protos using protoc-gen-validate plugin"""
+    protos = _proto_sources(ctx)
+
+    python_files = _protoc_python_output_files(protos)
+    out_files = [ctx.actions.declare_file(out) for out in python_files]
+
+    dir_out = _output_dir(ctx)
+
+    args = [
+        "--python_out=" + dir_out,
+        "--validate_out=lang=python:" + dir_out,
+    ]
+
+    return _protoc_gen_validate_impl(
+        ctx = ctx,
+        lang = "python",
+        protos = protos,
+        out_files = [out_file],
+        protoc_args = args,
+        package_command = "true",
+    )
+
 def _protoc_gen_validate_impl(ctx, lang, protos, out_files, protoc_args, package_command):
     protoc_args.append("--plugin=protoc-gen-validate=" + ctx.executable._plugin.path)
 
@@ -167,4 +199,27 @@ java_proto_gen_validate = rule(
     },
     output_to_genfiles = True,
     implementation = _protoc_gen_validate_java_impl,
+)
+
+python_proto_gen_validate = rule(
+    attrs = {
+        "deps": attr.label_list(
+            mandatory = True,
+            providers = ["proto"],
+        ),
+        "_protoc": attr.label(
+            cfg = "host",
+            default = Label("@com_google_protobuf//:protoc"),
+            executable = True,
+            single_file = True,
+        ),
+        "_plugin": attr.label(
+            cfg = "host",
+            default = Label("@com_lyft_protoc_gen_validate//:protoc-gen-validate"),
+            allow_files = True,
+            executable = True,
+        ),
+    },
+    output_to_genfiles = True,
+    implementation = _protoc_gen_validate_python_impl,
 )
