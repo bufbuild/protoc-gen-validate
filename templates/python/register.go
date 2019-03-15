@@ -16,6 +16,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	tpl.Funcs(map[string]interface{}{
 		"accessor": fns.accessor,
 		"err": fns.err,
+		"lit": fns.lit,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
