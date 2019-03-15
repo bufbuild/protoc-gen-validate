@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/lyft/protoc-gen-validate/templates/shared"
 	"reflect"
-	"strings"
 	"text/template"
 
 	pgs "github.com/lyft/protoc-gen-star"
