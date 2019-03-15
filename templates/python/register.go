@@ -17,6 +17,8 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"accessor": fns.accessor,
 		"err": fns.err,
 	})
+
+	template.Must(tpl.Parse(fileTpl))
 	template.Must(tpl.New("bool").Parse(constTpl))
 
 }
