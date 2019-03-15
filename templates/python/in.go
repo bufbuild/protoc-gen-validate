@@ -1,0 +1,3 @@
+package python
+
+const inTpl = ``
