@@ -5,7 +5,8 @@ const anyTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 
 	{{ if $r.In }}
 		{{ $table := lookup $f "InLookup" }}
-		if ({{ hasAccessor . }} && {{ $table }}.find({{ accessor . }}.type_url()) == {{ $table }}.end()) {
+		if ({{ has
+Accessor . }} && {{ $table }}.find({{ accessor . }}.type_url()) == {{ $table }}.end()) {
 			{{ err . "type URL must be in list " $r.In }}
 		}
 	{{ else if $r.NotIn }}
