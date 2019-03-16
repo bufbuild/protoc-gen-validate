@@ -75,11 +75,18 @@ pgv_cc_proto_library(
     visibility = ["//tests:__subpackages__"],
 )
 
+java_proto_library(
+    name = "cases_java_proto",
+    deps = [":cases_proto"],
+    visibility = ["//visibility:public"],
+)
+
 pgv_java_proto_library(
     name = "java",
     deps = [":cases_proto"],
     visibility = ["//visibility:public"],
     java_deps = [
+        ":cases_java_proto",
         "//tests/harness/cases/other_package:java",
     ],
 )

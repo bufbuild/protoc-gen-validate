@@ -65,8 +65,15 @@ go_library(
     visibility = ["//visibility:public"],
 )
 
+java_proto_library(
+    name = "embed_java_proto",
+    deps = [":embed_proto"],
+    visibility = ["//visibility:public"],
+)
+
 pgv_java_proto_library(
     name = "java",
+    java_deps = [":embed_java_proto"],
     visibility = ["//visibility:public"],
     deps = [":embed_proto"],
 )
