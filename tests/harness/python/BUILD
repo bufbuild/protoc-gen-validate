@@ -1,3 +1,5 @@
+load("//tests/harness:cases", "pgv_python_proto_library")
+
 py_library(
     name = "python-harness-proto",
     srcs = ["harness_pb2.py"],
