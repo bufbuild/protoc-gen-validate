@@ -97,8 +97,8 @@ def _protoc_python_output_files(proto_file_sources):
     for p in proto_file_sources:
         basename = p.basename[:-len(".proto")]
 
-        python_srcs.append(basename + ".pb.py")
-        python_srcs.append(basename + ".pb.validate.py")
+        python_srcs.append(basename + "_pb.py")
+        python_srcs.append(basename + "_pb_validate.py")
 
 def _protoc_gen_validate_python_impl(ctx):
     """Generate Python protos using protoc-gen-validate plugin"""
