@@ -7,7 +7,7 @@ py_library(
 py_binary(
     name = "python-harness",
     srcs = ["harness.py"],
-    deps = ["python-harness-proto", "//tests/harness/cases:pgv_python_proto_library"],
+    deps = ["python-harness-proto", "//tests/harness/cases:python"],
     main = "harness.py",
     visibility = ["//tests/harness:__subpackages__"],
 )
