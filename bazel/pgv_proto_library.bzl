@@ -124,7 +124,7 @@ def pgv_python_proto_library(
         deps = deps,
     )
 
-    py_library(
+    python_library(
         name = name,
         srcs = [name + "_validate"],
         deps = python_deps + [
