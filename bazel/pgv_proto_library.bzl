@@ -1,3 +1,4 @@
+load("//:build_defs.bzl", "py_library")
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 load("@io_bazel_rules_go//proto:compiler.bzl", "go_proto_compiler")
 load(":protobuf.bzl", "cc_proto_gen_validate", "java_proto_gen_validate", "python_proto_gen_validate")
@@ -124,7 +125,7 @@ def pgv_python_proto_library(
         deps = deps,
     )
 
-    python_library(
+    py_library(
         name = name,
         srcs = [name + "_validate"],
         deps = python_deps + [
