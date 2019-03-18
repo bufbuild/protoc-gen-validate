@@ -1,5 +1,3 @@
-load("//tests/harness:cases", "pgv_python_proto_library")
-
 py_library(
     name = "python-harness-proto",
     srcs = ["harness_pb2.py"],
@@ -9,7 +7,7 @@ py_library(
 py_binary(
     name = "python-harness",
     srcs = ["harness.py"],
-    deps = ["python-harness-proto"],
+    deps = ["python-harness-proto", ":pgv_python_proto_library"],
     main = "harness.py",
     visibility = ["//tests/harness:__subpackages__"],
 )
