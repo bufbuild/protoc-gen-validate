@@ -1,3 +1,5 @@
+load("//tests/harness/cases", "python")
+
 py_library(
     name = "python-harness-proto",
     srcs = ["harness_pb2.py"],
@@ -7,7 +9,7 @@ py_library(
 py_binary(
     name = "python-harness",
     srcs = ["harness.py"],
-    deps = ["python-harness-proto", "//tests/harness/cases:python"],
+    deps = ["python-harness-proto"],
     main = "harness.py",
     visibility = ["//tests/harness:__subpackages__"],
 )
