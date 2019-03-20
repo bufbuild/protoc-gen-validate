@@ -120,7 +120,7 @@ def _protoc_gen_validate_python_impl(ctx):
         ctx = ctx,
         lang = "python",
         protos = protos,
-        out_files = [out_files],
+        out_files = out_files,
         protoc_args = args,
         package_command = "true",
     )
