@@ -1,4 +1,4 @@
-package goshared
+package gogo
 
 const repTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
@@ -32,8 +32,12 @@ const repTpl = `
 	{{ end }}
 
 	{{ if or $r.GetUnique (ne (.Elem "" "").Typ "none") }}
-		for idx, item := range {{ accessor . }} {
-			_, _ = idx, item
+		for idx := range {{ accessor . }} {
+			{{ if .Gogo.Nullable }}
+			item := {{ accessor .}}[idx]
+			{{ else }}
+			item := &{{ accessor .}}[idx]
+			{{ end }}
 			{{ if $r.GetUnique }}
 				if _, exists := {{ lookup $f "Unique" }}[{{ if isBytes $f.Type.Element }}string(item){{ else }}item{{ end }}]; exists {
 					return {{ errIdx . "idx" "repeated value must contain unique items" }}

@@ -14,4 +14,5 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("required").Parse(requiredTpl))
 	template.Must(tpl.New("timestamp").Parse(timestampTpl))
 	template.Must(tpl.New("duration").Parse(durationTpl))
+	template.Must(tpl.New("repeated").Parse(repTpl))
 }
