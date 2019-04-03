@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "duration.go",
         "file.go",
+        "message.go",
         "register.go",
         "required.go",
         "timestamp.go",
