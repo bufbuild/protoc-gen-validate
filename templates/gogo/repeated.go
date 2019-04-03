@@ -38,6 +38,7 @@ const repTpl = `
 			{{ else }}
 			item := &{{ accessor .}}[idx]
 			{{ end }}
+			_ = item
 			{{ if $r.GetUnique }}
 				if _, exists := {{ lookup $f "Unique" }}[{{ if isBytes $f.Type.Element }}string(item){{ else }}item{{ end }}]; exists {
 					return {{ errIdx . "idx" "repeated value must contain unique items" }}
