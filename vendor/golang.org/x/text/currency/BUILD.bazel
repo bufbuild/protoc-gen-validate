@@ -9,7 +9,7 @@ go_library(
         "query.go",
         "tables.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/currency",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/currency",
     importpath = "golang.org/x/text/currency",
     visibility = ["//visibility:public"],
     deps = [

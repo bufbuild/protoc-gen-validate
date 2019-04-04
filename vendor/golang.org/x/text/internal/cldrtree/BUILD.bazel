@@ -9,7 +9,7 @@ go_library(
         "tree.go",
         "type.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/internal/cldrtree",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/internal/cldrtree",
     importpath = "golang.org/x/text/internal/cldrtree",
     visibility = ["//vendor/golang.org/x/text:__subpackages__"],
     deps = [

@@ -6,7 +6,7 @@ go_library(
         "customtype.go",
         "subproto.pb.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/importdedup/subpkg",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/importdedup/subpkg",
     importpath = "github.com/gogo/protobuf/test/importdedup/subpkg",
     visibility = ["//visibility:public"],
     deps = [

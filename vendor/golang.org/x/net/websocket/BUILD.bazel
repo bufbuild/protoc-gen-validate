@@ -9,7 +9,7 @@ go_library(
         "server.go",
         "websocket.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/websocket",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/net/websocket",
     importpath = "golang.org/x/net/websocket",
     visibility = ["//visibility:public"],
 )

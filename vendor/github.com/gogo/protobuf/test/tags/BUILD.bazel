@@ -6,7 +6,7 @@ go_library(
         "doc.go",
         "tags.pb.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/tags",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/tags",
     importpath = "github.com/gogo/protobuf/test/tags",
     visibility = ["//visibility:public"],
     deps = [

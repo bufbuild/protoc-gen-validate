@@ -6,7 +6,7 @@ go_library(
         "equal.go",
         "equaltest.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/plugin/equal",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/plugin/equal",
     importpath = "github.com/gogo/protobuf/plugin/equal",
     visibility = ["//visibility:public"],
     deps = [

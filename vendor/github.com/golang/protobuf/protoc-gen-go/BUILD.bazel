@@ -6,7 +6,7 @@ go_library(
         "link_grpc.go",
         "main.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/golang/protobuf/protoc-gen-go",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/golang/protobuf/protoc-gen-go",
     importpath = "github.com/golang/protobuf/protoc-gen-go",
     visibility = ["//visibility:private"],
     deps = [

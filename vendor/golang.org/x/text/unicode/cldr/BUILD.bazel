@@ -11,7 +11,7 @@ go_library(
         "slice.go",
         "xml.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/unicode/cldr",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/unicode/cldr",
     importpath = "golang.org/x/text/unicode/cldr",
     visibility = ["//visibility:public"],
 )

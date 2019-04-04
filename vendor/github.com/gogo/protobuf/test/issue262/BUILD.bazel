@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["timefail.pb.go"],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/issue262",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/issue262",
     importpath = "github.com/gogo/protobuf/test/issue262",
     visibility = ["//visibility:public"],
     deps = [

@@ -8,7 +8,7 @@ go_library(
         "huffman.go",
         "tables.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/http2/hpack",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/net/http2/hpack",
     importpath = "golang.org/x/net/http2/hpack",
     visibility = ["//visibility:public"],
 )

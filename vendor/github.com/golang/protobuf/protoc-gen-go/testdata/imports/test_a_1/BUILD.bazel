@@ -6,7 +6,7 @@ go_library(
         "m1.pb.go",
         "m2.pb.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/golang/protobuf/protoc-gen-go/testdata/imports/test_a_1",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/golang/protobuf/protoc-gen-go/testdata/imports/test_a_1",
     importpath = "github.com/golang/protobuf/protoc-gen-go/testdata/imports/test_a_1",
     visibility = ["//visibility:public"],
     deps = ["@com_github_golang_protobuf//proto:go_default_library"],
