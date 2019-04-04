@@ -7,7 +7,7 @@ go_library(
         "map.go",
         "tables.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/encoding/htmlindex",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/encoding/htmlindex",
     importpath = "golang.org/x/text/encoding/htmlindex",
     visibility = ["//visibility:public"],
     deps = [

@@ -32,7 +32,7 @@ go_library(
         "writesched_priority.go",
         "writesched_random.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/http2",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/net/http2",
     importpath = "golang.org/x/net/http2",
     visibility = ["//visibility:public"],
     deps = [

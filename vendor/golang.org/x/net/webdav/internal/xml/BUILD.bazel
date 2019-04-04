@@ -8,7 +8,7 @@ go_library(
         "typeinfo.go",
         "xml.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/webdav/internal/xml",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/net/webdav/internal/xml",
     importpath = "golang.org/x/net/webdav/internal/xml",
     visibility = ["//vendor/golang.org/x/net/webdav:__subpackages__"],
 )

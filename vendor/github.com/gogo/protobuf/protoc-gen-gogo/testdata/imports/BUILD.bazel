@@ -7,7 +7,7 @@ go_library(
         "test_import_a1m2.pb.go",
         "test_import_all.pb.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/protoc-gen-gogo/testdata/imports",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/protoc-gen-gogo/testdata/imports",
     importpath = "github.com/gogo/protobuf/protoc-gen-gogo/testdata/imports",
     visibility = ["//visibility:public"],
     deps = [

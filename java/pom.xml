@@ -18,7 +18,7 @@
 
     <name>PGV-Java Parent</name>
     <description>Protoc plugin to generate protobuf message validators.</description>
-    <url>https://github.com/lyft/protoc-gen-validate</url>
+    <url>https://github.com/envoyproxy/protoc-gen-validate</url>
 
     <licenses>
         <license>
@@ -162,9 +162,9 @@
     </profiles>
 
     <scm>
-        <url>https://github.com/lyft/protoc-gen-validate</url>
-        <connection>scm:git:git@github.com:lyft/protoc-gen-validate.git</connection>
-        <developerConnection>scm:git:git@github.com:lyft/protoc-gen-validate.git</developerConnection>
+        <url>https://github.com/envoyproxy/protoc-gen-validate</url>
+        <connection>scm:git:git@github.com:envoyproxy/protoc-gen-validate.git</connection>
+        <developerConnection>scm:git:git@github.com:envoyproxy/protoc-gen-validate.git</developerConnection>
     </scm>
 
     <distributionManagement>

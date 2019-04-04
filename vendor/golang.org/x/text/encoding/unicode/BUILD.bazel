@@ -6,7 +6,7 @@ go_library(
         "override.go",
         "unicode.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/encoding/unicode",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/encoding/unicode",
     importpath = "golang.org/x/text/encoding/unicode",
     visibility = ["//visibility:public"],
     deps = [

@@ -6,7 +6,7 @@ go_library(
         "catalog.go",
         "main.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/cmd/gotext/examples/extract",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/cmd/gotext/examples/extract",
     importpath = "golang.org/x/text/cmd/gotext/examples/extract",
     visibility = ["//visibility:private"],
     deps = [

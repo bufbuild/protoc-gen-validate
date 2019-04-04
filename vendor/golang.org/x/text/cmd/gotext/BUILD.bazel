@@ -10,7 +10,7 @@ go_library(
         "main.go",
         "rewrite.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/cmd/gotext",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/cmd/gotext",
     importpath = "golang.org/x/text/cmd/gotext",
     visibility = ["//visibility:private"],
     deps = [

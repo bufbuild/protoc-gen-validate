@@ -6,7 +6,7 @@ go_library(
         "charmap.go",
         "tables.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/encoding/charmap",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/encoding/charmap",
     importpath = "golang.org/x/text/encoding/charmap",
     visibility = ["//visibility:public"],
     deps = [

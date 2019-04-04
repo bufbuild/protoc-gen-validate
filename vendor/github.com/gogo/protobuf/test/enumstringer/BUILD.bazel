@@ -6,7 +6,7 @@ go_library(
         "enumstringer.pb.go",
         "string.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/enumstringer",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/enumstringer",
     importpath = "github.com/gogo/protobuf/test/enumstringer",
     visibility = ["//visibility:public"],
     deps = [

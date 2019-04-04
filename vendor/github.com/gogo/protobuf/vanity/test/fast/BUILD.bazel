@@ -7,7 +7,7 @@ go_library(
         "proto3.pb.go",
         "vanity.pb.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/vanity/test/fast",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/vanity/test/fast",
     importpath = "github.com/gogo/protobuf/vanity/test/fast",
     visibility = ["//visibility:public"],
     deps = [

@@ -7,7 +7,7 @@ go_library(
         "numbers.go",
         "snake.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/iancoleman/strcase",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/iancoleman/strcase",
     importpath = "github.com/iancoleman/strcase",
     visibility = ["//visibility:public"],
     deps = [

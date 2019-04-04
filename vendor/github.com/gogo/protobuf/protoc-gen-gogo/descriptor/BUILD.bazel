@@ -8,7 +8,7 @@ go_library(
         "descriptor_gostring.gen.go",
         "helper.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/protoc-gen-gogo/descriptor",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/protoc-gen-gogo/descriptor",
     importpath = "github.com/gogo/protobuf/protoc-gen-gogo/descriptor",
     visibility = ["//visibility:public"],
     deps = ["@com_github_gogo_protobuf//proto:go_default_library"],

@@ -12,7 +12,7 @@ go_library(
         "webdav.go",
         "xml.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/webdav",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/net/webdav",
     importpath = "golang.org/x/net/webdav",
     visibility = ["//visibility:public"],
     deps = [
