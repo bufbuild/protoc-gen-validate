@@ -2,7 +2,7 @@ package shared
 
 import (
 	"github.com/lyft/protoc-gen-star"
-	"github.com/lyft/protoc-gen-validate/validate"
+	"github.com/envoyproxy/protoc-gen-validate/validate"
 )
 
 type WellKnown string

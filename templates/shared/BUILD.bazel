@@ -9,7 +9,7 @@ go_library(
         "reflection.go",
         "well_known.go",
     ],
-    importpath = "github.com/lyft/protoc-gen-validate/templates/shared",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/templates/shared",
     visibility = ["//visibility:public"],
     deps = [
         "//gogoproto:go_default_library",

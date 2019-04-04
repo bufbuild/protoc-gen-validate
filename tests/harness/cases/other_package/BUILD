@@ -21,7 +21,7 @@ proto_library(
 
 pgv_go_proto_library(
     name = "go",
-    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/other_package/go",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go",
     proto = ":embed_proto",
     deps = [
         "@com_github_golang_protobuf//ptypes:go_default_library",
@@ -30,7 +30,7 @@ pgv_go_proto_library(
 
 pgv_gogo_proto_library(
     name = "gogo",
-    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/other_package/gogo",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/gogo",
     proto = ":embed_proto",
     deps = [
         "@com_github_golang_protobuf//ptypes:go_default_library",
@@ -52,7 +52,7 @@ proto_library(
 
 go_proto_library(
     name = "other_package_go_proto",
-    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/other_package",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package",
     proto = ":other_package_proto",
     visibility = ["//visibility:public"],
     deps = ["//validate:go_default_library"],
@@ -61,7 +61,7 @@ go_proto_library(
 go_library(
     name = "go_default_library",
     embed = [":other_package_go_proto"],
-    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/other_package",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package",
     visibility = ["//visibility:public"],
 )
 
