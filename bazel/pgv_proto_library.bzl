@@ -62,12 +62,12 @@ def pgv_cc_proto_library(
         hdrs = [":" + name + "_validate"],
         srcs = [":" + name + "_validate"],
         deps = cc_deps + [
-            "@com_lyft_protoc_gen_validate//validate:cc_validate",
-            "@com_lyft_protoc_gen_validate//validate:validate_cc",
+            "@com_envoyproxy_protoc_gen_validate//validate:cc_validate",
+            "@com_envoyproxy_protoc_gen_validate//validate:validate_cc",
             "@com_google_protobuf//:protobuf",
         ],
         copts = copts + select({
-            "@com_lyft_protoc_gen_validate//bazel:windows_x86_64": ["-DWIN32"],
+            "@com_envoyproxy_protoc_gen_validate//bazel:windows_x86_64": ["-DWIN32"],
             "//conditions:default": [],
         }),
         alwayslink = 1,
