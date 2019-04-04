@@ -1,0 +1,9 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    working_directory: ~/pgv
+    steps:
+      - checkout
+      - run: docker build -t protoc-gen-validate .
+      - run: docker run --rm protoc-gen-validate ci
