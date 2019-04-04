@@ -1,8 +1,9 @@
 version: 2
 jobs:
   build:
-    docker:
-      - image: circleci/ruby:2.4.1
+    machine: true
+    working_directory: ~/pgv
     steps:
       - checkout
-      - run: echo "A first hello"
+      - run: docker build -t protoc-gen-validate .
+      - run: docker run --rm protoc-gen-validate ci
