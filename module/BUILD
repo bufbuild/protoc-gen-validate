@@ -6,7 +6,7 @@ go_library(
         "checker.go",
         "validate.go",
     ],
-    importpath = "github.com/lyft/protoc-gen-validate/module",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/module",
     visibility = ["//visibility:public"],
     deps = [
         "//templates:go_default_library",

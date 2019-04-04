@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "go_default_library",
     srcs = ["h2c.go"],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/http2/h2c",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/net/http2/h2c",
     importpath = "golang.org/x/net/http2/h2c",
     visibility = ["//visibility:public"],
     deps = [

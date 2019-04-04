@@ -40,7 +40,7 @@ proto_library(
 
 pgv_go_proto_library(
     name = "go",
-    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/go",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go",
     proto = ":cases_proto",
     deps = [
         "//tests/harness/cases/other_package:go",
@@ -54,7 +54,7 @@ pgv_go_proto_library(
 
 pgv_gogo_proto_library(
     name = "gogo",
-    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/cases/gogo",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/gogo",
     proto = ":cases_proto",
     deps = [
         "//tests/harness/cases/other_package:gogo",

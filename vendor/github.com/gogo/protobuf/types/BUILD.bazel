@@ -20,7 +20,7 @@ go_library(
         "type.pb.go",
         "wrappers.pb.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/types",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/types",
     importpath = "github.com/gogo/protobuf/types",
     visibility = ["//visibility:public"],
     deps = [

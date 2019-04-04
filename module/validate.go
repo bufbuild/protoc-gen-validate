@@ -3,7 +3,7 @@ package module
 import (
 	"github.com/lyft/protoc-gen-star"
 	"github.com/lyft/protoc-gen-star/lang/go"
-	"github.com/lyft/protoc-gen-validate/templates"
+	"github.com/envoyproxy/protoc-gen-validate/templates"
 )
 
 const (

@@ -16,7 +16,7 @@ go_library(
         ],
         "//conditions:default": [],
     }),
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/collate/tools/colcmp",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/collate/tools/colcmp",
     importpath = "golang.org/x/text/collate/tools/colcmp",
     visibility = ["//visibility:private"],
     deps = [

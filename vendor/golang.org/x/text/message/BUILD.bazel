@@ -9,7 +9,7 @@ go_library(
         "message.go",
         "print.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/message",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/message",
     importpath = "golang.org/x/text/message",
     visibility = ["//visibility:public"],
     deps = [

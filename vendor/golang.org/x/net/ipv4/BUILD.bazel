@@ -69,7 +69,7 @@ go_library(
         "zsys_solaris.go",
     ],
     cgo = True,
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/ipv4",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/net/ipv4",
     importpath = "golang.org/x/net/ipv4",
     visibility = ["//visibility:public"],
     deps = [

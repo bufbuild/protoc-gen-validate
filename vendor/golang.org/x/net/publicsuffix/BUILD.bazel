@@ -6,7 +6,7 @@ go_library(
         "list.go",
         "table.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/publicsuffix",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/net/publicsuffix",
     importpath = "golang.org/x/net/publicsuffix",
     visibility = ["//visibility:public"],
 )

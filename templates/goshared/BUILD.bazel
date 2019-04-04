@@ -22,7 +22,7 @@ go_library(
         "timestamp.go",
         "wrapper.go",
     ],
-    importpath = "github.com/lyft/protoc-gen-validate/templates/goshared",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/templates/goshared",
     visibility = ["//visibility:public"],
     deps = [
         "//templates/shared:go_default_library",

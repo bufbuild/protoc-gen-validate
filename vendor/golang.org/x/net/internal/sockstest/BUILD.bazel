@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "go_default_library",
     srcs = ["server.go"],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/internal/sockstest",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/net/internal/sockstest",
     importpath = "golang.org/x/net/internal/sockstest",
     visibility = ["//vendor/golang.org/x/net:__subpackages__"],
     deps = [

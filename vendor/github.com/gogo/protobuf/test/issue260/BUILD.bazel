@@ -6,7 +6,7 @@ go_library(
         "issue260.pb.go",
         "models.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/issue260",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/issue260",
     importpath = "github.com/gogo/protobuf/test/issue260",
     visibility = ["//visibility:public"],
     deps = [

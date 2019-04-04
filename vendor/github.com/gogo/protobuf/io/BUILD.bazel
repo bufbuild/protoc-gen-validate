@@ -8,7 +8,7 @@ go_library(
         "uint32.go",
         "varint.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/io",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/io",
     importpath = "github.com/gogo/protobuf/io",
     visibility = ["//visibility:public"],
     deps = ["@com_github_gogo_protobuf//proto:go_default_library"],

@@ -35,7 +35,7 @@ go_library(
         "wkt.go",
         "workflow.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/lyft/protoc-gen-star",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/lyft/protoc-gen-star",
     importpath = "github.com/lyft/protoc-gen-star",
     visibility = ["//visibility:public"],
     deps = [
