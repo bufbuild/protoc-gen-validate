@@ -115,7 +115,7 @@ cc_proto_gen_validate = rule(
         ),
         "_plugin": attr.label(
             cfg = "host",
-            default = Label("@com_lyft_protoc_gen_validate//:protoc-gen-validate"),
+            default = Label("@com_envoyproxy_protoc_gen_validate//:protoc-gen-validate"),
             allow_files = True,
             executable = True,
         ),
@@ -174,7 +174,7 @@ _java_proto_gen_validate_aspect = aspect(
         ),
         "_plugin": attr.label(
             cfg = "host",
-            default = Label("@com_lyft_protoc_gen_validate//:protoc-gen-validate"),
+            default = Label("@com_envoyproxy_protoc_gen_validate//:protoc-gen-validate"),
             allow_files = True,
             executable = True,
         ),
@@ -218,12 +218,12 @@ java_proto_gen_validate = rule(
         ),
         "_validate_deps": attr.label_list(
             default = [
-                Label("@com_lyft_protoc_gen_validate//validate:validate_java"),
+                Label("@com_envoyproxy_protoc_gen_validate//validate:validate_java"),
                 Label("@com_google_re2j//jar"),
                 Label("@com_google_protobuf//:protobuf_java"),
                 Label("@com_google_protobuf//:protobuf_java_util"),
-                Label("@com_lyft_protoc_gen_validate//java/pgv-java-stub/src/main/java/com/lyft/pgv"),
-                Label("@com_lyft_protoc_gen_validate//java/pgv-java-validation/src/main/java/com/lyft/pgv"),
+                Label("@com_envoyproxy_protoc_gen_validate//java/pgv-java-stub/src/main/java/com/lyft/pgv"),
+                Label("@com_envoyproxy_protoc_gen_validate//java/pgv-java-validation/src/main/java/com/lyft/pgv"),
             ],
         ),
         "_java_toolchain": attr.label(default = Label("@bazel_tools//tools/jdk:current_java_toolchain")),
