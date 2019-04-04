@@ -1,4 +1,4 @@
-package goshared
+package gogo
 
 const messageTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}

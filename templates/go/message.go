@@ -1,4 +1,4 @@
-package goshared
+package golang
 
 const messageTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
