@@ -1,5 +1,6 @@
 package com.lyft.pgv.grpc;
 
+import com.lyft.pgv.ReflectiveValidatorIndex;
 import com.lyft.pgv.ValidationException;
 import com.lyft.pgv.Validator;
 import com.lyft.pgv.ValidatorIndex;
@@ -35,6 +36,16 @@ public class ValidatingClientInterceptorTest {
     }
 
     @Test
+    public void InterceptorPassesValidMessagesGenerated() {
+        serverRule.getServiceRegistry().addService(svc);
+
+        ValidatingClientInterceptor interceptor = new ValidatingClientInterceptor(new ReflectiveValidatorIndex());
+
+        GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel()).withInterceptors(interceptor);
+        stub.sayHello(Hello.HelloRequest.newBuilder().setName("World").build());
+    }
+
+    @Test
     public void InterceptorRejectsInvalidMessages() {
         // Don't set up server, so it will error if the call goes through
 
@@ -48,8 +59,20 @@ public class ValidatingClientInterceptorTest {
         });
 
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel()).withInterceptors(interceptor);
-        assertThatThrownBy(() -> stub.sayHello(Hello.HelloRequest.newBuilder().setName("World").build()))
+        assertThatThrownBy(() -> stub.sayHello(Hello.HelloRequest.newBuilder().setName("Foo").build()))
                 .isInstanceOf(StatusRuntimeException.class)
                 .hasMessage("INVALID_ARGUMENT: one: is invalid - Got ");
+    }
+
+    @Test
+    public void InterceptorRejectsInvalidMessagesGenerated() {
+        // Don't set up server, so it will error if the call goes through
+
+        ValidatingClientInterceptor interceptor = new ValidatingClientInterceptor(new ReflectiveValidatorIndex());
+
+        GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel()).withInterceptors(interceptor);
+        assertThatThrownBy(() -> stub.sayHello(Hello.HelloRequest.newBuilder().setName("Foo").build()))
+                .isInstanceOf(StatusRuntimeException.class)
+                .hasMessageStartingWith("INVALID_ARGUMENT: .io.envoyproxy.pgv.grpc.HelloRequest.name: must equal World");
     }
 }

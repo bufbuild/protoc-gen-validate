@@ -28,6 +28,14 @@
             <artifactId>protobuf-java</artifactId>
             <version>3.6.1</version>
         </dependency>
+
+        <!-- Depend on artifacts to ensure they are built before this module -->
+        <dependency>
+            <groupId>com.lyft.protoc-gen-validate</groupId>
+            <artifactId>protoc-gen-validate</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -75,7 +83,7 @@
                                 <include>tests/harness/cases/other_package/*.proto</include>
                             </includes>
                             <pluginId>java-pgv</pluginId>
-                            <pluginExecutable>${env.GOPATH}/bin/protoc-gen-validate</pluginExecutable>
+                            <pluginArtifact>com.lyft.protoc-gen-validate:protoc-gen-validate:${project.version}:exe:${os.detected.classifier}</pluginArtifact>
                         </configuration>
                     </execution>
                 </executions>

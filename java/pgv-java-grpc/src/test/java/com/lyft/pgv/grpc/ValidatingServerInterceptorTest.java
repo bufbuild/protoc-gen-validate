@@ -1,5 +1,6 @@
 package com.lyft.pgv.grpc;
 
+import com.lyft.pgv.ReflectiveValidatorIndex;
 import com.lyft.pgv.ValidationException;
 import com.lyft.pgv.Validator;
 import com.lyft.pgv.ValidatorIndex;
@@ -36,6 +37,16 @@ public class ValidatingServerInterceptorTest {
     }
 
     @Test
+    public void InterceptorPassesValidMessagesGenerated() {
+        ValidatingServerInterceptor interceptor = new ValidatingServerInterceptor(new ReflectiveValidatorIndex());
+
+        serverRule.getServiceRegistry().addService(ServerInterceptors.intercept(svc, interceptor));
+
+        GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel());
+        stub.sayHello(Hello.HelloRequest.newBuilder().setName("World").build());
+    }
+
+    @Test
     public void InterceptorRejectsInvalidMessages() {
         ValidatingServerInterceptor interceptor = new ValidatingServerInterceptor(new ValidatorIndex() {
             @Override
@@ -52,5 +63,17 @@ public class ValidatingServerInterceptorTest {
         assertThatThrownBy(() -> stub.sayHello(Hello.HelloRequest.newBuilder().setName("World").build()))
             .isInstanceOf(StatusRuntimeException.class)
             .hasMessage("INVALID_ARGUMENT: one: is invalid - Got ");
+    }
+
+    @Test
+    public void InterceptorRejectsInvalidMessagesGenerated() {
+        ValidatingServerInterceptor interceptor = new ValidatingServerInterceptor(new ReflectiveValidatorIndex());
+
+        serverRule.getServiceRegistry().addService(ServerInterceptors.intercept(svc, interceptor));
+
+        GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel());
+        assertThatThrownBy(() -> stub.sayHello(Hello.HelloRequest.newBuilder().setName("Bananas").build()))
+                .isInstanceOf(StatusRuntimeException.class)
+                .hasMessageStartingWith("INVALID_ARGUMENT: .com.lyft.pgv.grpc.HelloRequest.name: must equal World");
     }
 }
