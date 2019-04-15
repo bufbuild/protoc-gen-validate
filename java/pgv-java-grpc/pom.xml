@@ -37,6 +37,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.lyft.protoc-gen-validate</groupId>
             <artifactId>pgv-java-stub</artifactId>
             <version>${project.version}</version>
