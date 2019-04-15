@@ -406,13 +406,13 @@ func (fns javaFuncs) byteArrayLit(bytes []uint8) string {
 
 func (fns javaFuncs) durLit(dur *duration.Duration) string {
 	return fmt.Sprintf(
-		"com.lyft.pgv.TimestampValidation.toDuration(%d,%d)",
+		"io.envoyproxy.pgv.TimestampValidation.toDuration(%d,%d)",
 		dur.GetSeconds(), dur.GetNanos())
 }
 
 func (fns javaFuncs) tsLit(ts *timestamp.Timestamp) string {
 	return fmt.Sprintf(
-		"com.lyft.pgv.TimestampValidation.toTimestamp(%d,%d)",
+		"io.envoyproxy.pgv.TimestampValidation.toTimestamp(%d,%d)",
 		ts.GetSeconds(), ts.GetNanos())
 }
 

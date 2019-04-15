@@ -13,7 +13,7 @@ const oneOfTpl = `
 				{{ end -}}
 				{{- if required . }}
 				default: 
-					com.lyft.pgv.RequiredValidation.required("{{ .FullyQualifiedName }}", null);
+					io.envoyproxy.pgv.RequiredValidation.required("{{ .FullyQualifiedName }}", null);
 				{{- end }}
 			}
 `

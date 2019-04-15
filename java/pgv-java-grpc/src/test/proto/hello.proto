@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package com.lyft.pgv.grpc;
+package io.envoyproxy.pgv.grpc;
 
 import "validate/validate.proto";
 

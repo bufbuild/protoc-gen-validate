@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package com.lyft.pvg.cases;
+package io.envoyproxy.pvg.cases;
 
 enum TestEnum {
     ZERO = 0;
