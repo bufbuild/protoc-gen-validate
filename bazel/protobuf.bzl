@@ -289,7 +289,7 @@ python_proto_gen_validate = rule(
         ),
         "_plugin": attr.label(
             cfg = "host",
-            default = Label("@com_lyft_protoc_gen_validate//:protoc-gen-validate"),
+            default = Label("@com_envoyproxy_protoc_gen_validate//:protoc-gen-validate"),
             allow_files = True,
             executable = True,
         ),

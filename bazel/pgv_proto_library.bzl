@@ -96,7 +96,7 @@ def pgv_python_proto_library(
         name = name,
         srcs = [name + "_validate"],
         deps = python_deps + [
-            "@com_lyft_protoc_gen_validate//validate:validate_py",
+            "@com_envoyproxy_protoc_gen_validate//validate:validate_py",
         ],
         **kwargs
     )
