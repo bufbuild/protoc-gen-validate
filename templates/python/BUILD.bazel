@@ -23,7 +23,7 @@ go_library(
         "timestamp.go",
         "wrapper.go",
     ],
-    importpath = "github.com/lyft/protoc-gen-validate/templates/python",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/templates/python",
     visibility = ["//visibility:public"],
     deps = [
         "//templates/shared:go_default_library",

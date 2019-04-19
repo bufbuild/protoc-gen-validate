@@ -11,7 +11,7 @@ import (
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/lyft/protoc-gen-star"
 	"github.com/lyft/protoc-gen-star/lang/go"
-	"github.com/lyft/protoc-gen-validate/templates/shared"
+	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 )
 
 
