@@ -1,7 +1,7 @@
 import sys
 import inspect
 
-from harness_pb2 import TestCase, TestResult
+from tests.harness.harness_pb2 import TestCase, TestResult
 
 from tests.harness.cases.bool_pb_validate import *
 from tests.harness.cases.bytes_pb_validate import *
@@ -30,7 +30,6 @@ from tests.harness.cases.wkt_any_pb2 import *
 from tests.harness.cases.wkt_duration_pb2 import *
 from tests.harness.cases.wkt_wrappers_pb2 import *
 from tests.harness.cases.wkt_timestamp_pb2 import *
-
 
 # Todo: find a way to bind the validate functions to the main class
 class_list = {}

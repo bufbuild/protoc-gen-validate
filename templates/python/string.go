@@ -68,37 +68,3 @@ const strTpl = `
 		{{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
 	{{ end }}
 `
-
-const wip = `
-	{{ if $r.GetIp }}
-		if ip := net.ParseIP({{ accessor . }}); ip == nil {
-			return {{ err . "value must be a valid IP address" }}
-		}
-	{{ else if $r.GetIpv4 }}
-		if ip := net.ParseIP({{ accessor . }}); ip == nil || ip.To4() == nil {
-			return {{ err . "value must be a valid IPv4 address" }}
-		}
-	{{ else if $r.GetIpv6 }}
-		if ip := net.ParseIP({{ accessor . }}); ip == nil || ip.To4() != nil {
-			return {{ err . "value must be a valid IPv6 address" }}
-		}
-	{{ else if $r.GetEmail }}
-		if err := m._validateEmail({{ accessor . }}); err != nil {
-			return {{ errCause . "err" "value must be a valid email address" }}
-		}
-	{{ else if $r.GetHostname }}
-		if err := m._validateHostname({{ accessor . }}); err != nil {
-			return {{ errCause . "err" "value must be a valid hostname" }}
-		}
-	{{ else if $r.GetUri }}
-		if uri, err := url.Parse({{ accessor . }}); err != nil {
-			return {{ errCause . "err" "value must be a valid URI" }}
-		} else if !uri.IsAbs() {
-			return {{ err . "value must be absolute" }}
-		}
-	{{ else if $r.GetUriRef }}
-		if _, err := url.Parse({{ accessor . }}); err != nil {
-			return {{ errCause . "err" "value must be a valid URI" }}
-		}
-	{{ end }}
-`
