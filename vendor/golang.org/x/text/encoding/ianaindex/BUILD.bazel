@@ -6,7 +6,7 @@ go_library(
         "ianaindex.go",
         "tables.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/encoding/ianaindex",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/encoding/ianaindex",
     importpath = "golang.org/x/text/encoding/ianaindex",
     visibility = ["//visibility:public"],
     deps = [

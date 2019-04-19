@@ -10,7 +10,7 @@ go_library(
         "trieval.go",
         "width.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/width",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/width",
     importpath = "golang.org/x/text/width",
     visibility = ["//visibility:public"],
     deps = ["//vendor/golang.org/x/text/transform:go_default_library"],

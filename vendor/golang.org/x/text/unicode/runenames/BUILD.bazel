@@ -7,7 +7,7 @@ go_library(
         "runenames.go",
         "tables.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/unicode/runenames",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/unicode/runenames",
     importpath = "golang.org/x/text/unicode/runenames",
     visibility = ["//visibility:public"],
 )

@@ -6,7 +6,7 @@ go_library(
         "enumdeclall.pb.go",
         "models.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/enumdecl_all",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/enumdecl_all",
     importpath = "github.com/gogo/protobuf/test/enumdecl_all",
     visibility = ["//visibility:public"],
     deps = [

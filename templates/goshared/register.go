@@ -11,7 +11,7 @@ import (
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/lyft/protoc-gen-star"
 	"github.com/lyft/protoc-gen-star/lang/go"
-	"github.com/lyft/protoc-gen-validate/templates/shared"
+	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 )
 
 func Register(tpl *template.Template, params pgs.Parameters) {
@@ -74,7 +74,6 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("hostname").Parse(hostTpl))
 
 	template.Must(tpl.New("enum").Parse(enumTpl))
-	template.Must(tpl.New("message").Parse(messageTpl))
 	template.Must(tpl.New("repeated").Parse(repTpl))
 	template.Must(tpl.New("map").Parse(mapTpl))
 

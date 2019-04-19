@@ -6,7 +6,7 @@ go_library(
         "models.go",
         "typedeclimport.pb.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/typedeclimport",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/typedeclimport",
     importpath = "github.com/gogo/protobuf/test/typedeclimport",
     visibility = ["//visibility:public"],
     deps = [

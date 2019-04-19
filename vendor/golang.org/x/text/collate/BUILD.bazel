@@ -9,7 +9,7 @@ go_library(
         "sort.go",
         "tables.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/collate",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/collate",
     importpath = "golang.org/x/text/collate",
     visibility = ["//visibility:public"],
     deps = [

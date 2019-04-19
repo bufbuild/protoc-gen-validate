@@ -6,7 +6,7 @@ go_library(
         "gostring.go",
         "gostringtest.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/plugin/gostring",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/plugin/gostring",
     importpath = "github.com/gogo/protobuf/plugin/gostring",
     visibility = ["//visibility:public"],
     deps = [

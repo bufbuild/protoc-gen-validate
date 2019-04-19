@@ -66,7 +66,7 @@ go_library(
         "zsys_solaris.go",
     ],
     cgo = True,
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/ipv6",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/net/ipv6",
     importpath = "golang.org/x/net/ipv6",
     visibility = ["//visibility:public"],
     deps = [

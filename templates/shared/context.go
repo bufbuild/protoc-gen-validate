@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"text/template"
 
+	"github.com/envoyproxy/protoc-gen-validate/gogoproto"
+	"github.com/envoyproxy/protoc-gen-validate/validate"
 	"github.com/golang/protobuf/proto"
 	"github.com/lyft/protoc-gen-star"
-	"github.com/lyft/protoc-gen-validate/gogoproto"
-	"github.com/lyft/protoc-gen-validate/validate"
 )
 
 type RuleContext struct {
@@ -66,6 +66,7 @@ func (ctx RuleContext) Key(name, idx string) (out RuleContext, err error) {
 	out.Field = ctx.Field
 	out.AccessorOverride = name
 	out.Index = idx
+	out.Gogo = ctx.Gogo
 
 	out.Typ, out.Rules, _ = resolveRules(ctx.Field.Type().Key(), rules.GetKeys())
 
@@ -80,6 +81,7 @@ func (ctx RuleContext) Elem(name, idx string) (out RuleContext, err error) {
 	out.Field = ctx.Field
 	out.AccessorOverride = name
 	out.Index = idx
+	out.Gogo = ctx.Gogo
 
 	var rules *validate.FieldRules
 	switch r := ctx.Rules.(type) {
@@ -116,6 +118,7 @@ func (ctx RuleContext) Unwrap(name string) (out RuleContext, err error) {
 		Rules:            ctx.Rules,
 		Typ:              ctx.WrapperTyp,
 		AccessorOverride: name,
+		Gogo:             ctx.Gogo,
 	}, nil
 }
 
