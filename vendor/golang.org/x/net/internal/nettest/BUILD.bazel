@@ -13,7 +13,7 @@ go_library(
         "rlimit.go",
         "stack.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/internal/nettest",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/net/internal/nettest",
     importpath = "golang.org/x/net/internal/nettest",
     visibility = ["//vendor/golang.org/x/net:__subpackages__"],
 )

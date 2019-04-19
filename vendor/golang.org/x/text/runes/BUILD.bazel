@@ -6,7 +6,7 @@ go_library(
         "cond.go",
         "runes.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/runes",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/runes",
     importpath = "golang.org/x/text/runes",
     visibility = ["//visibility:public"],
     deps = ["//vendor/golang.org/x/text/transform:go_default_library"],

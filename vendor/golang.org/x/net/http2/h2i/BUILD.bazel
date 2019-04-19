@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["h2i.go"],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/net/http2/h2i",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/net/http2/h2i",
     importpath = "golang.org/x/net/http2/h2i",
     visibility = ["//visibility:private"],
     deps = select({

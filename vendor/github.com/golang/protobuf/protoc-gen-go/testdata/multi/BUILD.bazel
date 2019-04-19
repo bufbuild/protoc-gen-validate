@@ -7,7 +7,7 @@ go_library(
         "multi2.pb.go",
         "multi3.pb.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/golang/protobuf/protoc-gen-go/testdata/multi",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/golang/protobuf/protoc-gen-go/testdata/multi",
     importpath = "github.com/golang/protobuf/protoc-gen-go/testdata/multi",
     visibility = ["//visibility:public"],
     deps = ["@com_github_golang_protobuf//proto:go_default_library"],

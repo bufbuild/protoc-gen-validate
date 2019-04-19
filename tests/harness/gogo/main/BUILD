@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["harness.go"],
-    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/gogo/main",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/gogo/main",
     visibility = ["//visibility:private"],
     deps = [
         "//tests/harness:harness_gogo_proto",
@@ -33,6 +33,6 @@ genrule(
 go_binary(
     name = "main",
     embed = [":go_default_library"],
-    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/gogo/main",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/gogo/main",
     visibility = ["//visibility:public"],
 )

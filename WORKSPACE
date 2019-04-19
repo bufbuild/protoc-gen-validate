@@ -1,4 +1,4 @@
-workspace(name = "com_lyft_protoc_gen_validate")
+workspace(name = "com_envoyproxy_protoc_gen_validate")
 
 load('@bazel_tools//tools/build_defs/repo:http.bzl', 'http_archive')
 

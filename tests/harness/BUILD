@@ -15,7 +15,7 @@ proto_library(
 
 go_proto_library(
     name = "harness_go_proto",
-    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/go",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/go",
     proto = ":harness_proto",
     visibility = ["//visibility:public"],
 )
@@ -23,7 +23,7 @@ go_proto_library(
 go_proto_library(
     name = "harness_gogo_proto",
     compilers = ["@io_bazel_rules_go//proto:gogo_proto"],
-    importpath = "github.com/lyft/protoc-gen-validate/tests/harness/gogo",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/gogo",
     proto = ":harness_proto",
     visibility = ["//visibility:public"],
     deps = [
@@ -51,7 +51,7 @@ java_proto_library(
 go_library(
     name = "go_default_library",
     embed = [":harness_go_proto"],
-    importpath = "github.com/lyft/protoc-gen-validate/tests/harness",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness",
     visibility = ["//visibility:public"],
 )
 

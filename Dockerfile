@@ -52,7 +52,7 @@ RUN go get -d ${PGG_PKG} \
   && cd - \
   && rm -rf ${PGG_PATH}
 
-WORKDIR ${GOPATH}/src/github.com/lyft/protoc-gen-validate
+WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
 COPY . .
 
 RUN make build

@@ -7,7 +7,7 @@ go_library(
         "thetest.pb.go",
         "uuid.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/test",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/test",
     importpath = "github.com/gogo/protobuf/test",
     visibility = ["//visibility:public"],
     deps = [

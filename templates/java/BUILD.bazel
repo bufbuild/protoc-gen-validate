@@ -23,7 +23,7 @@ go_library(
         "unimplemented.go",
         "wrapper.go",
     ],
-    importpath = "github.com/lyft/protoc-gen-validate/templates/java",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/templates/java",
     visibility = ["//visibility:public"],
     deps = [
         "//templates/shared:go_default_library",

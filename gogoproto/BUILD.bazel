@@ -4,7 +4,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     embed = [":gogoproto_go_proto"],
-    importpath = "github.com/lyft/protoc-gen-validate/gogoproto",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/gogoproto",
     visibility = ["//visibility:public"],
 )
 
@@ -17,7 +17,7 @@ proto_library(
 
 go_proto_library(
     name = "gogoproto_go_proto",
-    importpath = "github.com/lyft/protoc-gen-validate/gogoproto",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/gogoproto",
     proto = ":gogoproto_proto",
     visibility = ["//visibility:public"],
 )

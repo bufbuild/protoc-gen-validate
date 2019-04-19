@@ -1,3 +1,5 @@
+load("@bazel_tools//tools/jdk:toolchain_utils.bzl", "find_java_runtime_toolchain", "find_java_toolchain")
+
 def _proto_path(proto):
     """
     The proto path is not really a file path
@@ -67,28 +69,38 @@ def _protoc_gen_validate_cc_impl(ctx):
         package_command = "true",
     )
 
-def _protoc_gen_validate_java_impl(ctx):
-    """Generate Java protos using protoc-gen-validate plugin"""
+def _protoc_python_output_files(proto_file_sources):
+    python_srcs = []
+
+    for p in proto_file_sources:
+        basename = p.basename[:-len(".proto")]
+
+        python_srcs.append(basename + "_pb2.py")
+        python_srcs.append(basename + "_pb_validate.py")
+
+    return python_srcs
+
+def _protoc_gen_validate_python_impl(ctx):
+    """Generate Python protos using protoc-gen-validate plugin"""
     protos = _proto_sources(ctx)
 
-    out_file = ctx.actions.declare_file(ctx.label.name + ".validate.srcjar")
+    python_files = _protoc_python_output_files(protos)
+    out_files = [ctx.actions.declare_file(out) for out in python_files]
 
     dir_out = _output_dir(ctx)
 
     args = [
-        "--java_out=" + dir_out,
-        "--validate_out=lang=java:" + dir_out,
+        "--python_out=" + dir_out,
+        "--validate_out=lang=python:" + dir_out,
     ]
-
-    jar_path = out_file.path[len(dir_out) + 1:]
 
     return _protoc_gen_validate_impl(
         ctx = ctx,
-        lang = "java",
+        lang = "python",
         protos = protos,
-        out_files = [out_file],
+        out_files = out_files,
         protoc_args = args,
-        package_command = "(cd " + dir_out + " && find . -name \*.java | xargs jar cf " + jar_path + ")",
+        package_command = "true",
     )
 
 def _protoc_python_output_files(proto_file_sources):
@@ -171,7 +183,7 @@ cc_proto_gen_validate = rule(
         ),
         "_plugin": attr.label(
             cfg = "host",
-            default = Label("@com_lyft_protoc_gen_validate//:protoc-gen-validate"),
+            default = Label("@com_envoyproxy_protoc_gen_validate//:protoc-gen-validate"),
             allow_files = True,
             executable = True,
         ),
@@ -180,7 +192,124 @@ cc_proto_gen_validate = rule(
     implementation = _protoc_gen_validate_cc_impl,
 )
 
+_ProtoValidateSourceInfo = provider(
+    fields = {
+        "sources": "Depset of sources created by protoc with protoc-gen-validate plugin",
+    },
+)
+
+def _create_include_path(include):
+    return "--proto_path={0}={1}".format(_proto_path(include), include.path)
+
+def _java_proto_gen_validate_aspect_impl(target, ctx):
+    proto_info = target[ProtoInfo]
+    includes = proto_info.transitive_imports
+    srcs = proto_info.direct_sources
+    options = ",".join(["lang=java"])
+    srcjar = ctx.actions.declare_file("%s-validate-gensrc.jar" % ctx.label.name)
+
+    args = ctx.actions.args()
+    args.add(ctx.executable._plugin.path, format = "--plugin=protoc-gen-validate=%s")
+    args.add("--validate_out={0}:{1}".format(options, srcjar.path))
+    args.add_all(includes, map_each = _create_include_path)
+    args.add_all(srcs, map_each = _proto_path)
+
+    ctx.actions.run(
+        inputs = depset([ctx.executable._plugin], transitive = [proto_info.transitive_imports]),
+        outputs = [srcjar],
+        executable = ctx.executable._protoc,
+        arguments = [args],
+        progress_message = "Generating %s" % srcjar.path,
+    )
+
+    return [_ProtoValidateSourceInfo(
+        sources = depset(
+            [srcjar],
+            transitive = [dep[_ProtoValidateSourceInfo].sources for dep in ctx.rule.attr.deps],
+        ),
+    )]
+
+_java_proto_gen_validate_aspect = aspect(
+    _java_proto_gen_validate_aspect_impl,
+    provides = [_ProtoValidateSourceInfo],
+    attr_aspects = ["deps"],
+    attrs = {
+        "_protoc": attr.label(
+            cfg = "host",
+            default = Label("@com_google_protobuf//:protoc"),
+            executable = True,
+            single_file = True,
+        ),
+        "_plugin": attr.label(
+            cfg = "host",
+            default = Label("@com_envoyproxy_protoc_gen_validate//:protoc-gen-validate"),
+            allow_files = True,
+            executable = True,
+        ),
+    },
+)
+
+def _java_proto_gen_validate_impl(ctx):
+    source_jars = [source_jar for dep in ctx.attr.deps for source_jar in dep[_ProtoValidateSourceInfo].sources]
+
+    deps = [java_common.make_non_strict(dep[JavaInfo]) for dep in ctx.attr.java_deps]
+    deps += [dep[JavaInfo] for dep in ctx.attr._validate_deps]
+
+    java_info = java_common.compile(
+        ctx,
+        source_jars = source_jars,
+        deps = deps,
+        output_source_jar = ctx.outputs.srcjar,
+        output = ctx.outputs.jar,
+        java_toolchain = find_java_toolchain(ctx, ctx.attr._java_toolchain),
+        host_javabase = find_java_runtime_toolchain(ctx, ctx.attr._host_javabase),
+    )
+
+    return [java_info]
+
+"""Bazel rule to create a Java protobuf validation library from proto sources files.
+
+Args:
+  deps: proto_library rules that contain the necessary .proto files
+  java_deps: the java_proto_library of the protos being compiled.
+"""
 java_proto_gen_validate = rule(
+    attrs = {
+        "deps": attr.label_list(
+            providers = [ProtoInfo],
+            aspects = [_java_proto_gen_validate_aspect],
+            mandatory = True,
+        ),
+        "java_deps": attr.label_list(
+            providers = [JavaInfo],
+            mandatory = True,
+        ),
+        "_validate_deps": attr.label_list(
+            default = [
+                Label("@com_envoyproxy_protoc_gen_validate//validate:validate_java"),
+                Label("@com_google_re2j//jar"),
+                Label("@com_google_protobuf//:protobuf_java"),
+                Label("@com_google_protobuf//:protobuf_java_util"),
+                Label("@com_envoyproxy_protoc_gen_validate//java/pgv-java-stub/src/main/java/com/lyft/pgv"),
+                Label("@com_envoyproxy_protoc_gen_validate//java/pgv-java-validation/src/main/java/com/lyft/pgv"),
+            ],
+        ),
+        "_java_toolchain": attr.label(default = Label("@bazel_tools//tools/jdk:current_java_toolchain")),
+        "_host_javabase": attr.label(
+            cfg = "host",
+            default = Label("@bazel_tools//tools/jdk:current_host_java_runtime"),
+        ),
+    },
+    fragments = ["java"],
+    provides = [JavaInfo],
+    outputs = {
+        "jar": "lib%{name}.jar",
+        "srcjar": "lib%{name}-src.jar",
+    },
+    implementation = _java_proto_gen_validate_impl,
+)
+
+python_proto_gen_validate = rule(
     attrs = {
         "deps": attr.label_list(
             mandatory = True,
@@ -200,7 +329,7 @@ java_proto_gen_validate = rule(
         ),
     },
     output_to_genfiles = True,
-    implementation = _protoc_gen_validate_java_impl,
+    implementation = _protoc_gen_validate_python_impl,
 )
 
 python_proto_gen_validate = rule(

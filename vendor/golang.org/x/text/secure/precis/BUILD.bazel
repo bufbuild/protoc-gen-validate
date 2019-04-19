@@ -15,7 +15,7 @@ go_library(
         "transformer.go",
         "trieval.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/secure/precis",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/secure/precis",
     importpath = "golang.org/x/text/secure/precis",
     visibility = ["//visibility:public"],
     deps = [

@@ -7,7 +7,7 @@ go_library(
         "match.go",
         "tables.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/internal",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/internal",
     importpath = "golang.org/x/text/internal",
     visibility = ["//visibility:public"],
     deps = ["//vendor/golang.org/x/text/language:go_default_library"],

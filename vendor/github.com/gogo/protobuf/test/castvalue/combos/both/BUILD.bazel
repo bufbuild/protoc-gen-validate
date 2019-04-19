@@ -6,7 +6,7 @@ go_library(
         "castvalue.pb.go",
         "mytypes.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/castvalue/combos/both",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/gogo/protobuf/test/castvalue/combos/both",
     importpath = "github.com/gogo/protobuf/test/castvalue/combos/both",
     visibility = ["//visibility:public"],
     deps = [

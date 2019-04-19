@@ -9,7 +9,7 @@ go_library(
         "shiftjis.go",
         "tables.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/golang.org/x/text/encoding/japanese",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/golang.org/x/text/encoding/japanese",
     importpath = "golang.org/x/text/encoding/japanese",
     visibility = ["//visibility:public"],
     deps = [

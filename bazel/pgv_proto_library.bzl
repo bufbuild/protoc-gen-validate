@@ -62,48 +62,16 @@ def pgv_cc_proto_library(
         hdrs = [":" + name + "_validate"],
         srcs = [":" + name + "_validate"],
         deps = cc_deps + [
-            "@com_lyft_protoc_gen_validate//validate:cc_validate",
-            "@com_lyft_protoc_gen_validate//validate:validate_cc",
+            "@com_envoyproxy_protoc_gen_validate//validate:cc_validate",
+            "@com_envoyproxy_protoc_gen_validate//validate:validate_cc",
             "@com_google_protobuf//:protobuf",
         ],
         copts = copts + select({
-            "@com_lyft_protoc_gen_validate//bazel:windows_x86_64": ["-DWIN32"],
+            "@com_envoyproxy_protoc_gen_validate//bazel:windows_x86_64": ["-DWIN32"],
             "//conditions:default": [],
         }),
         alwayslink = 1,
         **kargs
-    )
-
-def pgv_java_proto_library(
-        name,
-        deps = [],
-        java_deps = [],
-        **kwargs):
-    """Bazel rule to create a Java protobuf validation library from proto sources files.
-
-    Args:
-      name: the name of the pgv_java_proto_library
-      deps: proto_library rules that contain the necessary .proto files
-      java_deps: Java dependencies of the protos being compiled. Likely java_proto_library or pgv_java_proto_library.
-    """
-
-    java_proto_gen_validate(
-        name = name + "_validate",
-        deps = deps,
-    )
-
-    native.java_library(
-        name = name,
-        srcs = [name + "_validate"],
-        deps = java_deps + [
-            "@com_lyft_protoc_gen_validate//validate:validate_java",
-            "@com_google_re2j//jar",
-            "@com_google_protobuf//:protobuf_java",
-            "@com_google_protobuf//:protobuf_java_util",
-            "@com_lyft_protoc_gen_validate//java/pgv-java-stub/src/main/java/com/lyft/pgv",
-            "@com_lyft_protoc_gen_validate//java/pgv-java-validation/src/main/java/com/lyft/pgv",
-        ],
-        **kwargs
     )
 
 def pgv_python_proto_library(
@@ -132,3 +100,5 @@ def pgv_python_proto_library(
         ],
         **kwargs
     )
+
+pgv_java_proto_library = java_proto_gen_validate

@@ -11,7 +11,7 @@ go_library(
         "parameters.go",
         "type_name.go",
     ],
-    importmap = "github.com/lyft/protoc-gen-validate/vendor/github.com/lyft/protoc-gen-star/lang/go",
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/lyft/protoc-gen-star/lang/go",
     importpath = "github.com/lyft/protoc-gen-star/lang/go",
     visibility = ["//visibility:public"],
     deps = [
