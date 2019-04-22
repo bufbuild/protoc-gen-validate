@@ -164,7 +164,7 @@ Java generation is integrated with the existing protobuf toolchain for java proj
                     <configuration>
                         <pluginParameter>lang=java</pluginParameter>
                         <pluginId>java-pgv</pluginId>
-                        <pluginArtifact>com.lyft.protoc-gen-validate:protoc-gen-validate:${pgv.version}:exe:${os.detected.classifier}</pluginArtifact>
+                        <pluginArtifact>io.envoyproxy.protoc-gen-validate:protoc-gen-validate:${pgv.version}:exe:${os.detected.classifier}</pluginArtifact>
                     </configuration>
                 </execution>
             </executions>
