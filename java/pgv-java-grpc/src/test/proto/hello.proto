@@ -1,13 +1,15 @@
 syntax = "proto3";
 
-package com.lyft.pgv.grpc;
+package io.envoyproxy.pgv.grpc;
+
+import "validate/validate.proto";
 
 service Greeter {
     rpc SayHello (HelloRequest) returns (HelloResponse) {}
 }
 
 message HelloRequest {
-    string name = 1;
+    string name = 1 [(validate.rules).string.const = "World"];
 }
 
 message HelloResponse {

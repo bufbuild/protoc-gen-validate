@@ -20,9 +20,9 @@ const anyTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 	{{- template "required" . -}}
 
 	{{- if $r.In }}
-			if ({{ hasAccessor . }}) com.lyft.pgv.CollectiveValidation.in("{{ $f.FullyQualifiedName }}", {{ accessor . }}.getTypeUrl(), {{ constantName . "In" }});
+			if ({{ hasAccessor . }}) io.envoyproxy.pgv.CollectiveValidation.in("{{ $f.FullyQualifiedName }}", {{ accessor . }}.getTypeUrl(), {{ constantName . "In" }});
 	{{- end -}}
 	{{- if $r.NotIn }}
-			if ({{ hasAccessor . }}) com.lyft.pgv.CollectiveValidation.notIn("{{ $f.FullyQualifiedName }}", {{ accessor . }}.getTypeUrl(), {{ constantName . "NotIn" }});
+			if ({{ hasAccessor . }}) io.envoyproxy.pgv.CollectiveValidation.notIn("{{ $f.FullyQualifiedName }}", {{ accessor . }}.getTypeUrl(), {{ constantName . "NotIn" }});
 	{{- end -}}
 `
