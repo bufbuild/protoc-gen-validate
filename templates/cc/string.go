@@ -107,26 +107,35 @@ const strTpl = `
 	{{ end }}
 
 	{{ if $r.GetIp }}
-		{{ unimplemented }}
-		{{/* TODO(akonradi) implement IP address constraints
-		if ip := net.ParseIP({{ accessor . }}); ip == nil {
-			return {{ err . "value must be a valid IP address" }}
+	{
+		const std::string& value = {{ accessor . }};
+		struct sockaddr_in sa;
+		struct sockaddr_in6 sa_six;
+		const int valid_four = inet_pton(AF_INET, value.c_str(), &sa.sin_addr);
+		const int valid_six = inet_pton(AF_INET6, value.c_str(), &sa_six.sin6_addr);
+
+		if (valid_six < 1 && valid_four < 1) {
+			{{ err . "value must be a valid IPv4 or IPv6 Address" }}
 		}
-		*/}}
+	}
 	{{ else if $r.GetIpv4 }}
-		{{ unimplemented }}
-		{{/* TODO(akonradi) implement IP address constraints
-		if ip := net.ParseIP({{ accessor . }}); ip == nil || ip.To4() == nil {
-			return {{ err . "value must be a valid IPv4 address" }}
+	{
+		const std::string& value = {{ accessor . }};
+		struct sockaddr_in sa;
+
+		if (inet_pton(AF_INET, value.c_str(), &sa.sin_addr) < 1) {
+			{{ err . "value must be a valid IPv4 Address" }}
 		}
-		*/}}
+	}
 	{{ else if $r.GetIpv6 }}
-		{{ unimplemented }}
-		{{/* TODO(akonradi) implement IP address constraints
-		if ip := net.ParseIP({{ accessor . }}); ip == nil || ip.To4() != nil {
-			return {{ err . "value must be a valid IPv6 address" }}
+	{
+		const std::string& value = {{ accessor . }};
+		struct sockaddr_in6 sa_six;
+
+		if (inet_pton(AF_INET6, value.c_str(), &sa_six.sin6_addr) < 1) {
+			{{ err . "value must be a valid IPv6 Address" }}
 		}
-		*/}}
+	}
 	{{ else if $r.GetEmail }}
 		{{ unimplemented }}
 		{{/* TODO(akonradi) implement email address constraints
@@ -135,12 +144,39 @@ const strTpl = `
 		}
 		*/}}
 	{{ else if $r.GetHostname }}
-		{{ unimplemented }}
-		{{/* TODO(akonradi) implement hostname constraints
-		if err := m._validateHostname({{ accessor . }}); err != nil {
-			return {{ errCause . "err" "value must be a valid hostname" }}
+	{
+		// Take a copy so we can lowercase it.
+		std::string value = {{ accessor . }};
+		std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c){ return std::tolower(c); });
+
+		if (value.length() > 253) {
+			{{ err . "value must be a hostname, and hostname cannot exceed 253 characters" }}
 		}
-		*/}}
+
+		const std::regex dot_regex{"\\."};
+		const std::vector<std::string> domain_parts{
+			std::sregex_token_iterator(value.begin(), value.end(), dot_regex, -1),
+      std::sregex_token_iterator()
+		};
+		for (const auto &part : domain_parts) {
+			if (part.length() < 1 || part.length() > 63) {
+				{{ err . "hostname part must be non-empty, and cannot exceed 63 characters" }}
+			}
+
+			if (part.at(0) == '-') {
+				{{ err . "hostname parts cannot begin with hyphens." }}
+			}
+			if (part.at(part.length() - 1) == '-') {
+				{{ err . "hostname parts cannot end with hyphens." }}
+			}
+
+			for (const auto &character : part) {
+				if ((character < 'a' || character > 'z') && (character < '0' || character > '9') && character != '-') {
+					{{ err . "hostname parts can only contain alphanumeric characters or hyphens" }}
+				}
+			}
+		}
+	}
 	{{ else if $r.GetUri }}
 		{{ unimplemented }}
 		{{/* TODO(akonradi) implement URI constraints
