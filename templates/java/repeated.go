@@ -4,15 +4,15 @@ const repeatedConstTpl = `{{ renderConstants (.Elem "" "") }}`
 
 const repeatedTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.GetMinItems }}
-			com.lyft.pgv.RepeatedValidation.minItems("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMinItems }});
+			io.envoyproxy.pgv.RepeatedValidation.minItems("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMinItems }});
 {{- end -}}
 {{- if $r.GetMaxItems }}
-			com.lyft.pgv.RepeatedValidation.maxItems("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMaxItems }});
+			io.envoyproxy.pgv.RepeatedValidation.maxItems("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMaxItems }});
 {{- end -}}
 {{- if $r.GetUnique }}
-			com.lyft.pgv.RepeatedValidation.unique("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+			io.envoyproxy.pgv.RepeatedValidation.unique("{{ $f.FullyQualifiedName }}", {{ accessor . }});
 {{- end }}
-			com.lyft.pgv.RepeatedValidation.forEach({{ accessor . }}, item -> {
+			io.envoyproxy.pgv.RepeatedValidation.forEach({{ accessor . }}, item -> {
 				{{ render (.Elem "item" "") }}
 			});
 `
