@@ -5,14 +5,14 @@ import (
 
 	"time"
 
+	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
+	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/any"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/golang/protobuf/ptypes/wrappers"
-	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
-	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
 )
 
 type TestCase struct {
@@ -797,9 +797,14 @@ var stringCases = []TestCase{
 	{"string - email - invalid (bad hostname)", &cases.StringEmail{Val: "foo@-bar.com"}, false},
 
 	{"string - hostname - valid", &cases.StringHostname{Val: "example.com"}, true},
+	{"string - hostname - valid (uppercase)", &cases.StringHostname{Val: "ASD.example.com"}, true},
+	{"string - hostname - valid (hyphens)", &cases.StringHostname{Val: "foo-bar.com"}, true},
+	{"string - hostname - valid (trailing dot)", &cases.StringHostname{Val: "example.com."}, true},
 	{"string - hostname - invalid", &cases.StringHostname{Val: "!@#$%^&"}, false},
 	{"string - hostname - invalid (underscore)", &cases.StringHostname{Val: "foo_bar.com"}, false},
 	{"string - hostname - invalid (too long)", &cases.StringHostname{Val: "x0123456789012345678901234567890123456789012345678901234567890123456789.com"}, false},
+	{"string - hostname - invalid (hyphens)", &cases.StringHostname{Val: "foo-bar-.com"}, false},
+	{"string - hostname - invalid (empty)", &cases.StringHostname{Val: "asd..asd.com"}, false},
 	{"string - hostname - invalid (IDNs)", &cases.StringHostname{Val: "你好.com"}, false},
 
 	{"string - IP - valid (v4)", &cases.StringIP{Val: "192.168.0.1"}, true},

@@ -145,21 +145,18 @@ const strTpl = `
 		*/}}
 	{{ else if $r.GetHostname }}
 	{
-		// Take a copy so we can lowercase it.
-		std::string value = {{ accessor . }};
-		std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c){ return std::tolower(c); });
+		const std::string& value = {{ accessor . }};
 
 		if (value.length() > 253) {
 			{{ err . "value must be a hostname, and hostname cannot exceed 253 characters" }}
 		}
 
 		const std::regex dot_regex{"\\."};
-		const std::vector<std::string> domain_parts{
-			std::sregex_token_iterator(value.begin(), value.end(), dot_regex, -1),
-      std::sregex_token_iterator()
-		};
-		for (const auto &part : domain_parts) {
-			if (part.length() < 1 || part.length() > 63) {
+		const auto iter_end = std::sregex_token_iterator();
+		auto iter = std::sregex_token_iterator(value.begin(), value.end(), dot_regex, -1);
+		for (; iter != iter_end; ++iter) {
+			const std::string &part = *iter;
+			if (part.empty() || part.length() > 63) {
 				{{ err . "hostname part must be non-empty, and cannot exceed 63 characters" }}
 			}
 
@@ -171,7 +168,7 @@ const strTpl = `
 			}
 
 			for (const auto &character : part) {
-				if ((character < 'a' || character > 'z') && (character < '0' || character > '9') && character != '-') {
+				if ((character < 'A' || character > 'Z') && (character < 'a' || character > 'z') && (character < '0' || character > '9') && character != '-') {
 					{{ err . "hostname parts can only contain alphanumeric characters or hyphens" }}
 				}
 			}

@@ -2,7 +2,7 @@ package cc
 
 const hostTpl = `
 	func (m {{ .TypeName.Pointer }}) _validateHostname(host string) error {
-		s := strings.ToLower(strings.TrimSuffix(host, "."))
+		s := strings.TrimSuffix(host, ".")
 
 		if len(host) > 253 {
 			return errors.New("hostname cannot exceed 253 characters")
@@ -22,7 +22,7 @@ const hostTpl = `
 			}
 
 			for _, r := range s {
-				if (r < 'a' || r > 'z') && (r < '0' || r > '9') && r != '-' {
+				if (r < 'A' || r > 'Z') && (r < 'a' || r > 'z') && (r < '0' || r > '9') && r != '-' {
 					return errors.New("hostname parts can only contain alphanumeric characters or hyphens")
 				}
 			}
