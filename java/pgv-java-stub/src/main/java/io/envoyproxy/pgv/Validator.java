@@ -2,7 +2,7 @@ package io.envoyproxy.pgv;
 
 /**
  * {@code Validator} asserts the validity of a protobuf object.
- * @param <T>
+ * @param <T> The type to validate
  */
 @FunctionalInterface
 public interface Validator<T> {

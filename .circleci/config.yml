@@ -7,3 +7,30 @@ jobs:
       - checkout
       - run: docker build -t protoc-gen-validate .
       - run: docker run --rm protoc-gen-validate ci
+  
+  javabuild:
+    machine: true
+    working_directory: ~/pgv
+    environment:
+      MAVEN_OPTS: -Xms512m -Xmx1024m # Customize the JVM maximum heap limit
+    steps:
+      - checkout
+      - run: mvn -B verify  
+      - deploy:
+          command: | # Deploy if on master branch. If the $RELEASE and $NEXT variables are set then prepare a full maven release.
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo $GPG_KEY | base64 --decode > signing-key
+              gpg --passphrase $GPG_PASSPHRASE --import signing-key
+              shred signing-key
+              if [[ -n "${RELEASE}" && -n "${NEXT}" ]]; then
+                git config --global user.email "36644060+envoy-java-control-plane-bot@users.noreply.github.com"
+                git config --global user.name "envoy-java-control-plane-bot"
+                mvn -B -s .circleci/settings.xml release:prepare -Darguments="-s .circleci/settings.xml" -DreleaseVersion=$RELEASE -DdevelopmentVersion=$NEXT -DscmCommentPrefix="release: "
+              else
+                mvn -B -s .circleci/settings.xml deploy
+              fi
+            fi
+
+
+    
+    
