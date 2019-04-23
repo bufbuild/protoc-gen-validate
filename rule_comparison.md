@@ -26,10 +26,10 @@
 | prefix/suffix/contains |✅|✅|✅|✅|
 | in/not_in              |✅|✅|✅|✅|
 | email                  |✅|✅|❌|✅|
-| hostname               |✅|✅|❌|✅|
-| ip                     |✅|✅|❌|✅|
-| ipv4                   |✅|✅|❌|✅|
-| ipv6                   |✅|✅|❌|✅|
+| hostname               |✅|✅|✅|✅|
+| ip                     |✅|✅|✅|✅|
+| ipv4                   |✅|✅|✅|✅|
+| ipv6                   |✅|✅|✅|✅|
 | uri                    |✅|✅|✅|✅|
 | uri_ref                |✅|✅|✅|✅|
 
@@ -41,9 +41,9 @@
 | pattern                |✅|✅|✅|✅|
 | prefix/suffix/contains |✅|✅|✅|✅|
 | in/not_in              |✅|✅|✅|✅|
-| ip                     |✅|✅|✅|✅|
-| ipv4                   |✅|✅|✅|✅|
-| ipv6                   |✅|✅|✅|✅|
+| ip                     |✅|✅|❌|✅|
+| ipv4                   |✅|✅|❌|✅|
+| ipv6                   |✅|✅|❌|✅|
 
 ## Enums
 | Constraint Rule | Go | GoGo | C++ | Java |
