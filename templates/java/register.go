@@ -7,12 +7,12 @@ import (
 	"text/template"
 	"unicode"
 
+	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/iancoleman/strcase"
-	"github.com/lyft/protoc-gen-star"
-	"github.com/lyft/protoc-gen-star/lang/go"
-	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
+	pgs "github.com/lyft/protoc-gen-star"
+	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
 )
 
 func RegisterIndex(tpl *template.Template, params pgs.Parameters) {
@@ -191,35 +191,35 @@ func (fns javaFuncs) qualifiedName(entity pgs.Entity) string {
 
 // Replace invalid identifier characters with an underscore
 func makeInvalidClassnameCharactersUnderscores(name string) string {
-	var sb strings.Builder
+	var sb string
 	for _, c := range name {
 		switch {
 		case c >= '0' && c <= '9':
-			sb.WriteRune(c)
+			sb += string(c)
 		case c >= 'a' && c <= 'z':
-			sb.WriteRune(c)
+			sb += string(c)
 		case c >= 'A' && c <= 'Z':
-			sb.WriteRune(c)
+			sb += string(c)
 		default:
-			sb.WriteRune('_')
+			sb += "_"
 		}
 	}
-	return sb.String()
+	return sb
 }
 
 func upperCaseAfterNumber(name string) string {
-	var sb strings.Builder
+	var sb string
 	var p rune
 
 	for _, c := range name {
 		if unicode.IsDigit(p) {
-			sb.WriteRune(unicode.ToUpper(c))
+			sb += string(unicode.ToUpper(c))
 		} else {
-			sb.WriteRune(c)
+			sb += string(c)
 		}
 		p = c
 	}
-	return sb.String()
+	return sb
 }
 
 func appendOuterClassName(outerClassName string, file pgs.File) string {
@@ -394,14 +394,14 @@ func (fns javaFuncs) camelCase(name pgs.Name) string {
 }
 
 func (fns javaFuncs) byteArrayLit(bytes []uint8) string {
-	var sb strings.Builder
-	sb.WriteString("new byte[]{")
+	var sb string
+	sb += "new byte[]{"
 	for _, b := range bytes {
-		sb.WriteString(fmt.Sprintf("(byte)%#x,", b))
+		sb += fmt.Sprintf("(byte)%#x,", b)
 	}
-	sb.WriteString("}")
+	sb += "}"
 
-	return sb.String()
+	return sb
 }
 
 func (fns javaFuncs) durLit(dur *duration.Duration) string {
