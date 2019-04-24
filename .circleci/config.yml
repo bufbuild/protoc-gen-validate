@@ -10,12 +10,12 @@ jobs:
   
   javabuild:
     machine: true
-    working_directory: ~/go/src/github.com/envoyproxy/protoc-gen-validate/java
+    working_directory: ~/.go_workspace/src/github.com/envoyproxy/protoc-gen-validate/java
     environment:
       MAVEN_OPTS: -Xms512m -Xmx1024m # Customize the JVM maximum heap limit
     steps:
       - checkout:
-          path: ~/go/src/github.com/envoyproxy/protoc-gen-validate
+          path: ~/go/.go_workspace/github.com/envoyproxy/protoc-gen-validate
       - run: mvn -B verify  
       - deploy:
           command: | # Deploy if on master branch. If the $RELEASE and $NEXT variables are set then prepare a full maven release.
