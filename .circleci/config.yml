@@ -14,7 +14,8 @@ jobs:
     environment:
       MAVEN_OPTS: -Xms512m -Xmx1024m # Customize the JVM maximum heap limit
     steps:
-      - checkout
+      - checkout:
+        path: ~/pgv
       - run: mvn -B verify  
       - deploy:
           command: | # Deploy if on master branch. If the $RELEASE and $NEXT variables are set then prepare a full maven release.
