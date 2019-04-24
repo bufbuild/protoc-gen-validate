@@ -10,7 +10,7 @@ jobs:
   
   javabuild:
     machine: true
-    working_directory: ~/pgv
+    working_directory: ~/pgv-java
     environment:
       MAVEN_OPTS: -Xms512m -Xmx1024m # Customize the JVM maximum heap limit
     steps:
@@ -30,6 +30,13 @@ jobs:
                 mvn -B -s .circleci/settings.xml deploy
               fi
             fi
+
+workflows:
+  version: 2
+  build_and_javabuild:
+    jobs:
+      - build
+      - javabuild
 
 
     
