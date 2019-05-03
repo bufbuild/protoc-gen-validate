@@ -24,12 +24,13 @@ type EnumValue interface {
 type enumVal struct {
 	desc *descriptor.EnumValueDescriptorProto
 	enum Enum
+	fqn  string
 
 	info SourceCodeInfo
 }
 
 func (ev *enumVal) Name() Name                                       { return Name(ev.desc.GetName()) }
-func (ev *enumVal) FullyQualifiedName() string                       { return fullyQualifiedName(ev.enum, ev) }
+func (ev *enumVal) FullyQualifiedName() string                       { return ev.fqn }
 func (ev *enumVal) Syntax() Syntax                                   { return ev.enum.Syntax() }
 func (ev *enumVal) Package() Package                                 { return ev.enum.Package() }
 func (ev *enumVal) File() File                                       { return ev.enum.File() }

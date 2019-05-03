@@ -7,8 +7,8 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/plugin"
-	"github.com/lyft/protoc-gen-star"
+	plugin_go "github.com/golang/protobuf/protoc-gen-go/plugin"
+	pgs "github.com/lyft/protoc-gen-star"
 	"github.com/stretchr/testify/require"
 )
 
@@ -28,7 +28,7 @@ func readCodeGenReq(t *testing.T, dir ...string) *plugin_go.CodeGeneratorRequest
 
 func buildGraph(t *testing.T, dir ...string) pgs.AST {
 	d := pgs.InitMockDebugger()
-	ast := pgs.ProcessDescriptors(d, readCodeGenReq(t, dir...))
+	ast := pgs.ProcessCodeGeneratorRequest(d, readCodeGenReq(t, dir...))
 	require.False(t, d.Failed(), "failed to build graph (see previous log statements)")
 	return ast
 }

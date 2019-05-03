@@ -19,11 +19,8 @@ func TestEnum_Name(t *testing.T) {
 func TestEnum_FullyQualifiedName(t *testing.T) {
 	t.Parallel()
 
-	e := &enum{desc: &descriptor.EnumDescriptorProto{Name: proto.String("enum")}}
-	f := dummyFile()
-	f.addEnum(e)
-
-	assert.Equal(t, f.FullyQualifiedName()+".enum", e.FullyQualifiedName())
+	e := &enum{fqn: "enum"}
+	assert.Equal(t, e.fqn, e.FullyQualifiedName())
 }
 
 func TestEnum_Syntax(t *testing.T) {

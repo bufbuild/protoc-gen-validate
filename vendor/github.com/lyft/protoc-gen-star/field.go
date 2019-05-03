@@ -37,6 +37,7 @@ type Field interface {
 
 type field struct {
 	desc  *descriptor.FieldDescriptorProto
+	fqn   string
 	msg   Message
 	oneof OneOf
 	typ   FieldType
@@ -45,7 +46,7 @@ type field struct {
 }
 
 func (f *field) Name() Name                                   { return Name(f.desc.GetName()) }
-func (f *field) FullyQualifiedName() string                   { return fullyQualifiedName(f.msg, f) }
+func (f *field) FullyQualifiedName() string                   { return f.fqn }
 func (f *field) Syntax() Syntax                               { return f.msg.Syntax() }
 func (f *field) Package() Package                             { return f.msg.Package() }
 func (f *field) Imports() []File                              { return f.typ.Imports() }

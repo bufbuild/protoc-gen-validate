@@ -32,6 +32,7 @@ type Method interface {
 
 type method struct {
 	desc    *descriptor.MethodDescriptorProto
+	fqn     string
 	service Service
 
 	in, out Message
@@ -40,7 +41,7 @@ type method struct {
 }
 
 func (m *method) Name() Name                                    { return Name(m.desc.GetName()) }
-func (m *method) FullyQualifiedName() string                    { return fullyQualifiedName(m.service, m) }
+func (m *method) FullyQualifiedName() string                    { return m.fqn }
 func (m *method) Syntax() Syntax                                { return m.service.Syntax() }
 func (m *method) Package() Package                              { return m.service.Package() }
 func (m *method) File() File                                    { return m.service.File() }
@@ -56,15 +57,15 @@ func (m *method) BiDirStreaming() bool                          { return m.Clien
 
 func (m *method) Imports() (i []File) {
 	mine := m.File().Name()
+	input := m.Input().File()
+	output := m.Output().File()
 
-	if input := m.Input().File(); mine != input.Name() {
+	if mine != input.Name() {
 		i = append(i, input)
 	}
-
-	if output := m.Output().File(); mine != output.Name() {
+	if mine != output.Name() && input.Name() != output.Name() {
 		i = append(i, output)
 	}
-
 	return
 }
 

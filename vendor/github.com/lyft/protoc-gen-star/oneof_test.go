@@ -20,11 +20,8 @@ func TestOneof_Name(t *testing.T) {
 func TestOneOf_FullyQualifiedName(t *testing.T) {
 	t.Parallel()
 
-	m := dummyMsg()
-	o := &oneof{desc: &descriptor.OneofDescriptorProto{Name: proto.String("one_of")}}
-	m.addOneOf(o)
-
-	assert.Equal(t, m.FullyQualifiedName()+".one_of", o.FullyQualifiedName())
+	o := &oneof{fqn: "one_of"}
+	assert.Equal(t, o.fqn, o.FullyQualifiedName())
 }
 
 func TestOneof_Syntax(t *testing.T) {
@@ -96,6 +93,12 @@ func TestOneof_Imports(t *testing.T) {
 	assert.Empty(t, o.Imports())
 
 	o.addField(&mockField{i: []File{&file{}, &file{}}, Field: &field{}})
+	assert.Len(t, o.Imports(), 1)
+
+	f := &file{desc: &descriptor.FileDescriptorProto{
+		Name: proto.String("foobar"),
+	}}
+	o.addField(&mockField{i: []File{f}, Field: &field{}})
 	assert.Len(t, o.Imports(), 2)
 }
 

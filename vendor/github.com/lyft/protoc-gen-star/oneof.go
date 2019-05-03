@@ -27,6 +27,7 @@ type oneof struct {
 	desc *descriptor.OneofDescriptorProto
 	msg  Message
 	flds []Field
+	fqn  string
 
 	info SourceCodeInfo
 }
@@ -41,7 +42,7 @@ func (o *oneof) accept(v Visitor) (err error) {
 }
 
 func (o *oneof) Name() Name                                   { return Name(o.desc.GetName()) }
-func (o *oneof) FullyQualifiedName() string                   { return fullyQualifiedName(o.msg, o) }
+func (o *oneof) FullyQualifiedName() string                   { return o.fqn }
 func (o *oneof) Syntax() Syntax                               { return o.msg.Syntax() }
 func (o *oneof) Package() Package                             { return o.msg.Package() }
 func (o *oneof) File() File                                   { return o.msg.File() }
@@ -52,8 +53,15 @@ func (o *oneof) Message() Message                             { return o.msg }
 func (o *oneof) setMessage(m Message)                         { o.msg = m }
 
 func (o *oneof) Imports() (i []File) {
+	// Mapping for avoiding duplicate entries
+	mp := make(map[string]File, len(o.flds))
 	for _, f := range o.flds {
-		i = append(i, f.Imports()...)
+		for _, imp := range f.Imports() {
+			mp[imp.File().Name().String()] = imp
+		}
+	}
+	for _, f := range mp {
+		i = append(i, f)
 	}
 	return
 }

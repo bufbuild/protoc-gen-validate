@@ -52,6 +52,12 @@ RUN go get -d ${PGG_PKG} \
   && cd - \
   && rm -rf ${PGG_PATH}
 
+# deps
+RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+
+# buildozer
+RUN go get github.com/bazelbuild/buildtools/buildozer
+
 WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
 COPY . .
 

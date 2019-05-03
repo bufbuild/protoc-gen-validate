@@ -1,0 +1,17 @@
+syntax="proto3";
+
+// no package declaration!
+
+message RootMessage {
+    RootEnum field = 1;
+
+    message NestedMsg {}
+
+    enum NestedEnum {
+        VALUE = 0;
+    }
+}
+
+enum RootEnum {
+    VALUE = 0;
+}

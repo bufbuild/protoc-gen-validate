@@ -4,8 +4,10 @@ import (
 	"go/token"
 	"regexp"
 	"strings"
+	"unicode"
+	"unicode/utf8"
 
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 )
 
 var nonAlphaNumPattern = regexp.MustCompile("[^a-zA-Z0-9]")
@@ -26,6 +28,11 @@ func (c context) PackageName(node pgs.Node) pgs.Name {
 
 	// if the package name is a Go keyword, prefix with '_'
 	if token.Lookup(pkg).IsKeyword() {
+		pkg = "_" + pkg
+	}
+
+	// if package starts with digit, prefix with `_`
+	if r, _ := utf8.DecodeRuneInString(pkg); unicode.IsDigit(r) {
 		pkg = "_" + pkg
 	}
 
@@ -81,14 +88,14 @@ func (c context) optionPackage(e pgs.Entity) (path, pkg string) {
 	// go_package="example.com/foo/bar;baz" should have a package name of `baz`
 	if idx := strings.LastIndex(pkg, ";"); idx > -1 {
 		path = pkg[:idx]
-		pkg = pkg[idx+1:]
+		pkg = nonAlphaNumPattern.ReplaceAllString(pkg[idx+1:], "_")
 		return
 	}
 
 	// go_package="example.com/foo/bar" should have a package name of `bar`
 	if idx := strings.LastIndex(pkg, "/"); idx > -1 {
 		path = pkg
-		pkg = pkg[idx+1:]
+		pkg = nonAlphaNumPattern.ReplaceAllString(pkg[idx+1:], "_")
 		return
 	}
 

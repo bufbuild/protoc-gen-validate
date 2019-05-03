@@ -32,6 +32,9 @@ type Message interface {
 	// OneOfs returns the OneOfs contained within this Message.
 	OneOfs() []OneOf
 
+	// Extensions returns all of the Extensions applied to this Message.
+	Extensions() []Extension
+
 	// IsMapEntry identifies this message as a MapEntry. If true, this message is
 	// not generated as code, and is used exclusively when marshaling a map field
 	// to the wire format.
@@ -48,15 +51,19 @@ type Message interface {
 
 	setParent(p ParentEntity)
 	addField(f Field)
+	addExtension(e Extension)
 	addOneOf(o OneOf)
 }
 
 type msg struct {
 	desc   *descriptor.DescriptorProto
 	parent ParentEntity
+	fqn    string
 
 	msgs, preservedMsgs []Message
 	enums               []Enum
+	exts                []Extension
+	defExts             []Extension
 	fields              []Field
 	oneofs              []OneOf
 	maps                []Message
@@ -65,7 +72,7 @@ type msg struct {
 }
 
 func (m *msg) Name() Name                              { return Name(m.desc.GetName()) }
-func (m *msg) FullyQualifiedName() string              { return fullyQualifiedName(m.parent, m) }
+func (m *msg) FullyQualifiedName() string              { return m.fqn }
 func (m *msg) Syntax() Syntax                          { return m.parent.Syntax() }
 func (m *msg) Package() Package                        { return m.parent.Package() }
 func (m *msg) File() File                              { return m.parent.File() }
@@ -125,14 +132,29 @@ func (m *msg) OneOfFields() (f []Field) {
 }
 
 func (m *msg) Imports() (i []File) {
+	// Mapping for avoiding duplicate entries
+	mp := make(map[string]File, len(m.fields))
 	for _, f := range m.fields {
-		i = append(i, f.Imports()...)
+		for _, imp := range f.Imports() {
+			mp[imp.File().Name().String()] = imp
+		}
+	}
+	for _, f := range mp {
+		i = append(i, f)
 	}
 	return
 }
 
 func (m *msg) Extension(desc *proto.ExtensionDesc, ext interface{}) (bool, error) {
 	return extension(m.desc.GetOptions(), desc, &ext)
+}
+
+func (m *msg) Extensions() []Extension {
+	return m.exts
+}
+
+func (m *msg) DefinedExtensions() []Extension {
+	return m.defExts
 }
 
 func (m *msg) accept(v Visitor) (err error) {
@@ -168,7 +190,21 @@ func (m *msg) accept(v Visitor) (err error) {
 		}
 	}
 
+	for _, ext := range m.defExts {
+		if err = ext.accept(v); err != nil {
+			return
+		}
+	}
+
 	return
+}
+
+func (m *msg) addExtension(ext Extension) {
+	m.exts = append(m.exts, ext)
+}
+
+func (m *msg) addDefExtension(ext Extension) {
+	m.defExts = append(m.defExts, ext)
 }
 
 func (m *msg) setParent(p ParentEntity) { m.parent = p }

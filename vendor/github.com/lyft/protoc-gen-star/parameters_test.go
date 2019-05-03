@@ -224,3 +224,15 @@ func TestParameters_Duration(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 789*time.Second, out)
 }
+
+func TestParameters_Clone(t *testing.T) {
+	t.Parallel()
+
+	orig := Parameters{"foo": "bar", "fizz": "buzz"}
+
+	clone := orig.Clone()
+	assert.Equal(t, orig, clone)
+
+	clone.SetStr("foo", "baz")
+	assert.NotEqual(t, orig, clone)
+}

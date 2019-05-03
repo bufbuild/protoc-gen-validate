@@ -20,11 +20,8 @@ func TestService_Name(t *testing.T) {
 func TestService_FullyQualifiedName(t *testing.T) {
 	t.Parallel()
 
-	f := dummyFile()
-	s := &service{desc: &descriptor.ServiceDescriptorProto{Name: proto.String("foo")}}
-	f.addService(s)
-
-	assert.Equal(t, f.FullyQualifiedName()+".foo", s.FullyQualifiedName())
+	s := &service{fqn: "foo"}
+	assert.Equal(t, s.fqn, s.FullyQualifiedName())
 }
 
 func TestService_Syntax(t *testing.T) {
@@ -92,6 +89,12 @@ func TestService_Imports(t *testing.T) {
 	assert.Empty(t, s.Imports())
 	s.addMethod(&mockMethod{i: []File{&file{}}})
 	assert.Len(t, s.Imports(), 1)
+
+	nf := &file{desc: &descriptor.FileDescriptorProto{
+		Name: proto.String("foobar"),
+	}}
+	s.addMethod(&mockMethod{i: []File{nf, nf}})
+	assert.Len(t, s.Imports(), 2)
 }
 
 func TestService_Methods(t *testing.T) {

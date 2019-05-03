@@ -23,12 +23,13 @@ type service struct {
 	desc    *descriptor.ServiceDescriptorProto
 	methods []Method
 	file    File
+	fqn     string
 
 	info SourceCodeInfo
 }
 
 func (s *service) Name() Name                                     { return Name(s.desc.GetName()) }
-func (s *service) FullyQualifiedName() string                     { return fullyQualifiedName(s.file, s) }
+func (s *service) FullyQualifiedName() string                     { return s.fqn }
 func (s *service) Syntax() Syntax                                 { return s.file.Syntax() }
 func (s *service) Package() Package                               { return s.file.Package() }
 func (s *service) File() File                                     { return s.file }
@@ -41,8 +42,15 @@ func (s *service) Extension(desc *proto.ExtensionDesc, ext interface{}) (bool, e
 }
 
 func (s *service) Imports() (i []File) {
+	// Mapping for avoiding duplicate entries
+	mp := make(map[string]File, len(s.methods))
 	for _, m := range s.methods {
-		i = append(i, m.Imports()...)
+		for _, imp := range m.Imports() {
+			mp[imp.File().Name().String()] = imp
+		}
+	}
+	for _, f := range mp {
+		i = append(i, f)
 	}
 	return
 }

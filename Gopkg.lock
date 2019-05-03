@@ -41,14 +41,15 @@
   revision = "3605ed457bf7f8caa1371b4fafadadc026673479"
 
 [[projects]]
-  digest = "1:713a7f3eed52cdfec4ff27cd5dce8de1bbaf7b1a9e5074d4e4547d1001fec0ff"
+  digest = "1:5c01d0bd862ce78445d0af823828c42b86830323dbfe6d338a8c55ebc09e7e7e"
   name = "github.com/lyft/protoc-gen-star"
   packages = [
     ".",
     "lang/go",
   ]
-  revision = "95ca57a4ef989c084ed1a5a58810d2b34a28cf72"
-  version = "v0.4.4"
+  pruneopts = ""
+  revision = "bb8c3f89f33752b4c49c272d2ab2a0fef6f4b0cd"
+  version = "v0.4.10"
 
 [[projects]]
   digest = "1:d0431c2fd72e39ee43ea7742322abbc200c3e704c9102c5c3c2e2e667095b0ca"
@@ -102,6 +103,5 @@
     "github.com/lyft/protoc-gen-star/lang/go",
     "golang.org/x/net/context",
   ]
-  inputs-digest = "64d19afa87ef4ac27f2c796d73d1566bcad2862fe2b71a91d0b194e2770126e5"
   solver-name = "gps-cdcl"
   solver-version = 1

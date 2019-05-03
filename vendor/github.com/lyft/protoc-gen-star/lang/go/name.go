@@ -6,7 +6,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/golang/protobuf/protoc-gen-go/generator"
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 )
 
 func (c context) Name(node pgs.Node) pgs.Name {
