@@ -1,0 +1,31 @@
+syntax = "proto3";
+package extensions.ext;
+option go_package = "ext";
+
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.MessageOptions {
+    bool annotated = 123123;
+}
+
+extend google.protobuf.FieldOptions {
+    string name = 456789;
+}
+
+message EnumExtension {}
+
+extend google.protobuf.EnumOptions {
+    EnumExtension ext = 101112;
+}
+
+extend google.protobuf.EnumValueOptions {
+    repeated int32 numbers = 131415;
+}
+
+extend google.protobuf.OneofOptions {
+    double float = 161718;
+}
+
+extend google.protobuf.FileOptions {
+    string owner = 192021;
+}

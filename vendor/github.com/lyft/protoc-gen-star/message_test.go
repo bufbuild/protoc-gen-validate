@@ -22,11 +22,8 @@ func TestMsg_Name(t *testing.T) {
 func TestMsg_FullyQualifiedName(t *testing.T) {
 	t.Parallel()
 
-	m := &msg{desc: &descriptor.DescriptorProto{Name: proto.String("msg")}}
-	f := dummyFile()
-	f.addMessage(m)
-
-	assert.Equal(t, f.FullyQualifiedName()+".msg", m.FullyQualifiedName())
+	m := &msg{fqn: "msg"}
+	assert.Equal(t, m.fqn, m.FullyQualifiedName())
 }
 
 func TestMsg_Syntax(t *testing.T) {
@@ -220,6 +217,28 @@ func TestMsg_Extension(t *testing.T) {
 	assert.NotPanics(t, func() { m.Extension(nil, nil) })
 }
 
+func TestMsg_Extensions(t *testing.T) {
+	t.Parallel()
+
+	m := &msg{}
+	assert.Empty(t, m.Extensions())
+
+	ext := &ext{}
+	m.addExtension(ext)
+	assert.Len(t, m.Extensions(), 1)
+}
+
+func TestMsg_DefinedExtensions(t *testing.T) {
+	t.Parallel()
+
+	m := &msg{}
+	assert.Empty(t, m.DefinedExtensions())
+
+	ext := &ext{}
+	m.addDefExtension(ext)
+	assert.Len(t, m.DefinedExtensions(), 1)
+}
+
 func TestMsg_Accept(t *testing.T) {
 	t.Parallel()
 
@@ -228,6 +247,7 @@ func TestMsg_Accept(t *testing.T) {
 	m.addEnum(&enum{})
 	m.addField(&field{})
 	m.addOneOf(&oneof{})
+	m.addDefExtension(&ext{})
 
 	assert.NoError(t, m.accept(nil))
 
@@ -237,6 +257,7 @@ func TestMsg_Accept(t *testing.T) {
 	assert.Zero(t, v.enum)
 	assert.Zero(t, v.field)
 	assert.Zero(t, v.oneof)
+	assert.Zero(t, v.extension)
 
 	v.Reset()
 	v.v = v
@@ -246,6 +267,7 @@ func TestMsg_Accept(t *testing.T) {
 	assert.Zero(t, v.enum)
 	assert.Zero(t, v.field)
 	assert.Zero(t, v.oneof)
+	assert.Zero(t, v.extension)
 
 	v.Reset()
 	assert.NoError(t, m.accept(v))
@@ -253,6 +275,16 @@ func TestMsg_Accept(t *testing.T) {
 	assert.Equal(t, 1, v.enum)
 	assert.Equal(t, 1, v.field)
 	assert.Equal(t, 1, v.oneof)
+	assert.Equal(t, 1, v.extension)
+
+	v.Reset()
+	m.addDefExtension(&mockExtension{err: errors.New("")})
+	assert.Error(t, m.accept(v))
+	assert.Equal(t, 2, v.message)
+	assert.Equal(t, 1, v.enum)
+	assert.Equal(t, 1, v.field)
+	assert.Equal(t, 1, v.oneof)
+	assert.Equal(t, 2, v.extension)
 
 	v.Reset()
 	m.addOneOf(&mockOneOf{err: errors.New("")})
@@ -261,6 +293,7 @@ func TestMsg_Accept(t *testing.T) {
 	assert.Equal(t, 1, v.enum)
 	assert.Equal(t, 1, v.field)
 	assert.Equal(t, 2, v.oneof)
+	assert.Zero(t, v.extension)
 
 	v.Reset()
 	m.addField(&mockField{err: errors.New("")})
@@ -269,6 +302,7 @@ func TestMsg_Accept(t *testing.T) {
 	assert.Equal(t, 1, v.enum)
 	assert.Equal(t, 2, v.field)
 	assert.Zero(t, v.oneof)
+	assert.Zero(t, v.extension)
 
 	v.Reset()
 	m.addMessage(&mockMessage{err: errors.New("")})
@@ -277,6 +311,7 @@ func TestMsg_Accept(t *testing.T) {
 	assert.Equal(t, 1, v.enum)
 	assert.Zero(t, v.field)
 	assert.Zero(t, v.oneof)
+	assert.Zero(t, v.extension)
 
 	v.Reset()
 	m.addEnum(&mockEnum{err: errors.New("")})
@@ -285,6 +320,7 @@ func TestMsg_Accept(t *testing.T) {
 	assert.Equal(t, 1, v.message)
 	assert.Zero(t, v.field)
 	assert.Zero(t, v.oneof)
+	assert.Zero(t, v.extension)
 }
 
 func TestMsg_Imports(t *testing.T) {
@@ -294,6 +330,12 @@ func TestMsg_Imports(t *testing.T) {
 	assert.Empty(t, m.Imports())
 
 	m.addField(&mockField{i: []File{&file{}, &file{}}})
+	assert.Len(t, m.Imports(), 1)
+
+	nf := &file{desc: &descriptor.FileDescriptorProto{
+		Name: proto.String("foobar"),
+	}}
+	m.addField(&mockField{i: []File{nf, nf}})
 	assert.Len(t, m.Imports(), 2)
 }
 

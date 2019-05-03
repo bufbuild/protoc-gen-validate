@@ -16,15 +16,15 @@ lint: # lints the package for common code smells
 	go vet -all -shadow -shadowstrict $(PKGS)
 
 .PHONY: quick
-quick: vendor # runs all tests without the race detector or coverage
+quick: vendor testdata # runs all tests without the race detector or coverage
 	go test $(PKGS)
 
 .PHONY: tests
-tests: vendor # runs all tests against the package with race detection and coverage percentage
+tests: vendor testdata # runs all tests against the package with race detection and coverage percentage
 	go test -race -cover $(PKGS)
 
 .PHONY: cover
-cover: vendor # runs all tests against the package, generating a coverage report and opening it in the browser
+cover: vendor testdata # runs all tests against the package, generating a coverage report and opening it in the browser
 	go test -race -covermode=atomic -coverprofile=cover.out $(PKGS) || true
 	go tool cover -html cover.out -o cover.html
 	open cover.html
@@ -35,7 +35,7 @@ docs: # starts a doc server and opens a browser window to this package
 	godoc -http=localhost:6060
 
 .PHONY: testdata
-testdata: testdata-graph testdata-go testdata/generated # generate all testdata
+testdata: testdata-graph testdata-go testdata/generated testdata/fdset.bin # generate all testdata
 
 .PHONY: testdata-graph
 testdata-graph: bin/protoc-gen-debug # parses the proto file sets in testdata/graph and renders binary CodeGeneratorRequest
@@ -64,6 +64,12 @@ testdata/generated: protoc-gen-go bin/protoc-gen-example
 			--example_out="paths=source_relative:./testdata/generated" \
 			`find $$subdir -name "*.proto"`; \
 	done
+
+testdata/fdset.bin:
+	@protoc -I ./testdata/protos \
+		-o ./testdata/fdset.bin \
+		--include_imports \
+		testdata/protos/**/*.proto
 
 .PHONY: testdata-go
 testdata-go: protoc-gen-go bin/protoc-gen-debug # generate go-specific testdata

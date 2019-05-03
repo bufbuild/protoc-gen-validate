@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/plugin"
+	plugin_go "github.com/golang/protobuf/protoc-gen-go/plugin"
 )
 
 type workflow interface {
@@ -38,7 +38,7 @@ func (wf *standardWorkflow) Init(g *Generator) AST {
 		pm(wf.params)
 	}
 
-	return ProcessDescriptors(g, req)
+	return ProcessCodeGeneratorRequest(g, req)
 }
 
 func (wf *standardWorkflow) Run(ast AST) (arts []Artifact) {

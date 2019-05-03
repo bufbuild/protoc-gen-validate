@@ -29,10 +29,11 @@ type enum struct {
 	parent ParentEntity
 	vals   []EnumValue
 	info   SourceCodeInfo
+	fqn    string
 }
 
 func (e *enum) Name() Name                                  { return Name(e.desc.GetName()) }
-func (e *enum) FullyQualifiedName() string                  { return fullyQualifiedName(e.parent, e) }
+func (e *enum) FullyQualifiedName() string                  { return e.fqn }
 func (e *enum) Syntax() Syntax                              { return e.parent.Syntax() }
 func (e *enum) Package() Package                            { return e.parent.Package() }
 func (e *enum) File() File                                  { return e.parent.File() }
