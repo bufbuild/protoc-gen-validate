@@ -2,7 +2,7 @@ package pgs
 
 import (
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
-	"github.com/golang/protobuf/protoc-gen-go/plugin"
+	plugin_go "github.com/golang/protobuf/protoc-gen-go/plugin"
 )
 
 // AST encapsulates the entirety of the input CodeGeneratorRequest from protoc,
@@ -26,9 +26,10 @@ type AST interface {
 type graph struct {
 	d Debugger
 
-	targets  map[string]File
-	packages map[string]Package
-	entities map[string]Entity
+	targets    map[string]File
+	packages   map[string]Package
+	entities   map[string]Entity
+	extensions []Extension
 }
 
 func (g *graph) Targets() map[string]File { return g.targets }
@@ -40,14 +41,20 @@ func (g *graph) Lookup(name string) (Entity, bool) {
 	return e, ok
 }
 
-// ProcessDescriptors converts a CodeGeneratorRequest from protoc into a fully
-// connected AST entity graph. An error is returned if the input is malformed.
+// ProcessDescriptors is deprecated; use ProcessCodeGeneratorRequest instead
 func ProcessDescriptors(debug Debugger, req *plugin_go.CodeGeneratorRequest) AST {
+	return ProcessCodeGeneratorRequest(debug, req)
+}
+
+// ProcessCodeGeneratorRequest converts a CodeGeneratorRequest from protoc into a fully
+// connected AST entity graph. An error is returned if the input is malformed.
+func ProcessCodeGeneratorRequest(debug Debugger, req *plugin_go.CodeGeneratorRequest) AST {
 	g := &graph{
-		d:        debug,
-		targets:  make(map[string]File, len(req.GetFileToGenerate())),
-		packages: make(map[string]Package),
-		entities: make(map[string]Entity),
+		d:          debug,
+		targets:    make(map[string]File, len(req.GetFileToGenerate())),
+		packages:   make(map[string]Package),
+		entities:   make(map[string]Entity),
+		extensions: []Extension{},
 	}
 
 	for _, f := range req.GetFileToGenerate() {
@@ -59,7 +66,31 @@ func ProcessDescriptors(debug Debugger, req *plugin_go.CodeGeneratorRequest) AST
 		pkg.addFile(g.hydrateFile(pkg, f))
 	}
 
+	for _, e := range g.extensions {
+		e.addType(g.hydrateFieldType(e))
+		extendee := g.mustSeen(e.Descriptor().GetExtendee()).(Message)
+		e.setExtendee(extendee)
+		if extendee != nil {
+			extendee.addExtension(e)
+		}
+	}
+
 	return g
+}
+
+// ProcessFileDescriptorSet conversts a FileDescriptorSet from protoc into a
+// fully connected AST entity graph. An error is returned if the input is
+// malformed or missing dependencies. To generate a self-contained
+// FileDescriptorSet, run the following command:
+//
+//   protoc -o path/to/fdset.bin --include_imports $PROTO_FILES
+//
+// The emitted AST will have no values in the Targets map, but Packages will be
+// populated. If used for testing purposes, the Targets map can be manually
+// populated.
+func ProcessFileDescriptorSet(debug Debugger, fdset *descriptor.FileDescriptorSet) AST {
+	req := plugin_go.CodeGeneratorRequest{ProtoFile: fdset.File}
+	return ProcessCodeGeneratorRequest(debug, &req)
 }
 
 func (g *graph) hydratePackage(f *descriptor.FileDescriptorProto) Package {
@@ -79,6 +110,11 @@ func (g *graph) hydrateFile(pkg Package, f *descriptor.FileDescriptorProto) File
 		pkg:  pkg,
 		desc: f,
 	}
+	if pkg := f.GetPackage(); pkg != "" {
+		fl.fqn = "." + pkg
+	} else {
+		fl.fqn = ""
+	}
 	g.add(fl)
 
 	if _, fl.buildTarget = g.targets[f.GetName()]; fl.buildTarget {
@@ -89,6 +125,13 @@ func (g *graph) hydrateFile(pkg Package, f *descriptor.FileDescriptorProto) File
 	fl.enums = make([]Enum, 0, len(enums))
 	for _, e := range enums {
 		fl.addEnum(g.hydrateEnum(fl, e))
+	}
+
+	exts := f.GetExtension()
+	fl.defExts = make([]Extension, 0, len(exts))
+	for _, ext := range exts {
+		e := g.hydrateExtension(fl, ext)
+		fl.addDefExtension(e)
 	}
 
 	msgs := f.GetMessageType()
@@ -147,6 +190,7 @@ func (g *graph) hydrateEnum(p ParentEntity, ed *descriptor.EnumDescriptorProto) 
 		desc:   ed,
 		parent: p,
 	}
+	e.fqn = fullyQualifiedName(p, e)
 	g.add(e)
 
 	vals := ed.GetValue()
@@ -163,6 +207,7 @@ func (g *graph) hydrateEnumValue(e Enum, vd *descriptor.EnumValueDescriptorProto
 		desc: vd,
 		enum: e,
 	}
+	ev.fqn = fullyQualifiedName(e, ev)
 	g.add(ev)
 
 	return ev
@@ -173,6 +218,7 @@ func (g *graph) hydrateService(f File, sd *descriptor.ServiceDescriptorProto) Se
 		desc: sd,
 		file: f,
 	}
+	s.fqn = fullyQualifiedName(f, s)
 	g.add(s)
 
 	for _, md := range sd.GetMethod() {
@@ -187,6 +233,7 @@ func (g *graph) hydrateMethod(s Service, md *descriptor.MethodDescriptorProto) M
 		desc:    md,
 		service: s,
 	}
+	m.fqn = fullyQualifiedName(s, m)
 	g.add(m)
 
 	m.in = g.mustSeen(md.GetInputType()).(Message)
@@ -200,6 +247,7 @@ func (g *graph) hydrateMessage(p ParentEntity, md *descriptor.DescriptorProto) M
 		desc:   md,
 		parent: p,
 	}
+	m.fqn = fullyQualifiedName(p, m)
 	g.add(m)
 
 	for _, ed := range md.GetEnumType() {
@@ -230,6 +278,13 @@ func (g *graph) hydrateMessage(p ParentEntity, md *descriptor.DescriptorProto) M
 		}
 	}
 
+	exts := md.GetExtension()
+	m.defExts = make([]Extension, 0, len(exts))
+	for _, ext := range md.GetExtension() {
+		e := g.hydrateExtension(m, ext)
+		m.addDefExtension(e)
+	}
+
 	return m
 }
 
@@ -238,6 +293,7 @@ func (g *graph) hydrateField(m Message, fd *descriptor.FieldDescriptorProto) Fie
 		desc: fd,
 		msg:  m,
 	}
+	f.fqn = fullyQualifiedName(f.msg, f)
 	g.add(f)
 
 	return f
@@ -248,9 +304,22 @@ func (g *graph) hydrateOneOf(m Message, od *descriptor.OneofDescriptorProto) One
 		desc: od,
 		msg:  m,
 	}
+	o.fqn = fullyQualifiedName(m, o)
 	g.add(o)
 
 	return o
+}
+
+func (g *graph) hydrateExtension(parent ParentEntity, fd *descriptor.FieldDescriptorProto) Extension {
+	ext := &ext{
+		parent: parent,
+	}
+	ext.desc = fd
+	ext.fqn = fullyQualifiedName(parent, ext)
+	g.add(ext)
+	g.extensions = append(g.extensions, ext)
+
+	return ext
 }
 
 func (g *graph) hydrateFieldType(fld Field) FieldType {

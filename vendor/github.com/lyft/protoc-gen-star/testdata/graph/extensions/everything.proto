@@ -1,0 +1,72 @@
+
+syntax = "proto3";
+package extensions;
+option go_package = "extensions";
+option (extensions.ext.owner) = "IDL Tools";
+
+import "google/protobuf/descriptor.proto";
+import "google/protobuf/wrappers.proto";
+import "extensions/ext/api.proto";
+import "extensions/ext/data.proto";
+
+message RootMessage {
+    option (extensions.ext.annotated) = true;
+
+    message NestedMessage {}
+
+    enum NestedEnum {
+        option (extensions.ext.ext) = {};
+
+        ZERO = 0 [(extensions.ext.numbers) = 1];
+        ONE = 1;
+        TWO = 2;
+    }
+
+    NestedMessage nested_msg = 1 [(extensions.ext.name) = "reflection"];
+    NestedEnum nested_enum = 2;
+
+    oneof union {
+        option (extensions.ext.float) = 5.67;
+
+        bool boolean = 5;
+        string str = 6;
+        bytes data = 7;
+    }
+
+    repeated NestedMessage rep_msg = 8;
+    repeated RootEnum rep_enum = 9;
+    repeated double rep_scalar = 10;
+
+    map<string, string> scalar_map = 11;
+    map<string, RootMessage> recursive_map = 12;
+    map<string, NestedEnum> enum_map = 13;
+
+    google.protobuf.StringValue wkt = 14;
+}
+
+enum RootEnum {
+    ZERO = 0;
+    ONE = 1;
+    TWO = 2;
+}
+
+message Request {
+    extend google.protobuf.FieldOptions {
+        string footer = 222333;
+    }
+}
+
+message Response {
+}
+
+service API {
+    option (extensions.ext.host) = "Alex Trebek";
+
+    rpc Do (Request) returns (Response) {
+        option (extensions.ext.header) = "X-Foo=BAR";
+    }
+
+    rpc Client (stream Request) returns (Response);
+    rpc Server (Request) returns (stream Response);
+    rpc BiDi (stream Request) returns (stream Response);
+}

@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/plugin"
+	plugin_go "github.com/golang/protobuf/protoc-gen-go/plugin"
 )
 
 func main() {
@@ -31,8 +31,13 @@ func main() {
 		log.Fatal(`please execute the plugin with the output path to properly write the output file: --debug_out="{PATH}:{PATH}"`)
 	}
 
+	err = os.MkdirAll(path, 0755)
+	if err != nil {
+		log.Fatal("unable to create output dir: ", err)
+	}
+
 	err = ioutil.WriteFile(filepath.Join(path, "code_generator_request.pb.bin"), data, 0644)
-	if path == "" {
+	if err != nil {
 		log.Fatal("unable to write request to disk: ", err)
 	}
 

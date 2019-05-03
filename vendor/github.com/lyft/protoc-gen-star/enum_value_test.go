@@ -18,11 +18,8 @@ func TestEnumVal_Name(t *testing.T) {
 func TestEnumVal_FullyQualifiedName(t *testing.T) {
 	t.Parallel()
 
-	ev := &enumVal{desc: &descriptor.EnumValueDescriptorProto{Name: proto.String("ev")}}
-	e := dummyEnum()
-	e.addValue(ev)
-
-	assert.Equal(t, e.FullyQualifiedName()+".ev", ev.FullyQualifiedName())
+	ev := &enumVal{fqn: "ev"}
+	assert.Equal(t, ev.fqn, ev.FullyQualifiedName())
 }
 
 func TestEnumVal_Syntax(t *testing.T) {

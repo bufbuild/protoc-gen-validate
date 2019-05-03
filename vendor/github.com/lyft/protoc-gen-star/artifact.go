@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/plugin"
+	plugin_go "github.com/golang/protobuf/protoc-gen-go/plugin"
 )
 
 // An Artifact describes the output for a Module. Typically this is the creation

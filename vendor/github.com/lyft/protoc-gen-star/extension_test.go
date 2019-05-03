@@ -9,6 +9,95 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestExt_FullyQualifiedName(t *testing.T) {
+	t.Parallel()
+
+	e := &ext{fqn: "foo"}
+	assert.Equal(t, e.fqn, e.FullyQualifiedName())
+}
+
+func TestExt_Syntax(t *testing.T) {
+	t.Parallel()
+
+	msg := dummyMsg()
+	e := &ext{parent: msg}
+	assert.Equal(t, msg.Syntax(), e.Syntax())
+}
+
+func TestExt_Package(t *testing.T) {
+	t.Parallel()
+
+	msg := dummyMsg()
+	e := &ext{parent: msg}
+	assert.Equal(t, msg.Package(), e.Package())
+}
+
+func TestExt_File(t *testing.T) {
+	t.Parallel()
+
+	msg := dummyMsg()
+	e := &ext{parent: msg}
+	assert.Equal(t, msg.File(), e.File())
+}
+
+func TestExt_BuildTarget(t *testing.T) {
+	t.Parallel()
+
+	msg := dummyMsg()
+	e := &ext{parent: msg}
+	assert.Equal(t, msg.BuildTarget(), e.BuildTarget())
+}
+
+func TestExt_ParentEntity(t *testing.T) {
+	t.Parallel()
+
+	msg := dummyMsg()
+	e := &ext{parent: msg}
+	assert.Equal(t, msg, e.DefinedIn())
+}
+
+func TestExt_Extendee(t *testing.T) {
+	t.Parallel()
+
+	msg := dummyMsg()
+	e := &ext{}
+	e.setExtendee(msg)
+	assert.Equal(t, msg, e.Extendee())
+}
+
+func TestExt_Message(t *testing.T) {
+	t.Parallel()
+
+	e := &ext{}
+	assert.Nil(t, e.Message())
+}
+
+func TestExt_InOneOf(t *testing.T) {
+	t.Parallel()
+
+	e := &ext{}
+	assert.False(t, e.InOneOf())
+}
+
+func TestExt_OneOf(t *testing.T) {
+	t.Parallel()
+
+	e := &ext{}
+	assert.Nil(t, e.OneOf())
+}
+
+func TestExt_Accept(t *testing.T) {
+	t.Parallel()
+
+	e := &ext{}
+
+	assert.NoError(t, e.accept(nil))
+
+	v := &mockVisitor{err: errors.New("")}
+	assert.Error(t, e.accept(v))
+	assert.Equal(t, 1, v.extension)
+}
+
 type mockExtractor struct {
 	has bool
 	get interface{}
@@ -97,4 +186,22 @@ func TestProtoExtExtractor(t *testing.T) {
 	e := protoExtExtractor{}
 	assert.NotPanics(t, func() { e.HasExtension(nil, nil) })
 	assert.NotPanics(t, func() { e.GetExtension(nil, nil) })
+}
+
+// needed to wrapped since there is a Extension method
+type mExt interface {
+	Extension
+}
+
+type mockExtension struct {
+	mExt
+	err error
+}
+
+func (e *mockExtension) accept(v Visitor) error {
+	_, err := v.VisitExtension(e)
+	if e.err != nil {
+		return e.err
+	}
+	return err
 }

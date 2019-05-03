@@ -5,8 +5,10 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
+
 	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/plugin"
+	plugin_go "github.com/golang/protobuf/protoc-gen-go/plugin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -24,11 +26,33 @@ func readCodeGenReq(t *testing.T, dir string) *plugin_go.CodeGeneratorRequest {
 	return req
 }
 
+func readFileDescSet(t *testing.T, filename string) *descriptor.FileDescriptorSet {
+	data, err := ioutil.ReadFile(filename)
+	require.NoError(t, err, "unable to read FDS at %q", filename)
+
+	fdset := &descriptor.FileDescriptorSet{}
+	err = proto.Unmarshal(data, fdset)
+	require.NoError(t, err, "unable to unmarshal FDS data at %q", filename)
+
+	return fdset
+}
+
 func buildGraph(t *testing.T, dir string) AST {
 	d := InitMockDebugger()
-	ast := ProcessDescriptors(d, readCodeGenReq(t, dir))
+	ast := ProcessCodeGeneratorRequest(d, readCodeGenReq(t, dir))
 	require.False(t, d.Failed(), "failed to build graph (see previous log statements)")
 	return ast
+}
+
+func TestGraph_FDSet(t *testing.T) {
+	fdset := readFileDescSet(t, "testdata/fdset.bin")
+	d := InitMockDebugger()
+	ast := ProcessFileDescriptorSet(d, fdset)
+
+	require.False(t, d.Failed(), "failed to build graph from FDSet")
+	msg, found := ast.Lookup(".kitchen.Sink")
+	assert.True(t, found)
+	assert.Implements(t, (*Message)(nil), msg)
 }
 
 func TestGraph_Messages(t *testing.T) {
@@ -257,4 +281,53 @@ func TestGraph_HydrateFieldType_Group(t *testing.T) {
 
 	assert.Nil(t, g.hydrateFieldType(f))
 	assert.True(t, md.Failed())
+}
+
+func TestGraph_Packageless(t *testing.T) {
+	t.Parallel()
+
+	g := buildGraph(t, "packageless")
+
+	tests := []struct {
+		name        string
+		entityIFace interface{}
+	}{
+		{".RootMessage", (*Message)(nil)},
+		{".RootEnum", (*Enum)(nil)},
+		{".RootMessage.field", (*Field)(nil)},
+		{".RootEnum.VALUE", (*EnumValue)(nil)},
+		{".RootMessage.NestedMsg", (*Message)(nil)},
+		{".RootMessage.NestedEnum", (*Enum)(nil)},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			ent, ok := g.Lookup(tc.name)
+			assert.True(t, ok)
+			assert.NotNil(t, ent)
+			assert.Implements(t, tc.entityIFace, ent)
+		})
+	}
+}
+
+func TestGraph_Extensions(t *testing.T) {
+	t.Parallel()
+
+	g := buildGraph(t, "extensions")
+	assert.NotNil(t, g)
+
+	ent, ok := g.Lookup("extensions/ext/data.proto")
+	assert.True(t, ok)
+	assert.NotNil(t, ent.(File).DefinedExtensions())
+	assert.Len(t, ent.(File).DefinedExtensions(), 6)
+
+	ent, ok = g.Lookup(".extensions.Request")
+	assert.True(t, ok)
+	assert.NotNil(t, ent.(Message).DefinedExtensions())
+	assert.Len(t, ent.(Message).DefinedExtensions(), 1)
+
+	ent, ok = g.Lookup(".google.protobuf.MessageOptions")
+	assert.True(t, ok)
+	assert.NotNil(t, ent.(Message).Extensions())
+	assert.Len(t, ent.(Message).Extensions(), 1)
 }
