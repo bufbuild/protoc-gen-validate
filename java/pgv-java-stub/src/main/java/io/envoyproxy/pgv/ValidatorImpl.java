@@ -2,7 +2,7 @@ package io.envoyproxy.pgv;
 
 /**
  * {@code Validator} is the base interface for all generated PGV validators.
- * @param <T>
+ * @param <T> The type to validate
  */
 @FunctionalInterface
 public interface ValidatorImpl<T> {
