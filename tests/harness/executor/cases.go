@@ -1078,6 +1078,16 @@ var mapCases = []TestCase{
 	{"map - values - valid (pattern)", &cases.MapValuesPattern{Val: map[string]string{"a": "A"}}, true},
 	{"map - values - invalid", &cases.MapValues{Val: map[string]string{"a": "A", "b": "B"}}, false},
 	{"map - values - invalid (pattern)", &cases.MapValuesPattern{Val: map[string]string{"a": "A", "b": "!@#$%^&*()"}}, false},
+
+	{"map - combination - valid", &cases.MapCombination{Val: map[string]string{"a": "A", "b": "B"}}, true},
+	{"map - combination - invalid pairs (below)", &cases.MapCombination{Val: map[string]string{}}, false},
+	{"map - combination - invalid pairs (above)", &cases.MapCombination{Val: map[string]string{"a": "A", "b": "B", "c": "C", "d": "D"}}, false},
+	{"map - combination - invalid keys (below)", &cases.MapCombination{Val: map[string]string{"": "A", "b": "B"}}, false},
+	{"map - combination - invalid keys (above)", &cases.MapCombination{Val: map[string]string{"aaaaa": "A", "b": "B"}}, false},
+	{"map - combination - invalid keys (pattern)", &cases.MapCombination{Val: map[string]string{"A": "A", "b": "B"}}, false},
+	{"map - combination - invalid values (below)", &cases.MapCombination{Val: map[string]string{"a": "A", "b": ""}}, false},
+	{"map - combination - invalid values (above)", &cases.MapCombination{Val: map[string]string{"a": "A", "b": "BBBBB"}}, false},
+	{"map - combination - invalid values (pattern)", &cases.MapCombination{Val: map[string]string{"a": "A", "b": "b"}}, false},
 }
 
 var oneofCases = []TestCase{

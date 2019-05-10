@@ -117,8 +117,18 @@ const strTpl = `
 	{{ end }}
 
 	{{ if $r.Pattern }}
-	if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
-		return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
-	}
-{{ end }}
+		{{ if eq .AccessorOverride "key" }}
+		if !{{ lookup $f "Key_Pattern" }}.MatchString({{ accessor . }}) {
+			return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+		}
+		{{ else if eq .AccessorOverride "val" }}
+		if !{{ lookup $f "Val_Pattern" }}.MatchString({{ accessor . }}) {
+			return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+		}
+		{{ else }}
+		if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
+			return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+		}
+		{{ end }}
+	{{ end }}
 `
