@@ -3,6 +3,7 @@ package java
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"strings"
 	"text/template"
 	"unicode"
@@ -35,6 +36,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"byteArrayLit":             fns.byteArrayLit,
 		"camelCase":                fns.camelCase,
 		"classNameFile":            classNameFile,
+		"classNameMessage":         classNameMessage,
 		"durLit":                   fns.durLit,
 		"fieldName":                fns.fieldName,
 		"javaPackage":              javaPackage,
@@ -47,6 +49,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"simpleName":               fns.Name,
 		"tsLit":                    fns.tsLit,
 		"qualifiedName":            fns.qualifiedName,
+		"isOfFileType":             fns.isOfFileType,
 		"isOfMessageType":          fns.isOfMessageType,
 		"isOfStringType":           fns.isOfStringType,
 		"unwrap":                   fns.unwrap,
@@ -56,6 +59,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 
 	template.Must(tpl.Parse(fileTpl))
 	template.Must(tpl.New("msg").Parse(msgTpl))
+	template.Must(tpl.New("msgInner").Parse(msgInnerTpl))
 
 	template.Must(tpl.New("none").Parse(noneTpl))
 
@@ -119,10 +123,17 @@ func JavaFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.Fi
 		return nil
 	}
 
-	fullPath := strings.Replace(javaPackage(f), ".", "/", -1)
+	fullPath := strings.Replace(javaPackage(f), ".", string(os.PathSeparator), -1)
 	fileName := classNameFile(f) + "Validator.java"
 	filePath := pgs.JoinPaths(fullPath, fileName)
 	return &filePath
+}
+
+func JavaMultiFilePath(f pgs.File, m pgs.Message) pgs.FilePath {
+	fullPath := strings.Replace(javaPackage(f), ".", string(os.PathSeparator), -1)
+	fileName := classNameMessage(m) + "Validator.java"
+	filePath := pgs.JoinPaths(fullPath, fileName)
+	return filePath
 }
 
 func importsPvg(f pgs.File) bool {
@@ -134,20 +145,29 @@ func importsPvg(f pgs.File) bool {
 	return false
 }
 
-func classNameFile(file pgs.File) string {
+func classNameFile(f pgs.File) string {
 	// Explicit outer class name overrides implicit name
-	options := file.Descriptor().GetOptions()
+	options := f.Descriptor().GetOptions()
 	if options != nil && !options.GetJavaMultipleFiles() && options.JavaOuterClassname != nil {
 		return options.GetJavaOuterClassname()
 	}
 
-	protoName := pgs.FilePath(file.Name().String()).BaseName()
+	protoName := pgs.FilePath(f.Name().String()).BaseName()
 
-	className := makeInvalidClassnameCharactersUnderscores(protoName)
+	className := sanitizeClassName(protoName)
+	className = appendOuterClassName(className, f)
+
+	return className
+}
+
+func classNameMessage(m pgs.Message) string {
+	return sanitizeClassName(m.Name().String())
+}
+
+func sanitizeClassName(className string) string {
+	className = makeInvalidClassnameCharactersUnderscores(className)
 	className = strcase.ToCamel(strcase.ToSnake(className))
 	className = upperCaseAfterNumber(className)
-	className = appendOuterClassName(className, file)
-
 	return className
 }
 
@@ -418,6 +438,15 @@ func (fns javaFuncs) tsLit(ts *timestamp.Timestamp) string {
 
 func (fns javaFuncs) oneofTypeName(f pgs.Field) pgsgo.TypeName {
 	return pgsgo.TypeName(fmt.Sprintf("%s", strings.ToUpper(f.Name().String())))
+}
+
+func (fns javaFuncs) isOfFileType(o interface{}) bool {
+	switch o.(type) {
+	case pgs.File:
+		return true
+	default:
+		return false
+	}
 }
 
 func (fns javaFuncs) isOfMessageType(f pgs.Field) bool {
