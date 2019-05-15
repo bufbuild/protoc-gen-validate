@@ -134,7 +134,7 @@ Java generation is integrated with the existing protobuf toolchain for java proj
 ```xml
 <dependencies>
     <dependency>
-        <groupId>com.lyft.protoc-gen-validate</groupId>
+        <groupId> io.envoyproxy.protoc-gen-validate</groupId>
         <artifactId>pgv-java-stub</artifactId>
         <version>${pgv.version}</version>
     </dependency>
