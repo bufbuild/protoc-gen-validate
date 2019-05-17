@@ -152,3 +152,4 @@ clean:
 		tests/harness/cases/other_package/go \
 		tests/harness/cases/gogo \
 		tests/harness/cases/other_package/gogo \
+
