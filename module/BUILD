@@ -10,6 +10,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//templates:go_default_library",
+        "//templates/java:go_default_library",
         "//validate:go_default_library",
         "//vendor/github.com/lyft/protoc-gen-star:go_default_library",
         "//vendor/github.com/lyft/protoc-gen-star/lang/go:go_default_library",
