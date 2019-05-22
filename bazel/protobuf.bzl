@@ -36,7 +36,7 @@ def _protoc_cc_output_files(proto_file_sources):
 def _proto_sources(ctx):
     protos = []
     for dep in ctx.attr.deps:
-        protos += [f for f in dep.proto.direct_sources]
+        protos += [f for f in dep[ProtoInfo].direct_sources]
 
     return protos
 
@@ -76,8 +76,8 @@ def _protoc_gen_validate_impl(ctx, lang, protos, out_files, protoc_args, package
     if ctx.label.workspace_root:
         dir_out += "/" + ctx.label.workspace_root
 
-    tds = depset([], transitive = [dep.proto.transitive_descriptor_sets for dep in ctx.attr.deps])
-    descriptor_args = [ds.path for ds in tds]
+    tds = depset([], transitive = [dep[ProtoInfo].transitive_descriptor_sets for dep in ctx.attr.deps])
+    descriptor_args = [ds.path for ds in tds.to_list()]
 
     if len(descriptor_args) != 0:
         protoc_args += ["--descriptor_set_in=%s" % ctx.configuration.host_path_separator.join(descriptor_args)]
@@ -105,13 +105,13 @@ cc_proto_gen_validate = rule(
     attrs = {
         "deps": attr.label_list(
             mandatory = True,
-            providers = ["proto"],
+            providers = [ProtoInfo],
         ),
         "_protoc": attr.label(
             cfg = "host",
             default = Label("@com_google_protobuf//:protoc"),
             executable = True,
-            single_file = True,
+            allow_single_file = True,
         ),
         "_plugin": attr.label(
             cfg = "host",
@@ -147,10 +147,11 @@ def _java_proto_gen_validate_aspect_impl(target, ctx):
     args.add_all(srcs, map_each = _proto_path)
 
     ctx.actions.run(
-        inputs = depset([ctx.executable._plugin], transitive = [proto_info.transitive_imports]),
+        inputs = depset(transitive = [proto_info.transitive_imports]),
         outputs = [srcjar],
         executable = ctx.executable._protoc,
         arguments = [args],
+        tools = [ctx.executable._plugin],
         progress_message = "Generating %s" % srcjar.path,
     )
 
@@ -170,7 +171,7 @@ _java_proto_gen_validate_aspect = aspect(
             cfg = "host",
             default = Label("@com_google_protobuf//:protoc"),
             executable = True,
-            single_file = True,
+            allow_single_file = True,
         ),
         "_plugin": attr.label(
             cfg = "host",
@@ -182,7 +183,7 @@ _java_proto_gen_validate_aspect = aspect(
 )
 
 def _java_proto_gen_validate_impl(ctx):
-    source_jars = [source_jar for dep in ctx.attr.deps for source_jar in dep[_ProtoValidateSourceInfo].sources]
+    source_jars = [source_jar for dep in ctx.attr.deps for source_jar in dep[_ProtoValidateSourceInfo].sources.to_list()]
 
     deps = [java_common.make_non_strict(dep[JavaInfo]) for dep in ctx.attr.java_deps]
     deps += [dep[JavaInfo] for dep in ctx.attr._validate_deps]
