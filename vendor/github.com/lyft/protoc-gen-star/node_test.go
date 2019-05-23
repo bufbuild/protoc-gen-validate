@@ -68,6 +68,10 @@ func TestNilVisitor(t *testing.T) {
 	assert.Nil(t, v)
 	assert.NoError(t, err)
 
+	v, err = nv.VisitExtension(&ext{})
+	assert.Nil(t, v)
+	assert.NoError(t, err)
+
 	v, err = nv.VisitOneOf(&oneof{})
 	assert.Nil(t, v)
 	assert.NoError(t, err)
@@ -111,6 +115,10 @@ func TestPassThroughVisitor(t *testing.T) {
 	assert.Equal(t, nv, v)
 	assert.NoError(t, err)
 
+	v, err = pv.VisitExtension(&ext{})
+	assert.Equal(t, nv, v)
+	assert.NoError(t, err)
+
 	v, err = pv.VisitOneOf(&oneof{})
 	assert.Equal(t, nv, v)
 	assert.NoError(t, err)
@@ -120,7 +128,7 @@ type mockVisitor struct {
 	v   Visitor
 	err error
 
-	pkg, file, message, enum, enumvalue, field, oneof, service, method int
+	pkg, file, message, enum, enumvalue, extension, field, oneof, service, method int
 }
 
 func (v *mockVisitor) VisitPackage(p Package) (w Visitor, err error) {
@@ -150,6 +158,11 @@ func (v *mockVisitor) VisitEnumValue(ev EnumValue) (w Visitor, err error) {
 
 func (v *mockVisitor) VisitField(f Field) (w Visitor, err error) {
 	v.field++
+	return v.v, v.err
+}
+
+func (v *mockVisitor) VisitExtension(e Extension) (w Visitor, err error) {
+	v.extension++
 	return v.v, v.err
 }
 

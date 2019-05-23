@@ -17,6 +17,7 @@ type Visitor interface {
 	VisitEnum(Enum) (v Visitor, err error)
 	VisitEnumValue(EnumValue) (v Visitor, err error)
 	VisitField(Field) (v Visitor, err error)
+	VisitExtension(Extension) (v Visitor, err error)
 	VisitOneOf(OneOf) (v Visitor, err error)
 	VisitService(Service) (v Visitor, err error)
 	VisitMethod(Method) (v Visitor, err error)
@@ -40,6 +41,7 @@ func (nv nilVisitor) VisitMessage(m Message) (v Visitor, err error)     { return
 func (nv nilVisitor) VisitEnum(e Enum) (v Visitor, err error)           { return nil, nil }
 func (nv nilVisitor) VisitEnumValue(e EnumValue) (v Visitor, err error) { return nil, nil }
 func (nv nilVisitor) VisitField(f Field) (v Visitor, err error)         { return nil, nil }
+func (nv nilVisitor) VisitExtension(e Extension) (v Visitor, err error) { return nil, nil }
 func (nv nilVisitor) VisitOneOf(o OneOf) (v Visitor, err error)         { return nil, nil }
 func (nv nilVisitor) VisitService(s Service) (v Visitor, err error)     { return nil, nil }
 func (nv nilVisitor) VisitMethod(m Method) (v Visitor, err error)       { return nil, nil }
@@ -63,6 +65,7 @@ func (pv passVisitor) VisitMessage(Message) (v Visitor, err error)     { return 
 func (pv passVisitor) VisitEnum(Enum) (v Visitor, err error)           { return pv.v, nil }
 func (pv passVisitor) VisitEnumValue(EnumValue) (v Visitor, err error) { return pv.v, nil }
 func (pv passVisitor) VisitField(Field) (v Visitor, err error)         { return pv.v, nil }
+func (pv passVisitor) VisitExtension(Extension) (v Visitor, err error) { return pv.v, nil }
 func (pv passVisitor) VisitOneOf(OneOf) (v Visitor, err error)         { return pv.v, nil }
 func (pv passVisitor) VisitService(Service) (v Visitor, err error)     { return pv.v, nil }
 func (pv passVisitor) VisitMethod(Method) (v Visitor, err error)       { return pv.v, nil }

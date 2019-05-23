@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	pgs "github.com/lyft/protoc-gen-star"
 	"github.com/stretchr/testify/require"
-
-	"github.com/lyft/protoc-gen-star"
 
 	"github.com/stretchr/testify/assert"
 )

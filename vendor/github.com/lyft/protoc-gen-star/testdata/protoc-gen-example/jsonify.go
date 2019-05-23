@@ -3,9 +3,9 @@ package main
 import (
 	"text/template"
 
-	"github.com/lyft/protoc-gen-star/lang/go"
+	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
 
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 )
 
 // JSONifyPlugin adds encoding/json Marshaler and Unmarshaler methods on PB

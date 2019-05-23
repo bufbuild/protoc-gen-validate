@@ -4,6 +4,9 @@ import io.envoyproxy.pgv.ReflectiveValidatorIndex;
 import io.envoyproxy.pgv.ValidationException;
 import io.envoyproxy.pgv.Validator;
 import io.envoyproxy.pgv.ValidatorIndex;
+import io.envoyproxy.pgv.grpc.asubpackage.GreeterGrpc;
+import io.envoyproxy.pgv.grpc.asubpackage.HelloRequest;
+import io.envoyproxy.pgv.grpc.asubpackage.HelloResponse;
 import io.grpc.BindableService;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -19,8 +22,8 @@ public class ValidatingClientInterceptorTest {
 
     private BindableService svc = new GreeterGrpc.GreeterImplBase() {
         @Override
-        public void sayHello(Hello.HelloRequest request, StreamObserver<Hello.HelloResponse> responseObserver) {
-            responseObserver.onNext(Hello.HelloResponse.newBuilder().setMessage("Hello " + request.getName()).build());
+        public void sayHello(HelloRequest request, StreamObserver<HelloResponse> responseObserver) {
+            responseObserver.onNext(HelloResponse.newBuilder().setMessage("Hello " + request.getName()).build());
             responseObserver.onCompleted();
         }
     };
@@ -32,7 +35,7 @@ public class ValidatingClientInterceptorTest {
         ValidatingClientInterceptor interceptor = new ValidatingClientInterceptor(ValidatorIndex.ALWAYS_VALID);
 
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel()).withInterceptors(interceptor);
-        stub.sayHello(Hello.HelloRequest.newBuilder().setName("World").build());
+        stub.sayHello(HelloRequest.newBuilder().setName("World").build());
     }
 
     @Test
@@ -42,7 +45,7 @@ public class ValidatingClientInterceptorTest {
         ValidatingClientInterceptor interceptor = new ValidatingClientInterceptor(new ReflectiveValidatorIndex());
 
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel()).withInterceptors(interceptor);
-        stub.sayHello(Hello.HelloRequest.newBuilder().setName("World").build());
+        stub.sayHello(HelloRequest.newBuilder().setName("World").build());
     }
 
     @Test
@@ -59,7 +62,7 @@ public class ValidatingClientInterceptorTest {
         });
 
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel()).withInterceptors(interceptor);
-        assertThatThrownBy(() -> stub.sayHello(Hello.HelloRequest.newBuilder().setName("Foo").build()))
+        assertThatThrownBy(() -> stub.sayHello(HelloRequest.newBuilder().setName("Foo").build()))
                 .isInstanceOf(StatusRuntimeException.class)
                 .hasMessage("INVALID_ARGUMENT: one: is invalid - Got ");
     }
@@ -71,7 +74,7 @@ public class ValidatingClientInterceptorTest {
         ValidatingClientInterceptor interceptor = new ValidatingClientInterceptor(new ReflectiveValidatorIndex());
 
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel()).withInterceptors(interceptor);
-        assertThatThrownBy(() -> stub.sayHello(Hello.HelloRequest.newBuilder().setName("Foo").build()))
+        assertThatThrownBy(() -> stub.sayHello(HelloRequest.newBuilder().setName("Foo").build()))
                 .isInstanceOf(StatusRuntimeException.class)
                 .hasMessageStartingWith("INVALID_ARGUMENT: .io.envoyproxy.pgv.grpc.HelloRequest.name: must equal World");
     }

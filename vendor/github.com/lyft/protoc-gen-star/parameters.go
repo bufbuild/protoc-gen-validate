@@ -31,6 +31,15 @@ func ParseParameters(p string) (params Parameters) {
 	return
 }
 
+// Clone creates an independent copy of Parameters p.
+func (p Parameters) Clone() Parameters {
+	out := make(Parameters, len(p))
+	for k, v := range p {
+		out[k] = v
+	}
+	return out
+}
+
 // OutputPath returns the protoc-gen-star special parameter. If not set in the
 // execution of protoc, "." is returned, indicating that output is relative to
 // the (unknown) output location for sub-plugins or the directory where protoc
@@ -43,7 +52,8 @@ func (p Parameters) OutputPath() string { return p.StrDefault(outputPathKey, "."
 func (p Parameters) SetOutputPath(path string) { p.SetStr(outputPathKey, path) }
 
 // String satisfies the string.Stringer interface. This method returns p in the
-// format it is providing to the protoc execution.
+// format it is provided to the protoc execution. Output of this function is
+// always stable; parameters are sorted before the string is emitted.
 func (p Parameters) String() string {
 	parts := make([]string, 0, len(p))
 

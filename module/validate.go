@@ -1,9 +1,10 @@
 package module
 
 import (
-	"github.com/lyft/protoc-gen-star"
-	"github.com/lyft/protoc-gen-star/lang/go"
 	"github.com/envoyproxy/protoc-gen-validate/templates"
+	"github.com/envoyproxy/protoc-gen-validate/templates/java"
+	pgs "github.com/lyft/protoc-gen-star"
+	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
 )
 
 const (
@@ -46,7 +47,15 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 			// implementation-specific FilePathFor implementations.
 			// Ex: Don't generate Java validators for files that don't reference PGV.
 			if out != nil {
-				m.AddGeneratorTemplateFile(out.String(), tpl, f)
+				if opts := f.Descriptor().GetOptions(); opts != nil && opts.GetJavaMultipleFiles() {
+					// TODO: Only Java supports multiple file generation. If more languages add multiple file generation
+					// support, the implementation should be made more inderect.
+					for _, msg := range f.Messages() {
+						m.AddGeneratorTemplateFile(java.JavaMultiFilePath(f, msg).String(), tpl, msg)
+					}
+				} else {
+					m.AddGeneratorTemplateFile(out.String(), tpl, f)
+				}
 			}
 		}
 

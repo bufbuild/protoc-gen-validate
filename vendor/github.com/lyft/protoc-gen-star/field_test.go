@@ -20,11 +20,8 @@ func TestField_Name(t *testing.T) {
 func TestField_FullyQualifiedName(t *testing.T) {
 	t.Parallel()
 
-	f := &field{desc: &descriptor.FieldDescriptorProto{Name: proto.String("field")}}
-	m := dummyMsg()
-	m.addField(f)
-
-	assert.Equal(t, m.FullyQualifiedName()+".field", f.FullyQualifiedName())
+	f := &field{fqn: "field"}
+	assert.Equal(t, f.fqn, f.FullyQualifiedName())
 }
 
 func TestField_Syntax(t *testing.T) {

@@ -44,13 +44,19 @@ RUN wget -q https://storage.googleapis.com/golang/$GORELEASE \
 # protoc-gen-go
 ENV PGG_PKG "github.com/golang/protobuf/protoc-gen-go"
 ENV PGG_PATH "${GOPATH}/src/${PGG_PKG}"
-ENV PGG_VER=v1.2.0
+ENV PGG_VER=v1.3.1
 RUN go get -d ${PGG_PKG} \
   && cd ${PGG_PATH} \
   && git checkout ${PGG_VER} \
   && go install \
   && cd - \
   && rm -rf ${PGG_PATH}
+
+# deps
+RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+
+# buildozer
+RUN go get github.com/bazelbuild/buildtools/buildozer
 
 WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
 COPY . .

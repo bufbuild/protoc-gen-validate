@@ -1,0 +1,13 @@
+syntax = "proto3";
+package extensions.ext;
+option go_package = "ext";
+
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.ServiceOptions {
+    string host = 111111;
+}
+
+extend google.protobuf.MethodOptions {
+    string header = 222222;
+}

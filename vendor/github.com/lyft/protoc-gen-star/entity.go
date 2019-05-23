@@ -73,7 +73,11 @@ type ParentEntity interface {
 	// AllEnums returns all top-level and nested enums from this entity.
 	AllEnums() []Enum
 
+	// DefinedExtensions returns all Extensions defined on this entity.
+	DefinedExtensions() []Extension
+
 	addMessage(m Message)
 	addMapEntry(m Message)
 	addEnum(e Enum)
+	addDefExtension(e Extension)
 }
