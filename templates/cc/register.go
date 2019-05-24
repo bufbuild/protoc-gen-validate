@@ -7,12 +7,12 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	pgs "github.com/lyft/protoc-gen-star"
 	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
-	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 )
 
 func RegisterModule(tpl *template.Template, params pgs.Parameters) {
@@ -76,6 +76,7 @@ func RegisterModule(tpl *template.Template, params pgs.Parameters) {
 
 	template.Must(tpl.New("email").Parse(emailTpl))
 	template.Must(tpl.New("hostname").Parse(hostTpl))
+	template.Must(tpl.New("address").Parse(hostTpl))
 
 	template.Must(tpl.New("enum").Parse(enumTpl))
 	template.Must(tpl.New("message").Parse(messageTpl))

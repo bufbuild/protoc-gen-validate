@@ -94,6 +94,12 @@ const strTpl = `
 		if err := m._validateHostname({{ accessor . }}); err != nil {
 			return {{ errCause . "err" "value must be a valid hostname" }}
 		}
+	{{ else if $r.GetAddress }}
+		if err := m._validateHostname({{ accessor . }}); err != nil {
+			if ip := net.ParseIP({{ accessor . }}); ip == nil {
+				return {{ err . "value must be a valid hostname, or ip address" }}
+			}
+		}
 	{{ else if $r.GetUri }}
 		if uri, err := url.Parse({{ accessor . }}); err != nil {
 			return {{ errCause . "err" "value must be a valid URI" }}

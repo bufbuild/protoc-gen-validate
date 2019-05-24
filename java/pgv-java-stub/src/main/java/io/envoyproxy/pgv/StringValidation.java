@@ -93,6 +93,14 @@ public final class StringValidation {
         }
     }
 
+    public static void address(String field, String value) throws ValidationException {
+        try {
+            hostName(field, value);
+        } catch(ValidationException expected) {
+            ip(field, value);
+        }
+    }
+
     public static void hostName(String field, String value) throws ValidationException {
         if (!CharMatcher.ascii().matchesAllOf(value)) {
             throw new ValidationException(field, enquote(value), "should be a valid host containing only ascii characters");

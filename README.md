@@ -79,7 +79,7 @@ make build
 
 ### Parameters
 
-- **`lang`**: specify the target language to generate. Currently, the only supported options are: 
+- **`lang`**: specify the target language to generate. Currently, the only supported options are:
   - `go`
   - `gogo` for [gogo proto](https://github.com/gogo/protobuf) (experimental)
   - `cc` for c++ (partially implemented)
@@ -171,7 +171,7 @@ Java generation is integrated with the existing protobuf toolchain for java proj
         </plugin>
     </plugins>
 </build>
-``` 
+```
 
 Gradle projects follow a similar pattern.
 
@@ -307,6 +307,9 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
   ```protobuf
   // x must be a valid email address (via RFC 1034)
   string x = 1 [(validate.rules).string.email = true];
+
+  // x must be a valid address (IP or Hostname).
+  string x = 1 [(validate.rules).string.address = true];
 
   // x must be a valid hostname (via RFC 1034)
   string x = 1 [(validate.rules).string.hostname = true];
