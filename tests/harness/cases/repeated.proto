@@ -22,3 +22,4 @@ message RepeatedItemPattern  { repeated string val = 1 [(validate.rules).repeate
 message RepeatedEmbedSkip { repeated Embed val = 1 [(validate.rules).repeated.items.message.skip = true]; }
 message RepeatedItemIn { repeated string val = 1 [(validate.rules).repeated.items.string = {in: ["foo", "bar"]}]; }
 message RepeatedItemNotIn { repeated string val = 1 [(validate.rules).repeated.items.string = {not_in: ["foo", "bar"]}]; }
+message RepeatedMinAndItemLen { repeated string val = 1 [(validate.rules).repeated = { items { string { len: 3 } }, min_items: 1 }]; }
