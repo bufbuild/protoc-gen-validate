@@ -5,7 +5,7 @@ import io.envoyproxy.pgv.ValidationException;
 import io.envoyproxy.pgv.Validator;
 import io.envoyproxy.pgv.ValidatorIndex;
 import io.envoyproxy.pgv.grpc.asubpackage.GreeterGrpc;
-import io.envoyproxy.pgv.grpc.asubpackage.HelloRequest;
+import io.envoyproxy.pgv.grpc.asubpackage.HelloJKRequest;
 import io.envoyproxy.pgv.grpc.asubpackage.HelloResponse;
 import io.grpc.BindableService;
 import io.grpc.StatusRuntimeException;
@@ -22,7 +22,7 @@ public class ValidatingClientInterceptorTest {
 
     private BindableService svc = new GreeterGrpc.GreeterImplBase() {
         @Override
-        public void sayHello(HelloRequest request, StreamObserver<HelloResponse> responseObserver) {
+        public void sayHello(HelloJKRequest request, StreamObserver<HelloResponse> responseObserver) {
             responseObserver.onNext(HelloResponse.newBuilder().setMessage("Hello " + request.getName()).build());
             responseObserver.onCompleted();
         }
@@ -35,7 +35,7 @@ public class ValidatingClientInterceptorTest {
         ValidatingClientInterceptor interceptor = new ValidatingClientInterceptor(ValidatorIndex.ALWAYS_VALID);
 
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel()).withInterceptors(interceptor);
-        stub.sayHello(HelloRequest.newBuilder().setName("World").build());
+        stub.sayHello(HelloJKRequest.newBuilder().setName("World").build());
     }
 
     @Test
@@ -45,7 +45,7 @@ public class ValidatingClientInterceptorTest {
         ValidatingClientInterceptor interceptor = new ValidatingClientInterceptor(new ReflectiveValidatorIndex());
 
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel()).withInterceptors(interceptor);
-        stub.sayHello(HelloRequest.newBuilder().setName("World").build());
+        stub.sayHello(HelloJKRequest.newBuilder().setName("World").build());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class ValidatingClientInterceptorTest {
         });
 
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel()).withInterceptors(interceptor);
-        assertThatThrownBy(() -> stub.sayHello(HelloRequest.newBuilder().setName("Foo").build()))
+        assertThatThrownBy(() -> stub.sayHello(HelloJKRequest.newBuilder().setName("Foo").build()))
                 .isInstanceOf(StatusRuntimeException.class)
                 .hasMessage("INVALID_ARGUMENT: one: is invalid - Got ");
     }
@@ -74,8 +74,21 @@ public class ValidatingClientInterceptorTest {
         ValidatingClientInterceptor interceptor = new ValidatingClientInterceptor(new ReflectiveValidatorIndex());
 
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel()).withInterceptors(interceptor);
-        assertThatThrownBy(() -> stub.sayHello(HelloRequest.newBuilder().setName("Foo").build()))
+        assertThatThrownBy(() -> stub.sayHello(HelloJKRequest.newBuilder().setName("Foo").build()))
                 .isInstanceOf(StatusRuntimeException.class)
-                .hasMessageStartingWith("INVALID_ARGUMENT: .io.envoyproxy.pgv.grpc.HelloRequest.name: must equal World");
+                .hasMessageStartingWith("INVALID_ARGUMENT: .io.envoyproxy.pgv.grpc.HelloJKRequest.name: must equal World");
+    }
+
+    // Also testing compilation of proto files with strings of uppercase characters in their filename.
+    @Test
+    public void InterceptorRejectsInvalidMessagesGenerated2() {
+        // Don't set up server, so it will error if the call goes through
+
+        ValidatingClientInterceptor interceptor = new ValidatingClientInterceptor(new ReflectiveValidatorIndex());
+
+        DismisserGrpc.DismisserBlockingStub stub = DismisserGrpc.newBlockingStub(serverRule.getChannel()).withInterceptors(interceptor);
+        assertThatThrownBy(() -> stub.sayGoodbye(GooDBYe.GoodbyeJKRequest.newBuilder().setName("Foo").build()))
+                .isInstanceOf(StatusRuntimeException.class)
+                .hasMessageStartingWith("INVALID_ARGUMENT: .io.envoyproxy.pgv.grpc.GoodbyeJKRequest.name: must equal World");
     }
 }

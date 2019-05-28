@@ -166,6 +166,7 @@ func classNameMessage(m pgs.Message) string {
 
 func sanitizeClassName(className string) string {
 	className = makeInvalidClassnameCharactersUnderscores(className)
+	className = underscoreBetweenConsecutiveUppercase(className)
 	className = strcase.ToCamel(strcase.ToSnake(className))
 	className = upperCaseAfterNumber(className)
 	return className
@@ -234,6 +235,21 @@ func upperCaseAfterNumber(name string) string {
 	for _, c := range name {
 		if unicode.IsDigit(p) {
 			sb += string(unicode.ToUpper(c))
+		} else {
+			sb += string(c)
+		}
+		p = c
+	}
+	return sb
+}
+
+func underscoreBetweenConsecutiveUppercase(name string) string {
+	var sb string
+	var p rune
+
+	for _, c := range name {
+		if unicode.IsUpper(p) && unicode.IsUpper(c) {
+			sb += "_" + string(c)
 		} else {
 			sb += string(c)
 		}
