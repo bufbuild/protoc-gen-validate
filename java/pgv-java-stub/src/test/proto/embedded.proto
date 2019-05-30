@@ -8,7 +8,10 @@ import "validate/validate.proto";
 
 message TokenUse {
     message Payload {
-        string token = 1;
+        message Token {
+            string value = 1;
+        }
+        Token token = 1;
     }
     Payload payload = 1;
 }

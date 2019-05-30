@@ -24,9 +24,15 @@ public class {{ classNameFile . }}Validator {
 public class {{ classNameMessage .}}Validator implements io.envoyproxy.pgv.ValidatorImpl<{{ qualifiedName . }}>{
 	public static io.envoyproxy.pgv.ValidatorImpl validatorFor(Class clazz) {
 		if (clazz.equals({{ qualifiedName . }}.class)) return new {{ simpleName .}}Validator();
+		{{ range .AllMessages }}
+		if (clazz.equals({{ qualifiedName . }}.class)) return new {{ simpleName .}}Validator();
+		{{- end }}
 		return null;
 	}
 	{{- template "msgInner" . -}}
+	{{ range .AllMessages -}}
+	{{- template "msg" . -}}
+	{{- end }}
 }
 {{ end }}
 `
