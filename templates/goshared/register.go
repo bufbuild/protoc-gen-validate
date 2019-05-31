@@ -2,6 +2,7 @@ package goshared
 
 import (
 	"fmt"
+	"github.com/envoyproxy/protoc-gen-validate/validate"
 	"reflect"
 	"strings"
 	"text/template"
@@ -29,6 +30,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"errIdx":        fns.errIdx,
 		"errIdxCause":   fns.errIdxCause,
 		"errname":       fns.errName,
+		"hasrequired":	 HasRequiredAnnotation,
 		"inKey":         fns.inKey,
 		"inType":        fns.inType,
 		"isBytes":       fns.isBytes,
@@ -310,4 +312,14 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.FilePath]pgs.Nam
 	}
 
 	return out
+}
+
+func HasRequiredAnnotation(f pgs.Field)  bool {
+	if emb := f.Type().Embed(); emb != nil {
+		fieldRules := new(validate.FieldRules)
+		if ok, err := f.Extension(validate.E_Rules, &fieldRules); ok && err == nil {
+			return fieldRules.GetRequired()
+		}
+	}
+	return false
 }

@@ -5,5 +5,7 @@ const wrapperTpl = `
 
 	if wrapper := {{ accessor . }}; wrapper != nil {
 		{{ render (unwrap . "wrapper") }}
-	}
+	} {{ if hasrequired $f }} else {
+		return {{ err . "value is required and must not be nil." }}
+	} {{ end }}
 `

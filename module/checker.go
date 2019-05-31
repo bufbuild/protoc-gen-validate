@@ -95,7 +95,7 @@ func (m *Module) CheckFieldRules(typ FieldType, rules *validate.FieldRules) {
 		m.MustType(typ, pgs.BoolT, pgs.BoolValueWKT)
 	case *validate.FieldRules_String_:
 		m.MustType(typ, pgs.StringT, pgs.StringValueWKT)
-		m.CheckString(r.String_)
+		m.CheckString(r.String_, rules)
 	case *validate.FieldRules_Bytes:
 		m.MustType(typ, pgs.BytesT, pgs.BytesValueWKT)
 		m.CheckBytes(r.Bytes)
@@ -187,7 +187,10 @@ func (m *Module) CheckSFixed64(r *validate.SFixed64Rules) {
 	m.checkNums(len(r.In), len(r.NotIn), r.Const, r.Lt, r.Lte, r.Gt, r.Gte)
 }
 
-func (m *Module) CheckString(r *validate.StringRules) {
+func (m *Module) CheckString(r *validate.StringRules, f *validate.FieldRules) {
+	if f.GetRequired() == true {
+		m.Assert(f.GetString_() != nil, "string must not be nil")
+	}
 	m.checkLen(r.Len, r.MinLen, r.MaxLen)
 	m.checkLen(r.LenBytes, r.MinBytes, r.MaxBytes)
 	m.checkMinMax(r.MinLen, r.MaxLen)

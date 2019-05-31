@@ -1134,6 +1134,9 @@ var wrapperCases = []TestCase{
 	{"wrapper - bytes - valid", &cases.WrapperBytes{Val: &wrappers.BytesValue{Value: []byte("foo")}}, true},
 	{"wrapper - bytes - valid (empty)", &cases.WrapperBytes{Val: nil}, true},
 	{"wrapper - bytes - invalid", &cases.WrapperBytes{Val: &wrappers.BytesValue{Value: []byte("x")}}, false},
+
+	{"wrapper - required - string - valid", &cases.WrapperRequired{Val: &wrappers.StringValue{Value: "bar"}}, true},
+	{"wrapper - required - string - invalid", &cases.WrapperRequired{}, false},
 }
 
 var durationCases = []TestCase{
