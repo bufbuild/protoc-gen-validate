@@ -97,7 +97,11 @@ public final class StringValidation {
         try {
             hostName(field, value);
         } catch(ValidationException expected) {
-            ip(field, value);
+            try {
+                ip(field, value);
+            } catch (ValidationException unexpected) {
+                throw new ValidationException(field, enquote(value), "should be a valid host, or ip address");
+            }
         }
     }
 
