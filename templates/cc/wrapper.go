@@ -7,4 +7,7 @@ const wrapperTpl = `
 		const auto wrapped = {{ accessor . }};
 		{{ render (unwrap . "wrapped") }}
 	}
+	{{ if hasRequired $f }}
+		{{ unimplemented }}
+	{{ end }}
 `

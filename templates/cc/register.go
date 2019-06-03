@@ -2,6 +2,7 @@ package cc
 
 import (
 	"fmt"
+	"github.com/envoyproxy/protoc-gen-validate/validate"
 	"reflect"
 	"strconv"
 	"strings"
@@ -32,6 +33,7 @@ func RegisterModule(tpl *template.Template, params pgs.Parameters) {
 		"errIdx":        fns.errIdx,
 		"errIdxCause":   fns.errIdxCause,
 		"hasAccessor":   fns.hasAccessor,
+		"hasRequired":	 HasRequiredAnnotation,
 		"inKey":         fns.inKey,
 		"inType":        fns.inType,
 		"isBytes":       fns.isBytes,
@@ -425,4 +427,14 @@ func (fns CCFuncs) Type(f pgs.Field) pgsgo.TypeName {
 	}
 
 	return typ
+}
+
+func HasRequiredAnnotation(f pgs.Field)  bool {
+	if emb := f.Type().Embed(); emb != nil {
+		fieldRules := new(validate.FieldRules)
+		if ok, err := f.Extension(validate.E_Rules, &fieldRules); ok && err == nil {
+			return fieldRules.GetRequired()
+		}
+	}
+	return false
 }
