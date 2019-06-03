@@ -511,7 +511,7 @@ func (fns javaFuncs) constantName(ctx shared.RuleContext, rule string) string {
 }
 
 func (fns javaFuncs) failUnimplemented() string {
-	return "throw pgv::UnimplementedException();"
+	return "throw pgv::UnimplementedException;"
 }
 
 func HasRequiredAnnotation(f pgs.Field)  bool {
