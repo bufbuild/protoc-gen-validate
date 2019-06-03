@@ -87,7 +87,7 @@ static inline bool IsIpv6(const string& to_validate) {
 }
 
 static inline bool IsIp(const string& to_validate) {
-  return (IsIpv4(to_validate) || IsIpv6(to_validate));
+  return IsIpv4(to_validate) || IsIpv6(to_validate);
 }
 
 static inline bool IsHostname(const string& to_validate) {
