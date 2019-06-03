@@ -3,6 +3,7 @@ package java
 import (
 	"bytes"
 	"fmt"
+	"github.com/envoyproxy/protoc-gen-validate/validate"
 	"os"
 	"strings"
 	"text/template"
@@ -44,6 +45,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"javaTypeFor":              fns.javaTypeFor,
 		"javaTypeLiteralSuffixFor": fns.javaTypeLiteralSuffixFor,
 		"hasAccessor":              fns.hasAccessor,
+		"hasRequired":	 			HasRequiredAnnotation,
 		"oneof":                    fns.oneofTypeName,
 		"sprintf":                  fmt.Sprintf,
 		"simpleName":               fns.Name,
@@ -55,6 +57,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"unwrap":                   fns.unwrap,
 		"renderConstants":          fns.renderConstants(tpl),
 		"constantName":             fns.constantName,
+		"unimplemented": 			fns.failUnimplemented,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
@@ -505,4 +508,18 @@ func (fns javaFuncs) renderConstants(tpl *template.Template) func(ctx shared.Rul
 
 func (fns javaFuncs) constantName(ctx shared.RuleContext, rule string) string {
 	return strcase.ToScreamingSnake(ctx.Field.Name().String() + "_" + ctx.Index + "_" + rule)
+}
+
+func (fns javaFuncs) failUnimplemented() string {
+	return "throw pgv::UnimplementedException();"
+}
+
+func HasRequiredAnnotation(f pgs.Field)  bool {
+	if emb := f.Type().Embed(); emb != nil {
+		fieldRules := new(validate.FieldRules)
+		if ok, err := f.Extension(validate.E_Rules, &fieldRules); ok && err == nil {
+			return fieldRules.GetRequired()
+		}
+	}
+	return false
 }

@@ -6,4 +6,8 @@ const wrapperConstTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 const wrapperTpl = `{{ $f := .Field }}{{ $r := .Rules }}			
 			if ({{ hasAccessor . }}) {
 				{{- render (unwrap .) }}
-			}`
+			}
+			{{ if hasRequired $f }}
+				{{ unimplemented }}
+			{{ end }}
+`
