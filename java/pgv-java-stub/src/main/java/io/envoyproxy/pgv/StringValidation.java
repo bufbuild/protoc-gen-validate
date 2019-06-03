@@ -94,14 +94,11 @@ public final class StringValidation {
     }
 
     public static void address(String field, String value) throws ValidationException {
-        try {
-            hostName(field, value);
-        } catch(ValidationException expected) {
-            try {
-                ip(field, value);
-            } catch (ValidationException unexpected) {
-                throw new ValidationException(field, enquote(value), "should be a valid host, or ip address");
-            }
+        boolean validHost = CharMatcher.ascii().matchesAllOf(value) && DomainValidator.getInstance(true).isValid(value);
+        boolean validIp = InetAddressValidator.getInstance().isValid(value);
+
+        if (!validHost && !validIp) {
+            throw new ValidationException(field, enquote(value), "should be a valid host, or an ip address.");
         }
     }
 
