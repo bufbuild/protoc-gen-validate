@@ -510,8 +510,8 @@ func (fns javaFuncs) constantName(ctx shared.RuleContext, rule string) string {
 	return strcase.ToScreamingSnake(ctx.Field.Name().String() + "_" + ctx.Index + "_" + rule)
 }
 
-func (fns javaFuncs) failUnimplemented() string {
-	return "throw new io.envoyproxy.pgv.UnimplementedException(\"\",\"\");"
+func (fns javaFuncs) failUnimplemented(f pgs.Field) string {
+	return fmt.Sprintf("throw new io.envoyproxy.pgv.UnimplementedException(\"%s\",\" has not been implemented\");", f.Name().String())
 }
 
 func HasRequiredAnnotation(f pgs.Field)  bool {
