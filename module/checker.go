@@ -42,7 +42,6 @@ func (m *Module) CheckRules(msg pgs.Message) {
 		var rules validate.FieldRules
 		_, err = f.Extension(validate.E_Rules, &rules)
 		m.CheckErr(err, "unable to read validation rules from field")
-
 		m.CheckFieldRules(f.Type(), &rules)
 
 		m.Pop()
@@ -95,15 +94,13 @@ func (m *Module) CheckFieldRules(typ FieldType, rules *validate.FieldRules) {
 		m.MustType(typ, pgs.BoolT, pgs.BoolValueWKT)
 	case *validate.FieldRules_String_:
 		m.MustType(typ, pgs.StringT, pgs.StringValueWKT)
-		m.CheckString(r.String_, rules)
+		m.CheckString(r.String_)
 	case *validate.FieldRules_Bytes:
 		m.MustType(typ, pgs.BytesT, pgs.BytesValueWKT)
 		m.CheckBytes(r.Bytes)
 	case *validate.FieldRules_Enum:
 		m.MustType(typ, pgs.EnumT, pgs.UnknownWKT)
 		m.CheckEnum(typ, r.Enum)
-	case *validate.FieldRules_Message:
-		m.MustType(typ, pgs.MessageT, pgs.UnknownWKT)
 	case *validate.FieldRules_Repeated:
 		m.CheckRepeated(typ, r.Repeated)
 	case *validate.FieldRules_Map:
@@ -187,10 +184,7 @@ func (m *Module) CheckSFixed64(r *validate.SFixed64Rules) {
 	m.checkNums(len(r.In), len(r.NotIn), r.Const, r.Lt, r.Lte, r.Gt, r.Gte)
 }
 
-func (m *Module) CheckString(r *validate.StringRules, f *validate.FieldRules) {
-	if f.GetRequired() == true {
-		m.Assert(f.GetString_() != nil, "string must not be nil")
-	}
+func (m *Module) CheckString(r *validate.StringRules) {
 	m.checkLen(r.Len, r.MinLen, r.MaxLen)
 	m.checkLen(r.LenBytes, r.MinBytes, r.MaxBytes)
 	m.checkMinMax(r.MinLen, r.MaxLen)
