@@ -1,7 +1,7 @@
 package golang
 
 const requiredTpl = `
-	{{ if .Rules.GetRequired }}
+	{{ if or (.Rules.GetRequired) (hasrequired .Field) }}
 		if {{ accessor . }} == nil {
 			return {{ err . "value is required" }}
 		}

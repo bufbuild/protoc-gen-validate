@@ -1,7 +1,7 @@
 package java
 
 const requiredTpl = `{{ $f := .Field }}
-	{{- if .Rules.GetRequired }}
+	{{- if or (.Rules.GetRequired) (hasRequired .Field) }}
 		if ({{ hasAccessor . }}) {
 			io.envoyproxy.pgv.RequiredValidation.required("{{ $f.FullyQualifiedName }}", {{ accessor . }});
 		} else {
