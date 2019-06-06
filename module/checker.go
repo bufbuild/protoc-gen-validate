@@ -42,6 +42,7 @@ func (m *Module) CheckRules(msg pgs.Message) {
 		var rules validate.FieldRules
 		_, err = f.Extension(validate.E_Rules, &rules)
 		m.CheckErr(err, "unable to read validation rules from field")
+
 		m.CheckFieldRules(f.Type(), &rules)
 
 		m.Pop()

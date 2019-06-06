@@ -6,7 +6,6 @@ import (
 	"time"
 
 	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
-
 	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes"
@@ -965,6 +964,28 @@ var enumCases = []TestCase{
 	{"enum map (external) - defined_only - invalid", &cases.MapExternalEnumDefined{Val: map[string]other_package.Embed_Enumerated{"foo": math.MaxInt32}}, false},
 }
 
+var messageCases = []TestCase{
+	{"message - none - valid", &cases.MessageNone{Val: &cases.MessageNone_NoneMsg{}}, true},
+	{"message - none - valid (unset)", &cases.MessageNone{}, true},
+
+	{"message - disabled - valid", &cases.MessageDisabled{Val: 456}, true},
+	{"message - disabled - valid (invalid field)", &cases.MessageDisabled{Val: 0}, true},
+
+	{"message - field - valid", &cases.Message{Val: &cases.TestMsg{Const: "foo"}}, true},
+	{"message - field - valid (unset)", &cases.Message{}, true},
+	{"message - field - invalid", &cases.Message{Val: &cases.TestMsg{}}, false},
+	{"message - field - invalid (transitive)", &cases.Message{Val: &cases.TestMsg{Const: "foo", Nested: &cases.TestMsg{}}}, false},
+
+	{"message - skip - valid", &cases.MessageSkip{Val: &cases.TestMsg{}}, true},
+
+	{"message - required - valid", &cases.MessageRequired{Val: &cases.TestMsg{Const: "foo"}}, true},
+	{"message - required - invalid", &cases.MessageRequired{}, false},
+
+	{"message - cross-package embed none - valid", &cases.MessageCrossPackage{Val: &other_package.Embed{Val: 1}}, true},
+	{"message - cross-package embed none - valid (nil)", &cases.MessageCrossPackage{}, true},
+	{"message - cross-package embed none - valid (empty)", &cases.MessageCrossPackage{Val: &other_package.Embed{}}, false},
+	{"message - cross-package embed none - invalid", &cases.MessageCrossPackage{Val: &other_package.Embed{Val: -1}}, false},
+}
 
 var repeatedCases = []TestCase{
 	{"repeated - none - valid", &cases.RepeatedNone{Val: []int64{1, 2, 3}}, true},
@@ -1018,28 +1039,6 @@ var repeatedCases = []TestCase{
 	{"repeated - min and items len - valid", &cases.RepeatedMinAndItemLen{Val: []string{"aaa", "bbb"}}, true},
 	{"repeated - min and items len - invalid (min)", &cases.RepeatedMinAndItemLen{Val: []string{}}, false},
 	{"repeated - min and items len - invalid (len)", &cases.RepeatedMinAndItemLen{Val: []string{"x"}}, false},
-}
-var messageCases = []TestCase{
-	{"message - none - valid", &cases.MessageNone{Val: &cases.MessageNone_NoneMsg{}}, true},
-	{"message - none - valid (unset)", &cases.MessageNone{}, true},
-
-	{"message - disabled - valid", &cases.MessageDisabled{Val: 456}, true},
-	{"message - disabled - valid (invalid field)", &cases.MessageDisabled{Val: 0}, true},
-
-	{"message - field - valid", &cases.Message{Val: &cases.TestMsg{Const: "foo"}}, true},
-	{"message - field - valid (unset)", &cases.Message{}, true},
-	{"message - field - invalid", &cases.Message{Val: &cases.TestMsg{}}, false},
-	{"message - field - invalid (transitive)", &cases.Message{Val: &cases.TestMsg{Const: "foo", Nested: &cases.TestMsg{}}}, false},
-
-	{"message - skip - valid", &cases.MessageSkip{Val: &cases.TestMsg{}}, true},
-
-	{"message - required - valid", &cases.MessageRequired{Val: &cases.TestMsg{Const: "foo"}}, true},
-	{"message - required - invalid", &cases.MessageRequired{}, false},
-
-	{"message - cross-package embed none - valid", &cases.MessageCrossPackage{Val: &other_package.Embed{Val: 1}}, true},
-	{"message - cross-package embed none - valid (nil)", &cases.MessageCrossPackage{}, true},
-	{"message - cross-package embed none - valid (empty)", &cases.MessageCrossPackage{Val: &other_package.Embed{}}, false},
-	{"message - cross-package embed none - invalid", &cases.MessageCrossPackage{Val: &other_package.Embed{Val: -1}}, false},
 }
 
 var mapCases = []TestCase{

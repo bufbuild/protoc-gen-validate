@@ -9,5 +9,4 @@ const wrapperTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 			}
 			{{ if hasRequired $f }}
 				{{ unimplemented $f }}
-			{{ end }}
-`
+			{{ end }}`

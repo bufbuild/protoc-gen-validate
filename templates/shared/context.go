@@ -108,7 +108,7 @@ func (ctx RuleContext) Elem(name, idx string) (out RuleContext, err error) {
 }
 
 func (ctx RuleContext) Unwrap(name string) (out RuleContext, err error) {
-	if ctx.Typ != "wrapper" && ctx.Typ != "message" {
+	if ctx.Typ != "wrapper" {
 		err = fmt.Errorf("cannot unwrap non-wrapper type %q", ctx.Typ)
 		return
 	}
