@@ -109,30 +109,21 @@ const strTpl = `
 	{{ if $r.GetIp }}
 	{
 		const std::string& value = {{ accessor . }};
-		struct sockaddr_in sa;
-		struct sockaddr_in6 sa_six;
-		const int valid_four = inet_pton(AF_INET, value.c_str(), &sa.sin_addr);
-		const int valid_six = inet_pton(AF_INET6, value.c_str(), &sa_six.sin6_addr);
-
-		if (valid_six < 1 && valid_four < 1) {
-			{{ err . "value must be a valid IPv4 or IPv6 Address" }}
+		if (!pgv::IsIp(value)) {
+			{{ err . "value must be a valid IP Address" }}
 		}
 	}
 	{{ else if $r.GetIpv4 }}
 	{
 		const std::string& value = {{ accessor . }};
-		struct sockaddr_in sa;
-
-		if (inet_pton(AF_INET, value.c_str(), &sa.sin_addr) < 1) {
+		if (!pgv::IsIpv4(value)) {
 			{{ err . "value must be a valid IPv4 Address" }}
 		}
 	}
 	{{ else if $r.GetIpv6 }}
 	{
 		const std::string& value = {{ accessor . }};
-		struct sockaddr_in6 sa_six;
-
-		if (inet_pton(AF_INET6, value.c_str(), &sa_six.sin6_addr) < 1) {
+		if (!pgv::IsIpv6(value)) {
 			{{ err . "value must be a valid IPv6 Address" }}
 		}
 	}
@@ -143,35 +134,20 @@ const strTpl = `
 			return {{ errCause . "err" "value must be a valid email address" }}
 		}
 		*/}}
+	{{ else if $r.GetAddress }}
+	{
+		const std::string& value = {{ accessor . }};
+
+		if (!pgv::IsHostname(value) && !pgv::IsIp(value)) {
+			{{ err . "value must be an ip address, or a hostname." }}
+		}
+	}
 	{{ else if $r.GetHostname }}
 	{
 		const std::string& value = {{ accessor . }};
 
-		if (value.length() > 253) {
-			{{ err . "value must be a hostname, and hostname cannot exceed 253 characters" }}
-		}
-
-		const std::regex dot_regex{"\\."};
-		const auto iter_end = std::sregex_token_iterator();
-		auto iter = std::sregex_token_iterator(value.begin(), value.end(), dot_regex, -1);
-		for (; iter != iter_end; ++iter) {
-			const std::string &part = *iter;
-			if (part.empty() || part.length() > 63) {
-				{{ err . "hostname part must be non-empty, and cannot exceed 63 characters" }}
-			}
-
-			if (part.at(0) == '-') {
-				{{ err . "hostname parts cannot begin with hyphens." }}
-			}
-			if (part.at(part.length() - 1) == '-') {
-				{{ err . "hostname parts cannot end with hyphens." }}
-			}
-
-			for (const auto &character : part) {
-				if ((character < 'A' || character > 'Z') && (character < 'a' || character > 'z') && (character < '0' || character > '9') && character != '-') {
-					{{ err . "hostname parts can only contain alphanumeric characters or hyphens" }}
-				}
-			}
+		if (!pgv::IsHostname(value)) {
+			{{ err . "value must be a valid hostname" }}
 		}
 	}
 	{{ else if $r.GetUri }}

@@ -145,6 +145,21 @@ public class StringValidationTest {
     }
 
     @Test
+    public void addressWorks() throws ValidationException {
+        // Match Hostname
+        StringValidation.address("x", "google.com");
+        StringValidation.address("x", "images.google.com");
+        // Match IP
+        StringValidation.address("x", "127.0.0.1");
+        StringValidation.address("x", "fe80::3");
+
+        // No Match
+        assertThatThrownBy(() -> StringValidation.address("x", "bananas.bananas")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.address("x", "你好.com")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.address("x", "ff::fff::0b")).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
     public void ipWorks() throws ValidationException {
         // Match
         StringValidation.ip("x", "192.168.0.1");

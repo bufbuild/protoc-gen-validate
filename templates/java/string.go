@@ -62,6 +62,9 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.GetEmail }}
 			io.envoyproxy.pgv.StringValidation.email("{{ $f.FullyQualifiedName }}", {{ accessor . }});
 {{- end -}}
+{{- if $r.GetAddress }}
+			io.envoyproxy.pgv.StringValidation.address("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+{{- end -}}
 {{- if $r.GetHostname }}
 			io.envoyproxy.pgv.StringValidation.hostName("{{ $f.FullyQualifiedName }}", {{ accessor . }});
 {{- end -}}

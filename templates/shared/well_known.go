@@ -1,8 +1,8 @@
 package shared
 
 import (
-	"github.com/lyft/protoc-gen-star"
 	"github.com/envoyproxy/protoc-gen-validate/validate"
+	"github.com/lyft/protoc-gen-star"
 )
 
 type WellKnown string
@@ -53,7 +53,7 @@ func strRulesNeeds(rules *validate.StringRules, wk WellKnown) bool {
 			return true
 		}
 	case Hostname:
-		if rules.GetEmail() || rules.GetHostname() {
+		if rules.GetEmail() || rules.GetHostname() || rules.GetAddress() {
 			return true
 		}
 	}

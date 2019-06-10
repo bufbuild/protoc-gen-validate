@@ -93,6 +93,15 @@ public final class StringValidation {
         }
     }
 
+    public static void address(String field, String value) throws ValidationException {
+        boolean validHost = CharMatcher.ascii().matchesAllOf(value) && DomainValidator.getInstance(true).isValid(value);
+        boolean validIp = InetAddressValidator.getInstance().isValid(value);
+
+        if (!validHost && !validIp) {
+            throw new ValidationException(field, enquote(value), "should be a valid host, or an ip address.");
+        }
+    }
+
     public static void hostName(String field, String value) throws ValidationException {
         if (!CharMatcher.ascii().matchesAllOf(value)) {
             throw new ValidationException(field, enquote(value), "should be a valid host containing only ascii characters");

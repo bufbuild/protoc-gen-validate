@@ -25,6 +25,7 @@ message StringPrefix         { string val = 1 [(validate.rules).string.prefix = 
 message StringContains       { string val = 1 [(validate.rules).string.contains = "bar"]; }
 message StringSuffix         { string val = 1 [(validate.rules).string.suffix = "baz"]; }
 message StringEmail          { string val = 1 [(validate.rules).string.email = true]; }
+message StringAddress        { string val = 1 [(validate.rules).string.address = true]; }
 message StringHostname       { string val = 1 [(validate.rules).string.hostname = true]; }
 message StringIP             { string val = 1 [(validate.rules).string.ip = true]; }
 message StringIPv4           { string val = 1 [(validate.rules).string.ipv4 = true]; }
