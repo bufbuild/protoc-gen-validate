@@ -2,17 +2,16 @@ package goshared
 
 import (
 	"fmt"
-	"github.com/envoyproxy/protoc-gen-validate/validate"
 	"reflect"
 	"strings"
 	"text/template"
 
+	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/lyft/protoc-gen-star"
 	"github.com/lyft/protoc-gen-star/lang/go"
-	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 )
 
 func Register(tpl *template.Template, params pgs.Parameters) {
@@ -30,7 +29,6 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"errIdx":        fns.errIdx,
 		"errIdxCause":   fns.errIdxCause,
 		"errname":       fns.errName,
-		"hasrequired":	 HasRequiredAnnotation,
 		"inKey":         fns.inKey,
 		"inType":        fns.inType,
 		"isBytes":       fns.isBytes,
@@ -312,14 +310,4 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.FilePath]pgs.Nam
 	}
 
 	return out
-}
-
-func HasRequiredAnnotation(f pgs.Field)  bool {
-	if emb := f.Type().Embed(); emb != nil {
-		fieldRules := new(validate.FieldRules)
-		if ok, err := f.Extension(validate.E_Rules, &fieldRules); ok && err == nil {
-			return fieldRules.GetMessage().GetRequired()
-		}
-	}
-	return false
 }

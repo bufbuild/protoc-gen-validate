@@ -3,7 +3,6 @@ package java
 import (
 	"bytes"
 	"fmt"
-	"github.com/envoyproxy/protoc-gen-validate/validate"
 	"os"
 	"strings"
 	"text/template"
@@ -45,7 +44,6 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"javaTypeFor":              fns.javaTypeFor,
 		"javaTypeLiteralSuffixFor": fns.javaTypeLiteralSuffixFor,
 		"hasAccessor":              fns.hasAccessor,
-		"hasRequired":	 			HasRequiredAnnotation,
 		"oneof":                    fns.oneofTypeName,
 		"sprintf":                  fmt.Sprintf,
 		"simpleName":               fns.Name,
@@ -512,14 +510,4 @@ func (fns javaFuncs) constantName(ctx shared.RuleContext, rule string) string {
 
 func (fns javaFuncs) failUnimplemented(f pgs.Field) string {
 	return fmt.Sprintf("throw new io.envoyproxy.pgv.UnimplementedException(\"%s\",\" has not been implemented\");", f.Name().String())
-}
-
-func HasRequiredAnnotation(f pgs.Field)  bool {
-	if emb := f.Type().Embed(); emb != nil {
-		fieldRules := new(validate.FieldRules)
-		if ok, err := f.Extension(validate.E_Rules, &fieldRules); ok && err == nil {
-			return fieldRules.GetMessage().GetRequired()
-		}
-	}
-	return false
 }

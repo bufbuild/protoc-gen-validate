@@ -7,6 +7,6 @@ const wrapperTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 			if ({{ hasAccessor . }}) {
 				{{- render (unwrap .) }}
 			}
-			{{ if hasRequired $f }}
+			{{ if .MessageRules.GetRequired }}
 				{{ unimplemented $f }}
 			{{ end }}`

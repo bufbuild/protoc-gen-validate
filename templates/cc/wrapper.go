@@ -7,7 +7,7 @@ const wrapperTpl = `
 		const auto wrapped = {{ accessor . }};
 		{{ render (unwrap . "wrapped") }}
 	}
-	{{ if hasRequired $f }}
+	{{ if .MessageRules.GetRequired }}
 		{{ unimplemented }}
 	{{ end }}
 `
