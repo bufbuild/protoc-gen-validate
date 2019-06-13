@@ -6,12 +6,12 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"github.com/envoyproxy/protoc-gen-validate/validate"
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/lyft/protoc-gen-star"
-	"github.com/envoyproxy/protoc-gen-validate/validate"
 )
 
 type FieldType interface {
@@ -42,6 +42,10 @@ func (m *Module) CheckRules(msg pgs.Message) {
 		var rules validate.FieldRules
 		_, err = f.Extension(validate.E_Rules, &rules)
 		m.CheckErr(err, "unable to read validation rules from field")
+
+		if rules.GetMessage().GetRequired() || rules.GetMessage().GetSkip() {
+			m.CheckMessageCompatibility(f)
+		}
 
 		m.CheckFieldRules(f.Type(), &rules)
 
@@ -255,6 +259,29 @@ func (m *Module) CheckEnum(ft FieldType, r *validate.EnumRules) {
 func (m *Module) CheckMessage(ft FieldType, r *validate.MessageRules) {
 	if !r.GetSkip() {
 		m.CheckRules(m.mustFieldType(ft).Embed())
+	}
+}
+
+func (m *Module) CheckMessageCompatibility(f pgs.Field) {
+	if f.Type().IsRepeated() {
+		m.Failf("Repeated rules should be used for repeated fields")
+	}
+	if f.Type().IsEnum() {
+		m.Failf("Enum rules should be used for enum fields")
+	}
+	if f.Type().IsMap() {
+		m.Failf("Map rules should be used for map fields")
+	}
+	if emb := f.Type().Embed(); emb != nil && emb.IsWellKnown() {
+		if emb.WellKnownType() == pgs.AnyWKT {
+			m.Failf("Any rules should be used for Any fields")
+		}
+		if emb.WellKnownType() == pgs.DurationWKT {
+			m.Failf("Duration rules should be used for Duration fields")
+		}
+		if emb.WellKnownType() == pgs.TimestampWKT {
+			m.Failf("Timestamp rules should be used for Timestamp fields")
+		}
 	}
 }
 

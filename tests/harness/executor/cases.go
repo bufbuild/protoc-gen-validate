@@ -1135,9 +1135,13 @@ var wrapperCases = []TestCase{
 	{"wrapper - bytes - valid (empty)", &cases.WrapperBytes{Val: nil}, true},
 	{"wrapper - bytes - invalid", &cases.WrapperBytes{Val: &wrappers.BytesValue{Value: []byte("x")}}, false},
 
-	{"wrapper - required - string - valid", &cases.WrapperRequired{Val: &wrappers.StringValue{Value: "bar"}}, true},
-	{"wrapper - required - string - invalid", &cases.WrapperRequired{Val: &wrappers.StringValue{Value: "foo"}}, false},
-	{"wrapper - required - string - invalid (empty)", &cases.WrapperRequired{}, false},
+	{"wrapper - required - string - valid", &cases.WrapperRequiredString{Val: &wrappers.StringValue{Value: "bar"}}, true},
+	{"wrapper - required - string - invalid", &cases.WrapperRequiredString{Val: &wrappers.StringValue{Value: "foo"}}, false},
+	{"wrapper - required - string - invalid (empty)", &cases.WrapperRequiredString{}, false},
+
+	{"wrapper - required - string - valid", &cases.WrapperRequiredFloat{Val: &wrappers.FloatValue{Value: 1}}, true},
+	{"wrapper - required - string - invalid", &cases.WrapperRequiredFloat{Val: &wrappers.FloatValue{Value: -5}}, false},
+	{"wrapper - required - string - invalid (empty)", &cases.WrapperRequiredFloat{}, false},
 }
 
 var durationCases = []TestCase{

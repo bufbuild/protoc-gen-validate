@@ -169,7 +169,6 @@ func resolveRules(typ interface{ IsEmbed() bool }, rules *validate.FieldRules) (
 	case *validate.FieldRules_Repeated:
 		return "repeated", r.Repeated, rules.Message, false
 	case *validate.FieldRules_Map:
-
 		return "map", r.Map, rules.Message, false
 	case *validate.FieldRules_Any:
 		return "any", r.Any, rules.Message, false
