@@ -18,4 +18,5 @@ message WrapperBool   { google.protobuf.BoolValue val = 1 [(validate.rules).bool
 message WrapperString { google.protobuf.StringValue val = 1 [(validate.rules).string.suffix = "bar"]; }
 message WrapperBytes  { google.protobuf.BytesValue val = 1 [(validate.rules).bytes.min_len = 3]; }
 message WrapperRequiredString { google.protobuf.StringValue val = 1 [(validate.rules).string.const = "bar", (validate.rules).message.required = true]; }
+message WrapperRequiredEmptyString { google.protobuf.StringValue val = 1 [(validate.rules).string.const = "", (validate.rules).message.required = true]; }
 message WrapperRequiredFloat { google.protobuf.FloatValue val = 1 [(validate.rules).float.gt = 0, (validate.rules).message.required = true]; }

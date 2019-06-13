@@ -1139,9 +1139,13 @@ var wrapperCases = []TestCase{
 	{"wrapper - required - string - invalid", &cases.WrapperRequiredString{Val: &wrappers.StringValue{Value: "foo"}}, false},
 	{"wrapper - required - string - invalid (empty)", &cases.WrapperRequiredString{}, false},
 
-	{"wrapper - required - string - valid", &cases.WrapperRequiredFloat{Val: &wrappers.FloatValue{Value: 1}}, true},
-	{"wrapper - required - string - invalid", &cases.WrapperRequiredFloat{Val: &wrappers.FloatValue{Value: -5}}, false},
-	{"wrapper - required - string - invalid (empty)", &cases.WrapperRequiredFloat{}, false},
+	{"wrapper - required - string (empty) - valid", &cases.WrapperRequiredEmptyString{Val: &wrappers.StringValue{Value: ""}}, true},
+	{"wrapper - required - string (empty) - invalid", &cases.WrapperRequiredEmptyString{Val: &wrappers.StringValue{Value: "foo"}}, false},
+	{"wrapper - required - string (empty) - invalid (empty)", &cases.WrapperRequiredEmptyString{}, false},
+
+	{"wrapper - required - float - valid", &cases.WrapperRequiredFloat{Val: &wrappers.FloatValue{Value: 1}}, true},
+	{"wrapper - required - float - invalid", &cases.WrapperRequiredFloat{Val: &wrappers.FloatValue{Value: -5}}, false},
+	{"wrapper - required - float - invalid (empty)", &cases.WrapperRequiredFloat{}, false},
 }
 
 var durationCases = []TestCase{
