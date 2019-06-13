@@ -55,7 +55,6 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"unwrap":                   fns.unwrap,
 		"renderConstants":          fns.renderConstants(tpl),
 		"constantName":             fns.constantName,
-		"unimplemented": 			fns.failUnimplemented,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
@@ -506,8 +505,4 @@ func (fns javaFuncs) renderConstants(tpl *template.Template) func(ctx shared.Rul
 
 func (fns javaFuncs) constantName(ctx shared.RuleContext, rule string) string {
 	return strcase.ToScreamingSnake(ctx.Field.Name().String() + "_" + ctx.Index + "_" + rule)
-}
-
-func (fns javaFuncs) failUnimplemented(f pgs.Field) string {
-	return fmt.Sprintf("throw new io.envoyproxy.pgv.UnimplementedException(\"%s\",\" has not been implemented\");", f.Name().String())
 }
