@@ -6,8 +6,7 @@ const wrapperTpl = `
 	if ({{ hasAccessor . }}) {
 		const auto wrapped = {{ accessor . }};
 		{{ render (unwrap . "wrapped") }}
-	}
-	{{ if .MessageRules.GetRequired }}
-		{{ unimplemented }}
-	{{ end }}
+	} {{ if .MessageRules.GetRequired }} else {
+		{{ err . "value is required and must not be nil." }}
+	} {{ end }}
 `
