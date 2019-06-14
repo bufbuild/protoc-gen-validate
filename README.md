@@ -510,6 +510,13 @@ Person x = 1;
   Person x = 1 [(validate.rules).message = {required: true, skip: true}];
   ```
 
+- Message Rules can also be used with scalar Well-Known Types (WKTs):
+
+  ```protobuf
+  // Ensures that if a value is not set for age, it would not pass the validation despite its zero value being 0.
+  message X { google.protobuf.Int32Value age = 1 [(validate.rules).int32.gt = -1, (validate.rules).message.required = true]; }
+  ```
+
 ### Repeated
 
 - **min_items/max_items**: these rules control how many elements are contained in the field
