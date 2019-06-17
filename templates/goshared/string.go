@@ -110,6 +110,10 @@ const strTpl = `
 		if _, err := url.Parse({{ accessor . }}); err != nil {
 			return {{ errCause . "err" "value must be a valid URI" }}
 		}
+	{{ else if $r.GetUuid }}
+		if err := m._validateUuid({{ accessor . }}); err != nil {
+			return {{ errCause . "err" "value must be a valid UUID" }}
+		}
 	{{ end }}
 
 	{{ if $r.Pattern }}

@@ -32,3 +32,4 @@ message StringIPv4           { string val = 1 [(validate.rules).string.ipv4 = tr
 message StringIPv6           { string val = 1 [(validate.rules).string.ipv6 = true]; }
 message StringURI            { string val = 1 [(validate.rules).string.uri = true]; }
 message StringURIRef         { string val = 1 [(validate.rules).string.uri_ref = true]; }
+message StringUUID           { string val = 1 [(validate.rules).string.uuid = true]; }

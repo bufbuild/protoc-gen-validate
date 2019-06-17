@@ -53,3 +53,13 @@ const emailTpl = `
 		return m._validateHostname(parts[1])
 	}
 `
+
+const uuidTpl = `
+	func (m {{ (msgTyp .).Pointer }}) _validateUuid(uuid string) error {
+		if matched := _{{ .File.InputPath.BaseName }}_uuidPattern.MatchString(uuid); !matched {
+			return errors.New("invalid uuid format")
+		}
+
+		return nil
+	}
+`

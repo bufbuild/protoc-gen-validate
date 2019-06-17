@@ -40,6 +40,8 @@ func (m {{ (msgTyp .).Pointer }}) Validate() error {
 
 {{ if needs . "email" }}{{ template "email" . }}{{ end }}
 
+{{ if needs . "uuid" }}{{ template "uuid" . }}{{ end }}
+
 {{ cmt (errname .) " is the validation error returned by " (msgTyp .) ".Validate if the designated constraints aren't met." -}}
 type {{ errname . }} struct {
 	field  string

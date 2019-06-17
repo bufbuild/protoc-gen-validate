@@ -88,6 +88,8 @@ bool Validate(const {{ class . }}& m, pgv::ValidationMsg* err) {
 {{ if needs . "hostname" }}{{ template "hostname" . }}{{ end }}
 
 {{ if needs . "email" }}{{ template "email" . }}{{ end }}
+
+{{ if needs . "uuid" }}{{ template "uuid" . }}{{ end }}
 */}}
 
 `

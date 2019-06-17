@@ -10,6 +10,7 @@ type WellKnown string
 const (
 	Email    WellKnown = "email"
 	Hostname WellKnown = "hostname"
+	UUID     WellKnown = "uuid"
 )
 
 // Needs returns true if a well-known string validator is needed for this
@@ -54,6 +55,10 @@ func strRulesNeeds(rules *validate.StringRules, wk WellKnown) bool {
 		}
 	case Hostname:
 		if rules.GetEmail() || rules.GetHostname() || rules.GetAddress() {
+			return true
+		}
+	case UUID:
+		if rules.GetUuid() {
 			return true
 		}
 	}
