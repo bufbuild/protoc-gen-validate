@@ -43,8 +43,9 @@ func (m *Module) CheckRules(msg pgs.Message) {
 		_, err = f.Extension(validate.E_Rules, &rules)
 		m.CheckErr(err, "unable to read validation rules from field")
 
-		if rules.GetMessage().GetRequired() || rules.GetMessage().GetSkip() {
-			m.CheckMessageCompatibility(f)
+		if rules.GetMessage() != nil {
+			m.MustType(f.Type(), pgs.MessageT, pgs.UnknownWKT)
+			m.CheckMessage(f, &rules)
 		}
 
 		m.CheckFieldRules(f.Type(), &rules)
@@ -256,32 +257,22 @@ func (m *Module) CheckEnum(ft FieldType, r *validate.EnumRules) {
 	}
 }
 
-func (m *Module) CheckMessage(ft FieldType, r *validate.MessageRules) {
-	if !r.GetSkip() {
-		m.CheckRules(m.mustFieldType(ft).Embed())
-	}
-}
-
-func (m *Module) CheckMessageCompatibility(f pgs.Field) {
-	if f.Type().IsRepeated() {
-		m.Failf("Repeated rules should be used for repeated fields")
-	}
-	if f.Type().IsEnum() {
-		m.Failf("Enum rules should be used for enum fields")
-	}
-	if f.Type().IsMap() {
-		m.Failf("Map rules should be used for map fields")
-	}
-	if emb := f.Type().Embed(); emb != nil && emb.IsWellKnown() {
-		if emb.WellKnownType() == pgs.AnyWKT {
+func (m *Module) CheckMessage(f pgs.Field, rules *validate.FieldRules) {
+	m.Assert(f.Type().IsEmbed(), "field is not embedded but got message rules")
+	emb := f.Type().Embed()
+	if emb != nil && emb.IsWellKnown() {
+		switch emb.WellKnownType() {
+		case pgs.AnyWKT:
 			m.Failf("Any rules should be used for Any fields")
-		}
-		if emb.WellKnownType() == pgs.DurationWKT {
+		case pgs.DurationWKT:
 			m.Failf("Duration rules should be used for Duration fields")
-		}
-		if emb.WellKnownType() == pgs.TimestampWKT {
+		case pgs.TimestampWKT:
 			m.Failf("Timestamp rules should be used for Timestamp fields")
 		}
+	}
+
+	if rules.Type != nil && rules.GetMessage().GetSkip() {
+		m.Failf("Skip should not be used with WKT scalar rules")
 	}
 }
 

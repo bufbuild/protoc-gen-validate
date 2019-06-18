@@ -16,7 +16,7 @@ const messageTpl = `
 `
 
 const requiredTpl = `
-	{{ if or (.Rules.GetRequired) (.MessageRules.GetRequired) }}
+	{{ if .Rules.GetRequired }}
 		if (!{{ hasAccessor . }}) {
 			{{ err . "value is required" }}
 		}

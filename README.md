@@ -510,13 +510,6 @@ Person x = 1;
   Person x = 1 [(validate.rules).message = {required: true, skip: true}];
   ```
 
-- Message Rules can also be used with scalar Well-Known Types (WKTs):
-
-  ```protobuf
-  // Ensures that if a value is not set for age, it would not pass the validation despite its zero value being 0.
-  message X { google.protobuf.Int32Value age = 1 [(validate.rules).int32.gt = -1, (validate.rules).message.required = true]; }
-  ```
-
 ### Repeated
 
 - **min_items/max_items**: these rules control how many elements are contained in the field
@@ -599,6 +592,13 @@ In the `proto3` syntax, there is no way of distinguishing between unset and the 
 ```protobuf
 // if it is set, x must be greater than 3
 google.protobuf.Int32Value x = 1 [(validate.rules).int32.gt = 3];
+```
+
+Message Rules can also be used with scalar Well-Known Types (WKTs):
+
+```protobuf
+// Ensures that if a value is not set for age, it would not pass the validation despite its zero value being 0.
+message X { google.protobuf.Int32Value age = 1 [(validate.rules).int32.gt = -1, (validate.rules).message.required = true]; }
 ```
 
 #### Anys
@@ -789,14 +789,6 @@ All PGV dependencies are currently checked into the project. To test PGV, `proto
 - **`make build`**: generates the constraints proto and compiles PGV into `$GOPATH/bin`
 
 - **`make lint`**: runs static-analysis rules against the PGV codebase, including `golint`, `go vet`, and `gofmt -s`
-
-- **`make tests`**: runs all tests with race detection and coverage percentage
-
-- **`make quick`**: runs all tests without the race detector or coverage percentage
-
-- **`make cover`**: runs all tests with race detection, generating a coverage report and opening it in a browser
-
-- **`make kitchensink`**: generates the proto files in [`/tests/kitchensink`](/tests/kitchensink). This includes the officially generated code, as well as the validations.
 
 - **`make testcases`**: generates the proto files in [`/tests/harness/cases`](/tests/harness/cases). These are used by the test harness to verify the validation rules generated for each language.
 

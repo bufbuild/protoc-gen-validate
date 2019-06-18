@@ -14,7 +14,7 @@ import (
 type RuleContext struct {
 	Field pgs.Field
 	Rules proto.Message
-	MessageRules proto.Message
+	MessageRules *validate.MessageRules
 	Gogo  Gogo
 
 	Typ        string
@@ -132,50 +132,50 @@ func Render(tpl *template.Template) func(ctx RuleContext) (string, error) {
 	}
 }
 
-func resolveRules(typ interface{ IsEmbed() bool }, rules *validate.FieldRules) (ruleType string, rule proto.Message, messageRule proto.Message, wrapped bool) {
+func resolveRules(typ interface{ IsEmbed() bool }, rules *validate.FieldRules) (ruleType string, rule proto.Message, messageRule *validate.MessageRules, wrapped bool) {
 	switch r := rules.GetType().(type) {
 	case *validate.FieldRules_Float:
-		return "float", r.Float, rules.Message, typ.IsEmbed()
+		ruleType, rule, wrapped = "float", r.Float, typ.IsEmbed()
 	case *validate.FieldRules_Double:
-		return "double", r.Double, rules.Message, typ.IsEmbed()
+		ruleType, rule, wrapped = "double", r.Double, typ.IsEmbed()
 	case *validate.FieldRules_Int32:
-		return "int32", r.Int32, rules.Message, typ.IsEmbed()
+		ruleType, rule, wrapped = "int32", r.Int32, typ.IsEmbed()
 	case *validate.FieldRules_Int64:
-		return "int64", r.Int64, rules.Message, typ.IsEmbed()
+		ruleType, rule, wrapped = "int64", r.Int64, typ.IsEmbed()
 	case *validate.FieldRules_Uint32:
-		return "uint32", r.Uint32, rules.Message, typ.IsEmbed()
+		ruleType, rule, wrapped = "uint32", r.Uint32, typ.IsEmbed()
 	case *validate.FieldRules_Uint64:
-		return "uint64", r.Uint64, rules.Message, typ.IsEmbed()
+		ruleType, rule, wrapped = "uint64", r.Uint64, typ.IsEmbed()
 	case *validate.FieldRules_Sint32:
-		return "sint32", r.Sint32, rules.Message, false
+		ruleType, rule, wrapped = "sint32", r.Sint32, false
 	case *validate.FieldRules_Sint64:
-		return "sint64", r.Sint64, rules.Message, false
+		ruleType, rule, wrapped = "sint64", r.Sint64, false
 	case *validate.FieldRules_Fixed32:
-		return "fixed32", r.Fixed32, rules.Message, false
+		ruleType, rule, wrapped = "fixed32", r.Fixed32, false
 	case *validate.FieldRules_Fixed64:
-		return "fixed64", r.Fixed64, rules.Message, false
+		ruleType, rule, wrapped = "fixed64", r.Fixed64, false
 	case *validate.FieldRules_Sfixed32:
-		return "sfixed32", r.Sfixed32, rules.Message, false
+		ruleType, rule, wrapped = "sfixed32", r.Sfixed32, false
 	case *validate.FieldRules_Sfixed64:
-		return "sfixed64", r.Sfixed64, rules.Message, false
+		ruleType, rule, wrapped = "sfixed64", r.Sfixed64, false
 	case *validate.FieldRules_Bool:
-		return "bool", r.Bool, rules.Message, typ.IsEmbed()
+		ruleType, rule, wrapped = "bool", r.Bool, typ.IsEmbed()
 	case *validate.FieldRules_String_:
-		return "string", r.String_, rules.Message, typ.IsEmbed()
+		ruleType, rule, wrapped = "string", r.String_, typ.IsEmbed()
 	case *validate.FieldRules_Bytes:
-		return "bytes", r.Bytes, rules.Message, typ.IsEmbed()
+		ruleType, rule, wrapped = "bytes", r.Bytes, typ.IsEmbed()
 	case *validate.FieldRules_Enum:
-		return "enum", r.Enum, rules.Message, false
+		ruleType, rule, wrapped = "enum", r.Enum, false
 	case *validate.FieldRules_Repeated:
-		return "repeated", r.Repeated, rules.Message, false
+		ruleType, rule, wrapped = "repeated", r.Repeated, false
 	case *validate.FieldRules_Map:
-		return "map", r.Map, rules.Message, false
+		ruleType, rule, wrapped = "map", r.Map, false
 	case *validate.FieldRules_Any:
-		return "any", r.Any, rules.Message, false
+		ruleType, rule, wrapped = "any", r.Any, false
 	case *validate.FieldRules_Duration:
-		return "duration", r.Duration, rules.Message, false
+		ruleType, rule, wrapped = "duration", r.Duration, false
 	case *validate.FieldRules_Timestamp:
-		return "timestamp", r.Timestamp, rules.Message, false
+		ruleType, rule, wrapped = "timestamp", r.Timestamp, false
 	case nil:
 		if ft, ok := typ.(pgs.FieldType); ok && ft.IsRepeated() {
 			return "repeated", &validate.RepeatedRules{}, rules.Message, false
@@ -184,6 +184,8 @@ func resolveRules(typ interface{ IsEmbed() bool }, rules *validate.FieldRules) (
 		}
 		return "none", nil, nil, false
 	default:
-		return "error", nil, rules.Message, false
+		ruleType, rule, wrapped = "error", nil, false
 	}
+
+	return ruleType, rule, rules.Message, wrapped
 }
