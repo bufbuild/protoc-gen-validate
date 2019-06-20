@@ -130,7 +130,7 @@ Gogo support has the following limitations:
 #### Java
 
 Java generation is integrated with the existing protobuf toolchain for java projects. For Maven projects, add the
-following to your pom.xml. Gradle projects follow a similar pattern.
+following to your pom.xml or build.gradle.
 
 ```xml
 <dependencies>
@@ -172,6 +172,34 @@ following to your pom.xml. Gradle projects follow a similar pattern.
         </plugin>
     </plugins>
 </build>
+```
+
+```gradle
+plugins {
+    ...
+    id "com.google.protobuf" version "0.8.6"
+    ...
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.5.1"
+    }
+
+    plugins {
+        javapgv {
+            artifact = "io.envoyproxy.protoc-gen-validate:protoc-gen-validate:0.1.0"
+        }
+    }
+
+    generateProtoTasks {
+        all()*.plugins {
+            javapgv {
+                option "lang=java"
+            }
+        }
+    }
+}
 ```
 
 ```java
