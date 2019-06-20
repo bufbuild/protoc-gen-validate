@@ -129,7 +129,8 @@ Gogo support has the following limitations:
 
 #### Java
 
-Java generation is integrated with the existing protobuf toolchain for java projects. For Maven projects, add the following to your pom.xml.
+Java generation is integrated with the existing protobuf toolchain for java projects. For Maven projects, add the
+following to your pom.xml. Gradle projects follow a similar pattern.
 
 ```xml
 <dependencies>
@@ -173,7 +174,16 @@ Java generation is integrated with the existing protobuf toolchain for java proj
 </build>
 ```
 
-Gradle projects follow a similar pattern.
+```java
+// Create a validator index that reflectively loads generated validators
+ValidatorIndex index = new ReflectiveValidatorIndex();
+// Assert that a message is valid
+index.validatorFor(message.getClass()).assertValid(message);
+
+// Create a gRPC client and server interceptor to automatically validate messages (requires pgv-java-grpc module)
+clientStub = clientStub.withInterceptors(new ValidatingClientInterceptor(index));
+serverBuilder.addService(ServerInterceptors.intercept(svc, new ValidatingServerInterceptor(index)));
+```
 
 ## Constraint Rules
 
