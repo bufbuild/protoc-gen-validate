@@ -153,6 +153,14 @@ public final class StringValidation {
         }
     }
 
+    private static final Pattern uuidPattern = Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+    public static void uuid(String field, String value) throws ValidationException {
+        Matcher matcher = uuidPattern.matcher(value);
+        if (!matcher.matches()) {
+            throw new ValidationException(field, enquote(value), "should be a valid uuid");
+        }
+    }
+
     private static String enquote(String value) {
         return "\"" + value + "\"";
     }

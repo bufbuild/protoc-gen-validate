@@ -33,6 +33,7 @@
 | ipv6                   |✅|✅|✅|✅|
 | uri                    |✅|✅|✅|✅|
 | uri_ref                |✅|✅|✅|✅|
+| uuid                   |✅|✅|❌|✅|
 
 ## Bytes
 | Constraint Rule | Go | GoGo | C++ | Java |

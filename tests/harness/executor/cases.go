@@ -843,6 +843,20 @@ var stringCases = []TestCase{
 	{"string - URI - valid", &cases.StringURIRef{Val: "http://example.com/foo/bar?baz=quux"}, true},
 	{"string - URI - valid (relative)", &cases.StringURIRef{Val: "/foo/bar?baz=quux"}, true},
 	{"string - URI - invalid", &cases.StringURIRef{Val: "!@#$%^&*%$#"}, false},
+
+	{"string - UUID - valid (nil)", &cases.StringUUID{Val: "00000000-0000-0000-0000-000000000000"}, true},
+	{"string - UUID - valid (v1)", &cases.StringUUID{Val: "b45c0c80-8880-11e9-a5b1-000000000000"}, true},
+	{"string - UUID - valid (v1 - case-insensitive)", &cases.StringUUID{Val: "B45C0C80-8880-11E9-A5B1-000000000000"}, true},
+	{"string - UUID - valid (v2)", &cases.StringUUID{Val: "b45c0c80-8880-21e9-a5b1-000000000000"}, true},
+	{"string - UUID - valid (v2 - case-insensitive)", &cases.StringUUID{Val: "B45C0C80-8880-21E9-A5B1-000000000000"}, true},
+	{"string - UUID - valid (v3)", &cases.StringUUID{Val: "a3bb189e-8bf9-3888-9912-ace4e6543002"}, true},
+	{"string - UUID - valid (v3 - case-insensitive)", &cases.StringUUID{Val: "A3BB189E-8BF9-3888-9912-ACE4E6543002"}, true},
+	{"string - UUID - valid (v4)", &cases.StringUUID{Val: "8b208305-00e8-4460-a440-5e0dcd83bb0a"}, true},
+	{"string - UUID - valid (v4 - case-insensitive)", &cases.StringUUID{Val: "8B208305-00E8-4460-A440-5E0DCD83BB0A"}, true},
+	{"string - UUID - valid (v5)", &cases.StringUUID{Val: "a6edc906-2f9f-5fb2-a373-efac406f0ef2"}, true},
+	{"string - UUID - valid (v5 - case-insensitive)", &cases.StringUUID{Val: "A6EDC906-2F9F-5FB2-A373-EFAC406F0EF2"}, true},
+	{"string - UUID - invalid", &cases.StringUUID{Val: "foobar"}, false},
+	{"string - UUID - invalid (bad UUID)", &cases.StringUUID{Val: "ffffffff-ffff-ffff-ffff-fffffffffffff"}, false},
 }
 
 var bytesCases = []TestCase{

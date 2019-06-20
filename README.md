@@ -330,6 +330,9 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
 
   // x must be a valid URI reference (either absolute or relative)
   string x = 1 [(validate.rules).string.uri_ref = true];
+
+  // x must be a valid UUID (via RFC 4122)
+  string x = 1 [(validate.rules).string.uuid = true];
   ```
 
 ### Bytes
