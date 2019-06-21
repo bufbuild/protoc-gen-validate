@@ -131,8 +131,11 @@ public class StringValidationTest {
         // Match
         StringValidation.email("x", "foo@bar.com");
         StringValidation.email("x", "John Smith <foo@bar.com>");
+        StringValidation.email("x", "John Doe <john.\"we<i<>r>do\".doe@example.com>");
         // No Match
         assertThatThrownBy(() -> StringValidation.email("x", "bar.bar.bar")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.email("x", "John Doe <john.doe@example.com")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.email("x", "John Doe <john.doe@example.com> ")).isInstanceOf(ValidationException.class);
     }
 
     @Test

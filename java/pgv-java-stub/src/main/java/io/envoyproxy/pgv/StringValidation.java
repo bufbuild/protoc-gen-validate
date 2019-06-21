@@ -89,17 +89,14 @@ public final class StringValidation {
             final char[] chars = value.toCharArray();
             final StringBuilder sb = new StringBuilder();
             boolean insideQuotes = false;
-            loop: for (int i = chars.length - 2; i >= 0; i--) {
-                switch (chars[i]) {
-                    case '<':
-                        if (!insideQuotes) break loop;
-
-                    case '"':
-                        insideQuotes = !insideQuotes;
-
-                    default:
-                        sb.append(chars[i]);
+            for (int i = chars.length - 2; i >= 0; i--) {
+                final char c = chars[i];
+                if (c == '<') {
+                    if (!insideQuotes) break;
+                } else if (c == '"') {
+                    insideQuotes = !insideQuotes;
                 }
+                sb.append(c);
             }
             value = sb.reverse().toString();
         }
