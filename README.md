@@ -129,7 +129,8 @@ Gogo support has the following limitations:
 
 #### Java
 
-Java generation is integrated with the existing protobuf toolchain for java projects. For Maven projects, add the following to your pom.xml.
+Java generation is integrated with the existing protobuf toolchain for java projects. For Maven projects, add the
+following to your pom.xml or build.gradle.
 
 ```xml
 <dependencies>
@@ -173,7 +174,44 @@ Java generation is integrated with the existing protobuf toolchain for java proj
 </build>
 ```
 
-Gradle projects follow a similar pattern.
+```gradle
+plugins {
+    ...
+    id "com.google.protobuf" version "0.8.6"
+    ...
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.5.1"
+    }
+
+    plugins {
+        javapgv {
+            artifact = "io.envoyproxy.protoc-gen-validate:protoc-gen-validate:0.1.0"
+        }
+    }
+
+    generateProtoTasks {
+        all()*.plugins {
+            javapgv {
+                option "lang=java"
+            }
+        }
+    }
+}
+```
+
+```java
+// Create a validator index that reflectively loads generated validators
+ValidatorIndex index = new ReflectiveValidatorIndex();
+// Assert that a message is valid
+index.validatorFor(message.getClass()).assertValid(message);
+
+// Create a gRPC client and server interceptor to automatically validate messages (requires pgv-java-grpc module)
+clientStub = clientStub.withInterceptors(new ValidatingClientInterceptor(index));
+serverBuilder.addService(ServerInterceptors.intercept(svc, new ValidatingServerInterceptor(index)));
+```
 
 ## Constraint Rules
 
