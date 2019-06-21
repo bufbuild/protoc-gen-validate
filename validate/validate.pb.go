@@ -3444,27 +3444,27 @@ func (m *TimestampRules) GetWithin() *duration.Duration {
 var E_Disabled = &proto.ExtensionDesc{
 	ExtendedType:  (*descriptor.MessageOptions)(nil),
 	ExtensionType: (*bool)(nil),
-	Field:         919191,
+	Field:         1071,
 	Name:          "validate.disabled",
-	Tag:           "varint,919191,opt,name=disabled",
+	Tag:           "varint,1071,opt,name=disabled",
 	Filename:      "validate/validate.proto",
 }
 
 var E_Required = &proto.ExtensionDesc{
 	ExtendedType:  (*descriptor.OneofOptions)(nil),
 	ExtensionType: (*bool)(nil),
-	Field:         919191,
+	Field:         1071,
 	Name:          "validate.required",
-	Tag:           "varint,919191,opt,name=required",
+	Tag:           "varint,1071,opt,name=required",
 	Filename:      "validate/validate.proto",
 }
 
 var E_Rules = &proto.ExtensionDesc{
 	ExtendedType:  (*descriptor.FieldOptions)(nil),
 	ExtensionType: (*FieldRules)(nil),
-	Field:         919191,
+	Field:         1071,
 	Name:          "validate.rules",
-	Tag:           "bytes,919191,opt,name=rules",
+	Tag:           "bytes,1071,opt,name=rules",
 	Filename:      "validate/validate.proto",
 }
 
