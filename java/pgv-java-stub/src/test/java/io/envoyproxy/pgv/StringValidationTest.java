@@ -3,9 +3,15 @@ package io.envoyproxy.pgv;
 import com.google.re2j.Pattern;
 import org.junit.Test;
 
+import static io.envoyproxy.pgv.Assertions.assertValidationException;
+import static io.envoyproxy.pgv.StringValidation.uuid;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class StringValidationTest {
+    private static String repeat(final char c, final int n) {
+        return new String(new char[n]).replace('\0', c);
+    }
+
     @Test
     public void inWorks() throws ValidationException {
         String[] set = new String[]{"foo", "bar", "🙈"};
@@ -215,20 +221,33 @@ public class StringValidationTest {
 
     @Test
     public void uuidWorks() throws ValidationException {
+        char[] chars = "0123456789abcdefABCDEF".toCharArray();
+
         // Match
-        StringValidation.uuid("x", "00000000-0000-0000-0000-000000000000");
-        StringValidation.uuid("x", "b45c0c80-8880-11e9-a5b1-000000000000");
-        StringValidation.uuid("x", "B45C0C80-8880-11E9-A5B1-000000000000");
-        StringValidation.uuid("x", "b45c0c80-8880-21e9-a5b1-000000000000");
-        StringValidation.uuid("x", "B45C0C80-8880-21E9-A5B1-000000000000");
-        StringValidation.uuid("x", "a3bb189e-8bf9-3888-9912-ace4e6543002");
-        StringValidation.uuid("x", "A3BB189E-8BF9-3888-9912-ACE4E6543002");
-        StringValidation.uuid("x", "8b208305-00e8-4460-a440-5e0dcd83bb0a");
-        StringValidation.uuid("x", "8B208305-00E8-4460-A440-5E0DCD83BB0A");
-        StringValidation.uuid("x", "a6edc906-2f9f-5fb2-a373-efac406f0ef2");
-        StringValidation.uuid("x", "A6EDC906-2F9F-5FB2-A373-EFAC406F0EF2");
+        for (char c : chars) {
+            uuid("simple_" + c, repeat(c, 32));
+        }
+        for (char c : chars) {
+            final String s4 = repeat(c, 4);
+            uuid("hyphenated_" + c, repeat(c, 8) + '-' + s4 + '-' + s4 + '-' + s4 + '-' + repeat(c, 12));
+        }
+
         // No Match
-        assertThatThrownBy(() -> StringValidation.uuid("x", "foobar")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.uuid("x", "ffffffff-ffff-ffff-ffff-fffffffffffff")).isInstanceOf(ValidationException.class);
+        assertValidationException(() -> uuid("simple_g", "0000000000000000000000000000000g"));
+        assertValidationException(() -> uuid("simple_short", "0000000000000000000000000000000"));
+        assertValidationException(() -> uuid("simple_long", "000000000000000000000000000000000"));
+
+        assertValidationException(() -> uuid("hyphenated_g", "00000000-0000-0000-0000-00000000000g"));
+        assertValidationException(() -> uuid("hyphenated_underscore", "00000000-0000_0000-0000-000000000000"));
+        assertValidationException(() -> uuid("hyphenated_short", "00000000-000000000-0000-00000000000"));
+        assertValidationException(() -> uuid("hyphenated_long", "00000000-000000000-0000-0000000000000"));
+        assertValidationException(() -> uuid("hyphenated_1_dash_at_07", "0000000-00000-0000-0000-000000000000"));
+        assertValidationException(() -> uuid("hyphenated_1_dash_at_09", "000000000-000-0000-0000-000000000000"));
+        assertValidationException(() -> uuid("hyphenated_2_dash_at_12", "00000000-000-00000-0000-000000000000"));
+        assertValidationException(() -> uuid("hyphenated_2_dash_at_14", "00000000-00000-000-0000-000000000000"));
+        assertValidationException(() -> uuid("hyphenated_3_dash_at_17", "00000000-0000-000-00000-000000000000"));
+        assertValidationException(() -> uuid("hyphenated_3_dash_at_19", "00000000-0000-00000-000-000000000000"));
+        assertValidationException(() -> uuid("hyphenated_4_dash_at_22", "00000000-0000-0000-000-0000000000000"));
+        assertValidationException(() -> uuid("hyphenated_4_dash_at_24", "00000000-0000-0000-00000-00000000000"));
     }
 }

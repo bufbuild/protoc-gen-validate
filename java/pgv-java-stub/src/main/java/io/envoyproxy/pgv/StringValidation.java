@@ -171,12 +171,32 @@ public final class StringValidation {
         }
     }
 
-    private static final Pattern uuidPattern = Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
-    public static void uuid(String field, String value) throws ValidationException {
-        Matcher matcher = uuidPattern.matcher(value);
-        if (!matcher.matches()) {
-            throw new ValidationException(field, enquote(value), "should be a valid uuid");
+    public static void uuid(final String field, final String value) throws ValidationException {
+        final char[] chars = value.toCharArray();
+
+        err: switch (chars.length) {
+            case 32:
+                for (final char c : chars) {
+                    if (isNotHexDigit(c)) {
+                        break err;
+                    }
+                }
+                return;
+
+            case 36:
+                for (int i = 0; i < chars.length; i++) {
+                    if (isNotHexDigit(chars[i]) && ((i == 8 || i == 13 || i == 18 || i == 23) && chars[i] != '-')) {
+                        break err;
+                    }
+                }
+                return;
         }
+
+        throw new ValidationException(field, enquote(value), "invalid UUID string");
+    }
+
+    private static boolean isNotHexDigit(final char c) {
+        return (c < '0' || c > '9') && (c < 'a' || c > 'f') && (c < 'A' || c > 'F');
     }
 
     private static String enquote(String value) {
