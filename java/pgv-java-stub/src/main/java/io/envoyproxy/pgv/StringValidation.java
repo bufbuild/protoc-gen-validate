@@ -166,6 +166,11 @@ public final class StringValidation {
     }
 
     private static boolean isAscii(final String value) {
-        return value.chars().allMatch(it -> it >= 0 && it <= 127);
+        for (char c : value.toCharArray()) {
+            if (c > 127) {
+                return false;
+            }
+        }
+        return true;
     }
 }
