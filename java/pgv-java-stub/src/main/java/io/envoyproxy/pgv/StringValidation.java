@@ -14,8 +14,14 @@ import java.nio.charset.Charset;
 /**
  * {@code StringValidation} implements PGV validation for protobuf {@code String} fields.
  */
+@SuppressWarnings("WeakerAccess")
 public final class StringValidation {
     private StringValidation() {
+        // Intentionally left blank.
+    }
+
+    private static class Lazy {
+        static final EmailValidator EMAIL_VALIDATOR = EmailValidator.getInstance(true, true);
     }
 
     public static void length(String field, String value, int expected) throws ValidationException {
@@ -78,17 +84,27 @@ public final class StringValidation {
         }
     }
 
-    private static final Pattern emailWithDisplayName = Pattern.compile(".*<(.*)>");
-    public static void email(String field, String value) throws ValidationException {
-        EmailValidator emailValidator = EmailValidator.getInstance(true, true);
+    public static void email(final String field, String value) throws ValidationException {
+        if (value.charAt(value.length() - 1) == '>') {
+            final char[] chars = value.toCharArray();
+            final StringBuilder sb = new StringBuilder();
+            boolean insideQuotes = false;
+            loop: for (int i = chars.length - 2; i >= 0; i--) {
+                switch (chars[i]) {
+                    case '<':
+                        if (!insideQuotes) break loop;
 
-        // extract email address from between angle brackets, if present
-        Matcher matcher = emailWithDisplayName.matcher(value);
-        if (matcher.matches()) {
-            value = matcher.group(1);
+                    case '"':
+                        insideQuotes = !insideQuotes;
+
+                    default:
+                        sb.append(chars[i]);
+                }
+            }
+            value = sb.reverse().toString();
         }
 
-        if (!emailValidator.isValid(value)) {
+        if (!Lazy.EMAIL_VALIDATOR.isValid(value)) {
             throw new ValidationException(field, enquote(value), "should be a valid email");
         }
     }
