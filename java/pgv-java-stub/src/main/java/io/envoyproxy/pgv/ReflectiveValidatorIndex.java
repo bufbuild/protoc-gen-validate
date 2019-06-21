@@ -11,7 +11,7 @@ public final class ReflectiveValidatorIndex implements ValidatorIndex {
     private final ConcurrentHashMap<Class, Validator> VALIDATOR_INDEX = new ConcurrentHashMap<>();
 
     /**
-     * Retuns the validator for {@code <T>}, or {@code ALWAYS_VALID} if not found.
+     * Returns the validator for {@code <T>}, or {@code ALWAYS_VALID} if not found.
      */
     @Override
     @SuppressWarnings("unchecked")
