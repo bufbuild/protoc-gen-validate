@@ -1,6 +1,5 @@
 package io.envoyproxy.pgv;
 
-import com.google.re2j.Matcher;
 import com.google.re2j.Pattern;
 import org.apache.commons.validator.routines.DomainValidator;
 import org.apache.commons.validator.routines.EmailValidator;
