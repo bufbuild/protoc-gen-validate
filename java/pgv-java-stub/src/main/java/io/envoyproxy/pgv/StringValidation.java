@@ -27,21 +27,24 @@ public final class StringValidation {
         static final EmailValidator EMAIL_VALIDATOR = EmailValidator.getInstance(true, true);
     }
 
-    public static void length(String field, String value, int expected) throws ValidationException {
-        if (value.length() != expected) {
-            throw new ValidationException(field, enquote(value), "length must be " + expected);
+    public static void length(final String field, final String value, final int expected) throws ValidationException {
+        final int actual = value.codePointCount(0, value.length());
+        if (actual != expected) {
+            throw new ValidationException(field, enquote(value), "length must be " + expected + " but got: " + actual);
         }
     }
 
-    public static void minLength(String field, String value, int expected) throws ValidationException {
-        if (value.length() < expected) {
-            throw new ValidationException(field, enquote(value), "length must be at least " + expected);
+    public static void minLength(final String field, final String value, final int expected) throws ValidationException {
+        final int actual = value.codePointCount(0, value.length());
+        if (actual < expected) {
+            throw new ValidationException(field, enquote(value), "length must be " + expected + " but got: " + actual);
         }
     }
 
-    public static void maxLength(String field, String value, int expected) throws ValidationException {
-        if (value.length() > expected) {
-            throw new ValidationException(field, enquote(value), "length must be at maximum " + expected);
+    public static void maxLength(final String field, final String value, final int expected) throws ValidationException {
+        final int actual = value.codePointCount(0, value.length());
+        if (actual > expected) {
+            throw new ValidationException(field, enquote(value), "length must be " + expected + " but got: " + actual);
         }
     }
 

@@ -8,18 +8,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class StringValidationTest {
     @Test
     public void inWorks() throws ValidationException {
-        String[] set = new String[]{"foo", "bar"};
+        String[] set = new String[]{"foo", "bar", "🙈"};
         // In
-        CollectiveValidation.in("x", "foo", set);
+        CollectiveValidation.in("x", "🙈", set);
         // Not In
         assertThatThrownBy(() -> CollectiveValidation.in("x", "baz", set)).isInstanceOf(ValidationException.class);
     }
 
     @Test
     public void notInWorks() throws ValidationException {
-        String[] set = new String[]{"foo", "bar"};
+        String[] set = new String[]{"foo", "bar", "🙈"};
         // In
-        assertThatThrownBy(() -> CollectiveValidation.notIn("x", "foo", set)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> CollectiveValidation.notIn("x", "🙈", set)).isInstanceOf(ValidationException.class);
         // Not In
         CollectiveValidation.notIn("x", "baz", set);
     }
@@ -27,31 +27,31 @@ public class StringValidationTest {
     @Test
     public void lengthWorks() throws ValidationException {
         // Short
-        assertThatThrownBy(() -> StringValidation.length("x", "ñįö", 5)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.length("x", "🙈", 2)).isInstanceOf(ValidationException.class);
         // Same
-        StringValidation.length("x", "ñįöxx", 5);
+        StringValidation.length("x", "🙈🙉", 2);
         // Long
-        assertThatThrownBy(() -> StringValidation.length("x", "ñįöxxxx", 5)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.length("x", "🙈🙉🙊", 2)).isInstanceOf(ValidationException.class);
     }
 
     @Test
     public void minLengthWorks() throws ValidationException {
         // Short
-        assertThatThrownBy(() -> StringValidation.minLength("x", "ñįö", 5)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.minLength("x", "🙈", 2)).isInstanceOf(ValidationException.class);
         // Same
-        StringValidation.minLength("x", "ñįöxx", 5);
+        StringValidation.minLength("x", "🙈🙉", 2);
         // Long
-        StringValidation.minLength("x", "ñįöxxxx", 5);
+        StringValidation.minLength("x", "🙈🙉🙊", 2);
     }
 
     @Test
     public void maxLengthWorks() throws ValidationException {
         // Short
-        StringValidation.maxLength("x", "ñįö", 5);
+        StringValidation.maxLength("x", "🙈", 2);
         // Same
-        StringValidation.maxLength("x", "ñįöxx", 5);
+        StringValidation.maxLength("x", "🙈🙉", 2);
         // Long
-        assertThatThrownBy(() -> StringValidation.maxLength("x", "ñįöxxxx", 5)).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.maxLength("x", "🙈🙉🙊", 2)).isInstanceOf(ValidationException.class);
     }
 
     @Test
