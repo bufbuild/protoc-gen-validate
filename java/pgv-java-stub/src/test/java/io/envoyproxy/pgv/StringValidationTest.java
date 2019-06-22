@@ -221,6 +221,8 @@ public class StringValidationTest {
 
     @Test
     public void uuidWorks() throws ValidationException {
+        // We use this to generate UUIDs in short and hyphenated form for all
+        // valid hex digits, so 00000000-0000…, 11111111-1111…, …
         char[] chars = "0123456789abcdefABCDEF".toCharArray();
 
         // Match

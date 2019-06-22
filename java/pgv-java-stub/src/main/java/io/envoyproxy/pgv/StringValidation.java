@@ -15,6 +15,11 @@ import java.nio.charset.StandardCharsets;
  */
 @SuppressWarnings("WeakerAccess")
 public final class StringValidation {
+    private static final int UUID_DASH_1 = 8;
+    private static final int UUID_DASH_2 = 13;
+    private static final int UUID_DASH_3 = 18;
+    private static final int UUID_DASH_4 = 23;
+
     private StringValidation() {
         // Intentionally left blank.
     }
@@ -171,6 +176,11 @@ public final class StringValidation {
         }
     }
 
+    /**
+     * Validates if the given value is a UUID or GUID in short
+     * ({@code 00000000000000000000000000000000}) or hyphenated
+     * ({@code 00000000-0000-0000-0000-000000000000}) form.
+     */
     public static void uuid(final String field, final String value) throws ValidationException {
         final char[] chars = value.toCharArray();
 
@@ -185,7 +195,11 @@ public final class StringValidation {
 
             case 36:
                 for (int i = 0; i < chars.length; i++) {
-                    if (isNotHexDigit(chars[i]) && ((i == 8 || i == 13 || i == 18 || i == 23) && chars[i] != '-')) {
+                    if (i == UUID_DASH_1 || i == UUID_DASH_2 || i == UUID_DASH_3 || i == UUID_DASH_4) {
+                        if (chars[i] != '-') {
+                            break err;
+                        }
+                    } else if (isNotHexDigit(chars[i])) {
                         break err;
                     }
                 }
