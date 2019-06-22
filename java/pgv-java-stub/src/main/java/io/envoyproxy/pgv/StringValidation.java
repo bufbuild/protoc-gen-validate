@@ -20,6 +20,9 @@ public final class StringValidation {
         // Intentionally left blank.
     }
 
+    // Defers initialization until needed and from there on we keep an object
+    // reference and avoid future calls; it is safe to assume that we require
+    // the instance again after initialization.
     private static class Lazy {
         static final EmailValidator EMAIL_VALIDATOR = EmailValidator.getInstance(true, true);
     }
