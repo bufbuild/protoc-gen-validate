@@ -1,6 +1,5 @@
 package io.envoyproxy.pgv;
 
-import com.google.common.base.CharMatcher;
 import com.google.re2j.Matcher;
 import com.google.re2j.Pattern;
 import org.apache.commons.validator.routines.DomainValidator;
@@ -9,7 +8,7 @@ import org.apache.commons.validator.routines.InetAddressValidator;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * {@code StringValidation} implements PGV validation for protobuf {@code String} fields.
@@ -49,19 +48,19 @@ public final class StringValidation {
     }
 
     public static void lenBytes(String field, String value, int expected) throws ValidationException {
-        if (value.getBytes(Charset.forName("UTF-8")).length != expected) {
+        if (value.getBytes(StandardCharsets.UTF_8).length != expected) {
             throw new ValidationException(field, enquote(value), "bytes length must be " + expected);
         }
     }
 
     public static void minBytes(String field, String value, int expected) throws ValidationException {
-        if (value.getBytes(Charset.forName("UTF-8")).length < expected) {
+        if (value.getBytes(StandardCharsets.UTF_8).length < expected) {
             throw new ValidationException(field, enquote(value), "bytes length must be at least " + expected);
         }
     }
 
     public static void maxBytes(String field, String value, int expected) throws ValidationException {
-        if (value.getBytes(Charset.forName("UTF-8")).length > expected) {
+        if (value.getBytes(StandardCharsets.UTF_8).length > expected) {
             throw new ValidationException(field, enquote(value), "bytes length must be at maximum " + expected);
         }
     }
@@ -113,7 +112,7 @@ public final class StringValidation {
     }
 
     public static void address(String field, String value) throws ValidationException {
-        boolean validHost = CharMatcher.ascii().matchesAllOf(value) && DomainValidator.getInstance(true).isValid(value);
+        boolean validHost = isAscii(value) && DomainValidator.getInstance(true).isValid(value);
         boolean validIp = InetAddressValidator.getInstance().isValid(value);
 
         if (!validHost && !validIp) {
@@ -122,7 +121,7 @@ public final class StringValidation {
     }
 
     public static void hostName(String field, String value) throws ValidationException {
-        if (!CharMatcher.ascii().matchesAllOf(value)) {
+        if (!isAscii(value)) {
             throw new ValidationException(field, enquote(value), "should be a valid host containing only ascii characters");
         }
 
@@ -166,7 +165,7 @@ public final class StringValidation {
 
     public static void uriRef(String field, String value) throws ValidationException {
         try {
-            URI uri = new URI(value);
+            new URI(value);
         } catch (URISyntaxException ex) {
             throw new ValidationException(field, enquote(value), "should be a valid absolute uri");
         }
@@ -182,5 +181,14 @@ public final class StringValidation {
 
     private static String enquote(String value) {
         return "\"" + value + "\"";
+    }
+
+    private static boolean isAscii(final String value) {
+        for (char c : value.toCharArray()) {
+            if (c > 127) {
+                return false;
+            }
+        }
+        return true;
     }
 }
