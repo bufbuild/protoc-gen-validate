@@ -16,6 +16,14 @@ import java.nio.charset.StandardCharsets;
 @SuppressWarnings("WeakerAccess")
 public final class StringValidation {
     private StringValidation() {
+        // Intentionally left blank.
+    }
+
+    // Defers initialization until needed and from there on we keep an object
+    // reference and avoid future calls; it is safe to assume that we require
+    // the instance again after initialization.
+    private static class Lazy {
+        static final EmailValidator EMAIL_VALIDATOR = EmailValidator.getInstance(true, true);
     }
 
     public static void length(final String field, final String value, final int expected) throws ValidationException {
@@ -81,17 +89,24 @@ public final class StringValidation {
         }
     }
 
-    private static final Pattern emailWithDisplayName = Pattern.compile(".*<(.*)>");
-    public static void email(String field, String value) throws ValidationException {
-        EmailValidator emailValidator = EmailValidator.getInstance(true, true);
-
-        // extract email address from between angle brackets, if present
-        Matcher matcher = emailWithDisplayName.matcher(value);
-        if (matcher.matches()) {
-            value = matcher.group(1);
+    public static void email(final String field, String value) throws ValidationException {
+        if (value.charAt(value.length() - 1) == '>') {
+            final char[] chars = value.toCharArray();
+            final StringBuilder sb = new StringBuilder();
+            boolean insideQuotes = false;
+            for (int i = chars.length - 2; i >= 0; i--) {
+                final char c = chars[i];
+                if (c == '<') {
+                    if (!insideQuotes) break;
+                } else if (c == '"') {
+                    insideQuotes = !insideQuotes;
+                }
+                sb.append(c);
+            }
+            value = sb.reverse().toString();
         }
 
-        if (!emailValidator.isValid(value)) {
+        if (!Lazy.EMAIL_VALIDATOR.isValid(value)) {
             throw new ValidationException(field, enquote(value), "should be a valid email");
         }
     }
