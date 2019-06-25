@@ -221,35 +221,28 @@ public class StringValidationTest {
 
     @Test
     public void uuidWorks() throws ValidationException {
-        // We use this to generate UUIDs in short and hyphenated form for all
-        // valid hex digits, so 00000000-0000…, 11111111-1111…, …
+        // We use this to generate UUIDs for all valid hex digits, so:
+        // 00000000-0000…, 11111111-1111…, …, FFFFFFFF-FFFF…
         char[] chars = "0123456789abcdefABCDEF".toCharArray();
 
         // Match
         for (char c : chars) {
-            uuid("simple_" + c, repeat(c, 32));
-        }
-        for (char c : chars) {
             final String s4 = repeat(c, 4);
-            uuid("hyphenated_" + c, repeat(c, 8) + '-' + s4 + '-' + s4 + '-' + s4 + '-' + repeat(c, 12));
+            uuid(String.valueOf(c), repeat(c, 8) + '-' + s4 + '-' + s4 + '-' + s4 + '-' + repeat(c, 12));
         }
 
         // No Match
-        assertValidationException(() -> uuid("simple_g", "0000000000000000000000000000000g"));
-        assertValidationException(() -> uuid("simple_short", "0000000000000000000000000000000"));
-        assertValidationException(() -> uuid("simple_long", "000000000000000000000000000000000"));
-
-        assertValidationException(() -> uuid("hyphenated_g", "00000000-0000-0000-0000-00000000000g"));
-        assertValidationException(() -> uuid("hyphenated_underscore", "00000000-0000_0000-0000-000000000000"));
-        assertValidationException(() -> uuid("hyphenated_short", "00000000-000000000-0000-00000000000"));
-        assertValidationException(() -> uuid("hyphenated_long", "00000000-000000000-0000-0000000000000"));
-        assertValidationException(() -> uuid("hyphenated_1_dash_at_07", "0000000-00000-0000-0000-000000000000"));
-        assertValidationException(() -> uuid("hyphenated_1_dash_at_09", "000000000-000-0000-0000-000000000000"));
-        assertValidationException(() -> uuid("hyphenated_2_dash_at_12", "00000000-000-00000-0000-000000000000"));
-        assertValidationException(() -> uuid("hyphenated_2_dash_at_14", "00000000-00000-000-0000-000000000000"));
-        assertValidationException(() -> uuid("hyphenated_3_dash_at_17", "00000000-0000-000-00000-000000000000"));
-        assertValidationException(() -> uuid("hyphenated_3_dash_at_19", "00000000-0000-00000-000-000000000000"));
-        assertValidationException(() -> uuid("hyphenated_4_dash_at_22", "00000000-0000-0000-000-0000000000000"));
-        assertValidationException(() -> uuid("hyphenated_4_dash_at_24", "00000000-0000-0000-00000-00000000000"));
+        assertValidationException(() -> uuid("g", "00000000-0000-0000-0000-00000000000g"));
+        assertValidationException(() -> uuid("underscore", "00000000-0000_0000-0000-000000000000"));
+        assertValidationException(() -> uuid("short", "00000000-000000000-0000-00000000000"));
+        assertValidationException(() -> uuid("long", "00000000-000000000-0000-0000000000000"));
+        assertValidationException(() -> uuid("1_dash_at_07", "0000000-00000-0000-0000-000000000000"));
+        assertValidationException(() -> uuid("1_dash_at_09", "000000000-000-0000-0000-000000000000"));
+        assertValidationException(() -> uuid("2_dash_at_12", "00000000-000-00000-0000-000000000000"));
+        assertValidationException(() -> uuid("2_dash_at_14", "00000000-00000-000-0000-000000000000"));
+        assertValidationException(() -> uuid("3_dash_at_17", "00000000-0000-000-00000-000000000000"));
+        assertValidationException(() -> uuid("3_dash_at_19", "00000000-0000-00000-000-000000000000"));
+        assertValidationException(() -> uuid("4_dash_at_22", "00000000-0000-0000-000-0000000000000"));
+        assertValidationException(() -> uuid("4_dash_at_24", "00000000-0000-0000-00000-00000000000"));
     }
 }

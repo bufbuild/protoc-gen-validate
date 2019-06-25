@@ -18,6 +18,7 @@ public final class StringValidation {
     private static final int UUID_DASH_2 = 13;
     private static final int UUID_DASH_3 = 18;
     private static final int UUID_DASH_4 = 23;
+    private static final int UUID_LEN = 36;
 
     private StringValidation() {
         // Intentionally left blank.
@@ -176,40 +177,28 @@ public final class StringValidation {
     }
 
     /**
-     * Validates if the given value is a UUID or GUID in short
-     * ({@code 00000000000000000000000000000000}) or hyphenated
-     * ({@code 00000000-0000-0000-0000-000000000000}) form.
+     * Validates if the given value is a UUID or GUID in RFC 4122 hyphenated
+     * ({@code 00000000-0000-0000-0000-000000000000}) form; both lower and upper
+     * hex digits are accepted.
      */
     public static void uuid(final String field, final String value) throws ValidationException {
         final char[] chars = value.toCharArray();
 
-        err: switch (chars.length) {
-            case 32:
-                for (final char c : chars) {
-                    if (isNotHexDigit(c)) {
+        err: if (chars.length == UUID_LEN) {
+            for (int i = 0; i < chars.length; i++) {
+                final char c = chars[i];
+                if (i == UUID_DASH_1 || i == UUID_DASH_2 || i == UUID_DASH_3 || i == UUID_DASH_4) {
+                    if (c != '-') {
                         break err;
                     }
+                } else if ((c < '0' || c > '9') && (c < 'a' || c > 'f') && (c < 'A' || c > 'F')) {
+                    break err;
                 }
-                return;
-
-            case 36:
-                for (int i = 0; i < chars.length; i++) {
-                    if (i == UUID_DASH_1 || i == UUID_DASH_2 || i == UUID_DASH_3 || i == UUID_DASH_4) {
-                        if (chars[i] != '-') {
-                            break err;
-                        }
-                    } else if (isNotHexDigit(chars[i])) {
-                        break err;
-                    }
-                }
-                return;
+            }
+            return;
         }
 
         throw new ValidationException(field, enquote(value), "invalid UUID string");
-    }
-
-    private static boolean isNotHexDigit(final char c) {
-        return (c < '0' || c > '9') && (c < 'a' || c > 'f') && (c < 'A' || c > 'F');
     }
 
     private static String enquote(String value) {
