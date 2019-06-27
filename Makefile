@@ -68,7 +68,7 @@ harness: testcases tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.
 .PHONY: bazel-harness
 bazel-harness:
 	# runs the test harness via bazel
-	bazel run //tests/harness/executor:executor -- -go -gogo -cc -java
+	bazel run //tests/harness/executor:executor --incompatible_new_actions_api=false -- -go -gogo -cc -java -python
 
 .PHONY: testcases
 testcases: gogofast

@@ -1,18 +1,16 @@
 package main
 
 import (
-	"math"
-
-	"time"
-
 	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
-	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/any"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/golang/protobuf/ptypes/wrappers"
+	"math"
+	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
+	"time"
 )
 
 type TestCase struct {
