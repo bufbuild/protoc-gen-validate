@@ -29,12 +29,35 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-syntax = "proto2";
+package proto
 
-package goproto.test.import_public.sub;
+import "errors"
 
-option go_package = "github.com/golang/protobuf/protoc-gen-go/testdata/import_public/sub";
+// Deprecated: do not use.
+type Stats struct{ Emalloc, Dmalloc, Encode, Decode, Chit, Cmiss, Size uint64 }
 
-message M2 {
-  extensions 1 to max;
+// Deprecated: do not use.
+func GetStats() Stats { return Stats{} }
+
+// Deprecated: do not use.
+func MarshalMessageSet(interface{}) ([]byte, error) {
+	return nil, errors.New("proto: not implemented")
 }
+
+// Deprecated: do not use.
+func UnmarshalMessageSet([]byte, interface{}) error {
+	return errors.New("proto: not implemented")
+}
+
+// Deprecated: do not use.
+func MarshalMessageSetJSON(interface{}) ([]byte, error) {
+	return nil, errors.New("proto: not implemented")
+}
+
+// Deprecated: do not use.
+func UnmarshalMessageSetJSON([]byte, interface{}) error {
+	return errors.New("proto: not implemented")
+}
+
+// Deprecated: do not use.
+func RegisterMessageSetType(Message, int32, string) {}
