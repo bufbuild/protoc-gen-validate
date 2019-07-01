@@ -166,9 +166,9 @@ func classNameMessage(m pgs.Message) string {
 	// When multiple files is false, underscores are stripped. Short of rewriting all the name sanitization
 	// logic for java, using "UnderscoreUnderscoreUnderscore" is an escape sequence seems to work with an extremely
 	// small likelihood of name conflict.
-	className = strings.ReplaceAll(className, "_", "UnderscoreUnderscoreUnderscore")
+	className = strings.Replace(className, "_", "UnderscoreUnderscoreUnderscore", -1)
 	className = sanitizeClassName(className)
-	className = strings.ReplaceAll(className, "UnderscoreUnderscoreUnderscore", "_")
+	className = strings.Replace(className, "UnderscoreUnderscoreUnderscore", "_", -1)
 	return className
 }
 
