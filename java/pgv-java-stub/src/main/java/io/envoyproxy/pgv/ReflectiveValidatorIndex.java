@@ -1,14 +1,27 @@
 package io.envoyproxy.pgv;
 
+import java.sql.Ref;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * {@code ReflectiveValidatorIndex} uses reflection to discover {@link Validator} implementations lazily the first
- * time a type is validated. If no validator can be found for {@code type}, a default {@code ALWAYS_VALID} validator
- * will be used.
+ * time a type is validated. If no validator can be found for {@code type}, a fallback validator
+ * will be used (default ALWAYS_VALID).
  */
 public final class ReflectiveValidatorIndex implements ValidatorIndex {
     private final ConcurrentHashMap<Class, Validator> VALIDATOR_INDEX = new ConcurrentHashMap<>();
+    private final ValidatorIndex fallbackIndex;
+
+    public ReflectiveValidatorIndex() {
+        this(ValidatorIndex.ALWAYS_VALID);
+    }
+
+    /**
+     * @param fallbackIndex a {@link ValidatorIndex} implementation to use if reflective validator discovery fails.
+     */
+    public ReflectiveValidatorIndex(ValidatorIndex fallbackIndex) {
+        this.fallbackIndex = fallbackIndex;
+    }
 
     /**
      * Returns the validator for {@code <T>}, or {@code ALWAYS_VALID} if not found.
@@ -20,7 +33,7 @@ public final class ReflectiveValidatorIndex implements ValidatorIndex {
             try {
                 return reflectiveValidatorFor(c);
             } catch (ReflectiveOperationException ex) {
-                return Validator.ALWAYS_VALID;
+                return fallbackIndex.validatorFor(clazz);
             }
         });
     }

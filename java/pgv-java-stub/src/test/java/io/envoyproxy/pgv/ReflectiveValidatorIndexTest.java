@@ -1,9 +1,13 @@
 package io.envoyproxy.pgv;
 
 import io.envoyproxy.pvg.cases.TokenUse;
+import org.assertj.core.api.AtomicBooleanAssert;
 import org.junit.Test;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 
 public class ReflectiveValidatorIndexTest {
     @Test
@@ -34,5 +38,23 @@ public class ReflectiveValidatorIndexTest {
 
         assertThat(validator).withFailMessage("Unexpected Validator.ALWAYS_VALID").isNotEqualTo(Validator.ALWAYS_VALID);
         validator.assertValid(token);
+    }
+
+    @Test
+    public void indexFallsBack() throws ValidationException {
+        AtomicBoolean called = new AtomicBoolean();
+        ValidatorIndex fallback = new ValidatorIndex() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public <T> Validator<T> validatorFor(Class clazz) {
+                called.set(true);
+                return Validator.ALWAYS_VALID;
+            }
+        };
+
+        ReflectiveValidatorIndex index = new ReflectiveValidatorIndex(fallback);
+        index.validatorFor(fallback);
+
+        assertThat(called).isTrue();
     }
 }
