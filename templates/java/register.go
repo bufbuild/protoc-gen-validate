@@ -161,7 +161,15 @@ func classNameFile(f pgs.File) string {
 }
 
 func classNameMessage(m pgs.Message) string {
-	return sanitizeClassName(m.Name().String())
+	className := m.Name().String()
+	// This is really silly, but when the multiple files option is true, protoc puts underscores in file names.
+	// When multiple files is false, underscores are stripped. Short of rewriting all the name sanitization
+	// logic for java, using "UnderscoreUnderscoreUnderscore" is an escape sequence seems to work with an extremely
+	// small likelihood of name conflict.
+	className = strings.ReplaceAll(className, "_", "UnderscoreUnderscoreUnderscore")
+	className = sanitizeClassName(className)
+	className = strings.ReplaceAll(className, "UnderscoreUnderscoreUnderscore", "_")
+	return className
 }
 
 func sanitizeClassName(className string) string {
