@@ -1,6 +1,5 @@
 package io.envoyproxy.pgv;
 
-import com.google.re2j.Matcher;
 import com.google.re2j.Pattern;
 import org.apache.commons.validator.routines.DomainValidator;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -15,6 +14,12 @@ import java.nio.charset.StandardCharsets;
  */
 @SuppressWarnings("WeakerAccess")
 public final class StringValidation {
+    private static final int UUID_DASH_1 = 8;
+    private static final int UUID_DASH_2 = 13;
+    private static final int UUID_DASH_3 = 18;
+    private static final int UUID_DASH_4 = 23;
+    private static final int UUID_LEN = 36;
+
     private StringValidation() {
         // Intentionally left blank.
     }
@@ -171,12 +176,29 @@ public final class StringValidation {
         }
     }
 
-    private static final Pattern uuidPattern = Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
-    public static void uuid(String field, String value) throws ValidationException {
-        Matcher matcher = uuidPattern.matcher(value);
-        if (!matcher.matches()) {
-            throw new ValidationException(field, enquote(value), "should be a valid uuid");
+    /**
+     * Validates if the given value is a UUID or GUID in RFC 4122 hyphenated
+     * ({@code 00000000-0000-0000-0000-000000000000}) form; both lower and upper
+     * hex digits are accepted.
+     */
+    public static void uuid(final String field, final String value) throws ValidationException {
+        final char[] chars = value.toCharArray();
+
+        err: if (chars.length == UUID_LEN) {
+            for (int i = 0; i < chars.length; i++) {
+                final char c = chars[i];
+                if (i == UUID_DASH_1 || i == UUID_DASH_2 || i == UUID_DASH_3 || i == UUID_DASH_4) {
+                    if (c != '-') {
+                        break err;
+                    }
+                } else if ((c < '0' || c > '9') && (c < 'a' || c > 'f') && (c < 'A' || c > 'F')) {
+                    break err;
+                }
+            }
+            return;
         }
+
+        throw new ValidationException(field, enquote(value), "invalid UUID string");
     }
 
     private static String enquote(String value) {
