@@ -14,6 +14,7 @@ import (
 type RuleContext struct {
 	Field pgs.Field
 	Rules proto.Message
+	MessageRules *validate.MessageRules
 	Gogo  Gogo
 
 	Typ        string
@@ -44,7 +45,7 @@ func rulesContext(f pgs.Field) (out RuleContext, err error) {
 	}
 
 	var wrapped bool
-	if out.Typ, out.Rules, wrapped = resolveRules(f.Type(), &rules); wrapped {
+	if out.Typ, out.Rules, out.MessageRules, wrapped = resolveRules(f.Type(), &rules); wrapped {
 		out.WrapperTyp = out.Typ
 		out.Typ = "wrapper"
 	}
@@ -68,7 +69,7 @@ func (ctx RuleContext) Key(name, idx string) (out RuleContext, err error) {
 	out.Index = idx
 	out.Gogo = ctx.Gogo
 
-	out.Typ, out.Rules, _ = resolveRules(ctx.Field.Type().Key(), rules.GetKeys())
+	out.Typ, out.Rules, out.MessageRules, _ = resolveRules(ctx.Field.Type().Key(), rules.GetKeys())
 
 	if out.Typ == "error" {
 		err = fmt.Errorf("unknown rule type (%T)", rules)
@@ -95,7 +96,7 @@ func (ctx RuleContext) Elem(name, idx string) (out RuleContext, err error) {
 	}
 
 	var wrapped bool
-	if out.Typ, out.Rules, wrapped = resolveRules(ctx.Field.Type().Element(), rules); wrapped {
+	if out.Typ, out.Rules, out.MessageRules, wrapped = resolveRules(ctx.Field.Type().Element(), rules); wrapped {
 		out.WrapperTyp = out.Typ
 		out.Typ = "wrapper"
 	}
@@ -116,6 +117,7 @@ func (ctx RuleContext) Unwrap(name string) (out RuleContext, err error) {
 	return RuleContext{
 		Field:            ctx.Field,
 		Rules:            ctx.Rules,
+		MessageRules:	  ctx.MessageRules,
 		Typ:              ctx.WrapperTyp,
 		AccessorOverride: name,
 		Gogo:             ctx.Gogo,
@@ -130,60 +132,60 @@ func Render(tpl *template.Template) func(ctx RuleContext) (string, error) {
 	}
 }
 
-func resolveRules(typ interface{ IsEmbed() bool }, rules *validate.FieldRules) (ruleType string, rule proto.Message, wrapped bool) {
+func resolveRules(typ interface{ IsEmbed() bool }, rules *validate.FieldRules) (ruleType string, rule proto.Message, messageRule *validate.MessageRules, wrapped bool) {
 	switch r := rules.GetType().(type) {
 	case *validate.FieldRules_Float:
-		return "float", r.Float, typ.IsEmbed()
+		ruleType, rule, wrapped = "float", r.Float, typ.IsEmbed()
 	case *validate.FieldRules_Double:
-		return "double", r.Double, typ.IsEmbed()
+		ruleType, rule, wrapped = "double", r.Double, typ.IsEmbed()
 	case *validate.FieldRules_Int32:
-		return "int32", r.Int32, typ.IsEmbed()
+		ruleType, rule, wrapped = "int32", r.Int32, typ.IsEmbed()
 	case *validate.FieldRules_Int64:
-		return "int64", r.Int64, typ.IsEmbed()
+		ruleType, rule, wrapped = "int64", r.Int64, typ.IsEmbed()
 	case *validate.FieldRules_Uint32:
-		return "uint32", r.Uint32, typ.IsEmbed()
+		ruleType, rule, wrapped = "uint32", r.Uint32, typ.IsEmbed()
 	case *validate.FieldRules_Uint64:
-		return "uint64", r.Uint64, typ.IsEmbed()
+		ruleType, rule, wrapped = "uint64", r.Uint64, typ.IsEmbed()
 	case *validate.FieldRules_Sint32:
-		return "sint32", r.Sint32, false
+		ruleType, rule, wrapped = "sint32", r.Sint32, false
 	case *validate.FieldRules_Sint64:
-		return "sint64", r.Sint64, false
+		ruleType, rule, wrapped = "sint64", r.Sint64, false
 	case *validate.FieldRules_Fixed32:
-		return "fixed32", r.Fixed32, false
+		ruleType, rule, wrapped = "fixed32", r.Fixed32, false
 	case *validate.FieldRules_Fixed64:
-		return "fixed64", r.Fixed64, false
+		ruleType, rule, wrapped = "fixed64", r.Fixed64, false
 	case *validate.FieldRules_Sfixed32:
-		return "sfixed32", r.Sfixed32, false
+		ruleType, rule, wrapped = "sfixed32", r.Sfixed32, false
 	case *validate.FieldRules_Sfixed64:
-		return "sfixed64", r.Sfixed64, false
+		ruleType, rule, wrapped = "sfixed64", r.Sfixed64, false
 	case *validate.FieldRules_Bool:
-		return "bool", r.Bool, typ.IsEmbed()
+		ruleType, rule, wrapped = "bool", r.Bool, typ.IsEmbed()
 	case *validate.FieldRules_String_:
-		return "string", r.String_, typ.IsEmbed()
+		ruleType, rule, wrapped = "string", r.String_, typ.IsEmbed()
 	case *validate.FieldRules_Bytes:
-		return "bytes", r.Bytes, typ.IsEmbed()
+		ruleType, rule, wrapped = "bytes", r.Bytes, typ.IsEmbed()
 	case *validate.FieldRules_Enum:
-		return "enum", r.Enum, false
-	case *validate.FieldRules_Message:
-		return "message", r.Message, false
+		ruleType, rule, wrapped = "enum", r.Enum, false
 	case *validate.FieldRules_Repeated:
-		return "repeated", r.Repeated, false
+		ruleType, rule, wrapped = "repeated", r.Repeated, false
 	case *validate.FieldRules_Map:
-		return "map", r.Map, false
+		ruleType, rule, wrapped = "map", r.Map, false
 	case *validate.FieldRules_Any:
-		return "any", r.Any, false
+		ruleType, rule, wrapped = "any", r.Any, false
 	case *validate.FieldRules_Duration:
-		return "duration", r.Duration, false
+		ruleType, rule, wrapped = "duration", r.Duration, false
 	case *validate.FieldRules_Timestamp:
-		return "timestamp", r.Timestamp, false
+		ruleType, rule, wrapped = "timestamp", r.Timestamp, false
 	case nil:
 		if ft, ok := typ.(pgs.FieldType); ok && ft.IsRepeated() {
-			return "repeated", &validate.RepeatedRules{}, false
+			return "repeated", &validate.RepeatedRules{}, rules.Message, false
 		} else if typ.IsEmbed() {
-			return "message", &validate.MessageRules{}, false
+			return "message", rules.GetMessage(), rules.GetMessage(), false
 		}
-		return "none", nil, false
+		return "none", nil, nil, false
 	default:
-		return "error", nil, false
+		ruleType, rule, wrapped = "error", nil, false
 	}
+
+	return ruleType, rule, rules.Message, wrapped
 }

@@ -31,10 +31,13 @@
 
 syntax = "proto2";
 
-package goproto.test.import_public.sub;
+package goproto.test.import_public.importing;
 
-option go_package = "github.com/golang/protobuf/protoc-gen-go/testdata/import_public/sub";
+option go_package = "github.com/golang/protobuf/protoc-gen-go/testdata/import_public/importing";
 
-message M2 {
-  extensions 1 to max;
+import "import_public/a.proto";
+
+message M {
+  // Message type defined in a file publicly imported by a file we import.
+  optional goproto.test.import_public.sub.M m = 1;
 }

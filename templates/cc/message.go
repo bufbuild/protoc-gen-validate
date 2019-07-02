@@ -3,7 +3,7 @@ package cc
 const messageTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 	{{ template "required" . }}
-	{{ if $r.GetSkip }}
+	{{ if .MessageRules.GetSkip }}
 		// skipping validation for {{ $f.Name }}
 	{{ else }}
 	{
