@@ -27,8 +27,11 @@ const msgTpl = `
 
 def validate_{{ .Name }}(m):
 	{{ if disabled . -}}
+		# Validate is disabled. This method will always return nil.
 	return True, ""
 	{{ else -}}
+		# Validate checks the field values with the rules defined in the proto definition for this message. If any rules are violated, an error is returned.
+	{{ end }}
 	{{ range .NonOneOfFields }}
 		{{ render (context .) }}
 	{{ end }}
@@ -36,5 +39,4 @@ def validate_{{ .Name }}(m):
 	{{ unimplemented }}
 	{{ end }}
 	return True, ""
-	{{ end -}}
 `

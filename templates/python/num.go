@@ -1,5 +1,7 @@
 package python
 
 const numTpl = `
-	{{ unimplemented }}
+	{{ template "const" . }}
+	{{ template "ltgt" . }}
+	{{ template "in" . }}
 `

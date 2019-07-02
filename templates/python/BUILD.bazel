@@ -11,6 +11,7 @@ go_library(
         "file.go",
         "in.go",
         "known.go",
+        "ltgt.go",
         "map.go",
         "message.go",
         "msg.go",

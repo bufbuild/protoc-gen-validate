@@ -15,21 +15,25 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	fns := PythonFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
-		"accessor": fns.accessor,
-		"err": fns.err,
-		"inKey": fns.inKey,
-		"lit": fns.lit,
-		"lookup": fns.lookup,
-		"name": fns.Name,
-		"output": fns.output,
-		"typ": fns.Type,
+		"accessor":      fns.accessor,
+		"ctype":		 fns.cType,
+		"err":           fns.err,
+		"inKey":         fns.inKey,
+		"lit":           fns.lit,
+		"lookup":        fns.lookup,
+		"name":          fns.Name,
+		"output":        fns.output,
+		"typ":           fns.Type,
 		"unimplemented": fns.failUnimplemented,
+		"unwrap":        fns.unwrap,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
 	template.Must(tpl.New("msg").Parse(msgTpl))
 	template.Must(tpl.New("const").Parse(constTpl))
+	template.Must(tpl.New("ltgt").Parse(ltgtTpl))
 	template.Must(tpl.New("in").Parse(inTpl))
+	template.Must(tpl.New("required").Parse(requiredTpl))
 
 	template.Must(tpl.New("none").Parse(noneTpl))
 	template.Must(tpl.New("float").Parse(numTpl))
@@ -136,7 +140,6 @@ func (fns PythonFuncs) inKey(f pgs.Field, x interface{}) string {
 	}
 }
 
-
 func (fns PythonFuncs) byteStr(x []byte) string {
 	elms := make([]string, len(x))
 	for i, b := range x {
@@ -146,9 +149,27 @@ func (fns PythonFuncs) byteStr(x []byte) string {
 	return fmt.Sprintf(`"%s"`, strings.Join(elms, ""))
 }
 
-
 func (fns PythonFuncs) durLit(dur *duration.Duration) string {
 	return fmt.Sprintf(
 		"(%d + (10**-9 * %d))",
 		dur.GetSeconds(), dur.GetNanos())
+}
+
+func (fns PythonFuncs) unwrap(ctx shared.RuleContext, name string) (shared.RuleContext, error) {
+	ctx, err := ctx.Unwrap("wrapper")
+	if err != nil {
+		return ctx, err
+	}
+
+	ctx.AccessorOverride = fmt.Sprintf("%s.Get%s()", name,
+		pgsgo.PGGUpperCamelCase(ctx.Field.Type().Embed().Fields()[0].Name()))
+
+	return ctx, nil
+}
+
+func (fns PythonFuncs) cType(t pgs.FieldType) string {
+	if t.IsEmbed() {
+		return t.Embed().Name().String()
+	}
+	return ""
 }

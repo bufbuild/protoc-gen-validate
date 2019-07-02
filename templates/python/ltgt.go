@@ -1,0 +1,53 @@
+package python
+
+const ltgtTpl = `{{ $f := .Field }}{{ $r := .Rules }}
+	{{ if $r.Lt }}
+		{{ if $r.Gt }}
+			{{  if gt $r.GetLt $r.GetGt }}
+	if {{ accessor . }} <= {{ $r.Gt }} or {{ accessor . }} >= {{ $r.Lt }}:
+		{{ err . "value must be inside range (" $r.GetGt ", " $r.GetLt ")" }}
+			{{ else }}
+	if {{ accessor . }} >= {{ $r.Lt }} and {{ accessor . }} <= {{ $r.Gt }}:
+		{{ err . "value must be outside range [" $r.GetLt ", " $r.GetGt "]" }}
+			{{ end }}
+		{{ else if $r.Gte }}
+			{{  if gt $r.GetLt $r.GetGte }}
+	if {{ accessor . }} < {{ $r.Gte }} or {{ accessor . }} >= {{ $r.Lt }}:
+		{{ err . "value must be inside range [" $r.GetGte ", " $r.GetLt ")" }}
+			{{ else }}
+	if {{ accessor . }} >= {{ $r.Lt }} and {{ accessor . }} < {{ $r.Gte }}:
+		{{ err . "value must be outside range [" $r.GetLt ", " $r.GetGte ")" }}
+			{{ end }}
+		{{ else }}
+	if {{ accessor . }} >= {{ $r.Lt }}:
+		{{ err . "value must be less than " $r.GetLt }}
+		{{ end }}
+	{{ else if $r.Lte }}
+		{{ if $r.Gt }}
+			{{  if gt $r.GetLte $r.GetGt }}
+	if {{ accessor . }} <= {{ $r.Gt }} or {{ accessor . }} > {{ $r.Lte }}:
+		{{ err . "value must be inside range (" $r.GetGt ", " $r.GetLte "]" }}
+			{{ else }}
+	if {{ accessor . }} > {{ $r.Lte }} and {{ accessor . }} <= {{ $r.Gt }}:
+		{{ err . "value must be outside range (" $r.GetLte ", " $r.GetGt "]" }}
+			{{ end }}
+		{{ else if $r.Gte }}
+			{{ if gt $r.GetLte $r.GetGte }}
+	if {{ accessor . }} < {{ $r.Gte }} or {{ accessor . }} > {{ $r.Lte }}:
+		{{ err . "value must be inside range [" $r.GetGte ", " $r.GetLte "]" }}
+			{{ else }}
+	if {{ accessor . }} > {{ $r.Lte }} and {{ accessor . }} < {{ $r.Gte }}:
+		{{ err . "value must be outside range (" $r.GetLte ", " $r.GetGte ")" }}
+			{{ end }}
+		{{ else }}
+	if {{ accessor . }} > {{ $r.Lte }}:
+		{{ err . "value must be less than or equal to " $r.GetLte }}
+		{{ end }}
+	{{ else if $r.Gt }}
+	if {{ accessor . }} <= {{ $r.Gt }}:
+		{{ err . "value must be greater than " $r.GetGt }}
+	{{ else if $r.Gte }}
+	if {{ accessor . }} < {{ $r.Gte }}:
+		{{ err . "value must be greater than " $r.GetGte }}
+	{{ end }}
+`
