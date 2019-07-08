@@ -2,6 +2,7 @@ package main
 
 import (
 	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
+	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/any"
@@ -9,7 +10,6 @@ import (
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"math"
-	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
 	"time"
 )
 
@@ -27,30 +27,30 @@ var TestCases []TestCase
 
 func init() {
 	sets := [][]TestCase{
-		//floatCases,
-		//doubleCases,
-		//int32Cases,
-		//int64Cases,
-		//uint32Cases,
-		//uint64Cases,
-		//sint32Cases,
-		//sint64Cases,
-		//fixed32Cases,
-		//fixed64Cases,
-		//sfixed32Cases,
-		//sfixed64Cases,
-		//boolCases,
-		//stringCases,
-		//bytesCases,
-		//enumCases,
+		floatCases,
+		doubleCases,
+		int32Cases,
+		int64Cases,
+		uint32Cases,
+		uint64Cases,
+		sint32Cases,
+		sint64Cases,
+		fixed32Cases,
+		fixed64Cases,
+		sfixed32Cases,
+		sfixed64Cases,
+		boolCases,
+		stringCases,
+		bytesCases,
+		enumCases,
 		messageCases,
-		//repeatedCases,
-		//mapCases,
-		//oneofCases,
-		//wrapperCases,
-		//durationCases,
-		//timestampCases,
-		//anyCases,
+		repeatedCases,
+		mapCases,
+		oneofCases,
+		wrapperCases,
+		durationCases,
+		timestampCases,
+		anyCases,
 	}
 
 	for _, set := range sets {

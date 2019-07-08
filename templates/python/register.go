@@ -3,7 +3,9 @@ package python
 import (
 	"fmt"
 	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
+	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
+	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/lyft/protoc-gen-star"
 	"github.com/lyft/protoc-gen-star/lang/go"
 	"reflect"
@@ -15,17 +17,27 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	fns := PythonFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
-		"accessor":      fns.accessor,
-		"ctype":		 fns.cType,
-		"err":           fns.err,
-		"inKey":         fns.inKey,
-		"lit":           fns.lit,
-		"lookup":        fns.lookup,
-		"name":          fns.Name,
-		"output":        fns.output,
-		"typ":           fns.Type,
-		"unimplemented": fns.failUnimplemented,
-		"unwrap":        fns.unwrap,
+		"accessor":       fns.accessor,
+		"ctype":          fns.cType,
+		"durGt":          fns.durGt,
+		"durLit":         fns.durLit,
+		"durStr":         fns.durStr,
+		"err":            fns.err,
+		"hasAccessor":    fns.hasAccessor,
+		"shouldImport":   fns.shouldImport,
+		"inKey":          fns.inKey,
+		"lit":            fns.lit,
+		"lookup":         fns.lookup,
+		"msgTyp":         fns.msgTyp,
+		"name":           fns.Name,
+		"output":         fns.output,
+		"shouldValidate": fns.shouldValidate,
+		"tsGt":           fns.tsGt,
+		"tsLit":          fns.tsLit,
+		"tsStr":          fns.tsStr,
+		"typ":            fns.Type,
+		"unimplemented":  fns.failUnimplemented,
+		"unwrap":         fns.unwrap,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
@@ -167,9 +179,75 @@ func (fns PythonFuncs) unwrap(ctx shared.RuleContext, name string) (shared.RuleC
 	return ctx, nil
 }
 
-func (fns PythonFuncs) cType(t pgs.FieldType) string {
+func (fns PythonFuncs) cType(t pgs.FieldType, usage bool) string {
 	if t.IsEmbed() {
-		return t.Embed().Name().String()
+		if usage {
+			return t.Embed().Name().String()
+		} else {
+			return fns.importer(t)
+		}
 	}
 	return ""
+}
+
+func (fns PythonFuncs) importer(t pgs.FieldType) string {
+	return "from " + fns.packageName(t.Embed()) + "." + strings.ToLower(t.Embed().Name().String()) + "_pb_validate import validate_" + t.Embed().Name().String()
+}
+
+func (fns PythonFuncs) hasAccessor(ctx shared.RuleContext) string {
+	return fmt.Sprintf(
+		"m.HasField(\"%s\")",
+		ctx.Field.Name())
+}
+
+func (fns PythonFuncs) packageName(msg pgs.Entity) string {
+	return strings.Join(msg.Package().ProtoName().Split(), ".")
+}
+
+func (fns PythonFuncs) shouldImport(f pgs.Field) bool {
+	if f.Type().Embed().Package().ProtoName() != f.Message().Package().ProtoName() {
+		if f.Type().Embed().Package().ProtoName() != "google.protobuf" {
+			return true
+		}
+	}
+	return false
+}
+
+func (fns PythonFuncs) shouldValidate(f pgs.Field) bool {
+	return f.Type().Embed().Package().ProtoName() != "google.protobuf"
+}
+
+func (fns PythonFuncs) msgTyp(message pgs.Message) pgsgo.TypeName {
+	return pgsgo.TypeName(fns.Name(message))
+}
+
+func (fns PythonFuncs) durStr(dur *duration.Duration) string {
+	d, _ := ptypes.Duration(dur)
+	return d.String()
+}
+
+func (fns PythonFuncs) durGt(a, b *duration.Duration) bool {
+	ad, _ := ptypes.Duration(a)
+	bd, _ := ptypes.Duration(b)
+
+	return ad > bd
+}
+
+func (fns PythonFuncs) tsLit(ts *timestamp.Timestamp) string {
+	return fmt.Sprintf(
+		"(%d + (10**-9 * %d))",
+		ts.GetSeconds(), ts.GetNanos(),
+	)
+}
+
+func (fns PythonFuncs) tsStr(ts *timestamp.Timestamp) string {
+	t, _ := ptypes.Timestamp(ts)
+	return t.String()
+}
+
+func (fns PythonFuncs) tsGt(a, b *timestamp.Timestamp) bool {
+	at, _ := ptypes.Timestamp(a)
+	bt, _ := ptypes.Timestamp(b)
+
+	return bt.Before(at)
 }
