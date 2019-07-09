@@ -32,4 +32,8 @@ public interface Validator<T> {
     Validator ALWAYS_VALID = (proto) -> {
         // Do nothing. Always valid.
     };
+
+    Validator ALWAYS_INVALID = (proto) -> {
+        throw new ValidationException("UNKNOWN", new Object(), "Explicitly invalid");
+    };
 }
