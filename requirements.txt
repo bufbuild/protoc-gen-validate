@@ -1,0 +1,2 @@
+ipaddress==1.0.22
+validate-email==1.3
