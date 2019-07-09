@@ -4,11 +4,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * {@code ExplicitValidatorIndex} is an explicit registry of {@link Validator} instances. If no validator is registered
- * for {@code type}, a default {@code ALWAYS_VALID} validator will be used.
+ * for {@code type}, a fallback validator will be used (default ALWAYS_VALID).
  */
-public class ExplicitValidatorIndex implements ValidatorIndex {
+public final class ExplicitValidatorIndex implements ValidatorIndex {
     private final ConcurrentHashMap<Class, ValidatorImpl> VALIDATOR_IMPL_INDEX = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Class, Validator> VALIDATOR_INDEX = new ConcurrentHashMap<>();
+    private final ValidatorIndex fallbackIndex;
+
+    public ExplicitValidatorIndex() {
+        this(ValidatorIndex.ALWAYS_VALID);
+    }
+
+    public ExplicitValidatorIndex(ValidatorIndex fallbackIndex) {
+        this.fallbackIndex = fallbackIndex;
+    }
 
     /**
      * Adds a {@link Validator} to the set of known validators.
@@ -24,7 +33,7 @@ public class ExplicitValidatorIndex implements ValidatorIndex {
     @SuppressWarnings("unchecked")
     public <T> Validator<T> validatorFor(Class clazz) {
         return VALIDATOR_INDEX.computeIfAbsent(clazz, c ->
-                proto -> VALIDATOR_IMPL_INDEX.getOrDefault(c, ValidatorImpl.ALWAYS_VALID)
+                proto -> VALIDATOR_IMPL_INDEX.getOrDefault(c, (p, i) -> fallbackIndex.validatorFor(c))
                         .assertValid(proto, ExplicitValidatorIndex.this));
     }
 }
