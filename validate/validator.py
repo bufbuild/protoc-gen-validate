@@ -23,7 +23,7 @@ def generate_validate(proto_message):
         return locals()['validate']
 
 def print_validate(proto_message):
-    return printer
+    return "".join([s for s in printer.splitlines(True) if s.strip()])
 
 def has_validate(field):
     if field.GetOptions() is None:
@@ -57,7 +57,6 @@ def _validateHostName(host):
                 return False
     return True
 
-
 def _validateEmail(addr):
     if '<' in addr and '>' in addr: addr = addr.split("<")[1].split(">")[0]
 
@@ -84,14 +83,21 @@ def _has_field(message_pb, property_name):
 
 def const_template(option_value, name):
     const_tmpl = """{%- if str(o.string) and o.string.HasField('const') -%}
-    if p.{{ name }} != \"{{ o.string['const'] }}\":
+    if {{ name }} != \"{{ o.string['const'] }}\":
         raise ValidationFailed(\"{{ name }} not equal to {{ o.string['const'] }}\")
     {%- elif str(o.bool) and o.bool['const'] != "" -%}
-    if p.{{ name }} != {{ o.bool['const'] }}:
+    if {{ name }} != {{ o.bool['const'] }}:
         raise ValidationFailed(\"{{ name }} not equal to {{ o.bool['const'] }}\")
     {%- elif str(o.enum) and o.enum['const'] -%}
-    if p.{{ name }} != {{ o.enum['const'] }}:
+    if {{ name }} != {{ o.enum['const'] }}:
         raise ValidationFailed(\"{{ name }} not equal to {{ o.enum['const'] }}\")
+    {%- elif str(o.bytes) and o.bytes.HasField('const') -%}
+    try:
+        if {{ name }} != {{ o.bytes['const'] }}:
+            raise ValidationFailed(\"{{ name }} not equal to {{ o.bytes['const'] }}\")
+    except NameError:
+        if {{ name }} != b\"{{ o.bytes['const'] }}\":
+            raise ValidationFailed(\"{{ name }} not equal to {{ o.bytes['const'] }}\")
     {%- endif -%}
     """
     return Template(const_tmpl).render(o = option_value, name = name, str = str)
@@ -99,11 +105,11 @@ def const_template(option_value, name):
 def in_template(value, name):
     in_tmpl = """
     {%- if value['in'] %}
-    if p.{{ name }} not in {{ value['in'] }}:
+    if {{ name }} not in {{ value['in'] }}:
         raise ValidationFailed(\"{{ name }} not in {{ value['in'] }}\")
     {%- endif -%}
     {%- if value['not_in'] %}
-    if p.{{ name }} in {{ value['not_in'] }}:
+    if {{ name }} in {{ value['not_in'] }}:
         raise ValidationFailed(\"{{ name }} in {{ value['not_in'] }}\")
     {%- endif -%}
     """
@@ -115,91 +121,91 @@ def string_template(option_value, name):
     {{ in_template(o.string, name) -}}
     {%- set s = o.string -%}
     {%- if s['len'] %}
-    if len(p.{{ name }}) != {{ s['len'] }}:
+    if len({{ name }}) != {{ s['len'] }}:
         raise ValidationFailed(\"{{ name }} length does not equal {{ s['len'] }}\")
     {%- endif -%}
     {%- if s['min_len'] %}
-    if len(p.{{ name }}) < {{ s['min_len'] }}:
+    if len({{ name }}) < {{ s['min_len'] }}:
         raise ValidationFailed(\"{{ name }} length is less than {{ s['min_len'] }}\")
     {%- endif -%}
     {%- if s['max_len'] %}
-    if len(p.{{ name }}) > {{ s['max_len'] }}:
+    if len({{ name }}) > {{ s['max_len'] }}:
         raise ValidationFailed(\"{{ name }} length is more than {{ s['max_len'] }}\")
     {%- endif -%}
     {%- if s['len_bytes'] %}
-    if byte_len(p.{{ name }}) != {{ s['len_bytes'] }}:
+    if byte_len({{ name }}) != {{ s['len_bytes'] }}:
         raise ValidationFailed(\"{{ name }} length does not equal {{ s['len_bytes'] }}\")
     {%- endif -%}
     {%- if s['min_bytes'] %}
-    if byte_len(p.{{ name }}) < {{ s['min_bytes'] }}:
+    if byte_len({{ name }}) < {{ s['min_bytes'] }}:
         raise ValidationFailed(\"{{ name }} length is less than {{ s['min_bytes'] }}\")
     {%- endif -%}
     {%- if s['max_bytes'] %}
-    if byte_len(p.{{ name }}) > {{ s['max_bytes'] }}:
+    if byte_len({{ name }}) > {{ s['max_bytes'] }}:
         raise ValidationFailed(\"{{ name }} length is greater than {{ s['max_bytes'] }}\")
     {%- endif -%}
     {%- if s['pattern'] %}
-    if re.search(r\'{{ s['pattern'] }}\', p.{{ name }}) is None:
+    if re.search(r\'{{ s['pattern'] }}\', {{ name }}) is None:
         raise ValidationFailed(\"{{ name }} pattern does not match {{ s['pattern'] }}\")
     {%- endif -%}
     {%- if s['prefix'] %}
-    if not p.{{ name }}.startswith(\"{{ s['prefix'] }}\"):
+    if not {{ name }}.startswith(\"{{ s['prefix'] }}\"):
         raise ValidationFailed(\"{{ name }} does not start with prefix {{ s['prefix'] }}\")
     {%- endif -%}
     {%- if s['suffix'] %}
-    if not p.{{ name }}.endswith(\"{{ s['suffix'] }}\"):
+    if not {{ name }}.endswith(\"{{ s['suffix'] }}\"):
         raise ValidationFailed(\"{{ name }} does not end with suffix {{ s['suffix'] }}\")
     {%- endif -%}
     {%- if s['contains'] %}
-    if not \"{{ s['contains'] }}\" in p.{{ name }}:
+    if not \"{{ s['contains'] }}\" in {{ name }}:
         raise ValidationFailed(\"{{ name }} does not contain {{ s['contains'] }}\")
     {%- endif -%}
     {%- if s['email'] %}
-    if not _validateEmail(p.{{ name }}):
+    if not _validateEmail({{ name }}):
         raise ValidationFailed(\"{{ name }} is not a valid email\")
     {%- endif -%}    
     {%- if s['hostname'] %}
-    if not _validateHostName(p.{{ name }}):
+    if not _validateHostName({{ name }}):
         raise ValidationFailed(\"{{ name }} is not a valid email\")
     {%- endif -%}
     {%- if s['address'] %}
     try:
-        ipaddress.ip_address(p.{{ name }})
+        ipaddress.ip_address({{ name }})
     except ValueError:
-        if not _validateHostName(p.{{ name }}):
+        if not _validateHostName({{ name }}):
             raise ValidationFailed(\"{{ name }} is not a valid address\")
     {%- endif -%}
     {%- if s['ip'] %}
     try:
-        ipaddress.ip_address(p.{{ name }})
+        ipaddress.ip_address({{ name }})
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ip\")
     {%- endif -%}
     {%- if s['ipv4'] %}
     try:
-        ipaddress.IPv4Address(p.{{ name }})
+        ipaddress.IPv4Address({{ name }})
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ipv4\")
     {%- endif -%}
     {%- if s['ipv6'] %}
     try:
-        ipaddress.IPv6Address(p.{{ name }})
+        ipaddress.IPv6Address({{ name }})
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ipv6\")
     {%- endif %}
     {%- if s['uri'] %}
-    url = urlparse.urlparse(p.{{ name }})
+    url = urlparse.urlparse({{ name }})
     if not all([url.scheme, url.netloc, url.path]):
         raise ValidationFailed(\"{{ name }} is not a valid uri\")
     {%- endif %}
     {%- if s['uri_ref'] %}
-    url = urlparse.urlparse(p.{{ name }})
+    url = urlparse.urlparse({{ name }})
     if not all([url.scheme, url.path]) and url.fragment:
         raise ValidationFailed(\"{{ name }} is not a valid uri ref\")
     {%- endif -%}
     {%- if s['uuid'] %}
     try:
-        uuid.UUID(p.{{ name }})
+        uuid.UUID({{ name }})
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid UUID\")     
     {%- endif -%}
@@ -208,26 +214,30 @@ def string_template(option_value, name):
 
 def required_template(value, name):
     req_tmpl = """{%- if value['required'] -%}
-    if not _has_field(p, \"{{ name }}\"):
+    if not _has_field(p, \"{{ name.split('.')[-1] }}\"):
         raise ValidationFailed(\"{{ name }} is required.\")
     {%- endif -%}
     """
     return Template(req_tmpl).render(value = value, name = name)
 
-def message_template(option_value, name):
+def message_template(option_value, name, repeated = False):
     message_tmpl = """{%- if m.message %}
     {{- required_template(m.message, name) }}
     {%- endif -%}
     {%- if m.message and m.message['skip'] %}
     # Skipping validation for {{ name }}
     {%- else %}
-    if _has_field(p, \"{{ name }}\"):
+    {% if repeated %}
+    if {{ name }}:
+    {% else %}
+    if _has_field(p, \"{{ name.split('.')[-1] }}\"):
+    {% endif %}
         embedded = generate_validate(p.{{ name }})(p.{{ name }})
         if embedded is not None:
             return embedded
     {%- endif -%}
     """
-    return Template(message_tmpl).render(m = option_value, name = name, required_template = required_template)
+    return Template(message_tmpl).render(m = option_value, name = name, required_template = required_template, repeated = repeated)
 
 def bool_template(option_value, name):
     bool_tmpl = """
@@ -237,61 +247,61 @@ def bool_template(option_value, name):
 
 def num_template(option_value, name, num):
     num_tmpl = """{%- if num.HasField('const') and str(o.float) == "" -%}
-    if p.{{ name }} != {{ num['const'] }}:
+    if {{ name }} != {{ num['const'] }}:
         raise ValidationFailed(\"{{ name }} not equal to {{ num['const'] }}\")
     {%- endif -%}
     {%- if num.HasField('const') and str(o.float) != "" %}
-    if p.{{ name }} != struct.unpack(\"f\", struct.pack(\"f\", ({{ num['const'] }})))[0]:
+    if {{ name }} != struct.unpack(\"f\", struct.pack(\"f\", ({{ num['const'] }})))[0]:
         raise ValidationFailed(\"{{ name }} not equal to {{ num['const'] }}\")
     {%- endif -%}
     {{ in_template(num, name) }}
     {%- if num.HasField('lt') %}
         {%- if num.HasField('gt') %}
             {%- if num['lt'] > num['gt'] %}
-    if p.{{ name }} <= {{ num['gt'] }} or p.{{ name }} >= {{ num ['lt'] }}:
+    if {{ name }} <= {{ num['gt'] }} or {{ name }} >= {{ num ['lt'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['lt'], num['gt'] }}\")
             {%- else %}
-    if p.{{ name }} >= {{ num['lt'] }} and p.{{ name }} <= {{ num['gt'] }}:
+    if {{ name }} >= {{ num['lt'] }} and {{ name }} <= {{ num['gt'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['gt'], num['lt'] }}\")
             {%- endif -%}
         {%- elif num.HasField('gte') %}
             {%- if num['lt'] > num['gte'] %}
-    if p.{{ name }} < {{ num['gte'] }} or p.{{ name }} >= {{ num ['lt'] }}:
+    if {{ name }} < {{ num['gte'] }} or {{ name }} >= {{ num ['lt'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['lt'], num['gte'] }}\")
             {%- else %}
-    if p.{{ name }} >= {{ num['lt'] }} and p.{{ name }} < {{ num['gte'] }}:
+    if {{ name }} >= {{ num['lt'] }} and {{ name }} < {{ num['gte'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['gte'], num['lt'] }}\")
             {%- endif -%}
         {%- else %}
-    if p.{{ name }} >= {{ num['lt'] }}:
+    if {{ name }} >= {{ num['lt'] }}:
         raise ValidationFailed(\"{{ name }} is not lesser than {{ num['lt'] }}\")
         {%- endif -%}
     {%- elif num.HasField('lte') %}
         {%- if num.HasField('gt') %}
             {%- if num['lte'] > num['gt'] %}
-    if p.{{ name }} <= {{ num['gt'] }} or p.{{ name }} > {{ num ['lte'] }}:
+    if {{ name }} <= {{ num['gt'] }} or {{ name }} > {{ num ['lte'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['lte'], num['gt'] }}\")
             {%- else %}
-    if p.{{ name }} > {{ num['lte'] }} and p.{{ name }} <= {{ num['gt'] }}:
+    if {{ name }} > {{ num['lte'] }} and {{ name }} <= {{ num['gt'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['gt'], num['lte'] }}\")
             {%- endif -%}
         {%- elif num.HasField('gte') %}
             {%- if num['lte'] > num['gte'] %}
-    if p.{{ name }} < {{ num['gte'] }} or p.{{ name }} > {{ num ['lte'] }}:
+    if {{ name }} < {{ num['gte'] }} or {{ name }} > {{ num ['lte'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['lte'], num['gte'] }}\")
             {%- else %}
-    if p.{{ name }} > {{ num['lte'] }} and p.{{ name }} < {{ num['gte'] }}:
+    if {{ name }} > {{ num['lte'] }} and {{ name }} < {{ num['gte'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['gte'], num['lte'] }}\")
             {%- endif -%}
         {%- else %}
-    if p.{{ name }} > {{ num['lte'] }}:
+    if {{ name }} > {{ num['lte'] }}:
         raise ValidationFailed(\"{{ name }} is not lesser than or equal to {{ num['lte'] }}\")
         {%- endif -%}
     {%- elif num.HasField('gt') %}
-    if p.{{ name }} <= {{ num['gt'] }}:
+    if {{ name }} <= {{ num['gt'] }}:
         raise ValidationFailed(\"{{ name }} is not greater than {{ num['gt'] }}\")
     {%- elif num.HasField('gte') %}
-    if p.{{ name }} < {{ num['gte'] }}:
+    if {{ name }} < {{ num['gte'] }}:
         raise ValidationFailed(\"{{ name }} is not greater than or equal to {{ num['gte'] }}\")    
     {%- endif -%}
     """
@@ -311,11 +321,15 @@ def dur_lit(dur):
     value = dur.seconds + (10**-9 * dur.nanos)
     return value
 
-def duration_template(option_value, name):
+def duration_template(option_value, name, repeated = False):
     dur_tmpl = """
     {{- required_template(o.duration, name) }}
-    if _has_field(p, \"{{ name }}\"):
-        dur = p.{{ name }}.seconds + round((10**-9 * p.{{ name }}.nanos), 9)
+    {% if repeated %}
+    if {{ name }}:
+    {% else %}
+    if _has_field(p, \"{{ name.split('.')[-1] }}\"):
+    {% endif %}
+        dur = {{ name }}.seconds + round((10**-9 * {{ name }}.nanos), 9)
         {%- set dur = o.duration -%}
         {%- if dur.HasField('lt') %} 
         lt = {{ dur_lit(dur['lt']) }} 
@@ -391,13 +405,17 @@ def duration_template(option_value, name):
             raise ValidationFailed(\"{{ name }} is not greater than or equal to {{ dur_lit(dur['gte']) }}\")
         {%- endif -%}
     """
-    return Template(dur_tmpl).render(o = option_value, name = name, required_template = required_template, dur_lit = dur_lit, dur_arr = dur_arr)
+    return Template(dur_tmpl).render(o = option_value, name = name, required_template = required_template, dur_lit = dur_lit, dur_arr = dur_arr, repeated = repeated)
 
-def timestamp_template(option_value, name):
+def timestamp_template(option_value, name, repeated = False):
     timestamp_tmpl = """
     {{- required_template(o.timestamp, name) }}
-    if _has_field(p, \"{{ name }}\"):
-        ts = p.{{ name }}.seconds + round((10**-9 * p.{{ name }}.nanos), 9)
+    {% if repeated %}
+    if {{ name }}:
+    {% else %}
+    if _has_field(p, \"{{ name.split('.')[-1] }}\"):
+    {% endif %}
+        ts = {{ name }}.seconds + round((10**-9 * {{ name }}.nanos), 9)
         {%- set ts = o.timestamp -%}
         {%- if ts.HasField('lt') %} 
         lt = {{ dur_lit(ts['lt']) }} 
@@ -498,11 +516,15 @@ def timestamp_template(option_value, name):
              raise ValidationFailed(\"{{ name }} is not within range {{ dur_lit(ts['within']) }}\")
         {%- endif -%}
     """
-    return Template(timestamp_tmpl).render(o = option_value, name = name, required_template = required_template, dur_lit = dur_lit, dur_arr = dur_arr)
+    return Template(timestamp_tmpl).render(o = option_value, name = name, required_template = required_template, dur_lit = dur_lit, dur_arr = dur_arr, repeated = repeated)
 
-def wrapper_template(option_value, name):
+def wrapper_template(option_value, name, repeated = False):
     wrapper_tmpl = """
-    if p.HasField(\"{{ name }}\"):
+    {% if repeated %}
+    if {{ name }}:
+    {% else %}
+    if p.HasField(\"{{ name[2:] }}\"):
+    {% endif %}
         {%- if str(option_value.float) %}
         {{- num_template(option_value, name + ".value", option_value.float)|indent(8,True) -}}
         {% endif -%}
@@ -527,12 +549,15 @@ def wrapper_template(option_value, name):
         {%- if str(option_value.string) %}
         {{- string_template(option_value, name + ".value")|indent(8,True) -}}
         {% endif -%}
+        {%- if str(option_value.bytes) %}
+        {{- bytes_template(option_value, name + ".value")|indent(8,True) -}}
+        {% endif -%}
     {%- if str(option_value.message) and option_value.message['required'] %}
     else:
         raise ValidationFailed(\"{{ name }} is required.\")
     {%- endif %}
     """
-    return Template(wrapper_tmpl).render(option_value = option_value, name = name, str = str, num_template = num_template, bool_template = bool_template, string_template = string_template)
+    return Template(wrapper_tmpl).render(option_value = option_value, name = name, str = str, num_template = num_template, bool_template = bool_template, string_template = string_template, bytes_template = bytes_template, repeated = repeated)
 
 def enum_values(field):
     return [x.number for x in field.enum_type.values]
@@ -542,89 +567,354 @@ def enum_template(option_value, name, field):
     {{ const_template(option_value, name) -}}
     {{ in_template(option_value.enum, name) -}}
     {% if option_value.enum['defined_only'] %}
-    if p.{{ name }} not in {{ enum_values(field) }}:
+    if {{ name }} not in {{ enum_values(field) }}:
         raise ValidationFailed(\"{{ name }} is not defined\")
     {% endif %}
     """
     return Template(enum_tmpl).render(option_value = option_value, name = name, const_template = const_template, in_template = in_template, field = field, enum_values = enum_values)
 
-
-
-def any_template(option_value, name):
+def any_template(option_value, name, repeated = False):
     any_tmpl = """
     {{- required_template(o, name) }}
-    {% if o['in'] %}
-    if _has_field(p, \"{{ name }}\"):
-        if p.{{ name }}.type_url not in {{ o['in'] }}:
+    {%- if o['in'] %}
+    {% if repeated %}
+    if {{ name }}:
+    {% else %}
+    if _has_field(p, \"{{ name.split('.')[-1] }}\"):
+    {% endif %}
+        if {{ name }}.type_url not in {{ o['in'] }}:
             raise ValidationFailed(\"{{ name }} not in {{ o['in'] }}\")
+    {%- endif %}
+    {%- if o['not_in'] %}
+    {% if repeated %}
+    if {{ name }}:
+    {% else %}
+    if _has_field(p, \"{{ name.split('.')[-1] }}\"):
     {% endif %}
-    {% if o['not_in'] %}
-    if _has_field(p, \"{{ name }}\"):
-        if p.{{ name }}.type_url in {{ o['not_in'] }}:
+        if {{ name }}.type_url in {{ o['not_in'] }}:
             raise ValidationFailed(\"{{ name }} in {{ o['not_in'] }}\")
-    {% endif %}
+    {%- endif %}
     """
-    return Template(any_tmpl).render(name = name, required_template = required_template, o = option_value.any)
+    return Template(any_tmpl).render(o = option_value.any, name = name, required_template = required_template, repeated = repeated)
+
+def bytes_template(option_value, name):
+    bytes_tmpl = """
+    {{ const_template(o, name) -}}
+    {{ in_template(o.bytes, name) -}}
+    {%- if b['len'] %}
+    if len({{ name }}) != {{ b['len'] }}:
+        raise ValidationFailed(\"{{ name }} length does not equal {{ b['len'] }}\")
+    {%- endif -%}
+    {%- if b['min_len'] %}
+    if len({{ name }}) < {{ b['min_len'] }}:
+        raise ValidationFailed(\"{{ name }} length is less than {{ b['min_len'] }}\")
+    {%- endif -%}
+    {%- if b['max_len'] %}
+    if len({{ name }}) > {{ b['max_len'] }}:
+        raise ValidationFailed(\"{{ name }} length is more than {{ b['max_len'] }}\")
+    {%- endif -%}
+    {%- if b['ip'] %}
+    try:
+        ipaddress.ip_address({{ name }})
+    except ValueError:
+        raise ValidationFailed(\"{{ name }} is not a valid ip\")
+    {%- endif -%}
+    {%- if b['ipv4'] %}
+    try:
+        ipaddress.IPv4Address({{ name }})
+    except ValueError:
+        raise ValidationFailed(\"{{ name }} is not a valid ipv4\")
+    {%- endif -%}
+    {%- if b['ipv6'] %}
+    try:
+        ipaddress.IPv6Address({{ name }})
+    except ValueError:
+        raise ValidationFailed(\"{{ name }} is not a valid ipv6\")
+    {%- endif -%}
+    {% if b['contains'] %}
+    try:
+        if not {{ b['contains'] }} in {{ name }}:
+            raise ValidationFailed(\"{{ name }} does not contain {{ b['contains'] }}\")
+    except NameError:
+        if not b\"{{ b['contains'] }}\" in {{ name }}:
+            raise ValidationFailed(\"{{ name }} does not contain {{ b['contains'] }}\")
+    {% endif %}
+    {%- if b.HasField('pattern') %}
+    try:
+        if re.search({{ b['pattern'].encode() }}, {{ name }}) is None:
+            raise ValidationFailed(\"{{ name }} pattern does not match {{ b['pattern'].encode() }}\")
+    except NameError:
+        if re.search(\"{{ b['pattern'] }}\", {{ name }}) is None:
+            raise ValidationFailed(\"{{ name }} pattern does not match {{ b['pattern'] }}\")
+    {%- endif -%}
+    {%- if b['prefix'] %}
+    try:
+        if not {{ name }}.startswith({{ b['prefix'] }}):
+            raise ValidationFailed(\"{{ name }} does not start with prefix {{ b['prefix'] }}\")
+    except NameError:
+        if not {{ name }}.startswith(b\"{{ b['prefix'] }}\"):
+            raise ValidationFailed(\"{{ name }} does not start with prefix {{ b['prefix'] }}\")
+    {%- endif -%}
+    {%- if b['suffix'] %}
+    try:
+        if not {{ name }}.endswith({{ b['suffix'] }}):
+            raise ValidationFailed(\"{{ name }} does not end with suffix {{ b['suffix'] }}\")
+    except NameError:
+        if not {{ name }}.endswith(b\"{{ b['suffix'] }}\"):
+            raise ValidationFailed(\"{{ name }} does not end with suffix {{ b['suffix'] }}\")
+    {%- endif -%}
+    """
+    return Template(bytes_tmpl).render(o = option_value, name = name, const_template = const_template, in_template = in_template, b = option_value.bytes)
+
+def repeated_template(option_value, name, field):
+    rep_tmpl = """
+    {%- if o and o.repeated['min_items'] %}
+    if len({{ name }}) < {{ o.repeated['min_items'] }}:
+        raise ValidationFailed(\"{{ name }} needs to contain at least {{ o.repeated['min_items'] }} items\")
+    {%- endif %}
+    {%- if o and o.repeated['max_items'] %}
+    if len({{ name }}) > {{ o.repeated['max_items'] }}:
+        raise ValidationFailed(\"{{ name }} needs to contain at most {{ o.repeated['max_items'] }} items\")
+    {%- endif %}
+    {%- if o and o.repeated['unique'] %}
+    seen = set()
+    for item in {{ name }}:
+        if item in seen:
+            raise ValidationFailed(\"{{ name }} must contain unique items. %s has been repeated.\" %item)
+        else:
+            seen.add(item)
+    {%- endif %}
+    {%- if message_type %}
+    for item in {{ name }}:
+        {%- if o and o.repeated and o.repeated.items.message.skip %}
+        pass
+        {% else %}
+        generate_validate(item)(item)
+        {% endif %}
+    {%- endif %}
+    {%- if o and str(o.repeated['items']) %}
+    for item in {{ name }}:
+        {%- set accessor = o.repeated['items'] -%}
+        {%- if str(accessor.float) %}
+        {{- num_template(accessor, 'item', accessor.float)|indent(4,True) -}}
+        {%- elif str(accessor.double) %}
+        {{- num_template(accessor, 'item', accessor.double)|indent(4,True) -}}
+        {%- elif str(accessor.int32) %}
+        {{- num_template(accessor, 'item', accessor.int32)|indent(4,True) -}}
+        {%- elif str(accessor.int64) %}
+        {{- num_template(accessor, 'item', accessor.int64)|indent(4,True) -}}
+        {%- elif str(accessor.uint32) %}
+        {{- num_template(accessor, 'item', accessor.uint32)|indent(4,True) -}}
+        {%- elif str(accessor.uint64) %}
+        {{- num_template(accessor, 'item', accessor.uint64)|indent(4,True) -}}
+        {%- elif str(accessor.sint32) %}
+        {{- num_template(accessor, 'item', accessor.sint32)|indent(4,True) -}}
+        {%- elif str(accessor.sint64) %}
+        {{- num_template(accessor, 'item', accessor.sint64)|indent(4,True) -}}
+        {%- elif str(accessor.fixed32) %}
+        {{- num_template(accessor, 'item', accessor.fixed32)|indent(4,True) -}}
+        {%- elif str(accessor.fixed64) %}
+        {{- num_template(accessor, 'item', accessor.fixed64)|indent(4,True) -}}
+        {%- elif str(accessor.sfixed32) %}
+        {{- num_template(accessor, 'item', accessor.sfixed32)|indent(4,True) -}}
+        {%- elif str(accessor.sfixed64) %}
+        {{- num_template(accessor, 'item', accessor.sfixed64)|indent(4,True) -}}
+        {%- elif str(accessor.bool) %}
+        {{- bool_template(accessor, 'item')|indent(4,True) -}}
+        {%- elif str(accessor.string) %}
+        {{- string_template(accessor, 'item')|indent(4,True) -}}
+        {%- elif str(accessor.enum) %}
+        {{- enum_template(accessor, 'item', field)|indent(4,True) -}}
+        {%- elif str(accessor.duration) %}
+        {{- duration_template(accessor, 'item', True)|indent(4,True) -}}
+        {%- elif str(accessor.timestamp) %}
+        {{- timestamp_template(accessor, 'item', True)|indent(4,True) -}}
+        {%- elif str(accessor.message) %}
+        {{- message_template(accessor, 'item', True)|indent(4,True) -}}
+        {%- elif str(accessor.any) %}
+        {{- any_template(accessor, 'item', True)|indent(4,True) -}}
+        {%- elif str(accessor.message) %}
+        {{- message_template(accessor, 'item', True)|indent(4,True) -}}
+        {%- endif %}
+        pass
+    {%- endif %}
+    """
+    return Template(rep_tmpl).render(o = option_value, name = name, message_type = field.message_type, str = str, num_template = num_template, bool_template = bool_template, string_template = string_template, enum_template = enum_template, duration_template = duration_template, timestamp_template = timestamp_template, any_template = any_template, message_template = message_template,field = field)
+
+def is_map(field):
+    return field.label == 3 and field.message_type and len(field.message_type.fields) == 2 and \
+           field.message_type.fields[0].name == "key" and field.message_type.fields[1].name == "value"
+
+def map_template(option_value, name, field):
+    map_tmpl = """
+    {%- if o and o.map['min_pairs'] %}
+    if len({{ name }}) < {{ o.map['min_pairs'] }}:
+        raise ValidationFailed(\"{{ name }} needs to contain at least {{ o.map['min_pairs'] }} items\")
+    {%- endif %}
+    {%- if o and o.map['max_pairs'] %}
+    if len({{ name }}) > {{ o.map['max_pairs'] }}:
+        raise ValidationFailed(\"{{ name }} can contain at most {{ o.map['max_pairs'] }} items\")
+    {%- endif %}
+    {%- if o and o.map['no_sparse'] -%}
+    raise UnimplementedException()
+    {%- endif %}
+    {%- if o and str(o.map['keys']) %}
+    for item in {{ name }}:
+        {%- set accessor = o.map['keys'] -%}
+        {%- if str(accessor.double) %}
+        {{- num_template(accessor, 'item', accessor.double)|indent(4,True) -}}
+        {%- elif str(accessor.int32) %}
+        {{- num_template(accessor, 'item', accessor.int32)|indent(4,True) -}}
+        {%- elif str(accessor.int64) %}
+        {{- num_template(accessor, 'item', accessor.int64)|indent(4,True) -}}
+        {%- elif str(accessor.uint32) %}
+        {{- num_template(accessor, 'item', accessor.uint32)|indent(4,True) -}}
+        {%- elif str(accessor.uint64) %}
+        {{- num_template(accessor, 'item', accessor.uint64)|indent(4,True) -}}
+        {%- elif str(accessor.sint32) %}
+        {{- num_template(accessor, 'item', accessor.sint32)|indent(4,True) -}}
+        {%- elif str(accessor.sint64) %}
+        {{- num_template(accessor, 'item', accessor.sint64)|indent(4,True) -}}
+        {%- elif str(accessor.fixed32) %}
+        {{- num_template(accessor, 'item', accessor.fixed32)|indent(4,True) -}}
+        {%- elif str(accessor.fixed64) %}
+        {{- num_template(accessor, 'item', accessor.fixed64)|indent(4,True) -}}
+        {%- elif str(accessor.sfixed32) %}
+        {{- num_template(accessor, 'item', accessor.sfixed32)|indent(4,True) -}}
+        {%- elif str(accessor.sfixed64) %}
+        {{- num_template(accessor, 'item', accessor.sfixed64)|indent(4,True) -}}
+        {%- elif str(accessor.bool) %}
+        {{- bool_template(accessor, 'item')|indent(4,True) -}}
+        {%- elif str(accessor.string) %}
+        {{- string_template(accessor, 'item')|indent(4,True) -}}
+        {%- endif %}
+        pass
+    {%- endif %}
+    {%- if o and str(o.map['values']) %}
+    for item in {{ name }}.values():
+        {%- set accessor = o.map['values'] -%}
+        {%- if str(accessor.float) %}
+        {{- num_template(accessor, 'item', accessor.float)|indent(4,True) -}}
+        {%- elif str(accessor.double) %}
+        {{- num_template(accessor, 'item', accessor.double)|indent(4,True) -}}
+        {%- elif str(accessor.int32) %}
+        {{- num_template(accessor, 'item', accessor.int32)|indent(4,True) -}}
+        {%- elif str(accessor.int64) %}
+        {{- num_template(accessor, 'item', accessor.int64)|indent(4,True) -}}
+        {%- elif str(accessor.uint32) %}
+        {{- num_template(accessor, 'item', accessor.uint32)|indent(4,True) -}}
+        {%- elif str(accessor.uint64) %}
+        {{- num_template(accessor, 'item', accessor.uint64)|indent(4,True) -}}
+        {%- elif str(accessor.sint32) %}
+        {{- num_template(accessor, 'item', accessor.sint32)|indent(4,True) -}}
+        {%- elif str(accessor.sint64) %}
+        {{- num_template(accessor, 'item', accessor.sint64)|indent(4,True) -}}
+        {%- elif str(accessor.fixed32) %}
+        {{- num_template(accessor, 'item', accessor.fixed32)|indent(4,True) -}}
+        {%- elif str(accessor.fixed64) %}
+        {{- num_template(accessor, 'item', accessor.fixed64)|indent(4,True) -}}
+        {%- elif str(accessor.sfixed32) %}
+        {{- num_template(accessor, 'item', accessor.sfixed32)|indent(4,True) -}}
+        {%- elif str(accessor.sfixed64) %}
+        {{- num_template(accessor, 'item', accessor.sfixed64)|indent(4,True) -}}
+        {%- elif str(accessor.bool) %}
+        {{- bool_template(accessor, 'item')|indent(4,True) -}}
+        {%- elif str(accessor.string) %}
+        {{- string_template(accessor, 'item')|indent(4,True) -}}
+        {%- elif str(accessor.enum) %}
+        {{- enum_template(accessor, 'item', field.message_type.fields[1])|indent(4,True) -}}
+        {%- elif str(accessor.duration) %}
+        {{- duration_template(accessor, 'item', True)|indent(4,True) -}}
+        {%- elif str(accessor.timestamp) %}
+        {{- timestamp_template(accessor, 'item', True)|indent(4,True) -}}
+        {%- elif str(accessor.message) %}
+        {{- message_template(accessor, 'item', True)|indent(4,True) -}}
+        {%- elif str(accessor.any) %}
+        {{- any_template(accessor, 'item', True)|indent(4,True) -}}
+        {%- elif str(accessor.message) %}
+        {{- message_template(accessor, 'item', True)|indent(4,True) -}}
+        {%- endif %}
+        pass
+    {%- endif %}
+    """
+    return Template(map_tmpl).render(o = option_value, name = name, message_type = field.message_type, str = str, num_template = num_template, bool_template = bool_template, string_template = string_template, enum_template = enum_template, duration_template = duration_template, timestamp_template = timestamp_template, any_template = any_template, message_template = message_template,field = field)
 
 def rule_type(field):
-    if has_validate(field) and field.message_type is None and not field.containing_oneof:
+    name = "p."+ field.name
+    if has_validate(field) and field.message_type is None:
         for option_descriptor, option_value in field.GetOptions().ListFields():
             if option_descriptor.full_name == "validate.rules":
                 if str(option_value.string):
-                    return string_template(option_value, field.name)
+                    return string_template(option_value, name )
                 elif str(option_value.message):
                     return message_template(option_value, field.name)
                 elif str(option_value.bool):
-                    return bool_template(option_value, field.name)
+                    return bool_template(option_value, name)
                 elif str(option_value.float):
-                    return num_template(option_value, field.name, option_value.float)
+                    return num_template(option_value, name, option_value.float)
                 elif str(option_value.double):
-                    return num_template(option_value, field.name, option_value.double)
+                    return num_template(option_value, name, option_value.double)
                 elif str(option_value.int32):
-                    return num_template(option_value, field.name, option_value.int32)
+                    return num_template(option_value, name, option_value.int32)
                 elif str(option_value.int64):
-                    return num_template(option_value, field.name, option_value.int64)
+                    return num_template(option_value, name, option_value.int64)
                 elif str(option_value.uint32):
-                    return num_template(option_value, field.name, option_value.uint32)
+                    return num_template(option_value, name, option_value.uint32)
                 elif str(option_value.uint64):
-                    return num_template(option_value, field.name, option_value.uint64)
+                    return num_template(option_value, name, option_value.uint64)
                 elif str(option_value.sint32):
-                    return num_template(option_value, field.name, option_value.sint32)
+                    return num_template(option_value, name, option_value.sint32)
                 elif str(option_value.sint64):
-                    return num_template(option_value, field.name, option_value.sint64)
+                    return num_template(option_value, name, option_value.sint64)
                 elif str(option_value.fixed32):
-                    return num_template(option_value, field.name, option_value.fixed32)
+                    return num_template(option_value, name, option_value.fixed32)
                 elif str(option_value.fixed64):
-                    return num_template(option_value, field.name, option_value.fixed64)
+                    return num_template(option_value, name, option_value.fixed64)
                 elif str(option_value.sfixed32):
-                    return num_template(option_value, field.name, option_value.sfixed32)
+                    return num_template(option_value, name, option_value.sfixed32)
                 elif str(option_value.sfixed64):
-                    return num_template(option_value, field.name, option_value.sfixed64)
+                    return num_template(option_value, name, option_value.sfixed64)
                 elif str(option_value.enum):
-                    return enum_template(option_value, field.name, field)
+                    return enum_template(option_value, name, field)
+                elif str(option_value.bytes):
+                    return bytes_template(option_value, name)
+                elif str(option_value.repeated):
+                    return repeated_template(option_value, name, field)
+                elif str(option_value.map):
+                    return map_template(option_value, name, field)
+                elif str(option_value.required):
+                    return required_template(option_value, name)
                 else:
                     return "raise UnimplementedException()"
-    if field.message_type and not field.containing_oneof:
+    if field.message_type:
         for option_descriptor, option_value in field.GetOptions().ListFields():
             if option_descriptor.full_name == "validate.rules":
                 if str(option_value.duration):
-                    return duration_template(option_value, field.name)
+                    return duration_template(option_value, name)
                 elif str(option_value.timestamp):
-                    return timestamp_template(option_value, field.name)
+                    return timestamp_template(option_value, name)
                 elif str(option_value.float) or str(option_value.int32) or str(option_value.int64) or \
                         str(option_value.double) or str(option_value.uint32) or str(option_value.uint64) or \
-                        str(option_value.bool) or str(option_value.string):
-                    return wrapper_template(option_value, field.name)
-                elif str(option_value.bytes):
-                    return "raise UnimplementedException()"
+                        str(option_value.bool) or str(option_value.string) or str(option_value.bytes):
+                    return wrapper_template(option_value, name)
                 elif str(option_value.message) is not "":
                     return message_template(option_value, field.name)
                 elif str(option_value.any):
-                    return any_template(option_value, field.name)
+                    return any_template(option_value, name)
+                elif str(option_value.repeated):
+                    return repeated_template(option_value, name, field)
+                elif str(option_value.map):
+                    return map_template(option_value, name, field)
+                elif str(option_value.required):
+                    return required_template(option_value, name)
                 else:
                     return "raise UnimplementedException()"
         if field.message_type.full_name.startswith("google.protobuf"):
             return ""
+        elif is_map(field):
+            return map_template(None, name, field)
+        elif field.label == 3:
+            return repeated_template(None, name, field)
         else:
             return message_template(None, field.name)
     return ""
@@ -638,12 +928,24 @@ def validate(p):
     return None
         {%- endif -%}
     {%- endfor -%}
+    {%- for oneof in p.DESCRIPTOR.oneofs %}
+    present = False
+        {%- for field in oneof.fields %}
+    if _has_field(p, \"{{ field.name }}\"):
+        present = True
+        {{ rule_type(field)|indent(4,True) }}
+        {%- endfor %}
+        {% for option in oneof.GetOptions().ListFields() %}
+        {% if option[0].name == 'required' and option[1] %}
+    if not present:
+        raise ValidationFailed(\"Oneof {{ oneof.name }} is required\")
+        {% endif %}
+        {% endfor %}
+    {%- endfor %}
     {%- for field in p.DESCRIPTOR.fields -%}
-        {%- if field.label == 3 or field.containing_oneof %}
-    raise UnimplementedException()
-        {%- else %}
+        {%- if not field.containing_oneof %}
     {{ rule_type(field) -}}
-        {%- endif -%}
+        {%- endif %}
     {%- endfor %}
     return None"""
     return Template(file_tmp).render(rule_type = rule_type, p = proto_message)
