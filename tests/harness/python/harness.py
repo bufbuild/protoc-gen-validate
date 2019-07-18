@@ -39,7 +39,10 @@ if __name__ == "__main__":
     try:
         result = TestResult()
         validate = generate_validate(test_class)
-        result.Valid = validate(test_class)
+        valid = validate(test_class)
+        result.Valid = True
+    except ValidationFailed as e:
+        result.Valid = False
     except UnimplementedException as e:
         result.Error = False
         result.AllowFailure = True
