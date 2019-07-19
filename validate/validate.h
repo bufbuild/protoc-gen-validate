@@ -12,7 +12,7 @@
 #if !defined(_WIN32)
 #include <arpa/inet.h>
 #else
-#include <winsock.h>
+#include <winsock2.h>
 #include <ws2tcpip.h>
 #endif
 
