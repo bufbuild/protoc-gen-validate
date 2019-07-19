@@ -168,22 +168,123 @@ def _has_field(message_pb, property_name):
         all_fields = set([field.name for field in message_pb.DESCRIPTOR.fields])
         return property_name in all_fields
 
-
-def string_template(option_value, f, name):
-    str_templ = """{% if s['const'] %}
-    if p.{{ name }} != \"{{ s['const'] }}\":
-        raise ValidationFailed(\"{{ name }} not equal to {{ s['const'] }}\")
-    {% endif %}
-    {% if s['in'] %}
-    if p.{{ name }} not in {{ s['in'] }}:
-        raise ValidationFailed(\"{{ name }} not equal to {{ s['in'] }}\")
-    {% endif %}
-    {% if s['not_in'] %}
-    if p.{{ name }} in {{ s['not_in'] }}:
-        raise ValidationFailed(\"{{ name }} in {{ s['not_in'] }}\")
+def const_template(option_value, f, name):
+    const_tmpl = """{% if o.string != "" and o.string['const'] %}
+    if p.{{ name }} != \"{{ o.string['const'] }}\":
+        raise ValidationFailed(\"{{ name }} not equal to {{ o.string['const'] }}\")
     {% endif %}
     """
-    return Template(str_templ).render(s=option_value.string,f=f,name=name)
+    return Template(const_tmpl).render(o = option_value, f = f, name = name)
+
+def in_template(value, name):
+    in_tmpl = """
+    {% if value['in'] %}
+    if p.{{ name }} not in {{ value['in'] }}:
+        raise ValidationFailed(\"{{ name }} not in {{ value['in'] }}\")
+    {% endif %}
+    {% if value['not_in'] %}
+    if p.{{ name }} in {{ value['not_in'] }}:
+        raise ValidationFailed(\"{{ name }} in {{ value['not_in'] }}\")
+    {% endif %}
+    """
+    return Template(in_tmpl).render(value = value, name = name)
+
+def string_template(option_value, f, name):
+    str_templ = """
+    {{ const_template(o, f, name) }}
+    {{ in_template(o.string, name) }}
+    {% set s = o.string %}
+    {% if s['len'] %}
+    if len(p.{{ name }}) != {{ s['len'] }}:
+        raise ValidationFailed(\"{{ name }} length does not equal {{ s['len'] }}\")
+    {% endif %}
+    {% if s['min_len'] %}
+    if len(p.{{ name }}) < {{ s['min_len'] }}:
+        raise ValidationFailed(\"{{ name }} length is less than {{ s['min_len'] }}\")
+    {% endif %}
+    {% if s['max_len'] %}
+    if len(p.{{ name }}) > {{ s['max_len'] }}:
+        raise ValidationFailed(\"{{ name }} length is more than {{ s['max_len'] }}\")
+    {% endif %}
+    {% if s['len_bytes'] %}
+    if byte_len(p.{{ name }}) != {{ s['len_bytes'] }}:
+        raise ValidationFailed(\"{{ name }} length does not equal {{ s['len_bytes'] }}\")
+    {% endif %}
+    {% if s['min_bytes'] %}
+    if byte_len(p.{{ name }}) < {{ s['min_bytes'] }}:
+        raise ValidationFailed(\"{{ name }} length is less than {{ s['min_bytes'] }}\")
+    {% endif %}
+    {% if s['max_bytes'] %}
+    if byte_len(p.{{ name }}) > {{ s['max_bytes'] }}:
+        raise ValidationFailed(\"{{ name }} length is greater than {{ s['max_bytes'] }}\")
+    {% endif %}
+    {% if s['pattern'] %}
+    if re.search(r\'{{ s['pattern'] }}\', p.{{ name }}) is None:
+        raise ValidationFailed(\"{{ name }} pattern does not match {{ s['pattern'] }}\")
+    {% endif %}
+    {% if s['prefix'] %}
+    if not p.{{ name }}.startswith(\"{{ s['prefix'] }}\"):
+        raise ValidationFailed(\"{{ name }} does not start with prefix {{ s['prefix'] }}\")
+    {% endif %}
+    {% if s['suffix'] %}
+    if not p.{{ name }}.endswith(\"{{ s['suffix'] }}\"):
+        raise ValidationFailed(\"{{ name }} does not end with suffix {{ s['suffix'] }}\")
+    {% endif %}
+    {% if s['contains'] %}
+    if not \"{{ s['contains'] }}\" in p.{{ name }}:
+        raise ValidationFailed(\"{{ name }} does not contain {{ s['contains'] }}\")
+    {% endif %}
+    {% if s['email'] %}
+    if not _validateEmail(p.{{ name }}):
+        raise ValidationFailed(\"{{ name }} is not a valid email\")
+    {% endif %}    
+    {% if s['hostname'] %}
+    if not _validateHostName(p.{{ name }}):
+        raise ValidationFailed(\"{{ name }} is not a valid email\")
+    {% endif %}
+    {% if s['address'] %}
+    try:
+        ipaddress.ip_address(unicode(p.{{ name }}))
+    except ValueError:
+        if not _validateHostName(p.{{ name }}):
+            raise ValidationFailed(\"{{ name }} is not a valid address\")
+    {% endif %}
+    {% if s['ip'] %}
+    try:
+        ipaddress.ip_address(unicode(p.{{ name }}))
+    except ValueError:
+        raise ValidationFailed(\"{{ name }} is not a valid ip\")
+    {% endif %}
+    {% if s['ipv4'] %}
+    try:
+        ipaddress.IPv4Address(unicode(p.{{ name }}))
+    except ValueError:
+        raise ValidationFailed(\"{{ name }} is not a valid ipv4\")
+    {% endif %}
+    {% if s['ipv6'] %}
+    try:
+        ipaddress.IPv6Address(unicode(p.{{ name }}))
+    except ValueError:
+        raise ValidationFailed(\"{{ name }} is not a valid ipv6\")
+    {% endif %}
+    {% if s['uri'] %}
+    url = urlparse.urlparse(p.{{ name }})
+    if not all([url.scheme, url.netloc, url.path]):
+        raise ValidationFailed(\"{{ name }} is not a valid uri\")
+    {% endif %}
+    {% if s['uri_ref'] %}
+    url = urlparse.urlparse(p.{{ name }})
+    if not all([url.scheme, url.path]) and url.fragment:
+        raise ValidationFailed(\"{{ name }} is not a valid uri ref\")
+    {% endif %}
+    {% if s['uuid'] %}
+    try:
+        uuid.UUID(p.{{ name }})
+    except ValueError:
+        raise ValidationFailed(\"{{ name }} is not a valid UUID\")     
+    {% endif %}
+    """
+    return Template(str_templ).render(o=option_value,f=f,name=name,const_template=const_template, in_template=in_template)
 
 def message_template(option_value, f, name):
     message_tmpl = """{% if m.message and m.message['required'] %}
@@ -226,7 +327,7 @@ def file_template(proto_message):
     {% for field in accessor.fields -%}
         {{ rule_type(field) }}
     {%- endfor %}
-    return None, p"""
+    return None"""
     return Template(file_tmp).render(rule_type=rule_type, p=proto_message, dir=dir)
 
 
@@ -238,4 +339,6 @@ class ValidationFailed(Exception):
 
 def generate_validate(proto_message):
     func = file_template(proto_message)
+    # print func
     exec(func); return validate
+
