@@ -2,6 +2,7 @@ package goshared
 
 import (
 	"fmt"
+	"github.com/iancoleman/strcase"
 	"reflect"
 	"strings"
 	"text/template"
@@ -20,6 +21,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	tpl.Funcs(map[string]interface{}{
 		"accessor":      fns.accessor,
 		"byteStr":       fns.byteStr,
+		"snakeCase":	 fns.snakeCase,
 		"cmt":           pgs.C80,
 		"durGt":         fns.durGt,
 		"durLit":        fns.durLit,
@@ -310,4 +312,8 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.FilePath]pgs.Nam
 	}
 
 	return out
+}
+
+func (fns goSharedFuncs) snakeCase(name string) string {
+	return strcase.ToSnake(name)
 }
