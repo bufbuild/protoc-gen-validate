@@ -56,7 +56,7 @@ const emailTpl = `
 
 const uuidTpl = `
 	func (m {{ (msgTyp .).Pointer }}) _validateUuid(uuid string) error {
-		if matched := _{{ .File.InputPath.BaseName }}_uuidPattern.MatchString(uuid); !matched {
+		if matched := _{{ snakeCase .File.InputPath.BaseName }}_uuidPattern.MatchString(uuid); !matched {
 			return errors.New("invalid uuid format")
 		}
 
