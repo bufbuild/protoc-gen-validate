@@ -35,6 +35,10 @@ bazel:
 	# generate the PGV plugin with Bazel
 	bazel build //tests/...
 
+.PHONY: build_generation_tests
+build_generation_tests:
+	bazel build //tests/generation/...
+
 .PHONY: gazelle
 gazelle: vendor
 	# runs gazelle against the codebase to generate Bazel BUILD files
@@ -134,7 +138,7 @@ tests/harness/java/java-harness:
 	mvn -q -f java/pom.xml clean package -DskipTests
 
 .PHONY: ci
-ci: lint build testcases bazel-harness
+ci: lint bazel testcases bazel-harness build_generation_tests
 
 .PHONY: clean
 clean:
