@@ -33,7 +33,7 @@ build: validate/validate.pb.go
 .PHONY: bazel
 bazel:
 	# generate the PGV plugin with Bazel
-	bazel build //tests/...
+	bazel build //tests/... --incompatible_new_actions_api=false
 
 .PHONY: gazelle
 gazelle: vendor

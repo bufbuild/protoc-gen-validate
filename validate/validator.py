@@ -296,8 +296,20 @@ def duration_template(option_value, f, name):
     dur_tmpl = """
     {{ required_template(o.duration, name) }}
     if _has_field(p, \"{{ name }}\"):
-        dur = p.{{ name }}.seconds + round((10**-9 * p.{{ name }}.nanos),9)
+        dur = p.{{ name }}.seconds + round((10**-9 * p.{{ name }}.nanos), 9)
         {% set dur = o.duration %}
+        {% if dur.HasField('lt') %} 
+        lt = {{ dur_lit(dur['lt']) }} 
+        {% endif %}
+        {% if dur.HasField('lte') %} 
+        lte = {{ dur_lit(dur['lte']) }} 
+        {% endif %}
+        {% if dur.HasField('gt') %} 
+        gt = {{ dur_lit(dur['gt']) }} 
+        {% endif %}
+        {% if dur.HasField('gte') %} 
+        gte = {{ dur_lit(dur['gte']) }} 
+        {% endif %}
         {% if dur.HasField('const') %}
         if dur != {{ dur_lit(dur['const']) }}:
             raise ValidationFailed(\"{{ name }} is not equal to {{ dur_lit(dur['const']) }}\")
@@ -313,54 +325,163 @@ def duration_template(option_value, f, name):
         {% if dur.HasField('lt') %}
             {% if dur.HasField('gt') %}
                 {% if dur_lit(dur['lt']) > dur_lit(dur['gt']) %}
-        if dur <= {{ dur_lit(dur['gt']) }} or dur >= {{ dur_lit(dur['lt']) }}:
+        if dur <= gt or dur >= lt:
             raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['lt']), dur_lit(dur['gt']) }}\")
                 {% else %}
-        if dur >= {{ dur_lit(dur['lt']) }} and dur <= {{ dur_lit(dur['gt']) }}:
+        if dur >= lt and dur <= gt:
             raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['gt']), dur_lit(dur['lt']) }}\")
                 {% endif %}
             {% elif dur.HasField('gte') %}
                 {% if dur_lit(dur['lt']) > dur_lit(dur['gte']) %}
-        if dur < {{ dur_lit(dur['gte']) }} or dur >= {{ dur_lit(dur['lt']) }}:
+        if dur < gte or dur >= lt:
             raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['lt']), dur_lit(dur['gte']) }}\")
                 {% else %}
-        if dur >= {{ dur_lit(dur['lt']) }} and dur < {{ dur_lit(dur['gte']) }}:
+        if dur >= lt and dur < gte:
             raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['gte']), dur_lit(dur['lt']) }}\")
                 {% endif %}
             {% else %}
-        if dur >= {{ dur_lit(dur['lt']) }}:
+        if dur >= lt:
             raise ValidationFailed(\"{{ name }} is not lesser than {{ dur_lit(dur['lt']) }}\")    
             {% endif %}
         {% elif dur.HasField('lte') %}
             {% if dur.HasField('gt') %}
                 {% if dur_lit(dur['lte']) > dur_lit(dur['gt']) %}
-        if dur <= {{ dur_lit(dur['gt']) }} or dur > {{ dur_lit(dur['lte']) }}:
+        if dur <= gt or dur > lte:
             raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['lte']), dur_lit(dur['gt']) }}\")
                 {% else %}
-        if dur > {{ dur_lit(dur['lte']) }} and dur <= {{ dur_lit(dur['gt']) }}:
+        if dur > lte and dur <= gt:
             raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['gt']), dur_lit(dur['lte']) }}\")
                 {% endif %}
             {% elif dur.HasField('gte') %}
                 {% if dur_lit(dur['lte']) > dur_lit(dur['gte']) %}
-        if dur < {{ dur_lit(dur['gte']) }} or dur > {{ dur_lit(dur['lte']) }}:
+        if dur < gte or dur > lte:
             raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['lte']), dur_lit(dur['gte']) }}\")
                 {% else %}
-        if dur > {{ dur_lit(dur['lte']) }} and dur < {{ dur_lit(dur['gte']) }}:
+        if dur > lte and dur < gte:
             raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['gte']), dur_lit(dur['lte']) }}\")
                 {% endif %}
             {% else %}
-        if dur > {{ dur_lit(dur['lte']) }}:
+        if dur > lte:
             raise ValidationFailed(\"{{ name }} is not lesser than or equal to {{ dur_lit(dur['lte']) }}\")                   
             {% endif %}
         {% elif dur.HasField('gt') %}
-        if dur <= {{ dur_lit(dur['gt']) }}:
+        if dur <= gt:
             raise ValidationFailed(\"{{ name }} is not greater than {{ dur_lit(dur['gt']) }}\")
         {% elif dur.HasField('gte') %}
-        if dur < {{ dur_lit(dur['gte']) }}:
+        if dur < gte:
             raise ValidationFailed(\"{{ name }} is not greater than or equal to {{ dur_lit(dur['gte']) }}\")
         {% endif %}
     """
     return Template(dur_tmpl).render(o=option_value,f=f,name=name,required_template=required_template, _has_field=_has_field,dur_lit=dur_lit,dur_arr=dur_arr)
+
+def timestamp_template(option_value, f, name):
+    timestamp_tmpl = """
+    {{ required_template(o.timestamp, name) }}
+    if _has_field(p, \"{{ name }}\"):
+        ts = p.{{ name }}.seconds + round((10**-9 * p.{{ name }}.nanos), 9)
+        {% set ts = o.timestamp %}
+        {% if ts.HasField('lt') %} 
+        lt = {{ dur_lit(ts['lt']) }} 
+        {% endif %}
+        {% if ts.HasField('lte') %} 
+        lte = {{ dur_lit(ts['lte']) }} 
+        {% endif %}
+        {% if ts.HasField('gt') %} 
+        gt = {{ dur_lit(ts['gt']) }} 
+        {% endif %}
+        {% if ts.HasField('gte') %} 
+        gte = {{ dur_lit(ts['gte']) }} 
+        {% endif %}
+        {% if ts.HasField('const') %}
+        if ts != {{ dur_lit(ts['const']) }}:
+            raise ValidationFailed(\"{{ name }} is not equal to {{ dur_lit(ts['const']) }}\")
+        {% endif %}
+        {% if ts['in'] %}
+        if ts not in {{ dur_arr(ts['in']) }}:
+            raise ValidationFailed(\"{{ name }} is not in {{ dur_arr(ts['in']) }}\") 
+        {% endif %}
+        {% if ts['not_in'] %}
+        if ts in {{ dur_arr(ts['not_in']) }}:
+            raise ValidationFailed(\"{{ name }} is not in {{ dur_arr(ts['not_in']) }}\") 
+        {% endif %}
+        {% if ts.HasField('lt') %}
+            {% if ts.HasField('gt') %}
+                {% if dur_lit(ts['lt']) > dur_lit(ts['gt']) %}
+        if ts <= gt or ts >= lt:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(ts['lt']), dur_lit(ts['gt']) }}\")
+                {% else %}
+        if ts >= lt and ts <= gt:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(ts['gt']), dur_lit(ts['lt']) }}\")
+                {% endif %}
+            {% elif ts.HasField('gte') %}
+                {% if dur_lit(ts['lt']) > dur_lit(ts['gte']) %}
+        if ts < gte or ts >= lt:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(ts['lt']), dur_lit(ts['gte']) }}\")
+                {% else %}
+        if ts >= lt and ts < gte:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(ts['gte']), dur_lit(ts['lt']) }}\")
+                {% endif %}
+            {% else %}
+        if ts >= lt:
+            raise ValidationFailed(\"{{ name }} is not lesser than {{ dur_lit(ts['lt']) }}\")    
+            {% endif %}
+        {% elif ts.HasField('lte') %}
+            {% if ts.HasField('gt') %}
+                {% if dur_lit(ts['lte']) > dur_lit(ts['gt']) %}
+        if ts <= gt or ts > lte:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(ts['lte']), dur_lit(ts['gt']) }}\")
+                {% else %}
+        if ts > lte and ts <= gt:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(ts['gt']), dur_lit(ts['lte']) }}\")
+                {% endif %}
+            {% elif ts.HasField('gte') %}
+                {% if dur_lit(ts['lte']) > dur_lit(ts['gte']) %}
+        if ts < gte or ts > lte:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(ts['lte']), dur_lit(ts['gte']) }}\")
+                {% else %}
+        if ts > lte and ts < gte:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(ts['gte']), dur_lit(ts['lte']) }}\")
+                {% endif %}
+            {% else %}
+        if ts > lte:
+            raise ValidationFailed(\"{{ name }} is not lesser than or equal to {{ dur_lit(ts['lte']) }}\")                   
+            {% endif %}
+        {% elif ts.HasField('gt') %}
+        if ts <= gt:
+            raise ValidationFailed(\"{{ name }} is not greater than {{ dur_lit(ts['gt']) }}\")
+        {% elif ts.HasField('gte') %}
+        if ts < gte:
+            raise ValidationFailed(\"{{ name }} is not greater than or equal to {{ dur_lit(ts['gte']) }}\")
+        {% elif ts.HasField('lt_now') %}
+        now = time.time()
+            {% if ts.HasField('within') %}
+        within = {{ dur_lit(ts['within']) }}
+        if ts >= now or ts >= now - within:
+            raise ValidationFailed(\"{{ name }} is not within range {{ dur_lit(ts['within']) }}\")
+            {% else %}
+        if ts >= now:
+            raise ValidationFailed(\"{{ name }} is not lesser than now\")
+            {% endif %} 
+        {% elif ts.HasField('gt_now') %}
+        now = time.time()
+            {% if ts.HasField('within') %}
+        within = {{ dur_lit(ts['within']) }}
+        if ts <= now or ts <= now + within:
+            raise ValidationFailed(\"{{ name }} is not within range {{ dur_lit(ts['within']) }}\")
+            {% else %}
+        if ts <= now:
+            raise ValidationFailed(\"{{ name }} is not greater than now\")    
+            {% endif %}
+        {% elif ts.HasField('within') %}
+        now = time.time()
+        within = {{ dur_lit(ts['within']) }}
+        if ts >= now + within or ts <= now - within:
+             raise ValidationFailed(\"{{ name }} is not within range {{ dur_lit(ts['within']) }}\")
+        {% endif %}
+        
+    """
+    return Template(timestamp_tmpl).render(o=option_value,f=f,name=name,required_template=required_template, _has_field=_has_field,dur_lit=dur_lit,dur_arr=dur_arr)
+
 
 def rule_type(field, name = ""):
     if has_validate(field) and field.message_type is None and not field.containing_oneof:
@@ -403,8 +524,12 @@ def rule_type(field, name = ""):
             if option_descriptor.full_name == "validate.rules":
                 if str(option_value.duration) is not "":
                     return duration_template(option_value, field, ".".join([x for x in [name, field.name] if x]))
-                else:
+                elif str(option_value.timestamp) is not "":
+                    return timestamp_template(option_value, field, ".".join([x for x in [name, field.name] if x]))
+                elif str(option_value.message) is not "":
                     return message_template(option_value, field, ".".join([x for x in [name, field.name] if x]))
+                else:
+                    return "raise UnimplementedException()"
         if field.message_type.full_name.startswith("google.protobuf"):
             return ""
         else:
