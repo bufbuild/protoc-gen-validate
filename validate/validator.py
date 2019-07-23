@@ -56,108 +56,6 @@ def _validateEmail(addr):
         return False
     return _validateHostName(parts[1])
 
-# def num_template(option_value, f, num):
-#     returnval = ""
-#     if str(option_value.float) is not "": # Need to convert double to float
-#         if num.HasField('const'):
-#             returnval += '\n  if struct.unpack(\"f\", struct.pack(\"f\", %s))[0] != p.%s:\n    return False' %(getattr(num,'const'), f.name)
-#     else:
-#         if num.HasField('const'):
-#             returnval += '\n  if %s != p.%s:\n    return False' %(getattr(num,'const'), f.name)
-#     if num.HasField('lt'):
-#         if num.HasField('gt'):
-#             if getattr(num, 'lt') > getattr(num, 'gt'):
-#                 returnval += '\n  if p.%s <= %s or p.%s >= %s:\n    return False' %(f.name, getattr(num,'gt'), f.name, getattr(num,'lt'))
-#             else:
-#                 returnval += '\n  if p.%s >= %s and p.%s <= %s:\n    return False' %(f.name, getattr(num,'lt'), f.name, getattr(num,'gt'))
-#         elif num.HasField('gte'):
-#             if getattr(num, 'lt') > getattr(num, 'gte'):
-#                 returnval += '\n  if p.%s < %s or p.%s >= %s:\n    return False' %(f.name, getattr(num,'gte'), f.name, getattr(num,'lt'))
-#             else:
-#                 returnval += '\n  if p.%s >= %s and p.%s < %s:\n    return False' %(f.name, getattr(num,'lt'), f.name, getattr(num,'gte'))
-#         else:
-#             returnval += '\n  if p.%s >= struct.unpack(\"f\", struct.pack(\"f\", %s))[0]:\n    return False' %(f.name, getattr(num,'lt'))
-#     elif num.HasField('lte'):
-#         if num.HasField('gt'):
-#             if getattr(num, 'lte') > getattr(num, 'gt'):
-#                 returnval += '\n  if p.%s <= %s or p.%s > %s:\n    return False' %(f.name, getattr(num,'gt'), f.name, getattr(num,'lte'))
-#             else:
-#                 returnval += '\n  if p.%s > %s and p.%s <= %s:\n    return False' %(f.name, getattr(num,'lte'), f.name, getattr(num,'gt'))
-#         elif num.HasField('gte'):
-#             if getattr(num, 'lte') > getattr(num, 'gte'):
-#                 returnval += '\n  if p.%s < %s or p.%s > %s:\n    return False' %(f.name, getattr(num,'gte'), f.name, getattr(num,'lte'))
-#             else:
-#                 returnval += '\n  if p.%s > %s and p.%s < %s:\n    return False' %(f.name, getattr(num,'lte'), f.name, getattr(num,'gte'))
-#         else:
-#             returnval += '\n  if p.%s > %s:\n    return False' %(f.name, getattr(num,'lte'))
-#     elif num.HasField('gt'):
-#         returnval += '\n  if p.%s <= %s:\n    return False' %(f.name, getattr(num,'gt'))
-#     elif num.HasField('gte'):
-#         returnval += '\n  if p.%s < %s:\n    return False' %(f.name, getattr(num,'gte'))
-#     if getattr(num,'in'):
-#         returnval += '\n  if p.%s not in %s:\n    return False' %(f.name, getattr(num,'in'))
-#     if getattr(num,'not_in'):
-#         returnval += '\n  if p.%s in %s:\n    return False' %(f.name, getattr(num,'not_in'))
-#     return returnval
-#
-# def bool_template(option_value, f):
-#     b = option_value.bool
-#     returnval = ""
-#     if getattr(b,'const') is not None:
-#         returnval += '\n  if %s != p.%s:\n    return False' %(getattr(b,'const'), f.name)
-#     return returnval
-#
-# def string_template(option_value, f):
-#     s = option_value.string
-#     returnval = ""
-#     if getattr(s,'const'):
-#         returnval += '\n  if \"%s\" != p.%s:\n    return False' %(getattr(s,'const'), f.name)
-#     if getattr(s,'in'):
-#         returnval += '\n  if p.%s not in %s:\n    return False' %(f.name, getattr(s,'in'))
-#     if getattr(s,'not_in'):
-#         returnval += '\n  if p.%s in %s:\n    return False' %(f.name, getattr(s,'not_in'))
-#     if getattr(s, 'len'):
-#         returnval += '\n  if len(p.%s) != %s:\n    return False' %(f.name, getattr(s,'len'))
-#     if getattr(s, 'min_len'):
-#         returnval += '\n  if len(p.%s) < %s:\n    return False' %(f.name, getattr(s,'min_len'))
-#     if getattr(s, 'max_len'):
-#         returnval += '\n  if len(p.%s) > %s:\n    return False' %(f.name, getattr(s,'max_len'))
-#     if getattr(s, 'len_bytes'):
-#         returnval += '\n  if byte_len(p.%s) != %s:\n    return False' %(f.name, getattr(s,'len_bytes'))
-#     if getattr(s, 'min_bytes'):
-#         returnval += '\n  if byte_len(p.%s) < %s:\n    return False' %(f.name, getattr(s,'min_bytes'))
-#     if getattr(s, 'max_bytes'):
-#         returnval += '\n  if byte_len(p.%s) > %s:\n    return False' %(f.name, getattr(s,'max_bytes'))
-#     if getattr(s, 'pattern'):
-#         returnval += '\n  if re.search(r\'%s\', p.%s) is None:\n    return False' %(getattr(s,'pattern'), f.name)
-#     if getattr(s, 'prefix'):
-#         returnval += '\n  if not p.%s.startswith(\"%s\"):\n    return False' %(f.name, getattr(s,'prefix'))
-#     if getattr(s, 'suffix'):
-#         returnval += '\n  if not p.%s.endswith(\"%s\"):\n    return False' %(f.name, getattr(s,'suffix'))
-#     if getattr(s, 'contains'):
-#         returnval += '\n  if \"%s\" not in p.%s:\n    return False' %(getattr(s,'contains'), f.name)
-#     if getattr(s, 'email'):
-#         returnval += '\n  if not _validateEmail(p.%s):\n    return False' %f.name
-#     if getattr(s, 'hostname'):
-#         returnval += '\n  if not _validateHostName(p.%s):\n    return False' %f.name
-#     if getattr(s, 'address'):
-#         returnval += '\n  try:\n    ipaddress.ip_address(unicode(p.%s))\n  except ValueError:\n    if not _validateHostName(p.%s):\n      return False' %(f.name, f.name)
-#     if getattr(s, 'ip'):
-#         returnval += '\n  try:\n    ipaddress.ip_address(unicode(p.%s))\n  except ValueError:\n    return False' %f.name
-#     if getattr(s, 'ipv4'):
-#         returnval += '\n  try:\n    ipaddress.IPv4Address(unicode(p.%s))\n  except ValueError:\n    return False' %f.name
-#     if getattr(s, 'ipv6'):
-#         returnval += '\n  try:\n    ipaddress.IPv6Address(unicode(p.%s))\n  except ValueError:\n    return False' %f.name
-#     if getattr(s, 'uri'):
-#         returnval += '\n  url = urlparse.urlparse(p.%s)' %f.name
-#         returnval += '\n  if not all([url.scheme, url.netloc, url.path]):\n    return False'
-#     if getattr(s, 'uri_ref'):
-#         returnval += '\n  url = urlparse.urlparse(p.%s)' %f.name
-#         returnval += '\n  if not all([url.scheme, url.path]) and url.fragment:\n    return False'
-#     if getattr(s, 'uuid'):
-#         returnval += '\n  try:\n    uuid.UUID(p.%s)\n  except ValueError:\n    return False' %f.name
-#     return returnval
-
 def _has_field(message_pb, property_name):
     # NOTE: As of proto3, HasField() only works for message fields, not for
     #       singular (non-message) fields. First try to use HasField and
@@ -169,12 +67,15 @@ def _has_field(message_pb, property_name):
         return property_name in all_fields
 
 def const_template(option_value, f, name):
-    const_tmpl = """{% if o.string != "" and o.string['const'] %}
+    const_tmpl = """{% if str(o.string) != "" and o.string['const'] %}
     if p.{{ name }} != \"{{ o.string['const'] }}\":
         raise ValidationFailed(\"{{ name }} not equal to {{ o.string['const'] }}\")
+    {% elif str(o.bool) != "" and o.bool['const'] != '' %}
+    if p.{{ name }} != {{ o.bool['const'] }}:
+        raise ValidationFailed(\"{{ name }} not equal to {{ o.bool['const'] }}\")
     {% endif %}
     """
-    return Template(const_tmpl).render(o = option_value, f = f, name = name)
+    return Template(const_tmpl).render(o = option_value, f = f, name = name, str = str)
 
 def in_template(value, name):
     in_tmpl = """
@@ -286,10 +187,17 @@ def string_template(option_value, f, name):
     """
     return Template(str_templ).render(o=option_value,f=f,name=name,const_template=const_template, in_template=in_template)
 
-def message_template(option_value, f, name):
-    message_tmpl = """{% if m.message and m.message['required'] %}
+def required_template(value, name):
+    req_tmpl = """{% if value['required'] %}
     if not _has_field(p, \"{{ name }}\"):
         raise ValidationFailed(\"{{ name }} is required.\")
+    {% endif %}
+    """
+    return Template(req_tmpl).render(value = value, name = name)
+
+def message_template(option_value, f, name):
+    message_tmpl = """{% if m.message %}
+    {{ required_template(m.message, name) }}
     {% endif %}
     {% if m.message and m.message['skip'] %}
     # Skipping validation for {{ name }}
@@ -298,7 +206,161 @@ def message_template(option_value, f, name):
         return generate_validate(p.{{name}})(p.{{name}})    
     {% endif %}
     """
-    return Template(message_tmpl).render(m=option_value,f=f, name=name, generate_validate=generate_validate)
+    return Template(message_tmpl).render(m=option_value,f=f, name=name, generate_validate=generate_validate, required_template=required_template)
+
+def bool_template(option_value, f, name):
+    bool_tmpl = """
+    {{ const_template(o, f, name) }}
+    """
+    return Template(bool_tmpl).render(o=option_value,f=f,name=name,const_template=const_template)
+
+def num_template(option_value, f, name, num):
+    num_tmpl = """
+    {% if num.HasField('const') and str(o.float) == "" %}
+    if p.{{ name }} != {{ num['const'] }}:
+        raise ValidationFailed(\"{{ name }} not equal to {{ num['const'] }}\")
+    {% endif %}
+    {% if num.HasField('const') and str(o.float) != "" %}
+    if p.{{ name }} != struct.unpack(\"f\", struct.pack(\"f\", ({{ num['const'] }})))[0]:
+        raise ValidationFailed(\"{{ name }} not equal to {{ num['const'] }}\")
+    {% endif %}
+    {{ in_template(num, name) }}
+    {% if num.HasField('lt') %}
+        {% if num.HasField('gt') %}
+            {% if num['lt'] > num['gt'] %}
+    if p.{{ name }} <= {{ num['gt'] }} or p.{{ name }} >= {{ num ['lt'] }}:
+        raise ValidationFailed(\"{{ name }} is not in range {{ num['lt'], num['gt'] }}\")
+            {% else %}
+    if p.{{ name }} >= {{ num['lt'] }} and p.{{ name }} <= {{ num['gt'] }}:
+        raise ValidationFailed(\"{{ name }} is not in range {{ num['gt'], num['lt'] }}\")
+            {% endif %}
+        {% elif num.HasField('gte') %}
+            {% if num['lt'] > num['gte'] %}
+    if p.{{ name }} < {{ num['gte'] }} or p.{{ name }} >= {{ num ['lt'] }}:
+        raise ValidationFailed(\"{{ name }} is not in range {{ num['lt'], num['gte'] }}\")
+            {% else %}
+    if p.{{ name }} >= {{ num['lt'] }} and p.{{ name }} < {{ num['gte'] }}:
+        raise ValidationFailed(\"{{ name }} is not in range {{ num['gte'], num['lt'] }}\")
+            {% endif %}
+        {% else %}
+    if p.{{ name }} >= {{ num['lt'] }}:
+        raise ValidationFailed(\"{{ name }} is not lesser than {{ num['lt'] }}\")
+        {% endif %}
+    {% elif num.HasField('lte') %}
+        {% if num.HasField('gt') %}
+            {% if num['lte'] > num['gt'] %}
+    if p.{{ name }} <= {{ num['gt'] }} or p.{{ name }} > {{ num ['lte'] }}:
+        raise ValidationFailed(\"{{ name }} is not in range {{ num['lte'], num['gt'] }}\")
+            {% else %}
+    if p.{{ name }} > {{ num['lte'] }} and p.{{ name }} <= {{ num['gt'] }}:
+        raise ValidationFailed(\"{{ name }} is not in range {{ num['gt'], num['lte'] }}\")
+            {% endif %}
+        {% elif num.HasField('gte') %}
+            {% if num['lte'] > num['gte'] %}
+    if p.{{ name }} < {{ num['gte'] }} or p.{{ name }} > {{ num ['lte'] }}:
+        raise ValidationFailed(\"{{ name }} is not in range {{ num['lte'], num['gte'] }}\")
+            {% else %}
+    if p.{{ name }} > {{ num['lte'] }} and p.{{ name }} < {{ num['gte'] }}:
+        raise ValidationFailed(\"{{ name }} is not in range {{ num['gte'], num['lte'] }}\")
+            {% endif %}
+        {% else %}
+    if p.{{ name }} > {{ num['lte'] }}:
+        raise ValidationFailed(\"{{ name }} is not lesser than or equal to {{ num['lte'] }}\")
+        {% endif %}
+    {% elif num.HasField('gt') %}
+    if p.{{ name }} <= {{ num['gt'] }}:
+        raise ValidationFailed(\"{{ name }} is not greater than {{ num['gt'] }}\")
+    {% elif num.HasField('gte') %}
+    if p.{{ name }} < {{ num['gte'] }}:
+        raise ValidationFailed(\"{{ name }} is not greater than or equal to {{ num['gte'] }}\")    
+    {% endif %}
+    
+    """
+    return Template(num_tmpl).render(o=option_value,f=f,name=name,num=num,in_template=in_template,str=str)
+
+def dur_arr(dur):
+    value = 0
+    arr = []
+    for val in dur:
+        value += val.seconds
+        value += (10**-9 * val.nanos)
+        arr.append(value)
+        value = 0
+    return arr
+
+def dur_lit(dur):
+    value = dur.seconds + (10**-9 * dur.nanos)
+    return value
+
+def duration_template(option_value, f, name):
+    dur_tmpl = """
+    {{ required_template(o.duration, name) }}
+    if _has_field(p, \"{{ name }}\"):
+        dur = p.{{ name }}.seconds + round((10**-9 * p.{{ name }}.nanos),9)
+        {% set dur = o.duration %}
+        {% if dur.HasField('const') %}
+        if dur != {{ dur_lit(dur['const']) }}:
+            raise ValidationFailed(\"{{ name }} is not equal to {{ dur_lit(dur['const']) }}\")
+        {% endif %}
+        {% if dur['in'] %}
+        if dur not in {{ dur_arr(dur['in']) }}:
+            raise ValidationFailed(\"{{ name }} is not in {{ dur_arr(dur['in']) }}\") 
+        {% endif %}
+        {% if dur['not_in'] %}
+        if dur in {{ dur_arr(dur['not_in']) }}:
+            raise ValidationFailed(\"{{ name }} is not in {{ dur_arr(dur['not_in']) }}\") 
+        {% endif %}
+        {% if dur.HasField('lt') %}
+            {% if dur.HasField('gt') %}
+                {% if dur_lit(dur['lt']) > dur_lit(dur['gt']) %}
+        if dur <= {{ dur_lit(dur['gt']) }} or dur >= {{ dur_lit(dur['lt']) }}:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['lt']), dur_lit(dur['gt']) }}\")
+                {% else %}
+        if dur >= {{ dur_lit(dur['lt']) }} and dur <= {{ dur_lit(dur['gt']) }}:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['gt']), dur_lit(dur['lt']) }}\")
+                {% endif %}
+            {% elif dur.HasField('gte') %}
+                {% if dur_lit(dur['lt']) > dur_lit(dur['gte']) %}
+        if dur < {{ dur_lit(dur['gte']) }} or dur >= {{ dur_lit(dur['lt']) }}:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['lt']), dur_lit(dur['gte']) }}\")
+                {% else %}
+        if dur >= {{ dur_lit(dur['lt']) }} and dur < {{ dur_lit(dur['gte']) }}:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['gte']), dur_lit(dur['lt']) }}\")
+                {% endif %}
+            {% else %}
+        if dur >= {{ dur_lit(dur['lt']) }}:
+            raise ValidationFailed(\"{{ name }} is not lesser than {{ dur_lit(dur['lt']) }}\")    
+            {% endif %}
+        {% elif dur.HasField('lte') %}
+            {% if dur.HasField('gt') %}
+                {% if dur_lit(dur['lte']) > dur_lit(dur['gt']) %}
+        if dur <= {{ dur_lit(dur['gt']) }} or dur > {{ dur_lit(dur['lte']) }}:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['lte']), dur_lit(dur['gt']) }}\")
+                {% else %}
+        if dur > {{ dur_lit(dur['lte']) }} and dur <= {{ dur_lit(dur['gt']) }}:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['gt']), dur_lit(dur['lte']) }}\")
+                {% endif %}
+            {% elif dur.HasField('gte') %}
+                {% if dur_lit(dur['lte']) > dur_lit(dur['gte']) %}
+        if dur < {{ dur_lit(dur['gte']) }} or dur > {{ dur_lit(dur['lte']) }}:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['lte']), dur_lit(dur['gte']) }}\")
+                {% else %}
+        if dur > {{ dur_lit(dur['lte']) }} and dur < {{ dur_lit(dur['gte']) }}:
+            raise ValidationFailed(\"{{ name }} is not in range {{ dur_lit(dur['gte']), dur_lit(dur['lte']) }}\")
+                {% endif %}
+            {% else %}
+        if dur > {{ dur_lit(dur['lte']) }}:
+            raise ValidationFailed(\"{{ name }} is not lesser than or equal to {{ dur_lit(dur['lte']) }}\")                   
+            {% endif %}
+        {% elif dur.HasField('gt') %}
+        if dur <= {{ dur_lit(dur['gt']) }}:
+            raise ValidationFailed(\"{{ name }} is not greater than {{ dur_lit(dur['gt']) }}\")
+        {% elif dur.HasField('gte') %}
+        if dur < {{ dur_lit(dur['gte']) }}:
+            raise ValidationFailed(\"{{ name }} is not greater than or equal to {{ dur_lit(dur['gte']) }}\")
+        {% endif %}
+    """
+    return Template(dur_tmpl).render(o=option_value,f=f,name=name,required_template=required_template, _has_field=_has_field,dur_lit=dur_lit,dur_arr=dur_arr)
 
 def rule_type(field, name = ""):
     if has_validate(field) and field.message_type is None and not field.containing_oneof:
@@ -308,12 +370,45 @@ def rule_type(field, name = ""):
                     return string_template(option_value, field, ".".join([x for x in [name, field.name] if x]))
                 elif str(option_value.message) is not "":
                     return message_template(option_value, field, ".".join([x for x in [name, field.name] if x]))
+                elif str(option_value.bool) is not "":
+                    return bool_template(option_value, field, ".".join([x for x in [name, field.name] if x]))
+                elif str(option_value.float) is not "":
+                    return num_template(option_value, field, ".".join([x for x in [name, field.name] if x]), option_value.float)
+                elif str(option_value.double) is not "":
+                    return num_template(option_value, field, ".".join([x for x in [name, field.name] if x]), option_value.double)
+                elif str(option_value.int32) is not "":
+                    return num_template(option_value, field, ".".join([x for x in [name, field.name] if x]), option_value.int32)
+                elif str(option_value.int64) is not "":
+                    return num_template(option_value, field, ".".join([x for x in [name, field.name] if x]), option_value.int64)
+                elif str(option_value.uint32) is not "":
+                    return num_template(option_value, field, ".".join([x for x in [name, field.name] if x]), option_value.uint32)
+                elif str(option_value.uint64) is not "":
+                    return num_template(option_value, field, ".".join([x for x in [name, field.name] if x]), option_value.uint64)
+                elif str(option_value.sint32) is not "":
+                    return num_template(option_value, field, ".".join([x for x in [name, field.name] if x]), option_value.sint32)
+                elif str(option_value.sint64) is not "":
+                    return num_template(option_value, field, ".".join([x for x in [name, field.name] if x]), option_value.sint64)
+                elif str(option_value.fixed32) is not "":
+                    return num_template(option_value, field, ".".join([x for x in [name, field.name] if x]), option_value.fixed32)
+                elif str(option_value.fixed64) is not "":
+                    return num_template(option_value, field, ".".join([x for x in [name, field.name] if x]), option_value.fixed64)
+                elif str(option_value.sfixed32) is not "":
+                    return num_template(option_value, field, ".".join([x for x in [name, field.name] if x]), option_value.sfixed32)
+                elif str(option_value.sfixed64) is not "":
+                    return num_template(option_value, field, ".".join([x for x in [name, field.name] if x]), option_value.sfixed64)
                 else:
                     return "raise UnimplementedException()"
     if field.message_type and not field.containing_oneof:
         for option_descriptor, option_value in field.GetOptions().ListFields():
-            return message_template(option_value, field, ".".join([x for x in [name, field.name] if x]))
-        return message_template(None, field, ".".join([x for x in [name, field.name] if x]))
+            if option_descriptor.full_name == "validate.rules":
+                if str(option_value.duration) is not "":
+                    return duration_template(option_value, field, ".".join([x for x in [name, field.name] if x]))
+                else:
+                    return message_template(option_value, field, ".".join([x for x in [name, field.name] if x]))
+        if field.message_type.full_name.startswith("google.protobuf"):
+            return ""
+        else:
+            return message_template(None, field, ".".join([x for x in [name, field.name] if x]))
 
 
 def file_template(proto_message):
@@ -339,6 +434,4 @@ class ValidationFailed(Exception):
 
 def generate_validate(proto_message):
     func = file_template(proto_message)
-    # print func
     exec(func); return validate
-
