@@ -50,9 +50,15 @@
 ## Enums
 | Constraint Rule | Go | GoGo | C++ | Java | Python | 
 | ---| :---: | :---: | :---: | :---: | :---: |
+<<<<<<< HEAD
 | const                  |✅|✅|✅|✅|✅|
 | defined_only           |✅|✅|✅|✅|✅|
 | in/not_in              |✅|✅|✅|✅|✅|
+=======
+| const                  |✅|✅|✅|✅|❌|
+| defined_only           |✅|✅|✅|✅|❌|
+| in/not_in              |✅|✅|✅|✅|❌|
+>>>>>>> Comments addressed, fixed tests
 
 ## Messages
 | Constraint Rule | Go | GoGo | C++ | Java | Python | 
