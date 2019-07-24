@@ -9,6 +9,15 @@ import uuid
 import struct
 from jinja2 import Template
 import time
+
+def generate_validate(proto_message):
+    func = file_template(proto_message)
+    exec(func); return validate
+
+def print_validate(proto_message):
+    func = file_template(proto_message)
+    return func
+
 def has_validate(field):
     if field.GetOptions() is None:
         return False
@@ -203,10 +212,12 @@ def message_template(option_value, f, name):
     # Skipping validation for {{ name }}
     {% else %}
     if _has_field(p, \"{{ name }}\"):
-        return generate_validate(p.{{name}})(p.{{name}})    
+        embedded = generate_validate(p.{{name}})(p.{{name}});
+        if embedded is not None:
+            return embedded
     {% endif %}
     """
-    return Template(message_tmpl).render(m=option_value,f=f, name=name, generate_validate=generate_validate, required_template=required_template)
+    return Template(message_tmpl).render(m=option_value,f=f, name=name, required_template=required_template)
 
 def bool_template(option_value, f, name):
     bool_tmpl = """
@@ -478,10 +489,8 @@ def timestamp_template(option_value, f, name):
         if ts >= now + within or ts <= now - within:
              raise ValidationFailed(\"{{ name }} is not within range {{ dur_lit(ts['within']) }}\")
         {% endif %}
-        
     """
     return Template(timestamp_tmpl).render(o=option_value,f=f,name=name,required_template=required_template, _has_field=_has_field,dur_lit=dur_lit,dur_arr=dur_arr)
-
 
 def wrapper_template(option_value, field, name):
     wrapper_tmpl = """
@@ -576,28 +585,26 @@ def rule_type(field, name = ""):
         else:
             return message_template(None, field, ".".join([x for x in [name, field.name] if x]))
 
-
 def file_template(proto_message):
     file_tmp = """def validate(p):
-    {%- set accessor = p.DESCRIPTOR -%}
+    {% set accessor = p.DESCRIPTOR %}
     {% for option_descriptor, option_value in accessor.GetOptions().ListFields() %}
         {% if option_descriptor.full_name == "validate.disabled" and option_value %}
     return None
         {% endif %}
     {% endfor %}
-    {% for field in accessor.fields %}
+    {%- for field in accessor.fields -%}
+        {%- if field.label == 3 or field.containing_oneof -%}
+    raise UnimplementedException()
+        {% else %}
         {{- rule_type(field) -}}
+        {% endif %}
     {% endfor %}
     return None"""
     return Template(file_tmp).render(rule_type=rule_type, p=proto_message, dir=dir)
-
 
 class UnimplementedException(Exception):
     pass
 
 class ValidationFailed(Exception):
     pass
-
-def generate_validate(proto_message):
-    func = file_template(proto_message)
-    exec(func); return validate
