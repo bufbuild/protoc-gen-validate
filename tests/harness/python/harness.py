@@ -46,4 +46,5 @@ if __name__ == "__main__":
     except UnimplementedException as e:
         result.Error = False
         result.AllowFailure = True
+    result.Reason = print_validate(test_class)
     sys.stdout.write(result.SerializeToString())
