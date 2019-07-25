@@ -91,11 +91,11 @@ def const_template(option_value, name):
 
 def in_template(value, name):
     in_tmpl = """
-    {%- if value['in'] -%}
+    {%- if value['in'] %}
     if p.{{ name }} not in {{ value['in'] }}:
         raise ValidationFailed(\"{{ name }} not in {{ value['in'] }}\")
     {%- endif -%}
-    {%- if value['not_in'] -%}
+    {%- if value['not_in'] %}
     if p.{{ name }} in {{ value['not_in'] }}:
         raise ValidationFailed(\"{{ name }} in {{ value['not_in'] }}\")
     {%- endif -%}
@@ -200,7 +200,7 @@ def string_template(option_value, name):
     return Template(str_templ).render(o = option_value, name = name, const_template = const_template, in_template = in_template)
 
 def required_template(value, name):
-    req_tmpl = """{%- if value['required'] %}
+    req_tmpl = """{%- if value['required'] -%}
     if not _has_field(p, \"{{ name }}\"):
         raise ValidationFailed(\"{{ name }} is required.\")
     {%- endif -%}
@@ -209,13 +209,13 @@ def required_template(value, name):
 
 def message_template(option_value, name):
     message_tmpl = """{%- if m.message %}
-    {{ required_template(m.message, name) }}
+    {{- required_template(m.message, name) }}
     {%- endif -%}
     {%- if m.message and m.message['skip'] %}
     # Skipping validation for {{ name }}
     {%- else %}
     if _has_field(p, \"{{ name }}\"):
-        embedded = generate_validate(p.{{name}})(p.{{name}})
+        embedded = generate_validate(p.{{ name }})(p.{{ name }})
         if embedded is not None:
             return embedded
     {%- endif -%}
@@ -229,8 +229,7 @@ def bool_template(option_value, name):
     return Template(bool_tmpl).render(o = option_value, name = name, const_template = const_template)
 
 def num_template(option_value, name, num):
-    num_tmpl = """
-    {%- if num.HasField('const') and str(o.float) == "" %}
+    num_tmpl = """{%- if num.HasField('const') and str(o.float) == "" -%}
     if p.{{ name }} != {{ num['const'] }}:
         raise ValidationFailed(\"{{ name }} not equal to {{ num['const'] }}\")
     {%- endif -%}
@@ -238,13 +237,13 @@ def num_template(option_value, name, num):
     if p.{{ name }} != struct.unpack(\"f\", struct.pack(\"f\", ({{ num['const'] }})))[0]:
         raise ValidationFailed(\"{{ name }} not equal to {{ num['const'] }}\")
     {%- endif -%}
-    {{- in_template(num, name) -}}
+    {{ in_template(num, name) }}
     {%- if num.HasField('lt') %}
         {%- if num.HasField('gt') %}
             {%- if num['lt'] > num['gt'] %}
     if p.{{ name }} <= {{ num['gt'] }} or p.{{ name }} >= {{ num ['lt'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['lt'], num['gt'] }}\")
-            {%- else -%}
+            {%- else %}
     if p.{{ name }} >= {{ num['lt'] }} and p.{{ name }} <= {{ num['gt'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['gt'], num['lt'] }}\")
             {%- endif -%}
@@ -252,11 +251,11 @@ def num_template(option_value, name, num):
             {%- if num['lt'] > num['gte'] %}
     if p.{{ name }} < {{ num['gte'] }} or p.{{ name }} >= {{ num ['lt'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['lt'], num['gte'] }}\")
-            {%- else -%}
+            {%- else %}
     if p.{{ name }} >= {{ num['lt'] }} and p.{{ name }} < {{ num['gte'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['gte'], num['lt'] }}\")
             {%- endif -%}
-        {%- else -%}
+        {%- else %}
     if p.{{ name }} >= {{ num['lt'] }}:
         raise ValidationFailed(\"{{ name }} is not lesser than {{ num['lt'] }}\")
         {%- endif -%}
@@ -265,7 +264,7 @@ def num_template(option_value, name, num):
             {%- if num['lte'] > num['gt'] %}
     if p.{{ name }} <= {{ num['gt'] }} or p.{{ name }} > {{ num ['lte'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['lte'], num['gt'] }}\")
-            {%- else -%}
+            {%- else %}
     if p.{{ name }} > {{ num['lte'] }} and p.{{ name }} <= {{ num['gt'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['gt'], num['lte'] }}\")
             {%- endif -%}
@@ -273,11 +272,11 @@ def num_template(option_value, name, num):
             {%- if num['lte'] > num['gte'] %}
     if p.{{ name }} < {{ num['gte'] }} or p.{{ name }} > {{ num ['lte'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['lte'], num['gte'] }}\")
-            {%- else -%}
+            {%- else %}
     if p.{{ name }} > {{ num['lte'] }} and p.{{ name }} < {{ num['gte'] }}:
         raise ValidationFailed(\"{{ name }} is not in range {{ num['gte'], num['lte'] }}\")
             {%- endif -%}
-        {%- else -%}
+        {%- else %}
     if p.{{ name }} > {{ num['lte'] }}:
         raise ValidationFailed(\"{{ name }} is not lesser than or equal to {{ num['lte'] }}\")
         {%- endif -%}
@@ -395,16 +394,16 @@ def timestamp_template(option_value, name):
         {%- set ts = o.timestamp -%}
         {%- if ts.HasField('lt') %} 
         lt = {{ dur_lit(ts['lt']) }} 
-        {% endif %}
+        {% endif -%}
         {%- if ts.HasField('lte') %} 
         lte = {{ dur_lit(ts['lte']) }} 
-        {% endif %}
+        {% endif -%}
         {%- if ts.HasField('gt') %} 
         gt = {{ dur_lit(ts['gt']) }} 
-        {% endif %}
+        {% endif -%}
         {%- if ts.HasField('gte') %} 
         gte = {{ dur_lit(ts['gte']) }} 
-        {% endif %}
+        {% endif -%}
         {%- if ts.HasField('const') %}
         if ts != {{ dur_lit(ts['const']) }}:
             raise ValidationFailed(\"{{ name }} is not equal to {{ dur_lit(ts['const']) }}\")
@@ -498,30 +497,30 @@ def wrapper_template(option_value, name):
     wrapper_tmpl = """
     if p.HasField(\"{{ name }}\"):
         {%- if str(option_value.float) %}
-        {{ num_template(option_value, name + ".value", option_value.float)|indent(8,True) -}}
-        {% endif %}
+        {{- num_template(option_value, name + ".value", option_value.float)|indent(8,True) -}}
+        {% endif -%}
         {%- if str(option_value.double) %}
-        {{ num_template(option_value, name + ".value", option_value.double)|indent(8,True) -}}
-        {% endif %}
+        {{- num_template(option_value, name + ".value", option_value.double)|indent(8,True) -}}
+        {% endif -%}
         {%- if str(option_value.int32) %}
-        {{ num_template(option_value, name + ".value", option_value.int32)|indent(8,True) -}}
-        {% endif %}
+        {{- num_template(option_value, name + ".value", option_value.int32)|indent(8,True) -}}
+        {% endif -%}
         {%- if str(option_value.int64) %}
-        {{ num_template(option_value, name + ".value", option_value.int64)|indent(8,True) -}}
-        {% endif %}
+        {{- num_template(option_value, name + ".value", option_value.int64)|indent(8,True) -}}
+        {% endif -%}
         {%- if str(option_value.uint32) %}
-        {{ num_template(option_value, name + ".value", option_value.uint32)|indent(8,True) -}}
-        {% endif %}
+        {{- num_template(option_value, name + ".value", option_value.uint32)|indent(8,True) -}}
+        {% endif -%}
         {%- if str(option_value.uint64) %}
-        {{ num_template(option_value, name + ".value", option_value.uint64)|indent(8,True) -}}
-        {% endif %}
+        {{- num_template(option_value, name + ".value", option_value.uint64)|indent(8,True) -}}
+        {% endif -%}
         {%- if str(option_value.bool) %}
-        {{ bool_template(option_value, name + ".value")|indent(8,True) -}}
-        {% endif %}
+        {{- bool_template(option_value, name + ".value")|indent(8,True) -}}
+        {% endif -%}
         {%- if str(option_value.string) %}
-        {{ string_template(option_value, name + ".value")|indent(8,True) -}}
-        {% endif %}
-    {% if str(option_value.message) and option_value.message['required'] %}
+        {{- string_template(option_value, name + ".value")|indent(8,True) -}}
+        {% endif -%}
+    {%- if str(option_value.message) and option_value.message['required'] %}
     else:
         raise ValidationFailed(\"{{ name }} is required.\")
     {%- endif %}
@@ -588,22 +587,23 @@ def rule_type(field):
     return ""
 
 def file_template(proto_message):
-    file_tmp = """def validate(p):
-    {% set accessor = p.DESCRIPTOR -%}
-    {% for option_descriptor, option_value in accessor.GetOptions().ListFields() %}
+    file_tmp = """
+# Validates {{ p.DESCRIPTOR.name }}
+def validate(p):
+    {%- for option_descriptor, option_value in p.DESCRIPTOR.GetOptions().ListFields() %}
         {%- if option_descriptor.full_name == "validate.disabled" and option_value %}
     return None
-        {% endif %}
-    {%- endfor %}
-    {%- for field in accessor.fields -%}
+        {%- endif -%}
+    {%- endfor -%}
+    {%- for field in p.DESCRIPTOR.fields -%}
         {%- if field.label == 3 or field.containing_oneof %}
     raise UnimplementedException()
-        {% else %}
-        {{- rule_type(field) -}}
-        {% endif %}
+        {%- else %}
+    {{ rule_type(field) -}}
+        {%- endif -%}
     {%- endfor %}
     return None"""
-    return Template(file_tmp).render(rule_type=rule_type, p=proto_message, dir=dir)
+    return Template(file_tmp).render(rule_type = rule_type, p = proto_message)
 
 class UnimplementedException(Exception):
     pass

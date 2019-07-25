@@ -985,6 +985,12 @@ var messageCases = []TestCase{
 	{"message - cross-package embed none - valid (nil)", &cases.MessageCrossPackage{}, true},
 	{"message - cross-package embed none - valid (empty)", &cases.MessageCrossPackage{Val: &other_package.Embed{}}, false},
 	{"message - cross-package embed none - invalid", &cases.MessageCrossPackage{Val: &other_package.Embed{Val: -1}}, false},
+
+	{"message - complex - field - valid", &cases.ComplexMessage{Val: &cases.ComplexTestMsg{Const: "abcd", IntConst: 5, BoolConst: false, FloatVal: &wrappers.FloatValue{Value: 1}, DurVal: &duration.Duration{Seconds: 3}, TsVal: &timestamp.Timestamp{Seconds: 17}, Another: &cases.TestMsg{Const: "foo"}, FloatConst: 7, DoubleIn: 123}}, true},
+	{"message - complex - valid (unset)", &cases.ComplexMessage{}, true},
+	{"message - complex - field - invalid", &cases.ComplexMessage{Val: &cases.ComplexTestMsg{}}, false},
+	{"message - complex - field - embedded - invalid", &cases.ComplexMessage{Val: &cases.ComplexTestMsg{Another: &cases.TestMsg{}}}, false},
+	{"message - complex - field - invalid (transitive)", &cases.ComplexMessage{Val: &cases.ComplexTestMsg{Const: "abcd", BoolConst: true, Nested: &cases.ComplexTestMsg{}}}, false},
 }
 
 var repeatedCases = []TestCase{
