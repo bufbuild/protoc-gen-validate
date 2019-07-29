@@ -53,6 +53,7 @@ func init() {
 		durationCases,
 		timestampCases,
 		anyCases,
+		kitchenSink,
 	}
 
 	for _, set := range sets {
@@ -985,12 +986,6 @@ var messageCases = []TestCase{
 	{"message - cross-package embed none - valid (nil)", &cases.MessageCrossPackage{}, true},
 	{"message - cross-package embed none - valid (empty)", &cases.MessageCrossPackage{Val: &other_package.Embed{}}, false},
 	{"message - cross-package embed none - invalid", &cases.MessageCrossPackage{Val: &other_package.Embed{Val: -1}}, false},
-
-	{"message - complex - field - valid", &cases.ComplexMessage{Val: &cases.ComplexTestMsg{Const: "abcd", IntConst: 5, BoolConst: false, FloatVal: &wrappers.FloatValue{Value: 1}, DurVal: &duration.Duration{Seconds: 3}, TsVal: &timestamp.Timestamp{Seconds: 17}, Another: &cases.TestMsg{Const: "foo"}, FloatConst: 7, DoubleIn: 123}}, true},
-	{"message - complex - valid (unset)", &cases.ComplexMessage{}, true},
-	{"message - complex - field - invalid", &cases.ComplexMessage{Val: &cases.ComplexTestMsg{}}, false},
-	{"message - complex - field - embedded - invalid", &cases.ComplexMessage{Val: &cases.ComplexTestMsg{Another: &cases.TestMsg{}}}, false},
-	{"message - complex - field - invalid (transitive)", &cases.ComplexMessage{Val: &cases.ComplexTestMsg{Const: "abcd", BoolConst: true, Nested: &cases.ComplexTestMsg{}}}, false},
 }
 
 var repeatedCases = []TestCase{
@@ -1307,4 +1302,12 @@ var anyCases = []TestCase{
 	{"any - not in - valid", &cases.AnyNotIn{Val: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}}, true},
 	{"any - not in - valid (empty)", &cases.AnyNotIn{}, true},
 	{"any - not in - invalid", &cases.AnyNotIn{Val: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Timestamp"}}, false},
+}
+
+var kitchenSink = []TestCase{
+	{"kitchensink - field - valid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", IntConst: 5, BoolConst: false, FloatVal: &wrappers.FloatValue{Value: 1}, DurVal: &duration.Duration{Seconds: 3}, TsVal: &timestamp.Timestamp{Seconds: 17}, FloatConst: 7, DoubleIn: 123, EnumConst: cases.ComplexTestEnum_ComplexTWO}}, true},
+	{"kitchensink - valid (unset)", &cases.KitchenSinkMessage{}, true},
+	{"kitchensink - field - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{}}, false},
+	{"kitchensink - field - embedded - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Another: &cases.ComplexTestMsg{}}}, false},
+	{"kitchensink - field - invalid (transitive)", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", BoolConst: true, Nested: &cases.ComplexTestMsg{}}}, false},
 }

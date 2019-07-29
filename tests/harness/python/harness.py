@@ -1,5 +1,6 @@
 import sys
 import inspect
+import os
 
 from tests.harness.harness_pb2 import TestCase, TestResult
 from tests.harness.cases.bool_pb2 import *
@@ -15,8 +16,9 @@ from tests.harness.cases.wkt_any_pb2 import *
 from tests.harness.cases.wkt_duration_pb2 import *
 from tests.harness.cases.wkt_wrappers_pb2 import *
 from tests.harness.cases.wkt_timestamp_pb2 import *
+from tests.harness.cases.kitchen_sink_pb2 import *
 
-sys.path.append('/go/src/github.com/envoyproxy/protoc-gen-validate/validate')
+sys.path.append(os.environ['GOPATH']+'/src/github.com/envoyproxy/protoc-gen-validate/validate')
 from validator import *
 
 class_list = []

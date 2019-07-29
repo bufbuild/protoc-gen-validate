@@ -85,6 +85,9 @@ def const_template(option_value, name):
     {%- elif str(o.bool) and o.bool['const'] != "" -%}
     if p.{{ name }} != {{ o.bool['const'] }}:
         raise ValidationFailed(\"{{ name }} not equal to {{ o.bool['const'] }}\")
+    {%- elif str(o.enum) and o.enum['const'] -%}
+    if p.{{ name }} != {{ o.enum['const'] }}:
+        raise ValidationFailed(\"{{ name }} not equal to {{ o.enum['const'] }}\")
     {%- endif -%}
     """
     return Template(const_tmpl).render(o = option_value, name = name, str = str)
@@ -527,6 +530,20 @@ def wrapper_template(option_value, name):
     """
     return Template(wrapper_tmpl).render(option_value = option_value, name = name, str = str, num_template = num_template, bool_template = bool_template, string_template = string_template)
 
+def enum_values(field):
+    return [x.number for x in field.enum_type.values]
+
+def enum_template(option_value, name, field):
+    enum_tmpl = """
+    {{ const_template(option_value, name) -}}
+    {{ in_template(option_value.enum, name) -}}
+    {% if option_value.enum['defined_only'] %}
+    if p.{{ name }} not in {{ enum_values(field) }}:
+        raise ValidationFailed(\"{{ name }} is not defined\")
+    {% endif %}
+    """
+    return Template(enum_tmpl).render(option_value = option_value, name = name, const_template = const_template, in_template = in_template, field = field, enum_values = enum_values)
+
 def rule_type(field):
     if has_validate(field) and field.message_type is None and not field.containing_oneof:
         for option_descriptor, option_value in field.GetOptions().ListFields():
@@ -561,6 +578,8 @@ def rule_type(field):
                     return num_template(option_value, field.name, option_value.sfixed32)
                 elif str(option_value.sfixed64):
                     return num_template(option_value, field.name, option_value.sfixed64)
+                elif str(option_value.enum):
+                    return enum_template(option_value, field.name, field)
                 else:
                     return "raise UnimplementedException()"
     if field.message_type and not field.containing_oneof:

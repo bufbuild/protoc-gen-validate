@@ -7,10 +7,6 @@ import "tests/harness/cases/other_package/embed.proto";
 
 import "validate/validate.proto";
 
-import "google/protobuf/wrappers.proto";
-import "google/protobuf/duration.proto";
-import "google/protobuf/timestamp.proto";
-
 message TestMsg {
     string  const  = 1 [(validate.rules).string.const = "foo"];
     TestMsg nested = 2;
@@ -32,18 +28,3 @@ message MessageSkip { TestMsg val = 1 [(validate.rules).message.skip = true];}
 message MessageRequired { TestMsg val = 1 [(validate.rules).message.required = true]; }
 
 message MessageWith3dInside {}
-
-message ComplexTestMsg {
-    string                     const  = 1 [(validate.rules).string.const = "abcd"];
-    ComplexTestMsg             nested = 2;
-    int32                      int_const = 3 [(validate.rules).int32.const = 5];
-    bool                       bool_const = 4 [(validate.rules).bool.const = false];
-    google.protobuf.FloatValue float_val = 5 [(validate.rules).float.gt = 0];
-    google.protobuf.Duration   dur_val = 6 [(validate.rules).duration.lt = {seconds: 17}, (validate.rules).duration.required = true];
-    google.protobuf.Timestamp  ts_val = 7 [(validate.rules).timestamp.gt = {seconds: 7}];
-    TestMsg                    another = 8;
-    float                      float_const = 9 [(validate.rules).float.lt = 8];
-    double                     double_in = 10 [(validate.rules).double = {in: [456.789, 123]}];
-}
-
-message ComplexMessage { ComplexTestMsg val = 1; }
