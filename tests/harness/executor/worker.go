@@ -67,11 +67,6 @@ func execTestCase(tc TestCase, goFlag bool, gogoFlag bool, ccFlag bool, javaFlag
 					errs <- fmt.Errorf("%s: expected invalid, but got valid", h.Name)
 				}
 			}
-
-			if pythonFlag {
-				log.Printf(fmt.Sprintf("\n%s:\n\n%s",tc.Name, res.Reason))
-			}
-
 		}()
 	}
 
