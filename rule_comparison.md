@@ -88,8 +88,8 @@
 ## WKT Any
 | Constraint Rule | Go | GoGo | C++ | Java | Python | 
 | ---| :---: | :---: | :---: | :---: | :---: |
-| required               |✅|✅|✅|✅|❌|
-| in/not_in              |✅|✅|✅|✅|❌|
+| required               |✅|✅|✅|✅|✅|
+| in/not_in              |✅|✅|✅|✅|✅|
 
 ## WKT Duration
 | Constraint Rule | Go | GoGo | C++ | Java | Python | 

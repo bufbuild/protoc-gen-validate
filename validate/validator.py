@@ -164,26 +164,26 @@ def string_template(option_value, name):
     {%- endif -%}
     {%- if s['address'] %}
     try:
-        ipaddress.ip_address(str(p.{{ name }}))
+        ipaddress.ip_address(p.{{ name }})
     except ValueError:
         if not _validateHostName(p.{{ name }}):
             raise ValidationFailed(\"{{ name }} is not a valid address\")
     {%- endif -%}
     {%- if s['ip'] %}
     try:
-        ipaddress.ip_address(str(p.{{ name }}))
+        ipaddress.ip_address(p.{{ name }})
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ip\")
     {%- endif -%}
     {%- if s['ipv4'] %}
     try:
-        ipaddress.IPv4Address(str(p.{{ name }}))
+        ipaddress.IPv4Address(p.{{ name }})
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ipv4\")
     {%- endif -%}
     {%- if s['ipv6'] %}
     try:
-        ipaddress.IPv6Address(str(p.{{ name }}))
+        ipaddress.IPv6Address(p.{{ name }})
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ipv6\")
     {%- endif %}
@@ -548,6 +548,24 @@ def enum_template(option_value, name, field):
     """
     return Template(enum_tmpl).render(option_value = option_value, name = name, const_template = const_template, in_template = in_template, field = field, enum_values = enum_values)
 
+
+
+def any_template(option_value, name):
+    any_tmpl = """
+    {{- required_template(o, name) }}
+    {% if o['in'] %}
+    if _has_field(p, \"{{ name }}\"):
+        if p.{{ name }}.type_url not in {{ o['in'] }}:
+            raise ValidationFailed(\"{{ name }} not in {{ o['in'] }}\")
+    {% endif %}
+    {% if o['not_in'] %}
+    if _has_field(p, \"{{ name }}\"):
+        if p.{{ name }}.type_url in {{ o['not_in'] }}:
+            raise ValidationFailed(\"{{ name }} in {{ o['not_in'] }}\")
+    {% endif %}
+    """
+    return Template(any_tmpl).render(name = name, required_template = required_template, o = option_value.any)
+
 def rule_type(field):
     if has_validate(field) and field.message_type is None and not field.containing_oneof:
         for option_descriptor, option_value in field.GetOptions().ListFields():
@@ -601,6 +619,8 @@ def rule_type(field):
                     return "raise UnimplementedException()"
                 elif str(option_value.message) is not "":
                     return message_template(option_value, field.name)
+                elif str(option_value.any):
+                    return any_template(option_value, field.name)
                 else:
                     return "raise UnimplementedException()"
         if field.message_type.full_name.startswith("google.protobuf"):

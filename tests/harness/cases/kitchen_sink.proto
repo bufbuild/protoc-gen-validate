@@ -8,6 +8,7 @@ import "validate/validate.proto";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/any.proto";
 
 enum ComplexTestEnum {
     ComplexZero = 0;
@@ -27,6 +28,7 @@ message ComplexTestMsg {
     float                      float_const = 9 [(validate.rules).float.lt = 8];
     double                     double_in = 10 [(validate.rules).double = {in: [456.789, 123]}];
     ComplexTestEnum            enum_const = 11 [(validate.rules).enum.const = 2];
+    google.protobuf.Any        any_val = 12 [(validate.rules).any = {in: ["type.googleapis.com/google.protobuf.Duration"]}];
 }
 
 message KitchenSinkMessage { ComplexTestMsg val = 1; }
