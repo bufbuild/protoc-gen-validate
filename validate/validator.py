@@ -16,7 +16,11 @@ def generate_validate(proto_message):
     func = file_template(proto_message)
     global printer
     printer += func + "\n"
-    exec(func); return validate
+    exec(func)
+    try:
+        return validate
+    except NameError:
+        return locals()['validate']
 
 def print_validate(proto_message):
     return printer
@@ -160,26 +164,26 @@ def string_template(option_value, name):
     {%- endif -%}
     {%- if s['address'] %}
     try:
-        ipaddress.ip_address(unicode(p.{{ name }}))
+        ipaddress.ip_address(str(p.{{ name }}))
     except ValueError:
         if not _validateHostName(p.{{ name }}):
             raise ValidationFailed(\"{{ name }} is not a valid address\")
     {%- endif -%}
     {%- if s['ip'] %}
     try:
-        ipaddress.ip_address(unicode(p.{{ name }}))
+        ipaddress.ip_address(str(p.{{ name }}))
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ip\")
     {%- endif -%}
     {%- if s['ipv4'] %}
     try:
-        ipaddress.IPv4Address(unicode(p.{{ name }}))
+        ipaddress.IPv4Address(str(p.{{ name }}))
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ipv4\")
     {%- endif -%}
     {%- if s['ipv6'] %}
     try:
-        ipaddress.IPv6Address(unicode(p.{{ name }}))
+        ipaddress.IPv6Address(str(p.{{ name }}))
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ipv6\")
     {%- endif %}

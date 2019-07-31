@@ -36,7 +36,10 @@ def unpack(message):
 if __name__ == "__main__":
     message = sys.stdin.read()
     testcase = TestCase()
-    testcase.ParseFromString(message)
+    try:
+        testcase.ParseFromString(message)
+    except TypeError:
+        testcase.ParseFromString(message.encode(errors='surrogateescape'))
     test_class = unpack(testcase.message)
     try:
         result = TestResult()
@@ -45,8 +48,11 @@ if __name__ == "__main__":
         result.Valid = True
     except ValidationFailed as e:
         result.Valid = False
+        result.Reason = str(e)
     except UnimplementedException as e:
         result.Error = False
         result.AllowFailure = True
-    result.Reason = print_validate(test_class)
-    sys.stdout.write(result.SerializeToString())
+    try:
+        sys.stdout.write(result.SerializeToString())
+    except TypeError:
+        sys.stdout.write(result.SerializeToString().decode(errors='surrogateescape'))

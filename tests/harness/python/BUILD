@@ -14,5 +14,5 @@ py_binary(
        requirement("MarkupSafe"),],
     main = "harness.py",
     visibility = ["//tests/harness:__subpackages__"],
-    python_version = "PY2",
+#   Python Version is set by default to PY2AND3.
 )
