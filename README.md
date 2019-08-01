@@ -311,7 +311,7 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
   string x = 1 [(validate.rules).string.pattern = "(?i)^[0-9a-f]+$"];
   ```
 
-- **prefix/suffix/contains/not_contains**: the field must contain the specified substring in an optionally explicit location.
+- **prefix/suffix/contains/not_contains**: the field must contain the specified substring in an optionally explicit location, or not contain the specified substring.
 
   ```protobuf
   // x must begin with "foo"

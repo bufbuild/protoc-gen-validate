@@ -23,8 +23,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-// FieldRules encapsulates the rules for each type of field. Depending on the
-// field, the correct set should be used to ensure proper validations.
 type FieldRules struct {
 	Message *MessageRules `protobuf:"bytes,17,opt,name=message" json:"message,omitempty"`
 	// Types that are valid to be assigned to Type:
@@ -398,29 +396,13 @@ func (*FieldRules) XXX_OneofWrappers() []interface{} {
 	}
 }
 
-// FloatRules describes the constraints applied to `float` values
 type FloatRules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const *float32 `protobuf:"fixed32,1,opt,name=const" json:"const,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// exclusive
-	Lt *float32 `protobuf:"fixed32,2,opt,name=lt" json:"lt,omitempty"`
-	// Lte specifies that this field must be less than or equal to the
-	// specified value, inclusive
-	Lte *float32 `protobuf:"fixed32,3,opt,name=lte" json:"lte,omitempty"`
-	// Gt specifies that this field must be greater than the specified value,
-	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
-	// range is reversed.
-	Gt *float32 `protobuf:"fixed32,4,opt,name=gt" json:"gt,omitempty"`
-	// Gte specifies that this field must be greater than or equal to the
-	// specified value, inclusive. If the value of Gte is larger than a
-	// specified Lt or Lte, the range is reversed.
-	Gte *float32 `protobuf:"fixed32,5,opt,name=gte" json:"gte,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []float32 `protobuf:"fixed32,6,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
+	Const                *float32  `protobuf:"fixed32,1,opt,name=const" json:"const,omitempty"`
+	Lt                   *float32  `protobuf:"fixed32,2,opt,name=lt" json:"lt,omitempty"`
+	Lte                  *float32  `protobuf:"fixed32,3,opt,name=lte" json:"lte,omitempty"`
+	Gt                   *float32  `protobuf:"fixed32,4,opt,name=gt" json:"gt,omitempty"`
+	Gte                  *float32  `protobuf:"fixed32,5,opt,name=gte" json:"gte,omitempty"`
+	In                   []float32 `protobuf:"fixed32,6,rep,name=in" json:"in,omitempty"`
 	NotIn                []float32 `protobuf:"fixed32,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
 	XXX_unrecognized     []byte    `json:"-"`
@@ -501,29 +483,13 @@ func (m *FloatRules) GetNotIn() []float32 {
 	return nil
 }
 
-// DoubleRules describes the constraints applied to `double` values
 type DoubleRules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const *float64 `protobuf:"fixed64,1,opt,name=const" json:"const,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// exclusive
-	Lt *float64 `protobuf:"fixed64,2,opt,name=lt" json:"lt,omitempty"`
-	// Lte specifies that this field must be less than or equal to the
-	// specified value, inclusive
-	Lte *float64 `protobuf:"fixed64,3,opt,name=lte" json:"lte,omitempty"`
-	// Gt specifies that this field must be greater than the specified value,
-	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
-	// range is reversed.
-	Gt *float64 `protobuf:"fixed64,4,opt,name=gt" json:"gt,omitempty"`
-	// Gte specifies that this field must be greater than or equal to the
-	// specified value, inclusive. If the value of Gte is larger than a
-	// specified Lt or Lte, the range is reversed.
-	Gte *float64 `protobuf:"fixed64,5,opt,name=gte" json:"gte,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []float64 `protobuf:"fixed64,6,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
+	Const                *float64  `protobuf:"fixed64,1,opt,name=const" json:"const,omitempty"`
+	Lt                   *float64  `protobuf:"fixed64,2,opt,name=lt" json:"lt,omitempty"`
+	Lte                  *float64  `protobuf:"fixed64,3,opt,name=lte" json:"lte,omitempty"`
+	Gt                   *float64  `protobuf:"fixed64,4,opt,name=gt" json:"gt,omitempty"`
+	Gte                  *float64  `protobuf:"fixed64,5,opt,name=gte" json:"gte,omitempty"`
+	In                   []float64 `protobuf:"fixed64,6,rep,name=in" json:"in,omitempty"`
 	NotIn                []float64 `protobuf:"fixed64,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
 	XXX_unrecognized     []byte    `json:"-"`
@@ -604,29 +570,13 @@ func (m *DoubleRules) GetNotIn() []float64 {
 	return nil
 }
 
-// Int32Rules describes the constraints applied to `int32` values
 type Int32Rules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const *int32 `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// exclusive
-	Lt *int32 `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
-	// Lte specifies that this field must be less than or equal to the
-	// specified value, inclusive
-	Lte *int32 `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
-	// Gt specifies that this field must be greater than the specified value,
-	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
-	// range is reversed.
-	Gt *int32 `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
-	// Gte specifies that this field must be greater than or equal to the
-	// specified value, inclusive. If the value of Gte is larger than a
-	// specified Lt or Lte, the range is reversed.
-	Gte *int32 `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []int32 `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
+	Const                *int32   `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
+	Lt                   *int32   `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
+	Lte                  *int32   `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
+	Gt                   *int32   `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
+	Gte                  *int32   `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
+	In                   []int32  `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
 	NotIn                []int32  `protobuf:"varint,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -707,29 +657,13 @@ func (m *Int32Rules) GetNotIn() []int32 {
 	return nil
 }
 
-// Int64Rules describes the constraints applied to `int64` values
 type Int64Rules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const *int64 `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// exclusive
-	Lt *int64 `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
-	// Lte specifies that this field must be less than or equal to the
-	// specified value, inclusive
-	Lte *int64 `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
-	// Gt specifies that this field must be greater than the specified value,
-	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
-	// range is reversed.
-	Gt *int64 `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
-	// Gte specifies that this field must be greater than or equal to the
-	// specified value, inclusive. If the value of Gte is larger than a
-	// specified Lt or Lte, the range is reversed.
-	Gte *int64 `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []int64 `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
+	Const                *int64   `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
+	Lt                   *int64   `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
+	Lte                  *int64   `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
+	Gt                   *int64   `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
+	Gte                  *int64   `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
+	In                   []int64  `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
 	NotIn                []int64  `protobuf:"varint,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -810,29 +744,13 @@ func (m *Int64Rules) GetNotIn() []int64 {
 	return nil
 }
 
-// UInt32Rules describes the constraints applied to `uint32` values
 type UInt32Rules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const *uint32 `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// exclusive
-	Lt *uint32 `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
-	// Lte specifies that this field must be less than or equal to the
-	// specified value, inclusive
-	Lte *uint32 `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
-	// Gt specifies that this field must be greater than the specified value,
-	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
-	// range is reversed.
-	Gt *uint32 `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
-	// Gte specifies that this field must be greater than or equal to the
-	// specified value, inclusive. If the value of Gte is larger than a
-	// specified Lt or Lte, the range is reversed.
-	Gte *uint32 `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []uint32 `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
+	Const                *uint32  `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
+	Lt                   *uint32  `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
+	Lte                  *uint32  `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
+	Gt                   *uint32  `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
+	Gte                  *uint32  `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
+	In                   []uint32 `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
 	NotIn                []uint32 `protobuf:"varint,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -913,29 +831,13 @@ func (m *UInt32Rules) GetNotIn() []uint32 {
 	return nil
 }
 
-// UInt64Rules describes the constraints applied to `uint64` values
 type UInt64Rules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const *uint64 `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// exclusive
-	Lt *uint64 `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
-	// Lte specifies that this field must be less than or equal to the
-	// specified value, inclusive
-	Lte *uint64 `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
-	// Gt specifies that this field must be greater than the specified value,
-	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
-	// range is reversed.
-	Gt *uint64 `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
-	// Gte specifies that this field must be greater than or equal to the
-	// specified value, inclusive. If the value of Gte is larger than a
-	// specified Lt or Lte, the range is reversed.
-	Gte *uint64 `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []uint64 `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
+	Const                *uint64  `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
+	Lt                   *uint64  `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
+	Lte                  *uint64  `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
+	Gt                   *uint64  `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
+	Gte                  *uint64  `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
+	In                   []uint64 `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
 	NotIn                []uint64 `protobuf:"varint,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1016,29 +918,13 @@ func (m *UInt64Rules) GetNotIn() []uint64 {
 	return nil
 }
 
-// SInt32Rules describes the constraints applied to `sint32` values
 type SInt32Rules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const *int32 `protobuf:"zigzag32,1,opt,name=const" json:"const,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// exclusive
-	Lt *int32 `protobuf:"zigzag32,2,opt,name=lt" json:"lt,omitempty"`
-	// Lte specifies that this field must be less than or equal to the
-	// specified value, inclusive
-	Lte *int32 `protobuf:"zigzag32,3,opt,name=lte" json:"lte,omitempty"`
-	// Gt specifies that this field must be greater than the specified value,
-	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
-	// range is reversed.
-	Gt *int32 `protobuf:"zigzag32,4,opt,name=gt" json:"gt,omitempty"`
-	// Gte specifies that this field must be greater than or equal to the
-	// specified value, inclusive. If the value of Gte is larger than a
-	// specified Lt or Lte, the range is reversed.
-	Gte *int32 `protobuf:"zigzag32,5,opt,name=gte" json:"gte,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []int32 `protobuf:"zigzag32,6,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
+	Const                *int32   `protobuf:"zigzag32,1,opt,name=const" json:"const,omitempty"`
+	Lt                   *int32   `protobuf:"zigzag32,2,opt,name=lt" json:"lt,omitempty"`
+	Lte                  *int32   `protobuf:"zigzag32,3,opt,name=lte" json:"lte,omitempty"`
+	Gt                   *int32   `protobuf:"zigzag32,4,opt,name=gt" json:"gt,omitempty"`
+	Gte                  *int32   `protobuf:"zigzag32,5,opt,name=gte" json:"gte,omitempty"`
+	In                   []int32  `protobuf:"zigzag32,6,rep,name=in" json:"in,omitempty"`
 	NotIn                []int32  `protobuf:"zigzag32,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1119,29 +1005,13 @@ func (m *SInt32Rules) GetNotIn() []int32 {
 	return nil
 }
 
-// SInt64Rules describes the constraints applied to `sint64` values
 type SInt64Rules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const *int64 `protobuf:"zigzag64,1,opt,name=const" json:"const,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// exclusive
-	Lt *int64 `protobuf:"zigzag64,2,opt,name=lt" json:"lt,omitempty"`
-	// Lte specifies that this field must be less than or equal to the
-	// specified value, inclusive
-	Lte *int64 `protobuf:"zigzag64,3,opt,name=lte" json:"lte,omitempty"`
-	// Gt specifies that this field must be greater than the specified value,
-	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
-	// range is reversed.
-	Gt *int64 `protobuf:"zigzag64,4,opt,name=gt" json:"gt,omitempty"`
-	// Gte specifies that this field must be greater than or equal to the
-	// specified value, inclusive. If the value of Gte is larger than a
-	// specified Lt or Lte, the range is reversed.
-	Gte *int64 `protobuf:"zigzag64,5,opt,name=gte" json:"gte,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []int64 `protobuf:"zigzag64,6,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
+	Const                *int64   `protobuf:"zigzag64,1,opt,name=const" json:"const,omitempty"`
+	Lt                   *int64   `protobuf:"zigzag64,2,opt,name=lt" json:"lt,omitempty"`
+	Lte                  *int64   `protobuf:"zigzag64,3,opt,name=lte" json:"lte,omitempty"`
+	Gt                   *int64   `protobuf:"zigzag64,4,opt,name=gt" json:"gt,omitempty"`
+	Gte                  *int64   `protobuf:"zigzag64,5,opt,name=gte" json:"gte,omitempty"`
+	In                   []int64  `protobuf:"zigzag64,6,rep,name=in" json:"in,omitempty"`
 	NotIn                []int64  `protobuf:"zigzag64,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1222,29 +1092,13 @@ func (m *SInt64Rules) GetNotIn() []int64 {
 	return nil
 }
 
-// Fixed32Rules describes the constraints applied to `fixed32` values
 type Fixed32Rules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const *uint32 `protobuf:"fixed32,1,opt,name=const" json:"const,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// exclusive
-	Lt *uint32 `protobuf:"fixed32,2,opt,name=lt" json:"lt,omitempty"`
-	// Lte specifies that this field must be less than or equal to the
-	// specified value, inclusive
-	Lte *uint32 `protobuf:"fixed32,3,opt,name=lte" json:"lte,omitempty"`
-	// Gt specifies that this field must be greater than the specified value,
-	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
-	// range is reversed.
-	Gt *uint32 `protobuf:"fixed32,4,opt,name=gt" json:"gt,omitempty"`
-	// Gte specifies that this field must be greater than or equal to the
-	// specified value, inclusive. If the value of Gte is larger than a
-	// specified Lt or Lte, the range is reversed.
-	Gte *uint32 `protobuf:"fixed32,5,opt,name=gte" json:"gte,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []uint32 `protobuf:"fixed32,6,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
+	Const                *uint32  `protobuf:"fixed32,1,opt,name=const" json:"const,omitempty"`
+	Lt                   *uint32  `protobuf:"fixed32,2,opt,name=lt" json:"lt,omitempty"`
+	Lte                  *uint32  `protobuf:"fixed32,3,opt,name=lte" json:"lte,omitempty"`
+	Gt                   *uint32  `protobuf:"fixed32,4,opt,name=gt" json:"gt,omitempty"`
+	Gte                  *uint32  `protobuf:"fixed32,5,opt,name=gte" json:"gte,omitempty"`
+	In                   []uint32 `protobuf:"fixed32,6,rep,name=in" json:"in,omitempty"`
 	NotIn                []uint32 `protobuf:"fixed32,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1325,29 +1179,13 @@ func (m *Fixed32Rules) GetNotIn() []uint32 {
 	return nil
 }
 
-// Fixed64Rules describes the constraints applied to `fixed64` values
 type Fixed64Rules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const *uint64 `protobuf:"fixed64,1,opt,name=const" json:"const,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// exclusive
-	Lt *uint64 `protobuf:"fixed64,2,opt,name=lt" json:"lt,omitempty"`
-	// Lte specifies that this field must be less than or equal to the
-	// specified value, inclusive
-	Lte *uint64 `protobuf:"fixed64,3,opt,name=lte" json:"lte,omitempty"`
-	// Gt specifies that this field must be greater than the specified value,
-	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
-	// range is reversed.
-	Gt *uint64 `protobuf:"fixed64,4,opt,name=gt" json:"gt,omitempty"`
-	// Gte specifies that this field must be greater than or equal to the
-	// specified value, inclusive. If the value of Gte is larger than a
-	// specified Lt or Lte, the range is reversed.
-	Gte *uint64 `protobuf:"fixed64,5,opt,name=gte" json:"gte,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []uint64 `protobuf:"fixed64,6,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
+	Const                *uint64  `protobuf:"fixed64,1,opt,name=const" json:"const,omitempty"`
+	Lt                   *uint64  `protobuf:"fixed64,2,opt,name=lt" json:"lt,omitempty"`
+	Lte                  *uint64  `protobuf:"fixed64,3,opt,name=lte" json:"lte,omitempty"`
+	Gt                   *uint64  `protobuf:"fixed64,4,opt,name=gt" json:"gt,omitempty"`
+	Gte                  *uint64  `protobuf:"fixed64,5,opt,name=gte" json:"gte,omitempty"`
+	In                   []uint64 `protobuf:"fixed64,6,rep,name=in" json:"in,omitempty"`
 	NotIn                []uint64 `protobuf:"fixed64,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1428,29 +1266,13 @@ func (m *Fixed64Rules) GetNotIn() []uint64 {
 	return nil
 }
 
-// SFixed32Rules describes the constraints applied to `sfixed32` values
 type SFixed32Rules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const *int32 `protobuf:"fixed32,1,opt,name=const" json:"const,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// exclusive
-	Lt *int32 `protobuf:"fixed32,2,opt,name=lt" json:"lt,omitempty"`
-	// Lte specifies that this field must be less than or equal to the
-	// specified value, inclusive
-	Lte *int32 `protobuf:"fixed32,3,opt,name=lte" json:"lte,omitempty"`
-	// Gt specifies that this field must be greater than the specified value,
-	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
-	// range is reversed.
-	Gt *int32 `protobuf:"fixed32,4,opt,name=gt" json:"gt,omitempty"`
-	// Gte specifies that this field must be greater than or equal to the
-	// specified value, inclusive. If the value of Gte is larger than a
-	// specified Lt or Lte, the range is reversed.
-	Gte *int32 `protobuf:"fixed32,5,opt,name=gte" json:"gte,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []int32 `protobuf:"fixed32,6,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
+	Const                *int32   `protobuf:"fixed32,1,opt,name=const" json:"const,omitempty"`
+	Lt                   *int32   `protobuf:"fixed32,2,opt,name=lt" json:"lt,omitempty"`
+	Lte                  *int32   `protobuf:"fixed32,3,opt,name=lte" json:"lte,omitempty"`
+	Gt                   *int32   `protobuf:"fixed32,4,opt,name=gt" json:"gt,omitempty"`
+	Gte                  *int32   `protobuf:"fixed32,5,opt,name=gte" json:"gte,omitempty"`
+	In                   []int32  `protobuf:"fixed32,6,rep,name=in" json:"in,omitempty"`
 	NotIn                []int32  `protobuf:"fixed32,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1531,29 +1353,13 @@ func (m *SFixed32Rules) GetNotIn() []int32 {
 	return nil
 }
 
-// SFixed64Rules describes the constraints applied to `sfixed64` values
 type SFixed64Rules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const *int64 `protobuf:"fixed64,1,opt,name=const" json:"const,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// exclusive
-	Lt *int64 `protobuf:"fixed64,2,opt,name=lt" json:"lt,omitempty"`
-	// Lte specifies that this field must be less than or equal to the
-	// specified value, inclusive
-	Lte *int64 `protobuf:"fixed64,3,opt,name=lte" json:"lte,omitempty"`
-	// Gt specifies that this field must be greater than the specified value,
-	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
-	// range is reversed.
-	Gt *int64 `protobuf:"fixed64,4,opt,name=gt" json:"gt,omitempty"`
-	// Gte specifies that this field must be greater than or equal to the
-	// specified value, inclusive. If the value of Gte is larger than a
-	// specified Lt or Lte, the range is reversed.
-	Gte *int64 `protobuf:"fixed64,5,opt,name=gte" json:"gte,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []int64 `protobuf:"fixed64,6,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
+	Const                *int64   `protobuf:"fixed64,1,opt,name=const" json:"const,omitempty"`
+	Lt                   *int64   `protobuf:"fixed64,2,opt,name=lt" json:"lt,omitempty"`
+	Lte                  *int64   `protobuf:"fixed64,3,opt,name=lte" json:"lte,omitempty"`
+	Gt                   *int64   `protobuf:"fixed64,4,opt,name=gt" json:"gt,omitempty"`
+	Gte                  *int64   `protobuf:"fixed64,5,opt,name=gte" json:"gte,omitempty"`
+	In                   []int64  `protobuf:"fixed64,6,rep,name=in" json:"in,omitempty"`
 	NotIn                []int64  `protobuf:"fixed64,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1634,9 +1440,7 @@ func (m *SFixed64Rules) GetNotIn() []int64 {
 	return nil
 }
 
-// BoolRules describes the constraints applied to `bool` values
 type BoolRules struct {
-	// Const specifies that this field must be exactly the specified value
 	Const                *bool    `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1675,56 +1479,21 @@ func (m *BoolRules) GetConst() bool {
 	return false
 }
 
-// StringRules describe the constraints applied to `string` values
 type StringRules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const *string `protobuf:"bytes,1,opt,name=const" json:"const,omitempty"`
-	// Len specifies that this field must be the specified number of
-	// characters (Unicode code points). Note that the number of
-	// characters may differ from the number of bytes in the string.
-	Len *uint64 `protobuf:"varint,19,opt,name=len" json:"len,omitempty"`
-	// MinLen specifies that this field must be the specified number of
-	// characters (Unicode code points) at a minimum. Note that the number of
-	// characters may differ from the number of bytes in the string.
-	MinLen *uint64 `protobuf:"varint,2,opt,name=min_len,json=minLen" json:"min_len,omitempty"`
-	// MaxLen specifies that this field must be the specified number of
-	// characters (Unicode code points) at a maximum. Note that the number of
-	// characters may differ from the number of bytes in the string.
-	MaxLen *uint64 `protobuf:"varint,3,opt,name=max_len,json=maxLen" json:"max_len,omitempty"`
-	// LenBytes specifies that this field must be the specified number of bytes
-	// at a minimum
-	LenBytes *uint64 `protobuf:"varint,20,opt,name=len_bytes,json=lenBytes" json:"len_bytes,omitempty"`
-	// MinBytes specifies that this field must be the specified number of bytes
-	// at a minimum
-	MinBytes *uint64 `protobuf:"varint,4,opt,name=min_bytes,json=minBytes" json:"min_bytes,omitempty"`
-	// MaxBytes specifies that this field must be the specified number of bytes
-	// at a maximum
-	MaxBytes *uint64 `protobuf:"varint,5,opt,name=max_bytes,json=maxBytes" json:"max_bytes,omitempty"`
-	// Pattern specifes that this field must match against the specified
-	// regular expression (RE2 syntax). The included expression should elide
-	// any delimiters.
-	Pattern *string `protobuf:"bytes,6,opt,name=pattern" json:"pattern,omitempty"`
-	// Prefix specifies that this field must have the specified substring at
-	// the beginning of the string.
-	Prefix *string `protobuf:"bytes,7,opt,name=prefix" json:"prefix,omitempty"`
-	// Suffix specifies that this field must have the specified substring at
-	// the end of the string.
-	Suffix *string `protobuf:"bytes,8,opt,name=suffix" json:"suffix,omitempty"`
-	// Contains specifies that this field must have the specified substring
-	// anywhere in the string.
-	Contains *string `protobuf:"bytes,9,opt,name=contains" json:"contains,omitempty"`
-	// NotContains specifies that this field cannot have the specified substring
-	// anywhere in the string.
-	NotContains *string `protobuf:"bytes,23,opt,name=not_contains,json=notContains" json:"not_contains,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []string `protobuf:"bytes,10,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
-	NotIn []string `protobuf:"bytes,11,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
-	// WellKnown rules provide advanced constraints against common string
-	// patterns
-	//
+	Const       *string  `protobuf:"bytes,1,opt,name=const" json:"const,omitempty"`
+	Len         *uint64  `protobuf:"varint,19,opt,name=len" json:"len,omitempty"`
+	MinLen      *uint64  `protobuf:"varint,2,opt,name=min_len,json=minLen" json:"min_len,omitempty"`
+	MaxLen      *uint64  `protobuf:"varint,3,opt,name=max_len,json=maxLen" json:"max_len,omitempty"`
+	LenBytes    *uint64  `protobuf:"varint,20,opt,name=len_bytes,json=lenBytes" json:"len_bytes,omitempty"`
+	MinBytes    *uint64  `protobuf:"varint,4,opt,name=min_bytes,json=minBytes" json:"min_bytes,omitempty"`
+	MaxBytes    *uint64  `protobuf:"varint,5,opt,name=max_bytes,json=maxBytes" json:"max_bytes,omitempty"`
+	Pattern     *string  `protobuf:"bytes,6,opt,name=pattern" json:"pattern,omitempty"`
+	Prefix      *string  `protobuf:"bytes,7,opt,name=prefix" json:"prefix,omitempty"`
+	Suffix      *string  `protobuf:"bytes,8,opt,name=suffix" json:"suffix,omitempty"`
+	Contains    *string  `protobuf:"bytes,9,opt,name=contains" json:"contains,omitempty"`
+	NotContains *string  `protobuf:"bytes,23,opt,name=not_contains,json=notContains" json:"not_contains,omitempty"`
+	In          []string `protobuf:"bytes,10,rep,name=in" json:"in,omitempty"`
+	NotIn       []string `protobuf:"bytes,11,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	// Types that are valid to be assigned to WellKnown:
 	//	*StringRules_Email
 	//	*StringRules_Hostname
@@ -2007,40 +1776,17 @@ func (*StringRules) XXX_OneofWrappers() []interface{} {
 	}
 }
 
-// BytesRules describe the constraints applied to `bytes` values
 type BytesRules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const []byte `protobuf:"bytes,1,opt,name=const" json:"const,omitempty"`
-	// Len specifies that this field must be the specified number of bytes
-	Len *uint64 `protobuf:"varint,13,opt,name=len" json:"len,omitempty"`
-	// MinLen specifies that this field must be the specified number of bytes
-	// at a minimum
-	MinLen *uint64 `protobuf:"varint,2,opt,name=min_len,json=minLen" json:"min_len,omitempty"`
-	// MaxLen specifies that this field must be the specified number of bytes
-	// at a maximum
-	MaxLen *uint64 `protobuf:"varint,3,opt,name=max_len,json=maxLen" json:"max_len,omitempty"`
-	// Pattern specifes that this field must match against the specified
-	// regular expression (RE2 syntax). The included expression should elide
-	// any delimiters.
-	Pattern *string `protobuf:"bytes,4,opt,name=pattern" json:"pattern,omitempty"`
-	// Prefix specifies that this field must have the specified bytes at the
-	// beginning of the string.
-	Prefix []byte `protobuf:"bytes,5,opt,name=prefix" json:"prefix,omitempty"`
-	// Suffix specifies that this field must have the specified bytes at the
-	// end of the string.
-	Suffix []byte `protobuf:"bytes,6,opt,name=suffix" json:"suffix,omitempty"`
-	// Contains specifies that this field must have the specified bytes
-	// anywhere in the string.
-	Contains []byte `protobuf:"bytes,7,opt,name=contains" json:"contains,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In [][]byte `protobuf:"bytes,8,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
-	NotIn [][]byte `protobuf:"bytes,9,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
-	// WellKnown rules provide advanced constraints against common byte
-	// patterns
-	//
+	Const    []byte   `protobuf:"bytes,1,opt,name=const" json:"const,omitempty"`
+	Len      *uint64  `protobuf:"varint,13,opt,name=len" json:"len,omitempty"`
+	MinLen   *uint64  `protobuf:"varint,2,opt,name=min_len,json=minLen" json:"min_len,omitempty"`
+	MaxLen   *uint64  `protobuf:"varint,3,opt,name=max_len,json=maxLen" json:"max_len,omitempty"`
+	Pattern  *string  `protobuf:"bytes,4,opt,name=pattern" json:"pattern,omitempty"`
+	Prefix   []byte   `protobuf:"bytes,5,opt,name=prefix" json:"prefix,omitempty"`
+	Suffix   []byte   `protobuf:"bytes,6,opt,name=suffix" json:"suffix,omitempty"`
+	Contains []byte   `protobuf:"bytes,7,opt,name=contains" json:"contains,omitempty"`
+	In       [][]byte `protobuf:"bytes,8,rep,name=in" json:"in,omitempty"`
+	NotIn    [][]byte `protobuf:"bytes,9,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	// Types that are valid to be assigned to WellKnown:
 	//	*BytesRules_Ip
 	//	*BytesRules_Ipv4
@@ -2205,18 +1951,10 @@ func (*BytesRules) XXX_OneofWrappers() []interface{} {
 	}
 }
 
-// EnumRules describe the constraints applied to enum values
 type EnumRules struct {
-	// Const specifies that this field must be exactly the specified value
-	Const *int32 `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
-	// DefinedOnly specifies that this field must be only one of the defined
-	// values for this enum, failing on any undefined value.
-	DefinedOnly *bool `protobuf:"varint,2,opt,name=defined_only,json=definedOnly" json:"defined_only,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []int32 `protobuf:"varint,3,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
+	Const                *int32   `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
+	DefinedOnly          *bool    `protobuf:"varint,2,opt,name=defined_only,json=definedOnly" json:"defined_only,omitempty"`
+	In                   []int32  `protobuf:"varint,3,rep,name=in" json:"in,omitempty"`
 	NotIn                []int32  `protobuf:"varint,4,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -2276,13 +2014,8 @@ func (m *EnumRules) GetNotIn() []int32 {
 	return nil
 }
 
-// MessageRules describe the constraints applied to embedded message values.
-// For message-type fields, validation is performed recursively.
 type MessageRules struct {
-	// Skip specifies that the validation rules of this field should not be
-	// evaluated
-	Skip *bool `protobuf:"varint,1,opt,name=skip" json:"skip,omitempty"`
-	// Required specifies that this field must be set
+	Skip                 *bool    `protobuf:"varint,1,opt,name=skip" json:"skip,omitempty"`
 	Required             *bool    `protobuf:"varint,2,opt,name=required" json:"required,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -2328,21 +2061,10 @@ func (m *MessageRules) GetRequired() bool {
 	return false
 }
 
-// RepeatedRules describe the constraints applied to `repeated` values
 type RepeatedRules struct {
-	// MinItems specifies that this field must have the specified number of
-	// items at a minimum
-	MinItems *uint64 `protobuf:"varint,1,opt,name=min_items,json=minItems" json:"min_items,omitempty"`
-	// MaxItems specifies that this field must have the specified number of
-	// items at a maximum
-	MaxItems *uint64 `protobuf:"varint,2,opt,name=max_items,json=maxItems" json:"max_items,omitempty"`
-	// Unique specifies that all elements in this field must be unique. This
-	// contraint is only applicable to scalar and enum types (messages are not
-	// supported).
-	Unique *bool `protobuf:"varint,3,opt,name=unique" json:"unique,omitempty"`
-	// Items specifies the contraints to be applied to each item in the field.
-	// Repeated message fields will still execute validation against each item
-	// unless skip is specified here.
+	MinItems             *uint64     `protobuf:"varint,1,opt,name=min_items,json=minItems" json:"min_items,omitempty"`
+	MaxItems             *uint64     `protobuf:"varint,2,opt,name=max_items,json=maxItems" json:"max_items,omitempty"`
+	Unique               *bool       `protobuf:"varint,3,opt,name=unique" json:"unique,omitempty"`
 	Items                *FieldRules `protobuf:"bytes,4,opt,name=items" json:"items,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
 	XXX_unrecognized     []byte      `json:"-"`
@@ -2402,22 +2124,11 @@ func (m *RepeatedRules) GetItems() *FieldRules {
 	return nil
 }
 
-// MapRules describe the constraints applied to `map` values
 type MapRules struct {
-	// MinPairs specifies that this field must have the specified number of
-	// KVs at a minimum
-	MinPairs *uint64 `protobuf:"varint,1,opt,name=min_pairs,json=minPairs" json:"min_pairs,omitempty"`
-	// MaxPairs specifies that this field must have the specified number of
-	// KVs at a maximum
-	MaxPairs *uint64 `protobuf:"varint,2,opt,name=max_pairs,json=maxPairs" json:"max_pairs,omitempty"`
-	// NoSparse specifies values in this field cannot be unset. This only
-	// applies to map's with message value types.
-	NoSparse *bool `protobuf:"varint,3,opt,name=no_sparse,json=noSparse" json:"no_sparse,omitempty"`
-	// Keys specifies the constraints to be applied to each key in the field.
-	Keys *FieldRules `protobuf:"bytes,4,opt,name=keys" json:"keys,omitempty"`
-	// Values specifies the constraints to be applied to the value of each key
-	// in the field. Message values will still have their validations evaluated
-	// unless skip is specified here.
+	MinPairs             *uint64     `protobuf:"varint,1,opt,name=min_pairs,json=minPairs" json:"min_pairs,omitempty"`
+	MaxPairs             *uint64     `protobuf:"varint,2,opt,name=max_pairs,json=maxPairs" json:"max_pairs,omitempty"`
+	NoSparse             *bool       `protobuf:"varint,3,opt,name=no_sparse,json=noSparse" json:"no_sparse,omitempty"`
+	Keys                 *FieldRules `protobuf:"bytes,4,opt,name=keys" json:"keys,omitempty"`
 	Values               *FieldRules `protobuf:"bytes,5,opt,name=values" json:"values,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
 	XXX_unrecognized     []byte      `json:"-"`
@@ -2484,16 +2195,9 @@ func (m *MapRules) GetValues() *FieldRules {
 	return nil
 }
 
-// AnyRules describe constraints applied exclusively to the
-// `google.protobuf.Any` well-known type
 type AnyRules struct {
-	// Required specifies that this field must be set
-	Required *bool `protobuf:"varint,1,opt,name=required" json:"required,omitempty"`
-	// In specifies that this field's `type_url` must be equal to one of the
-	// specified values.
-	In []string `protobuf:"bytes,2,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field's `type_url` must not be equal to any of
-	// the specified values.
+	Required             *bool    `protobuf:"varint,1,opt,name=required" json:"required,omitempty"`
+	In                   []string `protobuf:"bytes,2,rep,name=in" json:"in,omitempty"`
 	NotIn                []string `protobuf:"bytes,3,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -2546,30 +2250,14 @@ func (m *AnyRules) GetNotIn() []string {
 	return nil
 }
 
-// DurationRules describe the constraints applied exclusively to the
-// `google.protobuf.Duration` well-known type
 type DurationRules struct {
-	// Required specifies that this field must be set
-	Required *bool `protobuf:"varint,1,opt,name=required" json:"required,omitempty"`
-	// Const specifies that this field must be exactly the specified value
-	Const *duration.Duration `protobuf:"bytes,2,opt,name=const" json:"const,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// exclusive
-	Lt *duration.Duration `protobuf:"bytes,3,opt,name=lt" json:"lt,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// inclusive
-	Lte *duration.Duration `protobuf:"bytes,4,opt,name=lte" json:"lte,omitempty"`
-	// Gt specifies that this field must be greater than the specified value,
-	// exclusive
-	Gt *duration.Duration `protobuf:"bytes,5,opt,name=gt" json:"gt,omitempty"`
-	// Gte specifies that this field must be greater than the specified value,
-	// inclusive
-	Gte *duration.Duration `protobuf:"bytes,6,opt,name=gte" json:"gte,omitempty"`
-	// In specifies that this field must be equal to one of the specified
-	// values
-	In []*duration.Duration `protobuf:"bytes,7,rep,name=in" json:"in,omitempty"`
-	// NotIn specifies that this field cannot be equal to one of the specified
-	// values
+	Required             *bool                `protobuf:"varint,1,opt,name=required" json:"required,omitempty"`
+	Const                *duration.Duration   `protobuf:"bytes,2,opt,name=const" json:"const,omitempty"`
+	Lt                   *duration.Duration   `protobuf:"bytes,3,opt,name=lt" json:"lt,omitempty"`
+	Lte                  *duration.Duration   `protobuf:"bytes,4,opt,name=lte" json:"lte,omitempty"`
+	Gt                   *duration.Duration   `protobuf:"bytes,5,opt,name=gt" json:"gt,omitempty"`
+	Gte                  *duration.Duration   `protobuf:"bytes,6,opt,name=gte" json:"gte,omitempty"`
+	In                   []*duration.Duration `protobuf:"bytes,7,rep,name=in" json:"in,omitempty"`
 	NotIn                []*duration.Duration `protobuf:"bytes,8,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
 	XXX_unrecognized     []byte               `json:"-"`
@@ -2657,38 +2345,19 @@ func (m *DurationRules) GetNotIn() []*duration.Duration {
 	return nil
 }
 
-// TimestampRules describe the constraints applied exclusively to the
-// `google.protobuf.Timestamp` well-known type
 type TimestampRules struct {
-	// Required specifies that this field must be set
-	Required *bool `protobuf:"varint,1,opt,name=required" json:"required,omitempty"`
-	// Const specifies that this field must be exactly the specified value
-	Const *timestamp.Timestamp `protobuf:"bytes,2,opt,name=const" json:"const,omitempty"`
-	// Lt specifies that this field must be less than the specified value,
-	// exclusive
-	Lt *timestamp.Timestamp `protobuf:"bytes,3,opt,name=lt" json:"lt,omitempty"`
-	// Lte specifies that this field must be less than the specified value,
-	// inclusive
-	Lte *timestamp.Timestamp `protobuf:"bytes,4,opt,name=lte" json:"lte,omitempty"`
-	// Gt specifies that this field must be greater than the specified value,
-	// exclusive
-	Gt *timestamp.Timestamp `protobuf:"bytes,5,opt,name=gt" json:"gt,omitempty"`
-	// Gte specifies that this field must be greater than the specified value,
-	// inclusive
-	Gte *timestamp.Timestamp `protobuf:"bytes,6,opt,name=gte" json:"gte,omitempty"`
-	// LtNow specifies that this must be less than the current time. LtNow
-	// can only be used with the Within rule.
-	LtNow *bool `protobuf:"varint,7,opt,name=lt_now,json=ltNow" json:"lt_now,omitempty"`
-	// GtNow specifies that this must be greater than the current time. GtNow
-	// can only be used with the Within rule.
-	GtNow *bool `protobuf:"varint,8,opt,name=gt_now,json=gtNow" json:"gt_now,omitempty"`
-	// Within specifies that this field must be within this duration of the
-	// current time. This constraint can be used alone or with the LtNow and
-	// GtNow rules.
-	Within               *duration.Duration `protobuf:"bytes,9,opt,name=within" json:"within,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
-	XXX_unrecognized     []byte             `json:"-"`
-	XXX_sizecache        int32              `json:"-"`
+	Required             *bool                `protobuf:"varint,1,opt,name=required" json:"required,omitempty"`
+	Const                *timestamp.Timestamp `protobuf:"bytes,2,opt,name=const" json:"const,omitempty"`
+	Lt                   *timestamp.Timestamp `protobuf:"bytes,3,opt,name=lt" json:"lt,omitempty"`
+	Lte                  *timestamp.Timestamp `protobuf:"bytes,4,opt,name=lte" json:"lte,omitempty"`
+	Gt                   *timestamp.Timestamp `protobuf:"bytes,5,opt,name=gt" json:"gt,omitempty"`
+	Gte                  *timestamp.Timestamp `protobuf:"bytes,6,opt,name=gte" json:"gte,omitempty"`
+	LtNow                *bool                `protobuf:"varint,7,opt,name=lt_now,json=ltNow" json:"lt_now,omitempty"`
+	GtNow                *bool                `protobuf:"varint,8,opt,name=gt_now,json=gtNow" json:"gt_now,omitempty"`
+	Within               *duration.Duration   `protobuf:"bytes,9,opt,name=within" json:"within,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
 func (m *TimestampRules) Reset()         { *m = TimestampRules{} }
