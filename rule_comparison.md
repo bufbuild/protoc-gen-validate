@@ -23,7 +23,8 @@
 | len/min\_len/max_len   |✅|✅|❌|✅|
 | min\_bytes/max\_bytes  |✅|✅|✅|✅|
 | pattern                |✅|✅|❌|✅|
-| prefix/suffix/contains |✅|✅|✅|✅|
+| prefix/suffix          |✅|✅|✅|✅|
+| contains/not_contains  |✅|✅|✅|✅|
 | in/not_in              |✅|✅|✅|✅|
 | email                  |✅|✅|❌|✅|
 | hostname               |✅|✅|✅|✅|

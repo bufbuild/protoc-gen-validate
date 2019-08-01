@@ -104,6 +104,14 @@ const strTpl = `
 			{{ err . "value does not contain substring " (lit $r.GetContains) }}
 		}
 	}
+        {{ end }}
+
+	{{ if $r.NotContains }}
+	{
+		if (pgv::Contains({{ accessor . }}, {{ lit $r.GetNotContains }})) {
+			{{ err . "value contains substring " (lit $r.GetNotContains) }}
+		}
+	}
 	{{ end }}
 
 	{{ if $r.GetIp }}

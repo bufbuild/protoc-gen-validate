@@ -57,9 +57,11 @@ vendor:
 lint:
 	# lints the package for common code smells
 	which golint || go get -u golang.org/x/lint/golint
+	which shadow || go get -u golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
 	test -z "$(gofmt -d -s ./*.go)" || (gofmt -d -s ./*.go && exit 1)
 	# golint -set_exit_status
-	go tool vet -all -shadow -shadowstrict *.go
+	# check for variable shadowing
+	go vet -vettool=$(which shadow) *.go
 
 gogofast:
 	go build -o $@ vendor/github.com/gogo/protobuf/protoc-gen-gogofast/main.go

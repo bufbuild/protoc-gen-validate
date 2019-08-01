@@ -502,6 +502,10 @@ message StringRules {
     // anywhere in the string.
     optional string contains = 9;
 
+    // NotContains specifies that this field cannot have the specified substring
+    // anywhere in the string.
+    optional string not_contains = 23;
+
     // In specifies that this field must be equal to one of the specified
     // values
     repeated string in     = 10;

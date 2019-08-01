@@ -21,8 +21,10 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
+// FieldRules encapsulates the rules for each type of field. Depending on the
+// field, the correct set should be used to ensure proper validations.
 type FieldRules struct {
 	Message *MessageRules `protobuf:"bytes,17,opt,name=message" json:"message,omitempty"`
 	// Types that are valid to be assigned to Type:
@@ -396,13 +398,29 @@ func (*FieldRules) XXX_OneofWrappers() []interface{} {
 	}
 }
 
+// FloatRules describes the constraints applied to `float` values
 type FloatRules struct {
-	Const                *float32  `protobuf:"fixed32,1,opt,name=const" json:"const,omitempty"`
-	Lt                   *float32  `protobuf:"fixed32,2,opt,name=lt" json:"lt,omitempty"`
-	Lte                  *float32  `protobuf:"fixed32,3,opt,name=lte" json:"lte,omitempty"`
-	Gt                   *float32  `protobuf:"fixed32,4,opt,name=gt" json:"gt,omitempty"`
-	Gte                  *float32  `protobuf:"fixed32,5,opt,name=gte" json:"gte,omitempty"`
-	In                   []float32 `protobuf:"fixed32,6,rep,name=in" json:"in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *float32 `protobuf:"fixed32,1,opt,name=const" json:"const,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// exclusive
+	Lt *float32 `protobuf:"fixed32,2,opt,name=lt" json:"lt,omitempty"`
+	// Lte specifies that this field must be less than or equal to the
+	// specified value, inclusive
+	Lte *float32 `protobuf:"fixed32,3,opt,name=lte" json:"lte,omitempty"`
+	// Gt specifies that this field must be greater than the specified value,
+	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
+	// range is reversed.
+	Gt *float32 `protobuf:"fixed32,4,opt,name=gt" json:"gt,omitempty"`
+	// Gte specifies that this field must be greater than or equal to the
+	// specified value, inclusive. If the value of Gte is larger than a
+	// specified Lt or Lte, the range is reversed.
+	Gte *float32 `protobuf:"fixed32,5,opt,name=gte" json:"gte,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []float32 `protobuf:"fixed32,6,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
 	NotIn                []float32 `protobuf:"fixed32,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
 	XXX_unrecognized     []byte    `json:"-"`
@@ -483,13 +501,29 @@ func (m *FloatRules) GetNotIn() []float32 {
 	return nil
 }
 
+// DoubleRules describes the constraints applied to `double` values
 type DoubleRules struct {
-	Const                *float64  `protobuf:"fixed64,1,opt,name=const" json:"const,omitempty"`
-	Lt                   *float64  `protobuf:"fixed64,2,opt,name=lt" json:"lt,omitempty"`
-	Lte                  *float64  `protobuf:"fixed64,3,opt,name=lte" json:"lte,omitempty"`
-	Gt                   *float64  `protobuf:"fixed64,4,opt,name=gt" json:"gt,omitempty"`
-	Gte                  *float64  `protobuf:"fixed64,5,opt,name=gte" json:"gte,omitempty"`
-	In                   []float64 `protobuf:"fixed64,6,rep,name=in" json:"in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *float64 `protobuf:"fixed64,1,opt,name=const" json:"const,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// exclusive
+	Lt *float64 `protobuf:"fixed64,2,opt,name=lt" json:"lt,omitempty"`
+	// Lte specifies that this field must be less than or equal to the
+	// specified value, inclusive
+	Lte *float64 `protobuf:"fixed64,3,opt,name=lte" json:"lte,omitempty"`
+	// Gt specifies that this field must be greater than the specified value,
+	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
+	// range is reversed.
+	Gt *float64 `protobuf:"fixed64,4,opt,name=gt" json:"gt,omitempty"`
+	// Gte specifies that this field must be greater than or equal to the
+	// specified value, inclusive. If the value of Gte is larger than a
+	// specified Lt or Lte, the range is reversed.
+	Gte *float64 `protobuf:"fixed64,5,opt,name=gte" json:"gte,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []float64 `protobuf:"fixed64,6,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
 	NotIn                []float64 `protobuf:"fixed64,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
 	XXX_unrecognized     []byte    `json:"-"`
@@ -570,13 +604,29 @@ func (m *DoubleRules) GetNotIn() []float64 {
 	return nil
 }
 
+// Int32Rules describes the constraints applied to `int32` values
 type Int32Rules struct {
-	Const                *int32   `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
-	Lt                   *int32   `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
-	Lte                  *int32   `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
-	Gt                   *int32   `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
-	Gte                  *int32   `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
-	In                   []int32  `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *int32 `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// exclusive
+	Lt *int32 `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
+	// Lte specifies that this field must be less than or equal to the
+	// specified value, inclusive
+	Lte *int32 `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
+	// Gt specifies that this field must be greater than the specified value,
+	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
+	// range is reversed.
+	Gt *int32 `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
+	// Gte specifies that this field must be greater than or equal to the
+	// specified value, inclusive. If the value of Gte is larger than a
+	// specified Lt or Lte, the range is reversed.
+	Gte *int32 `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []int32 `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
 	NotIn                []int32  `protobuf:"varint,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -657,13 +707,29 @@ func (m *Int32Rules) GetNotIn() []int32 {
 	return nil
 }
 
+// Int64Rules describes the constraints applied to `int64` values
 type Int64Rules struct {
-	Const                *int64   `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
-	Lt                   *int64   `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
-	Lte                  *int64   `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
-	Gt                   *int64   `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
-	Gte                  *int64   `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
-	In                   []int64  `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *int64 `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// exclusive
+	Lt *int64 `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
+	// Lte specifies that this field must be less than or equal to the
+	// specified value, inclusive
+	Lte *int64 `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
+	// Gt specifies that this field must be greater than the specified value,
+	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
+	// range is reversed.
+	Gt *int64 `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
+	// Gte specifies that this field must be greater than or equal to the
+	// specified value, inclusive. If the value of Gte is larger than a
+	// specified Lt or Lte, the range is reversed.
+	Gte *int64 `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []int64 `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
 	NotIn                []int64  `protobuf:"varint,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -744,13 +810,29 @@ func (m *Int64Rules) GetNotIn() []int64 {
 	return nil
 }
 
+// UInt32Rules describes the constraints applied to `uint32` values
 type UInt32Rules struct {
-	Const                *uint32  `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
-	Lt                   *uint32  `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
-	Lte                  *uint32  `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
-	Gt                   *uint32  `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
-	Gte                  *uint32  `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
-	In                   []uint32 `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *uint32 `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// exclusive
+	Lt *uint32 `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
+	// Lte specifies that this field must be less than or equal to the
+	// specified value, inclusive
+	Lte *uint32 `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
+	// Gt specifies that this field must be greater than the specified value,
+	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
+	// range is reversed.
+	Gt *uint32 `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
+	// Gte specifies that this field must be greater than or equal to the
+	// specified value, inclusive. If the value of Gte is larger than a
+	// specified Lt or Lte, the range is reversed.
+	Gte *uint32 `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []uint32 `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
 	NotIn                []uint32 `protobuf:"varint,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -831,13 +913,29 @@ func (m *UInt32Rules) GetNotIn() []uint32 {
 	return nil
 }
 
+// UInt64Rules describes the constraints applied to `uint64` values
 type UInt64Rules struct {
-	Const                *uint64  `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
-	Lt                   *uint64  `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
-	Lte                  *uint64  `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
-	Gt                   *uint64  `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
-	Gte                  *uint64  `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
-	In                   []uint64 `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *uint64 `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// exclusive
+	Lt *uint64 `protobuf:"varint,2,opt,name=lt" json:"lt,omitempty"`
+	// Lte specifies that this field must be less than or equal to the
+	// specified value, inclusive
+	Lte *uint64 `protobuf:"varint,3,opt,name=lte" json:"lte,omitempty"`
+	// Gt specifies that this field must be greater than the specified value,
+	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
+	// range is reversed.
+	Gt *uint64 `protobuf:"varint,4,opt,name=gt" json:"gt,omitempty"`
+	// Gte specifies that this field must be greater than or equal to the
+	// specified value, inclusive. If the value of Gte is larger than a
+	// specified Lt or Lte, the range is reversed.
+	Gte *uint64 `protobuf:"varint,5,opt,name=gte" json:"gte,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []uint64 `protobuf:"varint,6,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
 	NotIn                []uint64 `protobuf:"varint,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -918,13 +1016,29 @@ func (m *UInt64Rules) GetNotIn() []uint64 {
 	return nil
 }
 
+// SInt32Rules describes the constraints applied to `sint32` values
 type SInt32Rules struct {
-	Const                *int32   `protobuf:"zigzag32,1,opt,name=const" json:"const,omitempty"`
-	Lt                   *int32   `protobuf:"zigzag32,2,opt,name=lt" json:"lt,omitempty"`
-	Lte                  *int32   `protobuf:"zigzag32,3,opt,name=lte" json:"lte,omitempty"`
-	Gt                   *int32   `protobuf:"zigzag32,4,opt,name=gt" json:"gt,omitempty"`
-	Gte                  *int32   `protobuf:"zigzag32,5,opt,name=gte" json:"gte,omitempty"`
-	In                   []int32  `protobuf:"zigzag32,6,rep,name=in" json:"in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *int32 `protobuf:"zigzag32,1,opt,name=const" json:"const,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// exclusive
+	Lt *int32 `protobuf:"zigzag32,2,opt,name=lt" json:"lt,omitempty"`
+	// Lte specifies that this field must be less than or equal to the
+	// specified value, inclusive
+	Lte *int32 `protobuf:"zigzag32,3,opt,name=lte" json:"lte,omitempty"`
+	// Gt specifies that this field must be greater than the specified value,
+	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
+	// range is reversed.
+	Gt *int32 `protobuf:"zigzag32,4,opt,name=gt" json:"gt,omitempty"`
+	// Gte specifies that this field must be greater than or equal to the
+	// specified value, inclusive. If the value of Gte is larger than a
+	// specified Lt or Lte, the range is reversed.
+	Gte *int32 `protobuf:"zigzag32,5,opt,name=gte" json:"gte,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []int32 `protobuf:"zigzag32,6,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
 	NotIn                []int32  `protobuf:"zigzag32,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1005,13 +1119,29 @@ func (m *SInt32Rules) GetNotIn() []int32 {
 	return nil
 }
 
+// SInt64Rules describes the constraints applied to `sint64` values
 type SInt64Rules struct {
-	Const                *int64   `protobuf:"zigzag64,1,opt,name=const" json:"const,omitempty"`
-	Lt                   *int64   `protobuf:"zigzag64,2,opt,name=lt" json:"lt,omitempty"`
-	Lte                  *int64   `protobuf:"zigzag64,3,opt,name=lte" json:"lte,omitempty"`
-	Gt                   *int64   `protobuf:"zigzag64,4,opt,name=gt" json:"gt,omitempty"`
-	Gte                  *int64   `protobuf:"zigzag64,5,opt,name=gte" json:"gte,omitempty"`
-	In                   []int64  `protobuf:"zigzag64,6,rep,name=in" json:"in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *int64 `protobuf:"zigzag64,1,opt,name=const" json:"const,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// exclusive
+	Lt *int64 `protobuf:"zigzag64,2,opt,name=lt" json:"lt,omitempty"`
+	// Lte specifies that this field must be less than or equal to the
+	// specified value, inclusive
+	Lte *int64 `protobuf:"zigzag64,3,opt,name=lte" json:"lte,omitempty"`
+	// Gt specifies that this field must be greater than the specified value,
+	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
+	// range is reversed.
+	Gt *int64 `protobuf:"zigzag64,4,opt,name=gt" json:"gt,omitempty"`
+	// Gte specifies that this field must be greater than or equal to the
+	// specified value, inclusive. If the value of Gte is larger than a
+	// specified Lt or Lte, the range is reversed.
+	Gte *int64 `protobuf:"zigzag64,5,opt,name=gte" json:"gte,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []int64 `protobuf:"zigzag64,6,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
 	NotIn                []int64  `protobuf:"zigzag64,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1092,13 +1222,29 @@ func (m *SInt64Rules) GetNotIn() []int64 {
 	return nil
 }
 
+// Fixed32Rules describes the constraints applied to `fixed32` values
 type Fixed32Rules struct {
-	Const                *uint32  `protobuf:"fixed32,1,opt,name=const" json:"const,omitempty"`
-	Lt                   *uint32  `protobuf:"fixed32,2,opt,name=lt" json:"lt,omitempty"`
-	Lte                  *uint32  `protobuf:"fixed32,3,opt,name=lte" json:"lte,omitempty"`
-	Gt                   *uint32  `protobuf:"fixed32,4,opt,name=gt" json:"gt,omitempty"`
-	Gte                  *uint32  `protobuf:"fixed32,5,opt,name=gte" json:"gte,omitempty"`
-	In                   []uint32 `protobuf:"fixed32,6,rep,name=in" json:"in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *uint32 `protobuf:"fixed32,1,opt,name=const" json:"const,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// exclusive
+	Lt *uint32 `protobuf:"fixed32,2,opt,name=lt" json:"lt,omitempty"`
+	// Lte specifies that this field must be less than or equal to the
+	// specified value, inclusive
+	Lte *uint32 `protobuf:"fixed32,3,opt,name=lte" json:"lte,omitempty"`
+	// Gt specifies that this field must be greater than the specified value,
+	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
+	// range is reversed.
+	Gt *uint32 `protobuf:"fixed32,4,opt,name=gt" json:"gt,omitempty"`
+	// Gte specifies that this field must be greater than or equal to the
+	// specified value, inclusive. If the value of Gte is larger than a
+	// specified Lt or Lte, the range is reversed.
+	Gte *uint32 `protobuf:"fixed32,5,opt,name=gte" json:"gte,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []uint32 `protobuf:"fixed32,6,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
 	NotIn                []uint32 `protobuf:"fixed32,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1179,13 +1325,29 @@ func (m *Fixed32Rules) GetNotIn() []uint32 {
 	return nil
 }
 
+// Fixed64Rules describes the constraints applied to `fixed64` values
 type Fixed64Rules struct {
-	Const                *uint64  `protobuf:"fixed64,1,opt,name=const" json:"const,omitempty"`
-	Lt                   *uint64  `protobuf:"fixed64,2,opt,name=lt" json:"lt,omitempty"`
-	Lte                  *uint64  `protobuf:"fixed64,3,opt,name=lte" json:"lte,omitempty"`
-	Gt                   *uint64  `protobuf:"fixed64,4,opt,name=gt" json:"gt,omitempty"`
-	Gte                  *uint64  `protobuf:"fixed64,5,opt,name=gte" json:"gte,omitempty"`
-	In                   []uint64 `protobuf:"fixed64,6,rep,name=in" json:"in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *uint64 `protobuf:"fixed64,1,opt,name=const" json:"const,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// exclusive
+	Lt *uint64 `protobuf:"fixed64,2,opt,name=lt" json:"lt,omitempty"`
+	// Lte specifies that this field must be less than or equal to the
+	// specified value, inclusive
+	Lte *uint64 `protobuf:"fixed64,3,opt,name=lte" json:"lte,omitempty"`
+	// Gt specifies that this field must be greater than the specified value,
+	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
+	// range is reversed.
+	Gt *uint64 `protobuf:"fixed64,4,opt,name=gt" json:"gt,omitempty"`
+	// Gte specifies that this field must be greater than or equal to the
+	// specified value, inclusive. If the value of Gte is larger than a
+	// specified Lt or Lte, the range is reversed.
+	Gte *uint64 `protobuf:"fixed64,5,opt,name=gte" json:"gte,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []uint64 `protobuf:"fixed64,6,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
 	NotIn                []uint64 `protobuf:"fixed64,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1266,13 +1428,29 @@ func (m *Fixed64Rules) GetNotIn() []uint64 {
 	return nil
 }
 
+// SFixed32Rules describes the constraints applied to `sfixed32` values
 type SFixed32Rules struct {
-	Const                *int32   `protobuf:"fixed32,1,opt,name=const" json:"const,omitempty"`
-	Lt                   *int32   `protobuf:"fixed32,2,opt,name=lt" json:"lt,omitempty"`
-	Lte                  *int32   `protobuf:"fixed32,3,opt,name=lte" json:"lte,omitempty"`
-	Gt                   *int32   `protobuf:"fixed32,4,opt,name=gt" json:"gt,omitempty"`
-	Gte                  *int32   `protobuf:"fixed32,5,opt,name=gte" json:"gte,omitempty"`
-	In                   []int32  `protobuf:"fixed32,6,rep,name=in" json:"in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *int32 `protobuf:"fixed32,1,opt,name=const" json:"const,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// exclusive
+	Lt *int32 `protobuf:"fixed32,2,opt,name=lt" json:"lt,omitempty"`
+	// Lte specifies that this field must be less than or equal to the
+	// specified value, inclusive
+	Lte *int32 `protobuf:"fixed32,3,opt,name=lte" json:"lte,omitempty"`
+	// Gt specifies that this field must be greater than the specified value,
+	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
+	// range is reversed.
+	Gt *int32 `protobuf:"fixed32,4,opt,name=gt" json:"gt,omitempty"`
+	// Gte specifies that this field must be greater than or equal to the
+	// specified value, inclusive. If the value of Gte is larger than a
+	// specified Lt or Lte, the range is reversed.
+	Gte *int32 `protobuf:"fixed32,5,opt,name=gte" json:"gte,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []int32 `protobuf:"fixed32,6,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
 	NotIn                []int32  `protobuf:"fixed32,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1353,13 +1531,29 @@ func (m *SFixed32Rules) GetNotIn() []int32 {
 	return nil
 }
 
+// SFixed64Rules describes the constraints applied to `sfixed64` values
 type SFixed64Rules struct {
-	Const                *int64   `protobuf:"fixed64,1,opt,name=const" json:"const,omitempty"`
-	Lt                   *int64   `protobuf:"fixed64,2,opt,name=lt" json:"lt,omitempty"`
-	Lte                  *int64   `protobuf:"fixed64,3,opt,name=lte" json:"lte,omitempty"`
-	Gt                   *int64   `protobuf:"fixed64,4,opt,name=gt" json:"gt,omitempty"`
-	Gte                  *int64   `protobuf:"fixed64,5,opt,name=gte" json:"gte,omitempty"`
-	In                   []int64  `protobuf:"fixed64,6,rep,name=in" json:"in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *int64 `protobuf:"fixed64,1,opt,name=const" json:"const,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// exclusive
+	Lt *int64 `protobuf:"fixed64,2,opt,name=lt" json:"lt,omitempty"`
+	// Lte specifies that this field must be less than or equal to the
+	// specified value, inclusive
+	Lte *int64 `protobuf:"fixed64,3,opt,name=lte" json:"lte,omitempty"`
+	// Gt specifies that this field must be greater than the specified value,
+	// exclusive. If the value of Gt is larger than a specified Lt or Lte, the
+	// range is reversed.
+	Gt *int64 `protobuf:"fixed64,4,opt,name=gt" json:"gt,omitempty"`
+	// Gte specifies that this field must be greater than or equal to the
+	// specified value, inclusive. If the value of Gte is larger than a
+	// specified Lt or Lte, the range is reversed.
+	Gte *int64 `protobuf:"fixed64,5,opt,name=gte" json:"gte,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []int64 `protobuf:"fixed64,6,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
 	NotIn                []int64  `protobuf:"fixed64,7,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1440,7 +1634,9 @@ func (m *SFixed64Rules) GetNotIn() []int64 {
 	return nil
 }
 
+// BoolRules describes the constraints applied to `bool` values
 type BoolRules struct {
+	// Const specifies that this field must be exactly the specified value
 	Const                *bool    `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -1479,20 +1675,56 @@ func (m *BoolRules) GetConst() bool {
 	return false
 }
 
+// StringRules describe the constraints applied to `string` values
 type StringRules struct {
-	Const    *string  `protobuf:"bytes,1,opt,name=const" json:"const,omitempty"`
-	Len      *uint64  `protobuf:"varint,19,opt,name=len" json:"len,omitempty"`
-	MinLen   *uint64  `protobuf:"varint,2,opt,name=min_len,json=minLen" json:"min_len,omitempty"`
-	MaxLen   *uint64  `protobuf:"varint,3,opt,name=max_len,json=maxLen" json:"max_len,omitempty"`
-	LenBytes *uint64  `protobuf:"varint,20,opt,name=len_bytes,json=lenBytes" json:"len_bytes,omitempty"`
-	MinBytes *uint64  `protobuf:"varint,4,opt,name=min_bytes,json=minBytes" json:"min_bytes,omitempty"`
-	MaxBytes *uint64  `protobuf:"varint,5,opt,name=max_bytes,json=maxBytes" json:"max_bytes,omitempty"`
-	Pattern  *string  `protobuf:"bytes,6,opt,name=pattern" json:"pattern,omitempty"`
-	Prefix   *string  `protobuf:"bytes,7,opt,name=prefix" json:"prefix,omitempty"`
-	Suffix   *string  `protobuf:"bytes,8,opt,name=suffix" json:"suffix,omitempty"`
-	Contains *string  `protobuf:"bytes,9,opt,name=contains" json:"contains,omitempty"`
-	In       []string `protobuf:"bytes,10,rep,name=in" json:"in,omitempty"`
-	NotIn    []string `protobuf:"bytes,11,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *string `protobuf:"bytes,1,opt,name=const" json:"const,omitempty"`
+	// Len specifies that this field must be the specified number of
+	// characters (Unicode code points). Note that the number of
+	// characters may differ from the number of bytes in the string.
+	Len *uint64 `protobuf:"varint,19,opt,name=len" json:"len,omitempty"`
+	// MinLen specifies that this field must be the specified number of
+	// characters (Unicode code points) at a minimum. Note that the number of
+	// characters may differ from the number of bytes in the string.
+	MinLen *uint64 `protobuf:"varint,2,opt,name=min_len,json=minLen" json:"min_len,omitempty"`
+	// MaxLen specifies that this field must be the specified number of
+	// characters (Unicode code points) at a maximum. Note that the number of
+	// characters may differ from the number of bytes in the string.
+	MaxLen *uint64 `protobuf:"varint,3,opt,name=max_len,json=maxLen" json:"max_len,omitempty"`
+	// LenBytes specifies that this field must be the specified number of bytes
+	// at a minimum
+	LenBytes *uint64 `protobuf:"varint,20,opt,name=len_bytes,json=lenBytes" json:"len_bytes,omitempty"`
+	// MinBytes specifies that this field must be the specified number of bytes
+	// at a minimum
+	MinBytes *uint64 `protobuf:"varint,4,opt,name=min_bytes,json=minBytes" json:"min_bytes,omitempty"`
+	// MaxBytes specifies that this field must be the specified number of bytes
+	// at a maximum
+	MaxBytes *uint64 `protobuf:"varint,5,opt,name=max_bytes,json=maxBytes" json:"max_bytes,omitempty"`
+	// Pattern specifes that this field must match against the specified
+	// regular expression (RE2 syntax). The included expression should elide
+	// any delimiters.
+	Pattern *string `protobuf:"bytes,6,opt,name=pattern" json:"pattern,omitempty"`
+	// Prefix specifies that this field must have the specified substring at
+	// the beginning of the string.
+	Prefix *string `protobuf:"bytes,7,opt,name=prefix" json:"prefix,omitempty"`
+	// Suffix specifies that this field must have the specified substring at
+	// the end of the string.
+	Suffix *string `protobuf:"bytes,8,opt,name=suffix" json:"suffix,omitempty"`
+	// Contains specifies that this field must have the specified substring
+	// anywhere in the string.
+	Contains *string `protobuf:"bytes,9,opt,name=contains" json:"contains,omitempty"`
+	// NotContains specifies that this field cannot have the specified substring
+	// anywhere in the string.
+	NotContains *string `protobuf:"bytes,23,opt,name=not_contains,json=notContains" json:"not_contains,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []string `protobuf:"bytes,10,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
+	NotIn []string `protobuf:"bytes,11,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
+	// WellKnown rules provide advanced constraints against common string
+	// patterns
+	//
 	// Types that are valid to be assigned to WellKnown:
 	//	*StringRules_Email
 	//	*StringRules_Hostname
@@ -1607,6 +1839,13 @@ func (m *StringRules) GetSuffix() string {
 func (m *StringRules) GetContains() string {
 	if m != nil && m.Contains != nil {
 		return *m.Contains
+	}
+	return ""
+}
+
+func (m *StringRules) GetNotContains() string {
+	if m != nil && m.NotContains != nil {
+		return *m.NotContains
 	}
 	return ""
 }
@@ -1768,17 +2007,40 @@ func (*StringRules) XXX_OneofWrappers() []interface{} {
 	}
 }
 
+// BytesRules describe the constraints applied to `bytes` values
 type BytesRules struct {
-	Const    []byte   `protobuf:"bytes,1,opt,name=const" json:"const,omitempty"`
-	Len      *uint64  `protobuf:"varint,13,opt,name=len" json:"len,omitempty"`
-	MinLen   *uint64  `protobuf:"varint,2,opt,name=min_len,json=minLen" json:"min_len,omitempty"`
-	MaxLen   *uint64  `protobuf:"varint,3,opt,name=max_len,json=maxLen" json:"max_len,omitempty"`
-	Pattern  *string  `protobuf:"bytes,4,opt,name=pattern" json:"pattern,omitempty"`
-	Prefix   []byte   `protobuf:"bytes,5,opt,name=prefix" json:"prefix,omitempty"`
-	Suffix   []byte   `protobuf:"bytes,6,opt,name=suffix" json:"suffix,omitempty"`
-	Contains []byte   `protobuf:"bytes,7,opt,name=contains" json:"contains,omitempty"`
-	In       [][]byte `protobuf:"bytes,8,rep,name=in" json:"in,omitempty"`
-	NotIn    [][]byte `protobuf:"bytes,9,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const []byte `protobuf:"bytes,1,opt,name=const" json:"const,omitempty"`
+	// Len specifies that this field must be the specified number of bytes
+	Len *uint64 `protobuf:"varint,13,opt,name=len" json:"len,omitempty"`
+	// MinLen specifies that this field must be the specified number of bytes
+	// at a minimum
+	MinLen *uint64 `protobuf:"varint,2,opt,name=min_len,json=minLen" json:"min_len,omitempty"`
+	// MaxLen specifies that this field must be the specified number of bytes
+	// at a maximum
+	MaxLen *uint64 `protobuf:"varint,3,opt,name=max_len,json=maxLen" json:"max_len,omitempty"`
+	// Pattern specifes that this field must match against the specified
+	// regular expression (RE2 syntax). The included expression should elide
+	// any delimiters.
+	Pattern *string `protobuf:"bytes,4,opt,name=pattern" json:"pattern,omitempty"`
+	// Prefix specifies that this field must have the specified bytes at the
+	// beginning of the string.
+	Prefix []byte `protobuf:"bytes,5,opt,name=prefix" json:"prefix,omitempty"`
+	// Suffix specifies that this field must have the specified bytes at the
+	// end of the string.
+	Suffix []byte `protobuf:"bytes,6,opt,name=suffix" json:"suffix,omitempty"`
+	// Contains specifies that this field must have the specified bytes
+	// anywhere in the string.
+	Contains []byte `protobuf:"bytes,7,opt,name=contains" json:"contains,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In [][]byte `protobuf:"bytes,8,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
+	NotIn [][]byte `protobuf:"bytes,9,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
+	// WellKnown rules provide advanced constraints against common byte
+	// patterns
+	//
 	// Types that are valid to be assigned to WellKnown:
 	//	*BytesRules_Ip
 	//	*BytesRules_Ipv4
@@ -1943,10 +2205,18 @@ func (*BytesRules) XXX_OneofWrappers() []interface{} {
 	}
 }
 
+// EnumRules describe the constraints applied to enum values
 type EnumRules struct {
-	Const                *int32   `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
-	DefinedOnly          *bool    `protobuf:"varint,2,opt,name=defined_only,json=definedOnly" json:"defined_only,omitempty"`
-	In                   []int32  `protobuf:"varint,3,rep,name=in" json:"in,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *int32 `protobuf:"varint,1,opt,name=const" json:"const,omitempty"`
+	// DefinedOnly specifies that this field must be only one of the defined
+	// values for this enum, failing on any undefined value.
+	DefinedOnly *bool `protobuf:"varint,2,opt,name=defined_only,json=definedOnly" json:"defined_only,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []int32 `protobuf:"varint,3,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
 	NotIn                []int32  `protobuf:"varint,4,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -2006,8 +2276,13 @@ func (m *EnumRules) GetNotIn() []int32 {
 	return nil
 }
 
+// MessageRules describe the constraints applied to embedded message values.
+// For message-type fields, validation is performed recursively.
 type MessageRules struct {
-	Skip                 *bool    `protobuf:"varint,1,opt,name=skip" json:"skip,omitempty"`
+	// Skip specifies that the validation rules of this field should not be
+	// evaluated
+	Skip *bool `protobuf:"varint,1,opt,name=skip" json:"skip,omitempty"`
+	// Required specifies that this field must be set
 	Required             *bool    `protobuf:"varint,2,opt,name=required" json:"required,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -2053,10 +2328,21 @@ func (m *MessageRules) GetRequired() bool {
 	return false
 }
 
+// RepeatedRules describe the constraints applied to `repeated` values
 type RepeatedRules struct {
-	MinItems             *uint64     `protobuf:"varint,1,opt,name=min_items,json=minItems" json:"min_items,omitempty"`
-	MaxItems             *uint64     `protobuf:"varint,2,opt,name=max_items,json=maxItems" json:"max_items,omitempty"`
-	Unique               *bool       `protobuf:"varint,3,opt,name=unique" json:"unique,omitempty"`
+	// MinItems specifies that this field must have the specified number of
+	// items at a minimum
+	MinItems *uint64 `protobuf:"varint,1,opt,name=min_items,json=minItems" json:"min_items,omitempty"`
+	// MaxItems specifies that this field must have the specified number of
+	// items at a maximum
+	MaxItems *uint64 `protobuf:"varint,2,opt,name=max_items,json=maxItems" json:"max_items,omitempty"`
+	// Unique specifies that all elements in this field must be unique. This
+	// contraint is only applicable to scalar and enum types (messages are not
+	// supported).
+	Unique *bool `protobuf:"varint,3,opt,name=unique" json:"unique,omitempty"`
+	// Items specifies the contraints to be applied to each item in the field.
+	// Repeated message fields will still execute validation against each item
+	// unless skip is specified here.
 	Items                *FieldRules `protobuf:"bytes,4,opt,name=items" json:"items,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
 	XXX_unrecognized     []byte      `json:"-"`
@@ -2116,11 +2402,22 @@ func (m *RepeatedRules) GetItems() *FieldRules {
 	return nil
 }
 
+// MapRules describe the constraints applied to `map` values
 type MapRules struct {
-	MinPairs             *uint64     `protobuf:"varint,1,opt,name=min_pairs,json=minPairs" json:"min_pairs,omitempty"`
-	MaxPairs             *uint64     `protobuf:"varint,2,opt,name=max_pairs,json=maxPairs" json:"max_pairs,omitempty"`
-	NoSparse             *bool       `protobuf:"varint,3,opt,name=no_sparse,json=noSparse" json:"no_sparse,omitempty"`
-	Keys                 *FieldRules `protobuf:"bytes,4,opt,name=keys" json:"keys,omitempty"`
+	// MinPairs specifies that this field must have the specified number of
+	// KVs at a minimum
+	MinPairs *uint64 `protobuf:"varint,1,opt,name=min_pairs,json=minPairs" json:"min_pairs,omitempty"`
+	// MaxPairs specifies that this field must have the specified number of
+	// KVs at a maximum
+	MaxPairs *uint64 `protobuf:"varint,2,opt,name=max_pairs,json=maxPairs" json:"max_pairs,omitempty"`
+	// NoSparse specifies values in this field cannot be unset. This only
+	// applies to map's with message value types.
+	NoSparse *bool `protobuf:"varint,3,opt,name=no_sparse,json=noSparse" json:"no_sparse,omitempty"`
+	// Keys specifies the constraints to be applied to each key in the field.
+	Keys *FieldRules `protobuf:"bytes,4,opt,name=keys" json:"keys,omitempty"`
+	// Values specifies the constraints to be applied to the value of each key
+	// in the field. Message values will still have their validations evaluated
+	// unless skip is specified here.
 	Values               *FieldRules `protobuf:"bytes,5,opt,name=values" json:"values,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
 	XXX_unrecognized     []byte      `json:"-"`
@@ -2187,9 +2484,16 @@ func (m *MapRules) GetValues() *FieldRules {
 	return nil
 }
 
+// AnyRules describe constraints applied exclusively to the
+// `google.protobuf.Any` well-known type
 type AnyRules struct {
-	Required             *bool    `protobuf:"varint,1,opt,name=required" json:"required,omitempty"`
-	In                   []string `protobuf:"bytes,2,rep,name=in" json:"in,omitempty"`
+	// Required specifies that this field must be set
+	Required *bool `protobuf:"varint,1,opt,name=required" json:"required,omitempty"`
+	// In specifies that this field's `type_url` must be equal to one of the
+	// specified values.
+	In []string `protobuf:"bytes,2,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field's `type_url` must not be equal to any of
+	// the specified values.
 	NotIn                []string `protobuf:"bytes,3,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -2242,14 +2546,30 @@ func (m *AnyRules) GetNotIn() []string {
 	return nil
 }
 
+// DurationRules describe the constraints applied exclusively to the
+// `google.protobuf.Duration` well-known type
 type DurationRules struct {
-	Required             *bool                `protobuf:"varint,1,opt,name=required" json:"required,omitempty"`
-	Const                *duration.Duration   `protobuf:"bytes,2,opt,name=const" json:"const,omitempty"`
-	Lt                   *duration.Duration   `protobuf:"bytes,3,opt,name=lt" json:"lt,omitempty"`
-	Lte                  *duration.Duration   `protobuf:"bytes,4,opt,name=lte" json:"lte,omitempty"`
-	Gt                   *duration.Duration   `protobuf:"bytes,5,opt,name=gt" json:"gt,omitempty"`
-	Gte                  *duration.Duration   `protobuf:"bytes,6,opt,name=gte" json:"gte,omitempty"`
-	In                   []*duration.Duration `protobuf:"bytes,7,rep,name=in" json:"in,omitempty"`
+	// Required specifies that this field must be set
+	Required *bool `protobuf:"varint,1,opt,name=required" json:"required,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *duration.Duration `protobuf:"bytes,2,opt,name=const" json:"const,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// exclusive
+	Lt *duration.Duration `protobuf:"bytes,3,opt,name=lt" json:"lt,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// inclusive
+	Lte *duration.Duration `protobuf:"bytes,4,opt,name=lte" json:"lte,omitempty"`
+	// Gt specifies that this field must be greater than the specified value,
+	// exclusive
+	Gt *duration.Duration `protobuf:"bytes,5,opt,name=gt" json:"gt,omitempty"`
+	// Gte specifies that this field must be greater than the specified value,
+	// inclusive
+	Gte *duration.Duration `protobuf:"bytes,6,opt,name=gte" json:"gte,omitempty"`
+	// In specifies that this field must be equal to one of the specified
+	// values
+	In []*duration.Duration `protobuf:"bytes,7,rep,name=in" json:"in,omitempty"`
+	// NotIn specifies that this field cannot be equal to one of the specified
+	// values
 	NotIn                []*duration.Duration `protobuf:"bytes,8,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
 	XXX_unrecognized     []byte               `json:"-"`
@@ -2337,19 +2657,38 @@ func (m *DurationRules) GetNotIn() []*duration.Duration {
 	return nil
 }
 
+// TimestampRules describe the constraints applied exclusively to the
+// `google.protobuf.Timestamp` well-known type
 type TimestampRules struct {
-	Required             *bool                `protobuf:"varint,1,opt,name=required" json:"required,omitempty"`
-	Const                *timestamp.Timestamp `protobuf:"bytes,2,opt,name=const" json:"const,omitempty"`
-	Lt                   *timestamp.Timestamp `protobuf:"bytes,3,opt,name=lt" json:"lt,omitempty"`
-	Lte                  *timestamp.Timestamp `protobuf:"bytes,4,opt,name=lte" json:"lte,omitempty"`
-	Gt                   *timestamp.Timestamp `protobuf:"bytes,5,opt,name=gt" json:"gt,omitempty"`
-	Gte                  *timestamp.Timestamp `protobuf:"bytes,6,opt,name=gte" json:"gte,omitempty"`
-	LtNow                *bool                `protobuf:"varint,7,opt,name=lt_now,json=ltNow" json:"lt_now,omitempty"`
-	GtNow                *bool                `protobuf:"varint,8,opt,name=gt_now,json=gtNow" json:"gt_now,omitempty"`
-	Within               *duration.Duration   `protobuf:"bytes,9,opt,name=within" json:"within,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
-	XXX_unrecognized     []byte               `json:"-"`
-	XXX_sizecache        int32                `json:"-"`
+	// Required specifies that this field must be set
+	Required *bool `protobuf:"varint,1,opt,name=required" json:"required,omitempty"`
+	// Const specifies that this field must be exactly the specified value
+	Const *timestamp.Timestamp `protobuf:"bytes,2,opt,name=const" json:"const,omitempty"`
+	// Lt specifies that this field must be less than the specified value,
+	// exclusive
+	Lt *timestamp.Timestamp `protobuf:"bytes,3,opt,name=lt" json:"lt,omitempty"`
+	// Lte specifies that this field must be less than the specified value,
+	// inclusive
+	Lte *timestamp.Timestamp `protobuf:"bytes,4,opt,name=lte" json:"lte,omitempty"`
+	// Gt specifies that this field must be greater than the specified value,
+	// exclusive
+	Gt *timestamp.Timestamp `protobuf:"bytes,5,opt,name=gt" json:"gt,omitempty"`
+	// Gte specifies that this field must be greater than the specified value,
+	// inclusive
+	Gte *timestamp.Timestamp `protobuf:"bytes,6,opt,name=gte" json:"gte,omitempty"`
+	// LtNow specifies that this must be less than the current time. LtNow
+	// can only be used with the Within rule.
+	LtNow *bool `protobuf:"varint,7,opt,name=lt_now,json=ltNow" json:"lt_now,omitempty"`
+	// GtNow specifies that this must be greater than the current time. GtNow
+	// can only be used with the Within rule.
+	GtNow *bool `protobuf:"varint,8,opt,name=gt_now,json=gtNow" json:"gt_now,omitempty"`
+	// Within specifies that this field must be within this duration of the
+	// current time. This constraint can be used alone or with the LtNow and
+	// GtNow rules.
+	Within               *duration.Duration `protobuf:"bytes,9,opt,name=within" json:"within,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
 }
 
 func (m *TimestampRules) Reset()         { *m = TimestampRules{} }
@@ -2499,109 +2838,110 @@ func init() {
 func init() { proto.RegisterFile("validate/validate.proto", fileDescriptor_79dbefd0936fb92e) }
 
 var fileDescriptor_79dbefd0936fb92e = []byte{
-	// 1650 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x98, 0xcb, 0x6e, 0xdb, 0xcc,
-	0x15, 0xc7, 0x2b, 0xde, 0x35, 0x96, 0x22, 0x69, 0x3e, 0xdb, 0xe1, 0xe7, 0x5e, 0x3e, 0x47, 0x8b,
-	0xc2, 0x49, 0x13, 0x3b, 0x75, 0x5c, 0xa1, 0x30, 0x8a, 0x02, 0x35, 0xd2, 0xa0, 0x29, 0x9a, 0x26,
-	0xa0, 0x9b, 0x4d, 0x37, 0x02, 0x6d, 0x8d, 0x94, 0x81, 0xa9, 0x21, 0xc3, 0x8b, 0x6d, 0x3d, 0x44,
-	0x2f, 0x4f, 0xd2, 0xae, 0xbb, 0xea, 0xb6, 0xaf, 0xd2, 0x75, 0x5f, 0xa0, 0x98, 0x1b, 0x2f, 0x87,
-	0xb4, 0xbc, 0xf8, 0x76, 0x9a, 0x73, 0xfe, 0xe7, 0xcc, 0x4f, 0x67, 0x38, 0xc3, 0x33, 0x44, 0x4f,
-	0x6f, 0xc3, 0x88, 0x2e, 0xc2, 0x9c, 0x9c, 0xe8, 0x1f, 0xc7, 0x49, 0x1a, 0xe7, 0x31, 0xf6, 0xf4,
-	0xf8, 0xe0, 0x70, 0x15, 0xc7, 0xab, 0x88, 0x9c, 0x08, 0xfb, 0x55, 0xb1, 0x3c, 0x59, 0x90, 0xec,
-	0x3a, 0xa5, 0x49, 0x1e, 0xa7, 0x52, 0x7b, 0xf0, 0x93, 0x96, 0xa2, 0x48, 0xc3, 0x9c, 0xc6, 0x4c,
-	0xf9, 0xbf, 0x83, 0xfe, 0x9c, 0xae, 0x49, 0x96, 0x87, 0xeb, 0x44, 0x0a, 0xa6, 0xff, 0xf1, 0x10,
-	0x7a, 0x47, 0x49, 0xb4, 0x08, 0x8a, 0x88, 0x64, 0xf8, 0x35, 0x72, 0xd7, 0x24, 0xcb, 0xc2, 0x15,
-	0xf1, 0x27, 0x87, 0xbd, 0xa3, 0x9d, 0xd3, 0xfd, 0xe3, 0x92, 0xee, 0x83, 0x74, 0x08, 0x61, 0xa0,
-	0x65, 0xf8, 0x25, 0xb2, 0x97, 0x51, 0x1c, 0xe6, 0x7e, 0x4f, 0xe8, 0x77, 0x2b, 0xfd, 0x3b, 0x6e,
-	0x16, 0xea, 0xdf, 0xfd, 0x20, 0x90, 0x22, 0x7c, 0x82, 0x9c, 0x45, 0x5c, 0x5c, 0x45, 0xc4, 0x37,
-	0x84, 0x7c, 0xaf, 0x92, 0xbf, 0x15, 0x76, 0xad, 0x57, 0x32, 0x9e, 0x9e, 0xb2, 0xfc, 0xcd, 0xa9,
-	0x6f, 0xc2, 0xf4, 0xef, 0xb9, 0xb9, 0x4c, 0x2f, 0x44, 0x4a, 0x3d, 0x3b, 0xf3, 0xad, 0x0e, 0xf5,
-	0xec, 0xac, 0xae, 0x9e, 0x9d, 0x71, 0x98, 0x42, 0x26, 0xb7, 0x21, 0xcc, 0xe7, 0x46, 0x76, 0x25,
-	0xd3, 0x01, 0xb3, 0x33, 0xdf, 0xe9, 0x0a, 0xa8, 0x26, 0x50, 0x32, 0x1e, 0x90, 0xc9, 0x19, 0x5c,
-	0x18, 0x70, 0xd9, 0x9c, 0x21, 0x2b, 0x67, 0xc8, 0xe4, 0x0c, 0x5e, 0x57, 0x40, 0x6d, 0x06, 0x29,
-	0xc3, 0xa7, 0xc8, 0x5d, 0xd2, 0x7b, 0xb2, 0x78, 0x73, 0xea, 0xf7, 0xe1, 0x82, 0xbd, 0x93, 0x0e,
-	0x1d, 0xa2, 0x85, 0x65, 0xcc, 0xec, 0xcc, 0x47, 0x9d, 0x31, 0xd5, 0x34, 0x5a, 0x88, 0x7f, 0x81,
-	0xbc, 0x4c, 0x4f, 0xb4, 0x23, 0x82, 0x9e, 0xd6, 0xd0, 0xc0, 0x4c, 0xa5, 0xb4, 0x0a, 0x9b, 0x9d,
-	0xf9, 0x83, 0xee, 0xb0, 0x6a, 0xb2, 0x52, 0x8a, 0x9f, 0x23, 0xeb, 0x2a, 0x8e, 0x23, 0x7f, 0x28,
-	0x42, 0xbe, 0xa9, 0x42, 0x2e, 0xe2, 0x38, 0xd2, 0x72, 0x21, 0x11, 0x15, 0xcb, 0x53, 0xca, 0x56,
-	0xfe, 0x93, 0x56, 0xc5, 0x84, 0xbd, 0xaa, 0x98, 0x18, 0xf2, 0x67, 0xe4, 0x6a, 0x93, 0x93, 0xcc,
-	0x1f, 0xc1, 0x67, 0xe4, 0x82, 0x9b, 0xcb, 0x67, 0x44, 0x88, 0x38, 0x09, 0x61, 0xc5, 0xda, 0x1f,
-	0x43, 0x92, 0xdf, 0xb2, 0x62, 0x5d, 0x92, 0x70, 0x09, 0xff, 0xaf, 0x29, 0x49, 0x48, 0x98, 0x93,
-	0x85, 0x8f, 0xe1, 0x7f, 0x0d, 0x94, 0xa7, 0xfc, 0xaf, 0x5a, 0x8a, 0x7f, 0x8a, 0xcc, 0x75, 0x98,
-	0xf8, 0xdf, 0x88, 0x08, 0x5c, 0xdb, 0x6e, 0x61, 0xa2, 0xc5, 0x5c, 0xc0, 0x75, 0x21, 0xdb, 0xf8,
-	0xbb, 0x50, 0xf7, 0x1b, 0xb6, 0x29, 0x75, 0x21, 0xdb, 0x70, 0x0c, 0x7d, 0x08, 0xf8, 0x7b, 0x10,
-	0xe3, 0xad, 0xf2, 0x94, 0x18, 0x5a, 0x8a, 0x7f, 0x89, 0xfa, 0xe5, 0xd9, 0xe0, 0xef, 0x8b, 0x38,
-	0xbf, 0x8a, 0xfb, 0x93, 0x76, 0xe9, 0xc0, 0x4a, 0x7c, 0xe1, 0x20, 0x2b, 0xdf, 0x24, 0x64, 0xfa,
-	0x97, 0x1e, 0x42, 0xd5, 0x9e, 0xc7, 0xbb, 0xc8, 0xbe, 0x8e, 0x59, 0x26, 0x0f, 0x06, 0x23, 0x90,
-	0x03, 0xfc, 0x04, 0x19, 0x51, 0x2e, 0x36, 0xbf, 0x11, 0x18, 0x51, 0x8e, 0xc7, 0xc8, 0x8c, 0x72,
-	0x22, 0x76, 0xb7, 0x11, 0xf0, 0x9f, 0x5c, 0xb1, 0xca, 0xc5, 0x06, 0x36, 0x02, 0x63, 0x25, 0x14,
-	0xab, 0x9c, 0x88, 0x2d, 0x6a, 0x04, 0xfc, 0x27, 0x57, 0x50, 0xe6, 0x3b, 0x87, 0x26, 0x57, 0x50,
-	0x86, 0xf7, 0x90, 0xc3, 0xe2, 0x7c, 0x4e, 0x99, 0xef, 0x0a, 0x9b, 0xcd, 0xe2, 0xfc, 0x3d, 0x9b,
-	0xfe, 0xb5, 0x87, 0x76, 0x6a, 0x87, 0x4a, 0x13, 0xa8, 0xd7, 0x06, 0xea, 0x41, 0xa0, 0x1e, 0x04,
-	0xea, 0x41, 0xa0, 0x1e, 0x04, 0xea, 0x75, 0x00, 0xf5, 0x34, 0x10, 0x2f, 0x50, 0xb5, 0xeb, 0x9b,
-	0x3c, 0x76, 0x9b, 0xc7, 0x86, 0x3c, 0x36, 0xe4, 0xb1, 0x21, 0x8f, 0x0d, 0x79, 0xec, 0x0e, 0x1e,
-	0x1b, 0xf0, 0xa8, 0x0d, 0xd8, 0xe4, 0x31, 0xdb, 0x3c, 0x26, 0xe4, 0x31, 0x21, 0x8f, 0x09, 0x79,
-	0x4c, 0xc8, 0x63, 0x76, 0xf0, 0x98, 0xf5, 0x05, 0xfb, 0xfc, 0x50, 0x81, 0x86, 0x6d, 0xa0, 0x21,
-	0x04, 0x1a, 0x42, 0xa0, 0x21, 0x04, 0x1a, 0x42, 0xa0, 0x61, 0x07, 0xd0, 0x10, 0x02, 0x75, 0x56,
-	0xc8, 0x6a, 0x03, 0x59, 0x10, 0xc8, 0x82, 0x40, 0x16, 0x04, 0xb2, 0x20, 0x90, 0xd5, 0x01, 0x64,
-	0xd5, 0x81, 0x2e, 0x1f, 0xaa, 0xd0, 0xa4, 0x0d, 0x34, 0x81, 0x40, 0x13, 0x08, 0x34, 0x81, 0x40,
-	0x13, 0x08, 0x34, 0xe9, 0x00, 0x9a, 0x40, 0xa0, 0xce, 0x0a, 0xe1, 0x36, 0x10, 0x86, 0x40, 0x18,
-	0x02, 0x61, 0x08, 0x84, 0x21, 0x10, 0xee, 0x00, 0xc2, 0x1a, 0xe8, 0x6f, 0x3d, 0x34, 0xa8, 0xbf,
-	0x8d, 0x9a, 0x44, 0x6e, 0x9b, 0xc8, 0x85, 0x44, 0x2e, 0x24, 0x72, 0x21, 0x91, 0x0b, 0x89, 0xdc,
-	0x0e, 0x22, 0xb7, 0x45, 0xd4, 0x59, 0x23, 0xa7, 0x4d, 0xe4, 0x40, 0x22, 0x07, 0x12, 0x39, 0x90,
-	0xc8, 0x81, 0x44, 0x4e, 0x07, 0x91, 0xa3, 0x89, 0xfe, 0xde, 0x43, 0xc3, 0xcb, 0x87, 0x8b, 0x34,
-	0x6a, 0x23, 0x8d, 0x20, 0xd2, 0x08, 0x22, 0x8d, 0x20, 0xd2, 0x08, 0x22, 0x8d, 0x3a, 0x90, 0x46,
-	0x6d, 0xa4, 0xce, 0x2a, 0x8d, 0xdb, 0x48, 0x63, 0x88, 0x34, 0x86, 0x48, 0x63, 0x88, 0x34, 0x86,
-	0x48, 0xe3, 0x0e, 0xa4, 0xb1, 0x46, 0x7a, 0x86, 0xfa, 0x65, 0xb7, 0xd1, 0xa4, 0xf1, 0x14, 0xcd,
-	0xf4, 0x1f, 0x16, 0xda, 0xa9, 0x35, 0x19, 0x4d, 0x55, 0x5f, 0x33, 0x73, 0x46, 0xc2, 0xc4, 0x0b,
-	0x9e, 0x9f, 0x07, 0x84, 0xe1, 0xa7, 0xc8, 0x5d, 0x53, 0x36, 0xe7, 0x56, 0x79, 0x6c, 0x38, 0x6b,
-	0xca, 0xfe, 0xa0, 0x1c, 0xe1, 0xbd, 0x70, 0x98, 0xca, 0x11, 0xde, 0x73, 0xc7, 0x0f, 0x51, 0x3f,
-	0x22, 0x6c, 0x2e, 0x1b, 0x97, 0x5d, 0xe1, 0xf2, 0x22, 0xc2, 0x44, 0xc7, 0xc2, 0x9d, 0x3c, 0x9d,
-	0x74, 0xca, 0x53, 0xc6, 0x5b, 0xd3, 0x9a, 0x33, 0xbc, 0x57, 0x4e, 0x5b, 0x39, 0xc3, 0x7b, 0xe9,
-	0xf4, 0x91, 0x9b, 0x84, 0x79, 0x4e, 0x52, 0x26, 0x3a, 0xda, 0x7e, 0xa0, 0x87, 0x78, 0x1f, 0x39,
-	0x49, 0x4a, 0x96, 0xf4, 0x5e, 0x74, 0xae, 0xfd, 0x40, 0x8d, 0xb8, 0x3d, 0x2b, 0x96, 0xdc, 0xee,
-	0x49, 0xbb, 0x1c, 0xe1, 0x03, 0xe4, 0x5d, 0xc7, 0x2c, 0x0f, 0x29, 0xcb, 0x44, 0x23, 0xda, 0x0f,
-	0xca, 0xb1, 0x2a, 0x38, 0x3a, 0x34, 0x8f, 0xfa, 0xa0, 0xe0, 0x3b, 0xc2, 0x26, 0x0b, 0x8e, 0xf7,
-	0x91, 0x4d, 0xd6, 0x21, 0x8d, 0x44, 0xa3, 0xe8, 0xf1, 0x16, 0x4c, 0x0c, 0xf1, 0x8f, 0x90, 0xf7,
-	0x25, 0xce, 0x72, 0x16, 0xae, 0x89, 0x68, 0x08, 0xb9, 0xab, 0xb4, 0xe0, 0x31, 0x32, 0x68, 0x22,
-	0x7a, 0x3f, 0x6e, 0x37, 0x68, 0x82, 0x77, 0x91, 0x45, 0x93, 0xdb, 0x33, 0xd1, 0xdf, 0x71, 0x9b,
-	0x18, 0x29, 0xeb, 0x4c, 0x34, 0x72, 0xda, 0x3a, 0xc3, 0x18, 0x99, 0x45, 0x4a, 0xc5, 0x5d, 0x87,
-	0x1b, 0xf9, 0x00, 0x7f, 0x8b, 0xdc, 0x22, 0xa5, 0xf3, 0x94, 0x2c, 0x45, 0x1b, 0xe7, 0x89, 0x7e,
-	0x3e, 0xa5, 0x01, 0x59, 0xe2, 0x03, 0xe4, 0x86, 0x8b, 0x45, 0x4a, 0xb2, 0x4c, 0xb4, 0x56, 0xdc,
-	0xa5, 0x0d, 0x7c, 0x82, 0xa2, 0xa0, 0x0b, 0xd1, 0x3b, 0x89, 0x09, 0xf8, 0xe8, 0x62, 0x80, 0xd0,
-	0x1d, 0x89, 0xa2, 0xf9, 0x0d, 0x8b, 0xef, 0xd8, 0xf4, 0xdf, 0x06, 0x42, 0x55, 0x97, 0xd9, 0x7c,
-	0x5e, 0x06, 0xe0, 0x79, 0x19, 0x7e, 0x9f, 0xe7, 0xa5, 0xb6, 0xb0, 0xd6, 0x43, 0x0b, 0x6b, 0x8b,
-	0x49, 0xdb, 0x0b, 0xeb, 0x48, 0x7b, 0xc7, 0xc2, 0xba, 0xc2, 0x03, 0x17, 0xd6, 0x3b, 0x34, 0x8f,
-	0x06, 0x60, 0x61, 0xfb, 0xc2, 0xa6, 0x16, 0x56, 0x2e, 0x11, 0xea, 0x58, 0xa2, 0x9d, 0xce, 0x25,
-	0x1a, 0xd4, 0x97, 0x08, 0x54, 0xf0, 0x06, 0xf5, 0xcb, 0xce, 0xfb, 0x81, 0x0e, 0xea, 0x19, 0x1a,
-	0x2c, 0xc8, 0x92, 0x32, 0xb2, 0x98, 0xc7, 0x2c, 0xda, 0x88, 0x92, 0x79, 0xc1, 0x8e, 0xb2, 0x7d,
-	0x64, 0xd1, 0x46, 0x81, 0x9b, 0x1d, 0x0d, 0x92, 0x55, 0x6f, 0x90, 0x7e, 0x8d, 0x06, 0xf5, 0x4b,
-	0x2f, 0xc6, 0xc8, 0xca, 0x6e, 0x68, 0xa2, 0x0e, 0x01, 0xf1, 0x9b, 0xd7, 0x27, 0x25, 0x5f, 0x0b,
-	0x9a, 0x92, 0x85, 0x9a, 0xa9, 0x1c, 0xf3, 0x06, 0x6b, 0xd8, 0x68, 0xfc, 0xf5, 0x56, 0xa5, 0x39,
-	0x59, 0x67, 0xaa, 0x8b, 0xe0, 0x5b, 0xf5, 0x3d, 0x1f, 0xeb, 0xad, 0x2a, 0x9d, 0x46, 0xb9, 0x55,
-	0xa5, 0x73, 0x1f, 0x39, 0x05, 0xa3, 0x5f, 0x0b, 0x79, 0xd8, 0x79, 0x81, 0x1a, 0xe1, 0x17, 0xc8,
-	0x96, 0x01, 0xad, 0x2b, 0x6f, 0x75, 0xad, 0x0f, 0xa4, 0x64, 0xfa, 0xaf, 0x1e, 0xf2, 0xf4, 0xb5,
-	0x42, 0xa3, 0x24, 0x21, 0x4d, 0xeb, 0x28, 0x9f, 0xf8, 0x58, 0xa3, 0x48, 0x67, 0x85, 0x52, 0x3a,
-	0x59, 0x3c, 0xcf, 0x92, 0x30, 0xcd, 0x34, 0x8d, 0xc7, 0xe2, 0x4b, 0x31, 0xc6, 0x47, 0xc8, 0xba,
-	0x21, 0x9b, 0xed, 0x38, 0x42, 0x81, 0x5f, 0x22, 0xe7, 0x36, 0x8c, 0x0a, 0x75, 0x2c, 0x3d, 0xa4,
-	0x55, 0x9a, 0xe9, 0x07, 0xe4, 0xe9, 0x9b, 0x4e, 0xa3, 0xe6, 0xbd, 0x66, 0xcd, 0xd5, 0xd2, 0x1a,
-	0x1d, 0x87, 0x8d, 0x59, 0x3b, 0x6c, 0xa6, 0xff, 0x35, 0xd0, 0xb0, 0x71, 0x19, 0xda, 0x9a, 0xf4,
-	0x44, 0x3f, 0x68, 0xf2, 0xab, 0xc5, 0xb7, 0xc7, 0xf2, 0xb3, 0xca, 0xb1, 0xfe, 0xac, 0x52, 0xdd,
-	0xab, 0xd4, 0x33, 0xf8, 0x5c, 0xbc, 0xa7, 0xcc, 0xc7, 0xd4, 0xfc, 0x15, 0xf6, 0x33, 0xf9, 0x0a,
-	0xb3, 0x1e, 0xd3, 0x8a, 0xb7, 0xdb, 0x73, 0xf1, 0x76, 0xb3, 0x1f, 0xcd, 0xbb, 0x12, 0x79, 0xf9,
-	0x8b, 0xcf, 0x79, 0x34, 0xef, 0x4a, 0xe6, 0x55, 0xef, 0xbf, 0xed, 0x79, 0x29, 0xc3, 0xaf, 0xcb,
-	0x82, 0x7a, 0x8f, 0xc9, 0x55, 0xad, 0xff, 0x67, 0xa0, 0x27, 0xcd, 0x0b, 0xe4, 0xd6, 0x62, 0xbf,
-	0x6e, 0x16, 0xfb, 0xa0, 0x95, 0xbf, 0xca, 0xa5, 0xaa, 0xfd, 0xa2, 0x56, 0xed, 0x6d, 0x72, 0x5e,
-	0xee, 0x97, 0xf5, 0x72, 0x6f, 0x13, 0x8b, 0x7a, 0xbf, 0xa8, 0xd5, 0x7b, 0x6b, 0xe6, 0x95, 0xc8,
-	0x5c, 0x15, 0x7c, 0x6b, 0x66, 0x5e, 0xf1, 0x3d, 0xe4, 0x44, 0xf9, 0x9c, 0xc5, 0x77, 0xe2, 0x54,
-	0xf5, 0x02, 0x3b, 0xca, 0xff, 0x18, 0xdf, 0x71, 0xf3, 0x4a, 0x9a, 0x3d, 0x69, 0x5e, 0x09, 0xf3,
-	0xcf, 0x91, 0x73, 0x47, 0xf3, 0x2f, 0xe2, 0x64, 0x7d, 0x64, 0x3d, 0x95, 0xf0, 0xfc, 0x57, 0xc8,
-	0x5b, 0xd0, 0x2c, 0xbc, 0x8a, 0xc8, 0x02, 0x7f, 0xd7, 0x92, 0xab, 0x73, 0xed, 0x63, 0xc2, 0x63,
-	0x32, 0xff, 0x9f, 0x72, 0xb6, 0x32, 0xe2, 0xfc, 0xbc, 0x5a, 0x20, 0xfc, 0xe3, 0x56, 0xf4, 0x47,
-	0x46, 0xe2, 0x25, 0x8c, 0xd5, 0xfa, 0xf3, 0xdf, 0x23, 0x3b, 0x15, 0xab, 0xdc, 0x0e, 0x14, 0x1b,
-	0xbb, 0x11, 0xf8, 0xe0, 0x91, 0x25, 0x52, 0x5c, 0x7c, 0x42, 0x07, 0x34, 0x3e, 0x26, 0xec, 0x36,
-	0xde, 0x24, 0x69, 0x7c, 0xbf, 0x39, 0x4e, 0x56, 0xb7, 0xa5, 0xfe, 0xcf, 0xa7, 0x2b, 0x9a, 0x7f,
-	0x29, 0xae, 0x8e, 0xaf, 0xe3, 0xf5, 0x49, 0xa5, 0x91, 0x5f, 0x3b, 0xaf, 0x5f, 0xad, 0x08, 0x7b,
-	0xd5, 0xfa, 0xc8, 0xfa, 0xff, 0x00, 0x00, 0x00, 0xff, 0xff, 0x57, 0x32, 0x59, 0xcc, 0x78, 0x15,
-	0x00, 0x00,
+	// 1670 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x98, 0x4b, 0x73, 0xdb, 0xc8,
+	0x11, 0xc7, 0x43, 0xbc, 0x39, 0x24, 0x4d, 0x72, 0xac, 0x07, 0xac, 0x3c, 0x2c, 0xf3, 0x90, 0x92,
+	0x1d, 0x5b, 0x72, 0x64, 0x85, 0x95, 0x52, 0xa5, 0x52, 0x15, 0xc5, 0x71, 0xc5, 0xa9, 0x38, 0x76,
+	0x41, 0xf1, 0x65, 0x2f, 0x2c, 0x48, 0x1c, 0xd2, 0x53, 0x02, 0x07, 0x30, 0x1e, 0x92, 0xf8, 0x21,
+	0xf6, 0xf1, 0x4d, 0xf6, 0xbc, 0xa7, 0xbd, 0xee, 0x75, 0x3f, 0xc6, 0x9e, 0xf7, 0x0b, 0x6c, 0xcd,
+	0x0c, 0x06, 0x8f, 0x06, 0x44, 0x1d, 0xf6, 0xc6, 0xe9, 0xfe, 0xf7, 0xcc, 0x8f, 0xdd, 0x98, 0x41,
+	0x0f, 0xd0, 0xee, 0xb5, 0x1f, 0xd0, 0xb9, 0x9f, 0x92, 0x23, 0xf5, 0xe3, 0x30, 0x8a, 0xc3, 0x34,
+	0xc4, 0x8e, 0x1a, 0xef, 0xed, 0x2f, 0xc3, 0x70, 0x19, 0x90, 0x23, 0x61, 0xbf, 0xc8, 0x16, 0x47,
+	0x73, 0x92, 0x5c, 0xc6, 0x34, 0x4a, 0xc3, 0x58, 0x6a, 0xf7, 0xfe, 0xd0, 0x50, 0x64, 0xb1, 0x9f,
+	0xd2, 0x90, 0xe5, 0xfe, 0xc7, 0xd0, 0x9f, 0xd2, 0x15, 0x49, 0x52, 0x7f, 0x15, 0x49, 0xc1, 0xe4,
+	0x07, 0x07, 0xa1, 0x37, 0x94, 0x04, 0x73, 0x2f, 0x0b, 0x48, 0x82, 0x5f, 0x22, 0x7b, 0x45, 0x92,
+	0xc4, 0x5f, 0x12, 0x77, 0xbc, 0xdf, 0x39, 0xe8, 0x1d, 0xef, 0x1c, 0x16, 0x74, 0xef, 0xa4, 0x43,
+	0x08, 0x3d, 0x25, 0xc3, 0xcf, 0x91, 0xb9, 0x08, 0x42, 0x3f, 0x75, 0x3b, 0x42, 0xbf, 0x55, 0xea,
+	0xdf, 0x70, 0xb3, 0x50, 0xff, 0xfb, 0x37, 0x9e, 0x14, 0xe1, 0x23, 0x64, 0xcd, 0xc3, 0xec, 0x22,
+	0x20, 0xae, 0x26, 0xe4, 0xdb, 0xa5, 0xfc, 0xb5, 0xb0, 0x2b, 0x7d, 0x2e, 0xe3, 0xd3, 0x53, 0x96,
+	0xbe, 0x3a, 0x76, 0x75, 0x38, 0xfd, 0x5b, 0x6e, 0x2e, 0xa6, 0x17, 0xa2, 0x5c, 0x3d, 0x3d, 0x71,
+	0x8d, 0x16, 0xf5, 0xf4, 0xa4, 0xaa, 0x9e, 0x9e, 0x70, 0x98, 0x4c, 0x4e, 0x6e, 0x42, 0x98, 0x8f,
+	0xb5, 0xd9, 0x73, 0x99, 0x0a, 0x98, 0x9e, 0xb8, 0x56, 0x5b, 0x40, 0xb9, 0x40, 0x2e, 0xe3, 0x01,
+	0x89, 0x5c, 0xc1, 0x86, 0x01, 0xe7, 0xf5, 0x15, 0x92, 0x62, 0x85, 0x44, 0xae, 0xe0, 0xb4, 0x05,
+	0x54, 0x56, 0x90, 0x32, 0x7c, 0x8c, 0xec, 0x05, 0xbd, 0x25, 0xf3, 0x57, 0xc7, 0x6e, 0x17, 0x16,
+	0xec, 0x8d, 0x74, 0xa8, 0x10, 0x25, 0x2c, 0x62, 0xa6, 0x27, 0x2e, 0x6a, 0x8d, 0x29, 0x97, 0x51,
+	0x42, 0xfc, 0x17, 0xe4, 0x24, 0x6a, 0xa1, 0x9e, 0x08, 0xda, 0xad, 0xa0, 0x81, 0x95, 0x0a, 0x69,
+	0x19, 0x36, 0x3d, 0x71, 0xfb, 0xed, 0x61, 0xe5, 0x62, 0x85, 0x14, 0x3f, 0x45, 0xc6, 0x45, 0x18,
+	0x06, 0xee, 0x40, 0x84, 0x3c, 0x2c, 0x43, 0xce, 0xc2, 0x30, 0x50, 0x72, 0x21, 0x11, 0x19, 0x4b,
+	0x63, 0xca, 0x96, 0xee, 0x83, 0x46, 0xc6, 0x84, 0xbd, 0xcc, 0x98, 0x18, 0xf2, 0x67, 0xe4, 0x62,
+	0x9d, 0x92, 0xc4, 0x1d, 0xc2, 0x67, 0xe4, 0x8c, 0x9b, 0x8b, 0x67, 0x44, 0x88, 0x38, 0x09, 0x61,
+	0xd9, 0xca, 0x1d, 0x41, 0x92, 0x7f, 0xb1, 0x6c, 0x55, 0x90, 0x70, 0x09, 0xff, 0xaf, 0x31, 0x89,
+	0x88, 0x9f, 0x92, 0xb9, 0x8b, 0xe1, 0x7f, 0xf5, 0x72, 0x4f, 0xf1, 0x5f, 0x95, 0x14, 0xff, 0x11,
+	0xe9, 0x2b, 0x3f, 0x72, 0x1f, 0x8a, 0x08, 0x5c, 0xd9, 0x6e, 0x7e, 0xa4, 0xc4, 0x5c, 0xc0, 0x75,
+	0x3e, 0x5b, 0xbb, 0x5b, 0x50, 0xf7, 0x0f, 0xb6, 0x2e, 0x74, 0x3e, 0x5b, 0x73, 0x0c, 0x75, 0x08,
+	0xb8, 0xdb, 0x10, 0xe3, 0x75, 0xee, 0x29, 0x30, 0x94, 0x14, 0xff, 0x15, 0x75, 0x8b, 0xb3, 0xc1,
+	0xdd, 0x11, 0x71, 0x6e, 0x19, 0xf7, 0x7f, 0xe5, 0x52, 0x81, 0xa5, 0xf8, 0xcc, 0x42, 0x46, 0xba,
+	0x8e, 0xc8, 0xe4, 0xcb, 0x0e, 0x42, 0xe5, 0x9e, 0xc7, 0x5b, 0xc8, 0xbc, 0x0c, 0x59, 0x22, 0x0f,
+	0x06, 0xcd, 0x93, 0x03, 0xfc, 0x00, 0x69, 0x41, 0x2a, 0x36, 0xbf, 0xe6, 0x69, 0x41, 0x8a, 0x47,
+	0x48, 0x0f, 0x52, 0x22, 0x76, 0xb7, 0xe6, 0xf1, 0x9f, 0x5c, 0xb1, 0x4c, 0xc5, 0x06, 0xd6, 0x3c,
+	0x6d, 0x29, 0x14, 0xcb, 0x94, 0x88, 0x2d, 0xaa, 0x79, 0xfc, 0x27, 0x57, 0x50, 0xe6, 0x5a, 0xfb,
+	0x3a, 0x57, 0x50, 0x86, 0xb7, 0x91, 0xc5, 0xc2, 0x74, 0x46, 0x99, 0x6b, 0x0b, 0x9b, 0xc9, 0xc2,
+	0xf4, 0x2d, 0x9b, 0x7c, 0xd5, 0x41, 0xbd, 0xca, 0xa1, 0x52, 0x07, 0xea, 0x34, 0x81, 0x3a, 0x10,
+	0xa8, 0x03, 0x81, 0x3a, 0x10, 0xa8, 0x03, 0x81, 0x3a, 0x2d, 0x40, 0x1d, 0x05, 0xc4, 0x13, 0x54,
+	0xee, 0xfa, 0x3a, 0x8f, 0xd9, 0xe4, 0x31, 0x21, 0x8f, 0x09, 0x79, 0x4c, 0xc8, 0x63, 0x42, 0x1e,
+	0xb3, 0x85, 0xc7, 0x04, 0x3c, 0xf9, 0x06, 0xac, 0xf3, 0xe8, 0x4d, 0x1e, 0x1d, 0xf2, 0xe8, 0x90,
+	0x47, 0x87, 0x3c, 0x3a, 0xe4, 0xd1, 0x5b, 0x78, 0xf4, 0x6a, 0xc1, 0x3e, 0xde, 0x95, 0xa0, 0x41,
+	0x13, 0x68, 0x00, 0x81, 0x06, 0x10, 0x68, 0x00, 0x81, 0x06, 0x10, 0x68, 0xd0, 0x02, 0x34, 0x80,
+	0x40, 0xad, 0x19, 0x32, 0x9a, 0x40, 0x06, 0x04, 0x32, 0x20, 0x90, 0x01, 0x81, 0x0c, 0x08, 0x64,
+	0xb4, 0x00, 0x19, 0x55, 0xa0, 0xf3, 0xbb, 0x32, 0x34, 0x6e, 0x02, 0x8d, 0x21, 0xd0, 0x18, 0x02,
+	0x8d, 0x21, 0xd0, 0x18, 0x02, 0x8d, 0x5b, 0x80, 0xc6, 0x10, 0xa8, 0x35, 0x43, 0xb8, 0x09, 0x84,
+	0x21, 0x10, 0x86, 0x40, 0x18, 0x02, 0x61, 0x08, 0x84, 0x5b, 0x80, 0xb0, 0x02, 0xfa, 0xba, 0x83,
+	0xfa, 0xd5, 0xb7, 0x51, 0x9d, 0xc8, 0x6e, 0x12, 0xd9, 0x90, 0xc8, 0x86, 0x44, 0x36, 0x24, 0xb2,
+	0x21, 0x91, 0xdd, 0x42, 0x64, 0x37, 0x88, 0x5a, 0x73, 0x64, 0x35, 0x89, 0x2c, 0x48, 0x64, 0x41,
+	0x22, 0x0b, 0x12, 0x59, 0x90, 0xc8, 0x6a, 0x21, 0xb2, 0x14, 0xd1, 0x37, 0x1d, 0x34, 0x38, 0xbf,
+	0x3b, 0x49, 0xc3, 0x26, 0xd2, 0x10, 0x22, 0x0d, 0x21, 0xd2, 0x10, 0x22, 0x0d, 0x21, 0xd2, 0xb0,
+	0x05, 0x69, 0xd8, 0x44, 0x6a, 0xcd, 0xd2, 0xa8, 0x89, 0x34, 0x82, 0x48, 0x23, 0x88, 0x34, 0x82,
+	0x48, 0x23, 0x88, 0x34, 0x6a, 0x41, 0x1a, 0x29, 0xa4, 0x27, 0xa8, 0x5b, 0x74, 0x1b, 0x75, 0x1a,
+	0x27, 0xa7, 0x99, 0xfc, 0x68, 0xa0, 0x5e, 0xa5, 0xc9, 0xa8, 0xab, 0xba, 0x8a, 0x99, 0x33, 0x12,
+	0x26, 0x5e, 0xf0, 0xfc, 0x3c, 0x20, 0x0c, 0xef, 0x22, 0x7b, 0x45, 0xd9, 0x8c, 0x5b, 0xe5, 0xb1,
+	0x61, 0xad, 0x28, 0xfb, 0x6f, 0xee, 0xf0, 0x6f, 0x85, 0x43, 0xcf, 0x1d, 0xfe, 0x2d, 0x77, 0xfc,
+	0x16, 0x75, 0x03, 0xc2, 0x66, 0xb2, 0x71, 0xd9, 0x12, 0x2e, 0x27, 0x20, 0x4c, 0x74, 0x2c, 0xdc,
+	0xc9, 0xa7, 0x93, 0x4e, 0x79, 0xca, 0x38, 0x2b, 0x5a, 0x71, 0xfa, 0xb7, 0xb9, 0xd3, 0xcc, 0x9d,
+	0xfe, 0xad, 0x74, 0xba, 0xc8, 0x8e, 0xfc, 0x34, 0x25, 0x31, 0x13, 0x1d, 0x6d, 0xd7, 0x53, 0x43,
+	0xbc, 0x83, 0xac, 0x28, 0x26, 0x0b, 0x7a, 0x2b, 0x3a, 0xd7, 0xae, 0x97, 0x8f, 0xb8, 0x3d, 0xc9,
+	0x16, 0xdc, 0xee, 0x48, 0xbb, 0x1c, 0xe1, 0x3d, 0xe4, 0x5c, 0x86, 0x2c, 0xf5, 0x29, 0x4b, 0x44,
+	0x23, 0xda, 0xf5, 0x8a, 0x31, 0x7e, 0x82, 0xfa, 0x3c, 0xc1, 0x85, 0x7f, 0x57, 0xf8, 0x7b, 0x2c,
+	0x4c, 0xff, 0xa9, 0x24, 0xb2, 0x26, 0x68, 0x5f, 0x3f, 0xe8, 0x82, 0x9a, 0xf4, 0x84, 0x4d, 0xd6,
+	0x04, 0xef, 0x20, 0x93, 0xac, 0x7c, 0x1a, 0x88, 0x5e, 0xd2, 0xe1, 0x5d, 0x9a, 0x18, 0xe2, 0xdf,
+	0x21, 0xe7, 0x53, 0x98, 0xa4, 0xcc, 0x5f, 0x11, 0xd1, 0x33, 0x72, 0x57, 0x61, 0xc1, 0x23, 0xa4,
+	0xd1, 0x48, 0xb4, 0x87, 0xdc, 0xae, 0xd1, 0x08, 0x6f, 0x21, 0x83, 0x46, 0xd7, 0x27, 0xa2, 0x05,
+	0xe4, 0x36, 0x31, 0xca, 0xad, 0x53, 0xd1, 0xeb, 0x29, 0xeb, 0x14, 0x63, 0xa4, 0x67, 0x31, 0x15,
+	0xd7, 0x21, 0x6e, 0xe4, 0x03, 0xfc, 0x08, 0xd9, 0x59, 0x4c, 0x67, 0x31, 0x59, 0x88, 0x4e, 0xcf,
+	0x11, 0x2d, 0x7f, 0x4c, 0x3d, 0xb2, 0xc0, 0x7b, 0xc8, 0xf6, 0xe7, 0xf3, 0x98, 0x24, 0x89, 0xe8,
+	0xbe, 0xb8, 0x4b, 0x19, 0xf8, 0x02, 0x59, 0x46, 0xe7, 0xa2, 0xbd, 0x12, 0x0b, 0xf0, 0xd1, 0x59,
+	0x1f, 0xa1, 0x1b, 0x12, 0x04, 0xb3, 0x2b, 0x16, 0xde, 0xb0, 0xc9, 0xf7, 0x1a, 0x42, 0x65, 0x23,
+	0x5a, 0x7f, 0xa4, 0xfa, 0xe0, 0x91, 0x1a, 0xfc, 0x9a, 0x47, 0xaa, 0x52, 0x7b, 0xe3, 0xae, 0xda,
+	0x9b, 0x62, 0xd1, 0x66, 0xed, 0x2d, 0x69, 0x6f, 0xa9, 0xbd, 0x2d, 0x3c, 0x65, 0xed, 0x65, 0x61,
+	0x9d, 0x7d, 0xfd, 0xa0, 0x0f, 0x0a, 0xdb, 0x15, 0xb6, 0xbc, 0xb0, 0xb2, 0x44, 0xa8, 0xa5, 0x44,
+	0xbd, 0xd6, 0x12, 0xf5, 0xab, 0x25, 0x02, 0x19, 0xbc, 0x42, 0xdd, 0xa2, 0x39, 0xbf, 0xa3, 0xc9,
+	0x7a, 0x82, 0xfa, 0x73, 0xb2, 0xa0, 0x8c, 0xcc, 0x67, 0x21, 0x0b, 0xd6, 0x22, 0x65, 0x8e, 0xd7,
+	0xcb, 0x6d, 0xef, 0x59, 0xb0, 0xce, 0xc1, 0xf5, 0x96, 0x1e, 0xca, 0xa8, 0xf6, 0x50, 0x7f, 0x47,
+	0xfd, 0xea, 0xbd, 0x18, 0x63, 0x64, 0x24, 0x57, 0x34, 0xca, 0xcf, 0x09, 0xf1, 0x9b, 0xe7, 0x27,
+	0x26, 0x9f, 0x33, 0x1a, 0x93, 0x79, 0xbe, 0x52, 0x31, 0xe6, 0x3d, 0xd8, 0xa0, 0x76, 0x37, 0x50,
+	0xbb, 0x99, 0xa6, 0x64, 0x95, 0xe4, 0x8d, 0x06, 0xdf, 0xcd, 0x6f, 0xf9, 0x58, 0xed, 0x66, 0xe9,
+	0xd4, 0x8a, 0xdd, 0x2c, 0x9d, 0x3b, 0xc8, 0xca, 0x18, 0xfd, 0x9c, 0xc9, 0xf3, 0xd0, 0xf1, 0xf2,
+	0x11, 0x7e, 0x86, 0x4c, 0x19, 0xd0, 0xb8, 0x15, 0x97, 0x37, 0x7f, 0x4f, 0x4a, 0x26, 0xdf, 0x75,
+	0x90, 0xa3, 0x6e, 0x1e, 0x0a, 0x25, 0xf2, 0x69, 0x5c, 0x45, 0xf9, 0xc0, 0xc7, 0x0a, 0x45, 0x3a,
+	0x4b, 0x94, 0xc2, 0xc9, 0xc2, 0x59, 0x12, 0xf9, 0x71, 0xa2, 0x68, 0x1c, 0x16, 0x9e, 0x8b, 0x31,
+	0x3e, 0x40, 0xc6, 0x15, 0x59, 0x6f, 0xc6, 0x11, 0x0a, 0xfc, 0x1c, 0x59, 0xd7, 0x7e, 0x90, 0xe5,
+	0x27, 0xd7, 0x5d, 0xda, 0x5c, 0x33, 0x79, 0x87, 0x1c, 0x75, 0x19, 0xaa, 0xe5, 0xbc, 0x53, 0xcf,
+	0x79, 0x5e, 0x5a, 0xad, 0xe5, 0xb0, 0xd1, 0x2b, 0x87, 0xcd, 0xe4, 0x27, 0x0d, 0x0d, 0x6a, 0xf7,
+	0xa5, 0x8d, 0x93, 0x1e, 0xa9, 0x07, 0x4d, 0x7e, 0xd8, 0x78, 0x74, 0x28, 0xbf, 0xbc, 0x1c, 0xaa,
+	0x2f, 0x2f, 0xe5, 0xd5, 0x2b, 0x7f, 0x06, 0x9f, 0x8a, 0x57, 0x99, 0x7e, 0x9f, 0x9a, 0xbf, 0xe5,
+	0xfe, 0x24, 0xdf, 0x72, 0xc6, 0x7d, 0x5a, 0xf1, 0x02, 0x7c, 0x2a, 0x5e, 0x80, 0xe6, 0xbd, 0xf3,
+	0x2e, 0xc5, 0xbc, 0xfc, 0xdd, 0x68, 0xdd, 0x3b, 0xef, 0x52, 0xce, 0x9b, 0xbf, 0x22, 0x37, 0xcf,
+	0x4b, 0x19, 0x7e, 0x59, 0x24, 0xd4, 0xb9, 0x4f, 0x9e, 0xe7, 0xfa, 0x67, 0x0d, 0x3d, 0xa8, 0xdf,
+	0x31, 0x37, 0x26, 0xfb, 0x65, 0x3d, 0xd9, 0x7b, 0x8d, 0xf9, 0xcb, 0xb9, 0xf2, 0x6c, 0x3f, 0xab,
+	0x64, 0x7b, 0x93, 0x9c, 0xa7, 0xfb, 0x79, 0x35, 0xdd, 0x9b, 0xc4, 0x22, 0xdf, 0xcf, 0x2a, 0xf9,
+	0xde, 0x38, 0xf3, 0x52, 0xcc, 0x5c, 0x26, 0x7c, 0xe3, 0xcc, 0x3c, 0xe3, 0xdb, 0xc8, 0x0a, 0xd2,
+	0x19, 0x0b, 0x6f, 0xc4, 0xa9, 0xea, 0x78, 0x66, 0x90, 0xfe, 0x2f, 0xbc, 0xe1, 0xe6, 0xa5, 0x34,
+	0x3b, 0xd2, 0xbc, 0x14, 0xe6, 0x3f, 0x23, 0xeb, 0x86, 0xa6, 0x9f, 0xc4, 0xc9, 0x7a, 0x4f, 0x3d,
+	0x73, 0xe1, 0xe9, 0xdf, 0x90, 0x33, 0xa7, 0x89, 0x7f, 0x11, 0x90, 0x39, 0x7e, 0xdc, 0x90, 0xe7,
+	0xe7, 0xda, 0xfb, 0x88, 0xc7, 0x24, 0xee, 0xb7, 0x72, 0xb5, 0x22, 0xe2, 0xf4, 0xb4, 0x2c, 0x10,
+	0xfe, 0x7d, 0x23, 0xfa, 0x3d, 0x23, 0xe1, 0x02, 0xc6, 0x2a, 0xfd, 0xe9, 0x7f, 0x90, 0x19, 0x8b,
+	0x2a, 0x37, 0x03, 0xc5, 0xc6, 0xae, 0x05, 0xde, 0x79, 0x64, 0x89, 0x29, 0xce, 0x3e, 0xa0, 0x3d,
+	0x1a, 0x1e, 0x12, 0x76, 0x1d, 0xae, 0xa3, 0x38, 0xbc, 0x5d, 0x1f, 0x46, 0xcb, 0xeb, 0x42, 0xff,
+	0xc5, 0xf1, 0x92, 0xa6, 0x9f, 0xb2, 0x8b, 0xc3, 0xcb, 0x70, 0x75, 0x54, 0x6a, 0xe4, 0x07, 0xd1,
+	0xcb, 0x17, 0x4b, 0xc2, 0x5e, 0x34, 0xbe, 0xc3, 0xfe, 0x12, 0x00, 0x00, 0xff, 0xff, 0xff, 0xae,
+	0xfa, 0x73, 0x9b, 0x15, 0x00, 0x00,
 }

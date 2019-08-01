@@ -125,6 +125,14 @@ public class StringValidationTest {
     }
 
     @Test
+    public void notContainsWorks() throws ValidationException {
+        // Match
+        StringValidation.notContains("x", "Hello World", "Bananas");
+        // No Match
+        assertThatThrownBy(() -> StringValidation.notContains("x", "Hello World", "o W")).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
     public void suffixWorks() throws ValidationException {
         // Match
         StringValidation.suffix("x", "Hello World", "World");
