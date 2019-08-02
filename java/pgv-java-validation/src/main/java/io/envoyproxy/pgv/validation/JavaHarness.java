@@ -23,6 +23,7 @@ public class JavaHarness {
                     Bool.getDescriptor().toProto(),
                     Bytes.getDescriptor().toProto(),
                     Enums.getDescriptor().toProto(),
+                    KitchenSink.getDescriptor().toProto(),
                     Maps.getDescriptor().toProto(),
                     Messages.getDescriptor().toProto(),
                     Numbers.getDescriptor().toProto(),
