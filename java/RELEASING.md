@@ -11,5 +11,5 @@ curl -X POST -H "Content-Type: application/json" -d '{
     "NEXT": "<next-version>-SNAPSHOT",
     "GIT_USER_EMAIL": "envoy-bot@users.noreply.github.com",
     "GIT_USER_NAME": "Via CircleCI"
-}}' "https://circleci.com/api/v1.1/project/github/envoyproxy/java-control-plane/tree/master?circle-token=<my-token>"
+}}' "https://circleci.com/api/v1.1/project/github/envoyproxy/protoc-gen-validate/tree/master?circle-token=<my-token>"
 ```

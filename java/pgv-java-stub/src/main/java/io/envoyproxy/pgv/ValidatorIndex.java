@@ -25,4 +25,12 @@ public interface ValidatorIndex {
             return Validator.ALWAYS_VALID;
         }
     };
+
+    ValidatorIndex ALWAYS_INVALID = new ValidatorIndex() {
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> Validator<T> validatorFor(Class clazz) {
+            return Validator.ALWAYS_INVALID;
+        }
+    };
 }
