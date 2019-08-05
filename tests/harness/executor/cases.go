@@ -784,10 +784,10 @@ var stringCases = []TestCase{
 	{"string - contains - invalid", &cases.StringContains{Val: "candy bazs"}, false},
 	{"string - contains - invalid (case-sensitive)", &cases.StringContains{Val: "Candy Bars"}, false},
 
-	{"string - not contains - valid", &cases.StringNotContains{Val: "candy bars"}, false},
-	{"string - not contains - valid (only)", &cases.StringNotContains{Val: "bar"}, false},
-	{"string - not contains - invalid", &cases.StringNotContains{Val: "candy bazs"}, true},
-	{"string - not contains - invalid (case-sensitive)", &cases.StringNotContains{Val: "Candy Bars"}, true},
+	{"string - not contains - valid", &cases.StringNotContains{Val: "candy bazs"}, true},
+	{"string - not contains - valid (case-sensitive)", &cases.StringNotContains{Val: "Candy Bars"}, true},
+	{"string - not contains - invalid", &cases.StringNotContains{Val: "candy bars"}, false},
+	{"string - not contains - invalid (equal)", &cases.StringNotContains{Val: "bar"}, false},
 
 	{"string - suffix - valid", &cases.StringSuffix{Val: "foobaz"}, true},
 	{"string - suffix - valid (only)", &cases.StringSuffix{Val: "baz"}, true},
