@@ -53,6 +53,7 @@ func init() {
 		durationCases,
 		timestampCases,
 		anyCases,
+		kitchenSink,
 	}
 
 	for _, set := range sets {
@@ -1306,4 +1307,12 @@ var anyCases = []TestCase{
 	{"any - not in - valid", &cases.AnyNotIn{Val: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}}, true},
 	{"any - not in - valid (empty)", &cases.AnyNotIn{}, true},
 	{"any - not in - invalid", &cases.AnyNotIn{Val: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Timestamp"}}, false},
+}
+
+var kitchenSink = []TestCase{
+	{"kitchensink - field - valid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", IntConst: 5, BoolConst: false, FloatVal: &wrappers.FloatValue{Value: 1}, DurVal: &duration.Duration{Seconds: 3}, TsVal: &timestamp.Timestamp{Seconds: 17}, FloatConst: 7, DoubleIn: 123, EnumConst: cases.ComplexTestEnum_ComplexTWO, AnyVal: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}}}, true},
+	{"kitchensink - valid (unset)", &cases.KitchenSinkMessage{}, true},
+	{"kitchensink - field - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{}}, false},
+	{"kitchensink - field - embedded - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Another: &cases.ComplexTestMsg{}}}, false},
+	{"kitchensink - field - invalid (transitive)", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", BoolConst: true, Nested: &cases.ComplexTestMsg{}}}, false},
 }
