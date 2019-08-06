@@ -1,6 +1,7 @@
 #ifndef _VALIDATE_H
 #define _VALIDATE_H
 
+#include <codecvt>
 #include <functional>
 #include <regex>
 #include <stdexcept>
@@ -127,6 +128,11 @@ static inline bool IsHostname(const string& to_validate) {
   }
 
   return true;
+}
+
+static inline size_t Utf8Len(const string& narrow_string) {
+  std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> converter;
+  return converter.from_bytes(narrow_string).size();
 }
 
 } // namespace pgv
