@@ -12,15 +12,18 @@ http_archive(
     urls = ["https://github.com/bazelbuild/bazel-gazelle/releases/download/0.17.0/bazel-gazelle-0.17.0.tar.gz"],
     sha256 = "3c681998538231a2d24d0c07ed5a7658cb72bfb5fd4bf9911157c0e9ac6a2687",
 )
-# TODO: use released version of protobuf that includes commit
-# fa252ec2a54acb24ddc87d48fed1ecfd458445fd. This works around the issue
-# described here: https://github.com/google/protobuf/pull/5024
 http_archive(
     name = "com_google_protobuf",
-    url = "https://github.com/google/protobuf/archive/fa252ec2a54acb24ddc87d48fed1ecfd458445fd.tar.gz",
-    sha256 = "3d610ac90f8fa16e12490088605c248b85fdaf23114ce4b3605cdf81f7823604",
-    strip_prefix = "protobuf-fa252ec2a54acb24ddc87d48fed1ecfd458445fd",
+    url = "https://github.com/protocolbuffers/protobuf/releases/download/v3.9.1/protobuf-all-3.9.1.tar.gz",
+    sha256 = "3040a5b946d9df7aa89c0bf6981330bf92b7844fd90e71b61da0c721e421a421",
+    strip_prefix = "protobuf-3.9.1",
 )
+
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()
+
+
 http_archive(
     name = "bazel_skylib",
     url = "https://github.com/bazelbuild/bazel-skylib/archive/0.5.0.tar.gz",
@@ -67,6 +70,14 @@ maven_jar(
 bind(
     name = "gson",
     actual = "@com_google_gson//jar",
+)
+maven_jar(
+    name = "error_prone_annotations_maven",
+    artifact = "com.google.errorprone:error_prone_annotations:2.3.2",
+)
+bind(
+    name = "error_prone_annotations",
+    actual = "@error_prone_annotations_maven//jar",
 )
 
 maven_jar(
