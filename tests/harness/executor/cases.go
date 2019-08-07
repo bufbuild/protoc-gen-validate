@@ -1040,6 +1040,11 @@ var repeatedCases = []TestCase{
 	{"repeated - min and items len - valid", &cases.RepeatedMinAndItemLen{Val: []string{"aaa", "bbb"}}, true},
 	{"repeated - min and items len - invalid (min)", &cases.RepeatedMinAndItemLen{Val: []string{}}, false},
 	{"repeated - min and items len - invalid (len)", &cases.RepeatedMinAndItemLen{Val: []string{"x"}}, false},
+
+	{"repeated - duration - gte - valid", &cases.RepeatedDuration{Val: []*duration.Duration{{Seconds: 3}}}, true},
+	{"repeated - duration - gte - valid (empty)", &cases.RepeatedDuration{}, true},
+	{"repeated - duration - gte - valid (equal)", &cases.RepeatedDuration{Val: []*duration.Duration{{Nanos: 1000000}}}, true},
+	{"repeated - duration - gte - invalid", &cases.RepeatedDuration{Val: []*duration.Duration{{Seconds: -1}}}, false},
 }
 
 var mapCases = []TestCase{
@@ -1305,7 +1310,7 @@ var anyCases = []TestCase{
 }
 
 var kitchenSink = []TestCase{
-	{"kitchensink - field - valid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", IntConst: 5, BoolConst: false, FloatVal: &wrappers.FloatValue{Value: 1}, DurVal: &duration.Duration{Seconds: 3}, TsVal: &timestamp.Timestamp{Seconds: 17}, FloatConst: 7, DoubleIn: 123, EnumConst: cases.ComplexTestEnum_ComplexTWO, AnyVal: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}}}, true},
+	{"kitchensink - field - valid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", IntConst: 5, BoolConst: false, FloatVal: &wrappers.FloatValue{Value: 1}, DurVal: &duration.Duration{Seconds: 3}, TsVal: &timestamp.Timestamp{Seconds: 17}, FloatConst: 7, DoubleIn: 123, EnumConst: cases.ComplexTestEnum_ComplexTWO, AnyVal: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}, RepTsVal: []*timestamp.Timestamp{{Seconds: 3}}, MapVal: map[int32]string{-1: "a", -2: "b"}, BytesVal: []byte("\x00\x99"), O: &cases.ComplexTestMsg_X{X: "foobar"}}}, true},
 	{"kitchensink - valid (unset)", &cases.KitchenSinkMessage{}, true},
 	{"kitchensink - field - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{}}, false},
 	{"kitchensink - field - embedded - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Another: &cases.ComplexTestMsg{}}}, false},

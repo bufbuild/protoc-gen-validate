@@ -6,6 +6,7 @@ option go_package = "cases";
 import "tests/harness/cases/other_package/embed.proto";
 
 import "validate/validate.proto";
+import "google/protobuf/duration.proto";
 
 message Embed { int64 val = 1 [(validate.rules).int64.gt = 0]; }
 
@@ -23,3 +24,4 @@ message RepeatedEmbedSkip { repeated Embed val = 1 [(validate.rules).repeated.it
 message RepeatedItemIn { repeated string val = 1 [(validate.rules).repeated.items.string = {in: ["foo", "bar"]}]; }
 message RepeatedItemNotIn { repeated string val = 1 [(validate.rules).repeated.items.string = {not_in: ["foo", "bar"]}]; }
 message RepeatedMinAndItemLen { repeated string val = 1 [(validate.rules).repeated = { items { string { len: 3 } }, min_items: 1 }]; }
+message RepeatedDuration { repeated google.protobuf.Duration val = 1 [(validate.rules).repeated = { items { duration { gte { nanos: 1000000}}}}]; }
