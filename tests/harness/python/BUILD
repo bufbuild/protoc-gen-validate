@@ -1,4 +1,4 @@
-load("@my_deps//:requirements.bzl", "requirement")
+load("@pgv_pip_deps//:requirements.bzl", "requirement")
 load("@io_bazel_rules_python//python:python.bzl",  "py_binary")
 
 
