@@ -34,7 +34,7 @@ def unpack(message):
             return test_class
 
 if __name__ == "__main__":
-    message = sys.stdin.read()
+    message = sys.stdin.buffer.read()
     testcase = TestCase()
     try:
         testcase.ParseFromString(message)
