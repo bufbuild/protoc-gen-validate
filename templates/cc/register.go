@@ -241,7 +241,7 @@ func (fns CCFuncs) lit(x interface{}) string {
 	case reflect.String:
 		return fmt.Sprintf("%q", x)
 	case reflect.Uint8:
-		return fmt.Sprintf("0x%X", x)
+		return fmt.Sprintf("%d", x)
 	case reflect.Slice:
 		els := make([]string, val.Len())
 		switch reflect.TypeOf(x).Elem().Kind() {
