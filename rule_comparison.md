@@ -38,14 +38,14 @@
 ## Bytes
 | Constraint Rule | Go | GoGo | C++ | Java | Python |
 | ---| :---: | :---: | :---: | :---: | :---: |
-| const                  |✅|✅|✅|✅|❌|
-| len/min\_len/max_len   |✅|✅|✅|✅|❌|
-| pattern                |✅|✅|✅|✅|❌|
-| prefix/suffix/contains |✅|✅|✅|✅|❌|
-| in/not_in              |✅|✅|✅|✅|❌|
-| ip                     |✅|✅|❌|✅|❌|
-| ipv4                   |✅|✅|❌|✅|❌|
-| ipv6                   |✅|✅|❌|✅|❌|
+| const                  |✅|✅|✅|✅|✅|
+| len/min\_len/max_len   |✅|✅|✅|✅|✅|
+| pattern                |✅|✅|✅|✅|✅|
+| prefix/suffix/contains |✅|✅|✅|✅|✅|
+| in/not_in              |✅|✅|✅|✅|✅|
+| ip                     |✅|✅|❌|✅|✅|
+| ipv4                   |✅|✅|❌|✅|✅|
+| ipv6                   |✅|✅|❌|✅|✅|
 
 ## Enums
 | Constraint Rule | Go | GoGo | C++ | Java | Python | 
@@ -63,22 +63,22 @@
 ## Repeated
 | Constraint Rule | Go | GoGo | C++ | Java | Python | 
 | ---| :---: | :---: | :---: | :---: | :---: |
-| min\_items/max_items   |✅|✅|✅|✅|❌|
-| unique                 |✅|✅|✅|✅|❌|
-| items                  |✅|✅|❌|✅|❌|
+| min\_items/max_items   |✅|✅|✅|✅|✅|
+| unique                 |✅|✅|✅|✅|✅|
+| items                  |✅|✅|❌|✅|✅|
 
 ## Maps
 | Constraint Rule | Go | GoGo | C++ | Java | Python | 
 | ---| :---: | :---: | :---: | :---: | :---: |
-| min\_pairs/max_pairs   |✅|✅|❌|✅|❌|
+| min\_pairs/max_pairs   |✅|✅|❌|✅|✅|
 | no_sparse              |✅|✅|❌|❌|❌|
-| keys                   |✅|✅|❌|✅|❌|
-| values                 |✅|✅|❌|✅|❌|
+| keys                   |✅|✅|❌|✅|✅|
+| values                 |✅|✅|❌|✅|✅|
 
 ## OneOf
 | Constraint Rule | Go | GoGo | C++ | Java | Python | 
 | ---| :---: | :---: | :---: | :---: | :---: |
-| required               |✅|✅|✅|✅|❌|
+| required               |✅|✅|✅|✅|✅|
 
 ## WKT Scalar Value Wrappers
 | Constraint Rule | Go | GoGo | C++ | Java | Python | 

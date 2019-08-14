@@ -19,7 +19,7 @@ from tests.harness.cases.wkt_timestamp_pb2 import *
 from tests.harness.cases.kitchen_sink_pb2 import *
 
 sys.path.append(os.environ['GOPATH']+'/src/github.com/envoyproxy/protoc-gen-validate/validate')
-from validator import *
+from validator import validate, ValidationFailed, UnimplementedException, print_validate
 
 class_list = []
 for k, v in inspect.getmembers(sys.modules[__name__], inspect.isclass):
@@ -34,7 +34,10 @@ def unpack(message):
             return test_class
 
 if __name__ == "__main__":
-    message = sys.stdin.read()
+    if sys.version_info[0] >= 3:
+        message = sys.stdin.buffer.read()
+    else:
+        message = sys.stdin.read()
     testcase = TestCase()
     try:
         testcase.ParseFromString(message)
@@ -43,15 +46,15 @@ if __name__ == "__main__":
     test_class = unpack(testcase.message)
     try:
         result = TestResult()
-        validate = generate_validate(test_class)
         valid = validate(test_class)
         result.Valid = True
     except ValidationFailed as e:
         result.Valid = False
-        result.Reason = str(e)
+        result.Reason = repr(e)
     except UnimplementedException as e:
         result.Error = False
         result.AllowFailure = True
+        result.Reason = repr(e)
     try:
         sys.stdout.write(result.SerializeToString())
     except TypeError:
