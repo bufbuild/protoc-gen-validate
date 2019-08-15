@@ -1,18 +1,18 @@
 # Constraint Rule Comparison
 ## Global
-| Constraint Rule | Go | GoGo | C++ | Java | Python | 
+| Constraint Rule | Go | GoGo | C++ | Java | Python |
 | ---| :---: | :---: | :---: | :---: | :---: |
 | disabled               |✅|✅|✅|✅|✅|
 
 ## Numerics
-| Constraint Rule | Go | GoGo | C++ | Java | Python | 
+| Constraint Rule | Go | GoGo | C++ | Java | Python |
 | ---| :---: | :---: | :---: | :---: | :---: |
 | const                  |✅|✅|✅|✅|✅|
 | lt/lte/gt/gte          |✅|✅|✅|✅|✅|
 | in/not_in              |✅|✅|✅|✅|✅|
 
 ## Bools
-| Constraint Rule | Go | GoGo | C++ | Java | Python | 
+| Constraint Rule | Go | GoGo | C++ | Java | Python |
 | ---| :---: | :---: | :---: | :---: | :---: |
 | const                  |✅|✅|✅|✅|✅|
 
@@ -20,7 +20,7 @@
 | Constraint Rule | Go | GoGo | C++ | Java | Python |
 | ---| :---: | :---: | :---: | :---: | :---: |
 | const                  |✅|✅|✅|✅|✅|
-| len/min\_len/max_len   |✅|✅|❌|✅|✅|
+| len/min\_len/max_len   |✅|✅|✅|✅|✅|
 | min\_bytes/max\_bytes  |✅|✅|✅|✅|✅|
 | pattern                |✅|✅|❌|✅|✅|
 | prefix/suffix/contains |✅|✅|✅|✅|✅|
@@ -48,51 +48,51 @@
 | ipv6                   |✅|✅|❌|✅|✅|
 
 ## Enums
-| Constraint Rule | Go | GoGo | C++ | Java | Python | 
+| Constraint Rule | Go | GoGo | C++ | Java | Python |
 | ---| :---: | :---: | :---: | :---: | :---: |
 | const                  |✅|✅|✅|✅|✅|
 | defined_only           |✅|✅|✅|✅|✅|
 | in/not_in              |✅|✅|✅|✅|✅|
 
 ## Messages
-| Constraint Rule | Go | GoGo | C++ | Java | Python | 
+| Constraint Rule | Go | GoGo | C++ | Java | Python |
 | ---| :---: | :---: | :---: | :---: | :---: |
 | skip                   |✅|✅|✅|✅|✅|
 | required               |✅|✅|✅|✅|✅|
 
 ## Repeated
-| Constraint Rule | Go | GoGo | C++ | Java | Python | 
+| Constraint Rule | Go | GoGo | C++ | Java | Python |
 | ---| :---: | :---: | :---: | :---: | :---: |
 | min\_items/max_items   |✅|✅|✅|✅|✅|
 | unique                 |✅|✅|✅|✅|✅|
 | items                  |✅|✅|❌|✅|✅|
 
 ## Maps
-| Constraint Rule | Go | GoGo | C++ | Java | Python | 
+| Constraint Rule | Go | GoGo | C++ | Java | Python |
 | ---| :---: | :---: | :---: | :---: | :---: |
-| min\_pairs/max_pairs   |✅|✅|❌|✅|✅|
+| min\_pairs/max_pairs   |✅|✅|✅|✅|✅|
 | no_sparse              |✅|✅|❌|❌|❌|
 | keys                   |✅|✅|❌|✅|✅|
 | values                 |✅|✅|❌|✅|✅|
 
 ## OneOf
-| Constraint Rule | Go | GoGo | C++ | Java | Python | 
+| Constraint Rule | Go | GoGo | C++ | Java | Python |
 | ---| :---: | :---: | :---: | :---: | :---: |
 | required               |✅|✅|✅|✅|✅|
 
 ## WKT Scalar Value Wrappers
-| Constraint Rule | Go | GoGo | C++ | Java | Python | 
+| Constraint Rule | Go | GoGo | C++ | Java | Python |
 | ---| :---: | :---: | :---: | :---: | :---: |
 | wrapper validation     |✅|✅|✅|✅|✅|
 
 ## WKT Any
-| Constraint Rule | Go | GoGo | C++ | Java | Python | 
+| Constraint Rule | Go | GoGo | C++ | Java | Python |
 | ---| :---: | :---: | :---: | :---: | :---: |
 | required               |✅|✅|✅|✅|✅|
 | in/not_in              |✅|✅|✅|✅|✅|
 
 ## WKT Duration
-| Constraint Rule | Go | GoGo | C++ | Java | Python | 
+| Constraint Rule | Go | GoGo | C++ | Java | Python |
 | ---| :---: | :---: | :---: | :---: | :---: |
 | required               |✅|✅|✅|✅|✅|
 | const                  |✅|✅|✅|✅|✅|
@@ -100,7 +100,7 @@
 | in/not_in              |✅|✅|✅|✅|✅|
 
 ## WKT Timestamp
-| Constraint Rule | Go | GoGo | C++ | Java | Python | 
+| Constraint Rule | Go | GoGo | C++ | Java | Python |
 | ---| :---: | :---: | :---: | :---: | :---: |
 | required               |✅|✅|❌|✅|✅|
 | const                  |✅|✅|❌|✅|✅|
