@@ -84,8 +84,7 @@ make build
   - `gogo` for [gogo proto](https://github.com/gogo/protobuf) (experimental)
   - `cc` for c++ (partially implemented)
   - `java`
-
-Support for `python` is planned.
+  - `python`
 
 ### Examples
 
@@ -211,6 +210,31 @@ index.validatorFor(message.getClass()).assertValid(message);
 // Create a gRPC client and server interceptor to automatically validate messages (requires pgv-java-grpc module)
 clientStub = clientStub.withInterceptors(new ValidatingClientInterceptor(index));
 serverBuilder.addService(ServerInterceptors.intercept(svc, new ValidatingServerInterceptor(index)));
+```
+
+#### Python
+
+Since Python is a dynamically typed language, it works with JIT code generation. So protoc does not need to be run to generate code.
+
+The file `validate/validator.py` has a `validate()` method which needs to be run with an instance of the proto you are validating. 
+
+You must install all the dependencies in the `requirements.txt` before running the validator.
+
+To run `validate()`, do the following: 
+```
+from validator import validate, FailedValidation
+
+p = Person()
+validate(p) # This should either return None or raise a ValidationFailed exception.
+```
+
+To see what code has been generated and run, you can do the following:
+```
+from validator import validate, print_validate, FailedValidation
+
+p = Person()
+validate(p)
+printer = print_validate(p)
 ```
 
 ## Constraint Rules
