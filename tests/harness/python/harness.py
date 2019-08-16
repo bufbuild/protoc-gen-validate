@@ -47,6 +47,7 @@ if __name__ == "__main__":
     try:
         result = TestResult()
         valid = validate(test_class)
+        valid(test_class)
         result.Valid = True
     except ValidationFailed as e:
         result.Valid = False
