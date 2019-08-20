@@ -19,9 +19,9 @@ def validate(proto_message):
     printer += func + "\n"
     exec(func)
     try:
-        return generate_validate(proto_message)
+        return generate_validate
     except NameError:
-        return locals()['generate_validate'](proto_message)
+        return locals()['generate_validate']
 
 def print_validate(proto_message):
     return "".join([s for s in printer.splitlines(True) if s.strip()])
@@ -234,7 +234,7 @@ def message_template(option_value, name, repeated = False):
     {% else %}
     if _has_field(p, \"{{ name.split('.')[-1] }}\"):
     {% endif %}
-        embedded = validate(p.{{ name }})
+        embedded = validate(p.{{ name }})(p.{{ name }})
         if embedded is not None:
             return embedded
     {%- endif -%}
@@ -743,7 +743,7 @@ def repeated_template(option_value, name, field):
         {%- if o and o.repeated and o.repeated.items.message.skip %}
         pass
         {% else %}
-        validate(item)
+        validate(item)(item)
         {% endif %}
     {%- endif %}
     {%- if o and str(o.repeated['items']) %}
