@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:bc963c14b9a626c9951be5346ca658d4a967b50762733a27d69b928338a17183"
+  name = "github.com/emicklei/proto"
+  packages = ["."]
+  pruneopts = ""
+  revision = "0a9409d9194451bb7ef74edd3694cccfd316b3b1"
+  version = "v1.6.13"
+
+[[projects]]
   digest = "1:6e73003ecd35f4487a5e88270d3ca0a81bc80dc88053ac7e4dcfec5fba30d918"
   name = "github.com/gogo/protobuf"
   packages = [
@@ -50,6 +58,17 @@
   pruneopts = ""
   revision = "bb8c3f89f33752b4c49c272d2ab2a0fef6f4b0cd"
   version = "v0.4.10"
+
+[[projects]]
+  digest = "1:6594f47d0ba5aee94aead2c06258859757a8b407e05b93bdbf82af1c0f7b6bf3"
+  name = "github.com/nilslice/protolock"
+  packages = [
+    ".",
+    "extend",
+  ]
+  pruneopts = ""
+  revision = "7c01b4544e1ce14e93890a1346f853183caec6e4"
+  version = "v0.14.0"
 
 [[projects]]
   digest = "1:d0431c2fd72e39ee43ea7742322abbc200c3e704c9102c5c3c2e2e667095b0ca"
@@ -101,6 +120,7 @@
     "github.com/iancoleman/strcase",
     "github.com/lyft/protoc-gen-star",
     "github.com/lyft/protoc-gen-star/lang/go",
+    "github.com/nilslice/protolock/extend",
     "golang.org/x/net/context",
   ]
   solver-name = "gps-cdcl"

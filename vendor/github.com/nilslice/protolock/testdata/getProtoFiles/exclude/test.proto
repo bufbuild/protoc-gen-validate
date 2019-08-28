@@ -1,0 +1,6 @@
+syntax = "proto3";
+package exclude;
+
+message Test {
+  string name = 1;
+}

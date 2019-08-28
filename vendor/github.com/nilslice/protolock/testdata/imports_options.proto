@@ -1,0 +1,39 @@
+syntax = "proto3";
+package test;
+
+import "google/protobuf/descriptor.proto";
+import "testdata/test.proto";
+
+message Channel {
+  option (ext.persisted) = { opt1: true opt2: false };
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message Channel2 {
+  option (ext.persisted) = true;
+  int64 id = 1;
+  string name = 2 [(personal) = true, (owner) = 'test'];
+  string description = 3 [(custom_options_commas) = { personal: true, internal: false, owner: "some owner" }];
+  map<string, int32> map = 4 [(personal) = true];
+  string address = 5 [(custom_options) = { personal: true internal: false owner: "some owner" }];
+}
+
+enum TestEnumOption {
+  reserved 2;
+  option allow_alias = true;
+  FIRST = 0;
+  SECOND = 1;
+  SEGUNDO = 3 [(my_enum_value_option) = 321];
+}
+
+message FieldOptions {
+  bool personal = 1;
+  bool internal = 2;
+  string owner = 3;
+}
+
+extend google.protobuf.FieldOptions {
+  FieldOptions custom_options = 50000;
+}

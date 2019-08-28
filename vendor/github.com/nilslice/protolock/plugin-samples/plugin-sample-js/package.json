@@ -1,0 +1,26 @@
+{
+  "name": "plugin-sample-js",
+  "version": "0.0.1",
+  "description": "sample nodejs plugin to define custom protolock rules",
+  "main": "main.js",
+  "scripts": {
+    "pack": "pkg --output plugin-sample-js package.json && echo '' && echo 'Move the `plugin-sample-js` executable into your $PATH for `protolock` to find it and run it as a plugin.' && echo ''",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nilslice/protolock.git"
+  },
+  "author": "Steve Manuel",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/nilslice/protolock/issues"
+  },
+  "homepage": "https://github.com/nilslice/protolock#readme",
+  "bin": {
+    "plugin-sample-js": "./main.js"
+  },
+  "devDependencies": {
+    "pkg": "^4.3.4"
+  }
+}

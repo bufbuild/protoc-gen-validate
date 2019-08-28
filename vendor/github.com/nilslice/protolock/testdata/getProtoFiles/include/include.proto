@@ -1,0 +1,6 @@
+syntax = "proto3";
+package include;
+
+message Include {
+  string name = 1;
+}

@@ -1,0 +1,666 @@
+{
+    "current": {
+        "definitions": [
+            {
+                "protopath": "testdata:/:getProtoFiles:/:exclude:/:test.proto",
+                "def": {
+                    "messages": [
+                        {
+                            "name": "Test",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "name",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "protopath": "testdata:/:getProtoFiles:/:exclude.proto",
+                "def": {
+                    "messages": [
+                        {
+                            "name": "Exclude",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "name",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "protopath": "testdata:/:getProtoFiles:/:include:/:exclude.proto",
+                "def": {
+                    "messages": [
+                        {
+                            "name": "Exclude",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "name",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "protopath": "testdata:/:getProtoFiles:/:include:/:include.proto",
+                "def": {
+                    "messages": [
+                        {
+                            "name": "Include",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "name",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "protopath": "testdata:/:imports_options.proto",
+                "def": {
+                    "messages": [
+                        {
+                            "name": "Channel",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "id",
+                                    "type": "int64"
+                                },
+                                {
+                                    "id": 2,
+                                    "name": "name",
+                                    "type": "string"
+                                },
+                                {
+                                    "id": 3,
+                                    "name": "description",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Channel2",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "id",
+                                    "type": "int64"
+                                },
+                                {
+                                    "id": 2,
+                                    "name": "name",
+                                    "type": "string"
+                                },
+                                {
+                                    "id": 3,
+                                    "name": "description",
+                                    "type": "string"
+                                }
+                            ],
+                            "options": [
+                                {
+                                    "name": "(ext.persisted)",
+                                    "value": "true"
+                                }
+                            ]
+                        }
+                    ],
+                    "imports": [
+                        {
+                            "path": "testdata/test.proto"
+                        }
+                    ]
+                }
+            },
+            {
+                "protopath": "testdata:/:test.proto",
+                "def": {
+                    "enums": [
+                        {
+                            "name": "TestEnum",
+                            "enum_fields": [
+                                {
+                                    "name": "FIRST",
+                                    "integer": 0
+                                },
+                                {
+                                    "name": "SECOND",
+                                    "integer": 1
+                                },
+                                {
+                                    "name": "SEGUNDO",
+                                    "integer": 1
+                                }
+                            ],
+                            "reserved_ids": [
+                                2
+                            ]
+                        },
+                        {
+                            "name": "ContainsEnum.NestedEnum",
+                            "enum_fields": [
+                                {
+                                    "name": "ABC",
+                                    "integer": 1
+                                },
+                                {
+                                    "name": "DEF",
+                                    "integer": 2
+                                }
+                            ],
+                            "reserved_ids": [
+                                101
+                            ],
+                            "reserved_names": [
+                                "DEPTH"
+                            ]
+                        }
+                    ],
+                    "messages": [
+                        {
+                            "name": "Channel",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "id",
+                                    "type": "int64"
+                                },
+                                {
+                                    "id": 2,
+                                    "name": "name",
+                                    "type": "string"
+                                },
+                                {
+                                    "id": 3,
+                                    "name": "description",
+                                    "type": "string"
+                                },
+                                {
+                                    "id": 4,
+                                    "name": "foo",
+                                    "type": "string"
+                                },
+                                {
+                                    "id": 5,
+                                    "name": "age",
+                                    "type": "int32"
+                                },
+                                {
+                                    "id": 44,
+                                    "name": "msg",
+                                    "type": "A"
+                                }
+                            ],
+                            "reserved_ids": [
+                                6,
+                                8,
+                                9,
+                                10,
+                                11
+                            ],
+                            "messages": [
+                                {
+                                    "name": "A",
+                                    "fields": [
+                                        {
+                                            "id": 1,
+                                            "name": "id",
+                                            "type": "int32"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Display",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "width",
+                                    "type": "int32"
+                                },
+                                {
+                                    "id": 2,
+                                    "name": "height",
+                                    "type": "int32"
+                                },
+                                {
+                                    "id": 44,
+                                    "name": "msg",
+                                    "type": "A"
+                                }
+                            ],
+                            "maps": [
+                                {
+                                    "key_type": "string",
+                                    "field": {
+                                        "id": 4,
+                                        "name": "b_map",
+                                        "type": "int32"
+                                    }
+                                }
+                            ],
+                            "reserved_ids": [
+                                3
+                            ],
+                            "reserved_names": [
+                                "a_map"
+                            ],
+                            "messages": [
+                                {
+                                    "name": "A",
+                                    "fields": [
+                                        {
+                                            "id": 1,
+                                            "name": "id",
+                                            "type": "int64"
+                                        }
+                                    ],
+                                    "reserved_ids": [
+                                        2
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "ContainsEnum",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "id",
+                                    "type": "int32"
+                                },
+                                {
+                                    "id": 2,
+                                    "name": "value",
+                                    "type": "NestedEnum"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "PreviousRequest",
+                            "fields": [
+                                {
+                                    "id": 4,
+                                    "name": "name",
+                                    "type": "string"
+                                },
+                                {
+                                    "id": 9,
+                                    "name": "is_active",
+                                    "type": "bool"
+                                }
+                            ]
+                        }
+                    ],
+                    "services": [
+                        {
+                            "name": "ChannelChanger",
+                            "rpcs": [
+                                {
+                                    "name": "Next",
+                                    "in_type": "NextRequest",
+                                    "out_type": "Channel",
+                                    "in_streamed": true
+                                },
+                                {
+                                    "name": "Previous",
+                                    "in_type": "PreviousRequest",
+                                    "out_type": "Channel",
+                                    "out_streamed": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "updated": {
+        "definitions": [
+            {
+                "protopath": "testdata:/:getProtoFiles:/:exclude:/:test.proto",
+                "def": {
+                    "messages": [
+                        {
+                            "name": "Test",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "name",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "protopath": "testdata:/:getProtoFiles:/:exclude.proto",
+                "def": {
+                    "messages": [
+                        {
+                            "name": "Exclude",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "name",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "protopath": "testdata:/:getProtoFiles:/:include:/:exclude.proto",
+                "def": {
+                    "messages": [
+                        {
+                            "name": "Exclude",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "name",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "protopath": "testdata:/:getProtoFiles:/:include:/:include.proto",
+                "def": {
+                    "messages": [
+                        {
+                            "name": "Include",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "name",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "protopath": "testdata:/:imports_options.proto",
+                "def": {
+                    "messages": [
+                        {
+                            "name": "Channel",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "id",
+                                    "type": "int64"
+                                },
+                                {
+                                    "id": 2,
+                                    "name": "name",
+                                    "type": "string"
+                                },
+                                {
+                                    "id": 3,
+                                    "name": "description",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Channel2",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "id",
+                                    "type": "int64"
+                                },
+                                {
+                                    "id": 2,
+                                    "name": "name",
+                                    "type": "string"
+                                },
+                                {
+                                    "id": 3,
+                                    "name": "description",
+                                    "type": "string"
+                                }
+                            ],
+                            "options": [
+                                {
+                                    "name": "(ext.persisted)",
+                                    "value": "true"
+                                }
+                            ]
+                        }
+                    ],
+                    "imports": [
+                        {
+                            "path": "testdata/test.proto"
+                        }
+                    ]
+                }
+            },
+            {
+                "protopath": "testdata:/:test.proto",
+                "def": {
+                    "enums": [
+                        {
+                            "name": "TestEnum",
+                            "enum_fields": [
+                                {
+                                    "name": "FIRST",
+                                    "integer": 0
+                                },
+                                {
+                                    "name": "SECOND",
+                                    "integer": 1
+                                },
+                                {
+                                    "name": "SEGUNDO",
+                                    "integer": 1
+                                }
+                            ],
+                            "reserved_ids": [
+                                2
+                            ]
+                        },
+                        {
+                            "name": "ContainsEnum.NestedEnum",
+                            "enum_fields": [
+                                {
+                                    "name": "ABC",
+                                    "integer": 1
+                                },
+                                {
+                                    "name": "DEF",
+                                    "integer": 2
+                                }
+                            ],
+                            "reserved_ids": [
+                                101
+                            ],
+                            "reserved_names": [
+                                "DEPTH"
+                            ]
+                        }
+                    ],
+                    "messages": [
+                        {
+                            "name": "Channel",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "id",
+                                    "type": "int64"
+                                },
+                                {
+                                    "id": 2,
+                                    "name": "name",
+                                    "type": "string"
+                                },
+                                {
+                                    "id": 3,
+                                    "name": "description",
+                                    "type": "string"
+                                },
+                                {
+                                    "id": 4,
+                                    "name": "foo",
+                                    "type": "string"
+                                },
+                                {
+                                    "id": 5,
+                                    "name": "age",
+                                    "type": "int32"
+                                },
+                                {
+                                    "id": 44,
+                                    "name": "msg",
+                                    "type": "A"
+                                }
+                            ],
+                            "reserved_ids": [
+                                6,
+                                8,
+                                9,
+                                10,
+                                11
+                            ],
+                            "messages": [
+                                {
+                                    "name": "A",
+                                    "fields": [
+                                        {
+                                            "id": 1,
+                                            "name": "id",
+                                            "type": "int32"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Display",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "width",
+                                    "type": "int32"
+                                },
+                                {
+                                    "id": 2,
+                                    "name": "height",
+                                    "type": "int32"
+                                },
+                                {
+                                    "id": 44,
+                                    "name": "msg",
+                                    "type": "A"
+                                }
+                            ],
+                            "maps": [
+                                {
+                                    "key_type": "string",
+                                    "field": {
+                                        "id": 4,
+                                        "name": "b_map",
+                                        "type": "int32"
+                                    }
+                                }
+                            ],
+                            "reserved_ids": [
+                                3
+                            ],
+                            "reserved_names": [
+                                "a_map"
+                            ],
+                            "messages": [
+                                {
+                                    "name": "A",
+                                    "fields": [
+                                        {
+                                            "id": 1,
+                                            "name": "id",
+                                            "type": "int64"
+                                        }
+                                    ],
+                                    "reserved_ids": [
+                                        2
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "ContainsEnum",
+                            "fields": [
+                                {
+                                    "id": 1,
+                                    "name": "id",
+                                    "type": "int32"
+                                },
+                                {
+                                    "id": 2,
+                                    "name": "value",
+                                    "type": "NestedEnum"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "PreviousRequest",
+                            "fields": [
+                                {
+                                    "id": 4,
+                                    "name": "name",
+                                    "type": "string"
+                                },
+                                {
+                                    "id": 9,
+                                    "name": "is_active",
+                                    "type": "bool"
+                                }
+                            ]
+                        }
+                    ],
+                    "services": [
+                        {
+                            "name": "ChannelChanger",
+                            "rpcs": [
+                                {
+                                    "name": "Next",
+                                    "in_type": "NextRequest",
+                                    "out_type": "Channel",
+                                    "in_streamed": true
+                                },
+                                {
+                                    "name": "Previous",
+                                    "in_type": "PreviousRequest",
+                                    "out_type": "Channel",
+                                    "out_streamed": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

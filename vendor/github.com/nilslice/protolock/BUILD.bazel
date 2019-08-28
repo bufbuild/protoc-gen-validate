@@ -1,0 +1,39 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "commit.go",
+        "config.go",
+        "hints.go",
+        "init.go",
+        "parse.go",
+        "protopath.go",
+        "report.go",
+        "rules.go",
+        "status.go",
+        "uptodate.go",
+    ],
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/nilslice/protolock",
+    importpath = "github.com/nilslice/protolock",
+    visibility = ["//visibility:public"],
+    deps = ["//vendor/github.com/emicklei/proto:go_default_library"],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = [
+        "hints_test.go",
+        "order_test.go",
+        "parse_test.go",
+        "protopath_test.go",
+        "rules_test.go",
+        "uptodate_test.go",
+    ],
+    data = glob(["testdata/**"]),
+    embed = [":go_default_library"],
+    deps = [
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+    ],
+)

@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["plugin.go"],
+    importpath = "github.com/envoyproxy/protoc-gen-validate/protolock-pgv",
+    visibility = ["//visibility:private"],
+    deps = ["//vendor/github.com/nilslice/protolock/extend:go_default_library"],
+)
+
+go_binary(
+    name = "protolock-pgv",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)

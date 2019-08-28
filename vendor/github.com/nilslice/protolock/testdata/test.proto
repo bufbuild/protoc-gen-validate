@@ -1,0 +1,83 @@
+syntax = "proto3";
+package dataset;
+
+option java_multiple_files = true;
+option java_package = "test.java.package";
+option java_outer_classname = "TestClass";
+
+service TestService {
+  rpc TestRpc(TestRequest) returns (TestResponse) {
+    option (test_option) = "option_value";
+    option (test_option_2) = "option_value_3";
+  }
+}
+
+message TestRequest {}
+message TestResponse {}
+
+message Channel {
+  reserved 6, 8 to 11;
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  string foo = 4;
+  int32 age = 5;
+  int32 newnew = 101;
+
+  message A { int32 id = 1; }
+
+  A msg = 44;
+}
+
+message Display {
+  reserved "a_map", 'single_quoted';
+  reserved 3;
+  int32 width = 1;
+  int32 height = 2;
+
+  message A {
+    reserved 2;
+    int64 id = 1;
+  }
+
+  A msg = 44;
+
+  map<string, int32> b_map = 4;
+}
+
+enum TestEnum {
+  reserved 2;
+  option allow_alias = true;
+  FIRST = 0;
+  SECOND = 1;
+  SEGUNDO = 1;
+}
+
+message ContainsEnum {
+  int32 id = 1;
+
+  enum NestedEnum {
+    reserved 101;
+    reserved "DEPTH";
+
+    ABC = 1;
+    DEF = 2;
+  }
+
+  NestedEnum value = 2;
+}
+
+// @protolock:skip
+message NextRequest {}
+
+message PreviousRequest {
+  oneof test_oneof {
+    string name = 4;
+    bool is_active = 9;
+  }
+}
+
+service ChannelChanger {
+  rpc Next(stream NextRequest) returns (Channel);
+  rpc Previous(PreviousRequest) returns (stream Channel);
+}

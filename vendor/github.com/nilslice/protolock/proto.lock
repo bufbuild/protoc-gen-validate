@@ -1,0 +1,539 @@
+{
+  "definitions": [
+    {
+      "protopath": "testdata:/:getProtoFiles:/:exclude:/:test.proto",
+      "def": {
+        "messages": [
+          {
+            "name": "Test",
+            "fields": [
+              {
+                "id": 1,
+                "name": "name",
+                "type": "string"
+              }
+            ]
+          }
+        ],
+        "package": {
+          "name": "exclude"
+        }
+      }
+    },
+    {
+      "protopath": "testdata:/:getProtoFiles:/:exclude.proto",
+      "def": {
+        "messages": [
+          {
+            "name": "Exclude",
+            "fields": [
+              {
+                "id": 1,
+                "name": "name",
+                "type": "string"
+              }
+            ]
+          }
+        ],
+        "package": {
+          "name": "exclude"
+        }
+      }
+    },
+    {
+      "protopath": "testdata:/:getProtoFiles:/:include:/:exclude.proto",
+      "def": {
+        "messages": [
+          {
+            "name": "Exclude",
+            "fields": [
+              {
+                "id": 1,
+                "name": "name",
+                "type": "string"
+              }
+            ]
+          }
+        ],
+        "package": {
+          "name": "exclude"
+        }
+      }
+    },
+    {
+      "protopath": "testdata:/:getProtoFiles:/:include:/:include.proto",
+      "def": {
+        "messages": [
+          {
+            "name": "Include",
+            "fields": [
+              {
+                "id": 1,
+                "name": "name",
+                "type": "string"
+              }
+            ]
+          }
+        ],
+        "package": {
+          "name": "include"
+        }
+      }
+    },
+    {
+      "protopath": "testdata:/:imports_options.proto",
+      "def": {
+        "enums": [
+          {
+            "name": "TestEnumOption",
+            "enum_fields": [
+              {
+                "name": "FIRST"
+              },
+              {
+                "name": "SECOND",
+                "integer": 1
+              },
+              {
+                "name": "SEGUNDO",
+                "integer": 3,
+                "options": [
+                  {
+                    "name": "(my_enum_value_option)",
+                    "value": "321"
+                  }
+                ]
+              }
+            ],
+            "reserved_ids": [
+              2
+            ]
+          }
+        ],
+        "messages": [
+          {
+            "name": "Channel",
+            "fields": [
+              {
+                "id": 1,
+                "name": "id",
+                "type": "int64"
+              },
+              {
+                "id": 2,
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "id": 3,
+                "name": "description",
+                "type": "string"
+              }
+            ],
+            "options": [
+              {
+                "name": "(ext.persisted)",
+                "aggregated": [
+                  {
+                    "name": "opt1",
+                    "value": "true"
+                  },
+                  {
+                    "name": "opt2",
+                    "value": "false"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Channel2",
+            "fields": [
+              {
+                "id": 1,
+                "name": "id",
+                "type": "int64"
+              },
+              {
+                "id": 2,
+                "name": "name",
+                "type": "string",
+                "options": [
+                  {
+                    "name": "(personal)",
+                    "value": "true"
+                  },
+                  {
+                    "name": "(owner)",
+                    "value": "test"
+                  }
+                ]
+              },
+              {
+                "id": 3,
+                "name": "description",
+                "type": "string",
+                "options": [
+                  {
+                    "name": "(custom_options_commas)",
+                    "aggregated": [
+                      {
+                        "name": "personal",
+                        "value": "true"
+                      },
+                      {
+                        "name": "internal",
+                        "value": "false"
+                      },
+                      {
+                        "name": "owner",
+                        "value": "some owner"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": 5,
+                "name": "address",
+                "type": "string",
+                "options": [
+                  {
+                    "name": "(custom_options)",
+                    "aggregated": [
+                      {
+                        "name": "personal",
+                        "value": "true"
+                      },
+                      {
+                        "name": "internal",
+                        "value": "false"
+                      },
+                      {
+                        "name": "owner",
+                        "value": "some owner"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "maps": [
+              {
+                "key_type": "string",
+                "field": {
+                  "id": 4,
+                  "name": "map",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(personal)",
+                      "value": "true"
+                    }
+                  ]
+                }
+              }
+            ],
+            "options": [
+              {
+                "name": "(ext.persisted)",
+                "value": "true"
+              }
+            ]
+          },
+          {
+            "name": "FieldOptions",
+            "fields": [
+              {
+                "id": 1,
+                "name": "personal",
+                "type": "bool"
+              },
+              {
+                "id": 2,
+                "name": "internal",
+                "type": "bool"
+              },
+              {
+                "id": 3,
+                "name": "owner",
+                "type": "string"
+              }
+            ]
+          },
+          {
+            "name": "google.protobuf.FieldOptions",
+            "fields": [
+              {
+                "id": 50000,
+                "name": "custom_options",
+                "type": "FieldOptions"
+              }
+            ]
+          }
+        ],
+        "imports": [
+          {
+            "path": "google/protobuf/descriptor.proto"
+          },
+          {
+            "path": "testdata/test.proto"
+          }
+        ],
+        "package": {
+          "name": "test"
+        }
+      }
+    },
+    {
+      "protopath": "testdata:/:test.proto",
+      "def": {
+        "enums": [
+          {
+            "name": "TestEnum",
+            "enum_fields": [
+              {
+                "name": "FIRST"
+              },
+              {
+                "name": "SECOND",
+                "integer": 1
+              },
+              {
+                "name": "SEGUNDO",
+                "integer": 1
+              }
+            ],
+            "reserved_ids": [
+              2
+            ]
+          },
+          {
+            "name": "ContainsEnum.NestedEnum",
+            "enum_fields": [
+              {
+                "name": "ABC",
+                "integer": 1
+              },
+              {
+                "name": "DEF",
+                "integer": 2
+              }
+            ],
+            "reserved_ids": [
+              101
+            ],
+            "reserved_names": [
+              "DEPTH"
+            ]
+          }
+        ],
+        "messages": [
+          {
+            "name": "TestRequest"
+          },
+          {
+            "name": "TestResponse"
+          },
+          {
+            "name": "Channel",
+            "fields": [
+              {
+                "id": 1,
+                "name": "id",
+                "type": "int64"
+              },
+              {
+                "id": 2,
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "id": 3,
+                "name": "description",
+                "type": "string"
+              },
+              {
+                "id": 4,
+                "name": "foo",
+                "type": "string"
+              },
+              {
+                "id": 5,
+                "name": "age",
+                "type": "int32"
+              },
+              {
+                "id": 101,
+                "name": "newnew",
+                "type": "int32"
+              },
+              {
+                "id": 44,
+                "name": "msg",
+                "type": "A"
+              }
+            ],
+            "reserved_ids": [
+              6,
+              8,
+              9,
+              10,
+              11
+            ],
+            "messages": [
+              {
+                "name": "A",
+                "fields": [
+                  {
+                    "id": 1,
+                    "name": "id",
+                    "type": "int32"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Display",
+            "fields": [
+              {
+                "id": 1,
+                "name": "width",
+                "type": "int32"
+              },
+              {
+                "id": 2,
+                "name": "height",
+                "type": "int32"
+              },
+              {
+                "id": 44,
+                "name": "msg",
+                "type": "A"
+              }
+            ],
+            "maps": [
+              {
+                "key_type": "string",
+                "field": {
+                  "id": 4,
+                  "name": "b_map",
+                  "type": "int32"
+                }
+              }
+            ],
+            "reserved_ids": [
+              3
+            ],
+            "reserved_names": [
+              "a_map",
+              "single_quoted"
+            ],
+            "messages": [
+              {
+                "name": "A",
+                "fields": [
+                  {
+                    "id": 1,
+                    "name": "id",
+                    "type": "int64"
+                  }
+                ],
+                "reserved_ids": [
+                  2
+                ]
+              }
+            ]
+          },
+          {
+            "name": "ContainsEnum",
+            "fields": [
+              {
+                "id": 1,
+                "name": "id",
+                "type": "int32"
+              },
+              {
+                "id": 2,
+                "name": "value",
+                "type": "NestedEnum"
+              }
+            ]
+          },
+          {
+            "name": "PreviousRequest",
+            "fields": [
+              {
+                "id": 4,
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "id": 9,
+                "name": "is_active",
+                "type": "bool"
+              }
+            ]
+          }
+        ],
+        "services": [
+          {
+            "name": "TestService",
+            "rpcs": [
+              {
+                "name": "TestRpc",
+                "in_type": "TestRequest",
+                "out_type": "TestResponse",
+                "options": [
+                  {
+                    "name": "(test_option)",
+                    "value": "option_value"
+                  },
+                  {
+                    "name": "(test_option_2)",
+                    "value": "option_value_3"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "ChannelChanger",
+            "rpcs": [
+              {
+                "name": "Next",
+                "in_type": "NextRequest",
+                "out_type": "Channel",
+                "in_streamed": true
+              },
+              {
+                "name": "Previous",
+                "in_type": "PreviousRequest",
+                "out_type": "Channel",
+                "out_streamed": true
+              }
+            ]
+          }
+        ],
+        "package": {
+          "name": "dataset"
+        },
+        "options": [
+          {
+            "name": "java_multiple_files",
+            "value": "true"
+          },
+          {
+            "name": "java_package",
+            "value": "test.java.package"
+          },
+          {
+            "name": "java_outer_classname",
+            "value": "TestClass"
+          }
+        ]
+      }
+    }
+  ]
+}

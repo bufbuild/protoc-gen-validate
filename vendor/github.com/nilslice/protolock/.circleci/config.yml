@@ -1,0 +1,118 @@
+# Check https://circleci.com/docs/2.0/language-go/ for more details
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.12
+        environment:
+          GO111MODULE: "on"
+
+    working_directory: /go/src/github.com/nilslice/protolock
+    steps:
+      - checkout
+      # fetch depenencies, test code
+      - run: go get -v -d ./...
+      - run: go test -v -race ./...
+      # install binary, test commands
+      - run: go install ./...
+      - run: protolock
+      - run: stat proto.lock
+      - run: cat proto.lock | grep "testdata:/:test.proto"
+      - run: protolock status
+      - run: protolock commit
+      - run: protolock status --plugins=_not-a-plugin_ | grep "executable file not found"
+      - run: 
+          name: check output using plugin-sample-error
+          command: |
+            set +o pipefail
+
+            protolock status --plugins=plugin-sample-error | grep "some error"
+      - run:
+          name: check output using plugin-sample
+          command: |
+            set +o pipefail
+
+            WARNINGS=$(protolock status --plugins=plugin-sample | wc -l)
+            if [ "$WARNINGS" != 2 ]; then
+              exit 1
+            fi
+      - run: 
+          name: check output using multiple plugins, with one error expected
+          command: |
+            set +o pipefail
+
+            protolock status --plugins=plugin-sample,plugin-sample-error | grep "some error"
+            protolock status --plugins=plugin-sample-error,plugin-sample | grep "some error"
+      - run: 
+          name: check output using multiple plugins with errors
+          command: |
+            set +o pipefail
+
+            ERRS=$(protolock status --plugins=plugin-sample-error,plugin-sample-error | grep "some error" | wc -l)
+            if [ "$ERRS" != 4 ]; then # (4 = 2 * 2, since errors are now reported using 2 lines)
+              exit 1
+            fi
+            MOREERRS=$(protolock status --plugins=plugin-sample-error,plugin-sample-error,plugin-sample-error | grep "some error" | wc -l)
+            if [ "$MOREERRS" != 6 ]; then # (6 = 3 * 2, since errors are now reported using 2 lines)
+              exit 1
+            fi
+      - run: 
+          name: remove a test proto file, expect violations.txt to contain data from plugin-sample
+          command: |
+            set +o pipefail
+
+            rm testdata/test.proto
+            protolock status --plugins=plugin-sample || true # let this fail, don't stop CI
+            stat violations.txt
+            cat violations.txt | grep "Encountered changes in violation of: NoRemovingFieldsWithoutReserve"
+      - run:
+          name: check if proto.lock is up-to-date with the .proto files in the tree
+          command: |
+            set +o pipefail
+
+            cat >testdata/newProto.proto <<EOL
+            syntax = "proto3";
+            package testdata;
+            message newProto {}
+            EOL
+
+            # checkout to HEAD to revert the changes made by previous tests
+            git reset --hard HEAD
+
+            # basic status check should not fail even though the lock file is 
+            # now technically out of date, compared to the protos
+            protolock status     
+
+            NOCHECK=$(protolock status --uptodate=false | wc -l) # false=default 
+            if [ "$NOCHECK" != 0 ]; then 
+              exit 1
+            fi
+
+            CHECK=$(protolock status --uptodate=true | wc -l)
+            if [ "$CHECK" = 0 ]; then 
+              exit 1
+            fi
+  plugin_nodejs:
+    docker:
+      - image: circleci/node:8
+
+    steps: 
+      - checkout
+      # fetch depenencies, test code
+      - run: npm i --prefix plugin-samples/plugin-sample-js/
+      - run: npm run pack --prefix plugin-samples/plugin-sample-js/
+      - run: 
+          name: 
+          command: |
+            set +o pipefail
+            cd plugin-samples/plugin-sample-js/
+            WARNINGS=$(cat example.data.json | ./plugin-sample-js)
+            echo $WARNINGS | grep '{"filepath":"path/to/file.proto","message":"Something bad happened."}'
+            echo $WARNINGS | grep '{"filepath":"path/to/another.proto","message":"Something else bad happened."}'
+
+workflows:
+  version: 2
+  build-cmd-test-plugins:
+    jobs:
+      - build
+      - plugin_nodejs
