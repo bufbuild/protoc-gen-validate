@@ -1,0 +1,6118 @@
+Comparing numbers.proto
+  Comparing FloatNone
+    Comparing val
+  Comparing FloatConst
+    Comparing val
+  Comparing FloatIn
+    Comparing val
+      Comparing (validate.rules).float
+         : 
+  Comparing FloatNotIn
+    Comparing val
+      Comparing (validate.rules).float
+         : 
+  Comparing FloatLT
+    Comparing val
+      Comparing (validate.rules).float.lt
+        0 : 0
+  Comparing FloatLTE
+    Comparing val
+      Comparing (validate.rules).float.lte
+        64 : 64
+  Comparing FloatGT
+    Comparing val
+      Comparing (validate.rules).float.gt
+        16 : 16
+  Comparing FloatGTE
+    Comparing val
+      Comparing (validate.rules).float.gte
+        8 : 8
+  Comparing FloatGTLT
+    Comparing val
+      Comparing (validate.rules).float
+         : 
+  Comparing FloatExLTGT
+    Comparing val
+      Comparing (validate.rules).float
+         : 
+  Comparing FloatGTELTE
+    Comparing val
+      Comparing (validate.rules).float
+         : 
+  Comparing FloatExGTELTE
+    Comparing val
+      Comparing (validate.rules).float
+         : 
+  Comparing DoubleNone
+    Comparing val
+  Comparing DoubleConst
+    Comparing val
+      Comparing (validate.rules).double.const
+        1.23 : 1.23
+  Comparing DoubleIn
+    Comparing val
+      Comparing (validate.rules).double
+         : 
+  Comparing DoubleNotIn
+    Comparing val
+      Comparing (validate.rules).double
+         : 
+  Comparing DoubleLT
+    Comparing val
+      Comparing (validate.rules).double.lt
+        0 : 0
+  Comparing DoubleLTE
+    Comparing val
+      Comparing (validate.rules).double.lte
+        64 : 64
+  Comparing DoubleGT
+    Comparing val
+      Comparing (validate.rules).double.gt
+        16 : 16
+  Comparing DoubleGTE
+    Comparing val
+      Comparing (validate.rules).double.gte
+        8 : 8
+  Comparing DoubleGTLT
+    Comparing val
+      Comparing (validate.rules).double
+         : 
+  Comparing DoubleExLTGT
+    Comparing val
+      Comparing (validate.rules).double
+         : 
+  Comparing DoubleGTELTE
+    Comparing val
+      Comparing (validate.rules).double
+         : 
+  Comparing DoubleExGTELTE
+    Comparing val
+      Comparing (validate.rules).double
+         : 
+  Comparing Int32None
+    Comparing val
+  Comparing Int32Const
+    Comparing val
+      Comparing (validate.rules).int32.const
+        1 : 1
+  Comparing Int32In
+    Comparing val
+      Comparing (validate.rules).int32
+         : 
+  Comparing Int32NotIn
+    Comparing val
+      Comparing (validate.rules).int32
+         : 
+  Comparing Int32LT
+    Comparing val
+      Comparing (validate.rules).int32.lt
+        0 : 0
+  Comparing Int32LTE
+    Comparing val
+      Comparing (validate.rules).int32.lte
+        64 : 64
+  Comparing Int32GT
+    Comparing val
+      Comparing (validate.rules).int32.gt
+        16 : 16
+  Comparing Int32GTE
+    Comparing val
+      Comparing (validate.rules).int32.gte
+        8 : 8
+  Comparing Int32GTLT
+    Comparing val
+      Comparing (validate.rules).int32
+         : 
+  Comparing Int32ExLTGT
+    Comparing val
+      Comparing (validate.rules).int32
+         : 
+  Comparing Int32GTELTE
+    Comparing val
+      Comparing (validate.rules).int32
+         : 
+  Comparing Int32ExGTELTE
+    Comparing val
+      Comparing (validate.rules).int32
+         : 
+  Comparing Int64None
+    Comparing val
+  Comparing Int64Const
+    Comparing val
+      Comparing (validate.rules).int64.const
+        1 : 1
+  Comparing Int64In
+    Comparing val
+      Comparing (validate.rules).int64
+         : 
+  Comparing Int64NotIn
+    Comparing val
+      Comparing (validate.rules).int64
+         : 
+  Comparing Int64LT
+    Comparing val
+      Comparing (validate.rules).int64.lt
+        0 : 0
+  Comparing Int64LTE
+    Comparing val
+      Comparing (validate.rules).int64.lte
+        64 : 64
+  Comparing Int64GT
+    Comparing val
+      Comparing (validate.rules).int64.gt
+        16 : 16
+  Comparing Int64GTE
+    Comparing val
+      Comparing (validate.rules).int64.gte
+        8 : 8
+  Comparing Int64GTLT
+    Comparing val
+      Comparing (validate.rules).int64
+         : 
+  Comparing Int64ExLTGT
+    Comparing val
+      Comparing (validate.rules).int64
+         : 
+  Comparing Int64GTELTE
+    Comparing val
+      Comparing (validate.rules).int64
+         : 
+  Comparing Int64ExGTELTE
+    Comparing val
+      Comparing (validate.rules).int64
+         : 
+  Comparing UInt32None
+    Comparing val
+  Comparing UInt32Const
+    Comparing val
+      Comparing (validate.rules).uint32.const
+        1 : 1
+  Comparing UInt32In
+    Comparing val
+      Comparing (validate.rules).uint32
+         : 
+  Comparing UInt32NotIn
+    Comparing val
+      Comparing (validate.rules).uint32
+         : 
+  Comparing UInt32LT
+    Comparing val
+      Comparing (validate.rules).uint32.lt
+        5 : 5
+  Comparing UInt32LTE
+    Comparing val
+      Comparing (validate.rules).uint32.lte
+        64 : 64
+  Comparing UInt32GT
+    Comparing val
+      Comparing (validate.rules).uint32.gt
+        16 : 16
+  Comparing UInt32GTE
+    Comparing val
+      Comparing (validate.rules).uint32.gte
+        8 : 8
+  Comparing UInt32GTLT
+    Comparing val
+      Comparing (validate.rules).uint32
+         : 
+  Comparing UInt32ExLTGT
+    Comparing val
+      Comparing (validate.rules).uint32
+         : 
+  Comparing UInt32GTELTE
+    Comparing val
+      Comparing (validate.rules).uint32
+         : 
+  Comparing UInt32ExGTELTE
+    Comparing val
+      Comparing (validate.rules).uint32
+         : 
+  Comparing UInt64None
+    Comparing val
+  Comparing UInt64Const
+    Comparing val
+      Comparing (validate.rules).uint64.const
+        1 : 1
+  Comparing UInt64In
+    Comparing val
+      Comparing (validate.rules).uint64
+         : 
+  Comparing UInt64NotIn
+    Comparing val
+      Comparing (validate.rules).uint64
+         : 
+  Comparing UInt64LT
+    Comparing val
+      Comparing (validate.rules).uint64.lt
+        5 : 5
+  Comparing UInt64LTE
+    Comparing val
+      Comparing (validate.rules).uint64.lte
+        64 : 64
+  Comparing UInt64GT
+    Comparing val
+      Comparing (validate.rules).uint64.gt
+        16 : 16
+  Comparing UInt64GTE
+    Comparing val
+      Comparing (validate.rules).uint64.gte
+        8 : 8
+  Comparing UInt64GTLT
+    Comparing val
+      Comparing (validate.rules).uint64
+         : 
+  Comparing UInt64ExLTGT
+    Comparing val
+      Comparing (validate.rules).uint64
+         : 
+  Comparing UInt64GTELTE
+    Comparing val
+      Comparing (validate.rules).uint64
+         : 
+  Comparing UInt64ExGTELTE
+    Comparing val
+      Comparing (validate.rules).uint64
+         : 
+  Comparing SInt32None
+    Comparing val
+  Comparing SInt32Const
+    Comparing val
+      Comparing (validate.rules).sint32.const
+        1 : 1
+  Comparing SInt32In
+    Comparing val
+      Comparing (validate.rules).sint32
+         : 
+  Comparing SInt32NotIn
+    Comparing val
+      Comparing (validate.rules).sint32
+         : 
+  Comparing SInt32LT
+    Comparing val
+      Comparing (validate.rules).sint32.lt
+        0 : 0
+  Comparing SInt32LTE
+    Comparing val
+      Comparing (validate.rules).sint32.lte
+        64 : 64
+  Comparing SInt32GT
+    Comparing val
+      Comparing (validate.rules).sint32.gt
+        16 : 16
+  Comparing SInt32GTE
+    Comparing val
+      Comparing (validate.rules).sint32.gte
+        8 : 8
+  Comparing SInt32GTLT
+    Comparing val
+      Comparing (validate.rules).sint32
+         : 
+  Comparing SInt32ExLTGT
+    Comparing val
+      Comparing (validate.rules).sint32
+         : 
+  Comparing SInt32GTELTE
+    Comparing val
+      Comparing (validate.rules).sint32
+         : 
+  Comparing SInt32ExGTELTE
+    Comparing val
+      Comparing (validate.rules).sint32
+         : 
+  Comparing SInt64None
+    Comparing val
+  Comparing SInt64Const
+    Comparing val
+      Comparing (validate.rules).sint64.const
+        1 : 1
+  Comparing SInt64In
+    Comparing val
+      Comparing (validate.rules).sint64
+         : 
+  Comparing SInt64NotIn
+    Comparing val
+      Comparing (validate.rules).sint64
+         : 
+  Comparing SInt64LT
+    Comparing val
+      Comparing (validate.rules).sint64.lt
+        0 : 0
+  Comparing SInt64LTE
+    Comparing val
+      Comparing (validate.rules).sint64.lte
+        64 : 64
+  Comparing SInt64GT
+    Comparing val
+      Comparing (validate.rules).sint64.gt
+        16 : 16
+  Comparing SInt64GTE
+    Comparing val
+      Comparing (validate.rules).sint64.gte
+        8 : 8
+  Comparing SInt64GTLT
+    Comparing val
+      Comparing (validate.rules).sint64
+         : 
+  Comparing SInt64ExLTGT
+    Comparing val
+      Comparing (validate.rules).sint64
+         : 
+  Comparing SInt64GTELTE
+    Comparing val
+      Comparing (validate.rules).sint64
+         : 
+  Comparing SInt64ExGTELTE
+    Comparing val
+      Comparing (validate.rules).sint64
+         : 
+  Comparing Fixed32None
+    Comparing val
+  Comparing Fixed32Const
+    Comparing val
+      Comparing (validate.rules).fixed32.const
+        1 : 1
+  Comparing Fixed32In
+    Comparing val
+      Comparing (validate.rules).fixed32
+         : 
+  Comparing Fixed32NotIn
+    Comparing val
+      Comparing (validate.rules).fixed32
+         : 
+  Comparing Fixed32LT
+    Comparing val
+      Comparing (validate.rules).fixed32.lt
+        5 : 5
+  Comparing Fixed32LTE
+    Comparing val
+      Comparing (validate.rules).fixed32.lte
+        64 : 64
+  Comparing Fixed32GT
+    Comparing val
+      Comparing (validate.rules).fixed32.gt
+        16 : 16
+  Comparing Fixed32GTE
+    Comparing val
+      Comparing (validate.rules).fixed32.gte
+        8 : 8
+  Comparing Fixed32GTLT
+    Comparing val
+      Comparing (validate.rules).fixed32
+         : 
+  Comparing Fixed32ExLTGT
+    Comparing val
+      Comparing (validate.rules).fixed32
+         : 
+  Comparing Fixed32GTELTE
+    Comparing val
+      Comparing (validate.rules).fixed32
+         : 
+  Comparing Fixed32ExGTELTE
+    Comparing val
+      Comparing (validate.rules).fixed32
+         : 
+  Comparing Fixed64None
+    Comparing val
+  Comparing Fixed64Const
+    Comparing val
+      Comparing (validate.rules).fixed64.const
+        1 : 1
+  Comparing Fixed64In
+    Comparing val
+      Comparing (validate.rules).fixed64
+         : 
+  Comparing Fixed64NotIn
+    Comparing val
+      Comparing (validate.rules).fixed64
+         : 
+  Comparing Fixed64LT
+    Comparing val
+      Comparing (validate.rules).fixed64.lt
+        5 : 5
+  Comparing Fixed64LTE
+    Comparing val
+      Comparing (validate.rules).fixed64.lte
+        64 : 64
+  Comparing Fixed64GT
+    Comparing val
+      Comparing (validate.rules).fixed64.gt
+        16 : 16
+  Comparing Fixed64GTE
+    Comparing val
+      Comparing (validate.rules).fixed64.gte
+        8 : 8
+  Comparing Fixed64GTLT
+    Comparing val
+      Comparing (validate.rules).fixed64
+         : 
+  Comparing Fixed64ExLTGT
+    Comparing val
+      Comparing (validate.rules).fixed64
+         : 
+  Comparing Fixed64GTELTE
+    Comparing val
+      Comparing (validate.rules).fixed64
+         : 
+  Comparing Fixed64ExGTELTE
+    Comparing val
+      Comparing (validate.rules).fixed64
+         : 
+  Comparing SFixed32None
+    Comparing val
+  Comparing SFixed32Const
+    Comparing val
+      Comparing (validate.rules).sfixed32.const
+        1 : 1
+  Comparing SFixed32In
+    Comparing val
+      Comparing (validate.rules).sfixed32
+         : 
+  Comparing SFixed32NotIn
+    Comparing val
+      Comparing (validate.rules).sfixed32
+         : 
+  Comparing SFixed32LT
+    Comparing val
+      Comparing (validate.rules).sfixed32.lt
+        0 : 0
+  Comparing SFixed32LTE
+    Comparing val
+      Comparing (validate.rules).sfixed32.lte
+        64 : 64
+  Comparing SFixed32GT
+    Comparing val
+      Comparing (validate.rules).sfixed32.gt
+        16 : 16
+  Comparing SFixed32GTE
+    Comparing val
+      Comparing (validate.rules).sfixed32.gte
+        8 : 8
+  Comparing SFixed32GTLT
+    Comparing val
+      Comparing (validate.rules).sfixed32
+         : 
+  Comparing SFixed32ExLTGT
+    Comparing val
+      Comparing (validate.rules).sfixed32
+         : 
+  Comparing SFixed32GTELTE
+    Comparing val
+      Comparing (validate.rules).sfixed32
+         : 
+  Comparing SFixed32ExGTELTE
+    Comparing val
+      Comparing (validate.rules).sfixed32
+         : 
+  Comparing SFixed64None
+    Comparing val
+  Comparing SFixed64Const
+    Comparing val
+      Comparing (validate.rules).sfixed64.const
+        1 : 1
+  Comparing SFixed64In
+    Comparing val
+      Comparing (validate.rules).sfixed64
+         : 
+  Comparing SFixed64NotIn
+    Comparing val
+      Comparing (validate.rules).sfixed64
+         : 
+  Comparing SFixed64LT
+    Comparing val
+      Comparing (validate.rules).sfixed64.lt
+        0 : 0
+  Comparing SFixed64LTE
+    Comparing val
+      Comparing (validate.rules).sfixed64.lte
+        64 : 64
+  Comparing SFixed64GT
+    Comparing val
+      Comparing (validate.rules).sfixed64.gt
+        16 : 16
+  Comparing SFixed64GTE
+    Comparing val
+      Comparing (validate.rules).sfixed64.gte
+        8 : 8
+  Comparing SFixed64GTLT
+    Comparing val
+      Comparing (validate.rules).sfixed64
+         : 
+  Comparing SFixed64ExLTGT
+    Comparing val
+      Comparing (validate.rules).sfixed64
+         : 
+  Comparing SFixed64GTELTE
+    Comparing val
+      Comparing (validate.rules).sfixed64
+         : 
+  Comparing SFixed64ExGTELTE
+    Comparing val
+      Comparing (validate.rules).sfixed64
+         : 
+======================
+{
+  "current": {
+    "definitions": [
+      {
+        "protopath": "numbers.proto",
+        "def": {
+          "messages": [
+            {
+              "name": "FloatNone",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float"
+                }
+              ]
+            },
+            {
+              "name": "FloatConst",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float.const",
+                      "value": "1.23"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatNotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatLTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatGTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatGTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleNone",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double"
+                }
+              ]
+            },
+            {
+              "name": "DoubleConst",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double.const",
+                      "value": "1.23"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleNotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleLTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleGTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleGTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32"
+                }
+              ]
+            },
+            {
+              "name": "Int32Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64"
+                }
+              ]
+            },
+            {
+              "name": "Int64Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32"
+                }
+              ]
+            },
+            {
+              "name": "UInt32Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32.lt",
+                      "value": "5"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64"
+                }
+              ]
+            },
+            {
+              "name": "UInt64Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64.lt",
+                      "value": "5"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32"
+                }
+              ]
+            },
+            {
+              "name": "SInt32Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64"
+                }
+              ]
+            },
+            {
+              "name": "SInt64Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32"
+                }
+              ]
+            },
+            {
+              "name": "Fixed32Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32.lt",
+                      "value": "5"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64"
+                }
+              ]
+            },
+            {
+              "name": "Fixed64Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64.lt",
+                      "value": "5"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32"
+                }
+              ]
+            },
+            {
+              "name": "SFixed32Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64"
+                }
+              ]
+            },
+            {
+              "name": "SFixed64Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "imports": [
+            {
+              "path": "validate/validate.proto"
+            }
+          ],
+          "package": {
+            "name": "tests.harness.cases"
+          },
+          "options": [
+            {
+              "name": "go_package",
+              "value": "cases"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "updated": {
+    "definitions": [
+      {
+        "protopath": "numbers.proto",
+        "def": {
+          "messages": [
+            {
+              "name": "FloatNone",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float"
+                }
+              ]
+            },
+            {
+              "name": "FloatConst",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float"
+                }
+              ]
+            },
+            {
+              "name": "FloatIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatNotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatLTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatGTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatGTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "FloatExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "float",
+                  "options": [
+                    {
+                      "name": "(validate.rules).float",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleNone",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double"
+                }
+              ]
+            },
+            {
+              "name": "DoubleConst",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double.const",
+                      "value": "1.23"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleNotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleLTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleGTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleGTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "DoubleExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "double",
+                  "options": [
+                    {
+                      "name": "(validate.rules).double",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32"
+                }
+              ]
+            },
+            {
+              "name": "Int32Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int32ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int32",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64"
+                }
+              ]
+            },
+            {
+              "name": "Int64Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Int64ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "int64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).int64",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32"
+                }
+              ]
+            },
+            {
+              "name": "UInt32Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32.lt",
+                      "value": "5"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt32ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint32",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64"
+                }
+              ]
+            },
+            {
+              "name": "UInt64Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64.lt",
+                      "value": "5"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "UInt64ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "uint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).uint64",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32"
+                }
+              ]
+            },
+            {
+              "name": "SInt32Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt32ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint32",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64"
+                }
+              ]
+            },
+            {
+              "name": "SInt64Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SInt64ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sint64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sint64",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32"
+                }
+              ]
+            },
+            {
+              "name": "Fixed32Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32.lt",
+                      "value": "5"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed32ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed32",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64"
+                }
+              ]
+            },
+            {
+              "name": "Fixed64Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64.lt",
+                      "value": "5"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "5"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Fixed64ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "fixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).fixed64",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32"
+                }
+              ]
+            },
+            {
+              "name": "SFixed32Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed32ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed32",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed32",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64None",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64"
+                }
+              ]
+            },
+            {
+              "name": "SFixed64Const",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64.const",
+                      "value": "1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64In",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64",
+                      "aggregated": [
+                        {
+                          "name": "in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64NotIn",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64",
+                      "aggregated": [
+                        {
+                          "name": "not_in"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64LT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64.lt",
+                      "value": "0"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64LTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64.lte",
+                      "value": "64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64GT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64.gt",
+                      "value": "16"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64GTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64.gte",
+                      "value": "8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64GTLT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64",
+                      "aggregated": [
+                        {
+                          "name": "gt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "lt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64ExLTGT",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64",
+                      "aggregated": [
+                        {
+                          "name": "lt",
+                          "value": "0"
+                        },
+                        {
+                          "name": "gt",
+                          "value": "10"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64GTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64",
+                      "aggregated": [
+                        {
+                          "name": "gte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "lte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "SFixed64ExGTELTE",
+              "fields": [
+                {
+                  "id": 1,
+                  "name": "val",
+                  "type": "sfixed64",
+                  "options": [
+                    {
+                      "name": "(validate.rules).sfixed64",
+                      "aggregated": [
+                        {
+                          "name": "lte",
+                          "value": "128"
+                        },
+                        {
+                          "name": "gte",
+                          "value": "256"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "imports": [
+            {
+              "path": "validate/validate.proto"
+            }
+          ],
+          "package": {
+            "name": "tests.harness.cases"
+          },
+          "options": [
+            {
+              "name": "go_package",
+              "value": "cases"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
