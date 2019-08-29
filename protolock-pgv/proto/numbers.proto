@@ -5,11 +5,11 @@ option go_package = "cases";
 
 import "validate/validate.proto";
 
-message FloatNone     { float val = 1; }
+// message FloatNone     { float val = 1 [(validate.rules).float.lt = 1]; }
 message FloatConst    { float val = 1 ;/*[(validate.rules).float.const = 1.23];*/ }
 message FloatIn       { float val = 1 [(validate.rules).float = {in: [4.56, 7.89]}]; }
 message FloatNotIn    { float val = 1 [(validate.rules).float = {not_in: [0]}]; }
-message FloatLT       { float val = 1 [(validate.rules).float.lt = 0]; }
+message FloatLT       { float val = 1 [(validate.rules).float.lt = 1]; }
 message FloatLTE      { float val = 1 [(validate.rules).float.lte = 64]; }
 message FloatGT       { float val = 1 [(validate.rules).float.gt = 16]; }
 message FloatGTE      { float val = 1 [(validate.rules).float.gte = 8]; }

@@ -1,553 +1,923 @@
 Comparing numbers.proto
-  Comparing FloatNone
-    Comparing val
-  Comparing FloatConst
-    Comparing val
-  Comparing FloatIn
-    Comparing val
-      Comparing (validate.rules).float
-         : 
   Comparing FloatNotIn
     Comparing val
-      Comparing (validate.rules).float
+      Comparing (validate.rules).float.not_in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing FloatLT
     Comparing val
       Comparing (validate.rules).float.lt
-        0 : 0
+        0 : 1
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing FloatLTE
     Comparing val
       Comparing (validate.rules).float.lte
         64 : 64
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing FloatGT
     Comparing val
       Comparing (validate.rules).float.gt
         16 : 16
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing FloatGTE
     Comparing val
       Comparing (validate.rules).float.gte
         8 : 8
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing FloatGTLT
     Comparing val
-      Comparing (validate.rules).float
+      Comparing (validate.rules).float.gt
+        0 : 0
+      Comparing (validate.rules).float.lt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing FloatExLTGT
     Comparing val
-      Comparing (validate.rules).float
+      Comparing (validate.rules).float.lt
+        0 : 0
+      Comparing (validate.rules).float.gt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing FloatGTELTE
     Comparing val
-      Comparing (validate.rules).float
+      Comparing (validate.rules).float.gte
+        128 : 128
+      Comparing (validate.rules).float.lte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing FloatExGTELTE
     Comparing val
-      Comparing (validate.rules).float
+      Comparing (validate.rules).float.lte
+        128 : 128
+      Comparing (validate.rules).float.gte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing DoubleNone
     Comparing val
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing DoubleConst
     Comparing val
       Comparing (validate.rules).double.const
         1.23 : 1.23
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing DoubleIn
     Comparing val
-      Comparing (validate.rules).double
+      Comparing (validate.rules).double.in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing DoubleNotIn
     Comparing val
-      Comparing (validate.rules).double
+      Comparing (validate.rules).double.not_in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing DoubleLT
     Comparing val
       Comparing (validate.rules).double.lt
         0 : 0
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing DoubleLTE
     Comparing val
       Comparing (validate.rules).double.lte
         64 : 64
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing DoubleGT
     Comparing val
       Comparing (validate.rules).double.gt
         16 : 16
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing DoubleGTE
     Comparing val
       Comparing (validate.rules).double.gte
         8 : 8
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing DoubleGTLT
     Comparing val
-      Comparing (validate.rules).double
+      Comparing (validate.rules).double.gt
+        0 : 0
+      Comparing (validate.rules).double.lt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing DoubleExLTGT
     Comparing val
-      Comparing (validate.rules).double
+      Comparing (validate.rules).double.lt
+        0 : 0
+      Comparing (validate.rules).double.gt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing DoubleGTELTE
     Comparing val
-      Comparing (validate.rules).double
+      Comparing (validate.rules).double.gte
+        128 : 128
+      Comparing (validate.rules).double.lte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing DoubleExGTELTE
     Comparing val
-      Comparing (validate.rules).double
+      Comparing (validate.rules).double.lte
+        128 : 128
+      Comparing (validate.rules).double.gte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Int32None
     Comparing val
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Int32Const
     Comparing val
       Comparing (validate.rules).int32.const
         1 : 1
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Int32In
     Comparing val
-      Comparing (validate.rules).int32
+      Comparing (validate.rules).int32.in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Int32NotIn
     Comparing val
-      Comparing (validate.rules).int32
+      Comparing (validate.rules).int32.not_in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Int32LT
     Comparing val
       Comparing (validate.rules).int32.lt
         0 : 0
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Int32LTE
     Comparing val
       Comparing (validate.rules).int32.lte
         64 : 64
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Int32GT
     Comparing val
       Comparing (validate.rules).int32.gt
         16 : 16
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Int32GTE
     Comparing val
       Comparing (validate.rules).int32.gte
         8 : 8
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Int32GTLT
     Comparing val
-      Comparing (validate.rules).int32
+      Comparing (validate.rules).int32.gt
+        0 : 0
+      Comparing (validate.rules).int32.lt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Int32ExLTGT
     Comparing val
-      Comparing (validate.rules).int32
+      Comparing (validate.rules).int32.lt
+        0 : 0
+      Comparing (validate.rules).int32.gt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Int32GTELTE
     Comparing val
-      Comparing (validate.rules).int32
+      Comparing (validate.rules).int32.gte
+        128 : 128
+      Comparing (validate.rules).int32.lte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Int32ExGTELTE
     Comparing val
-      Comparing (validate.rules).int32
+      Comparing (validate.rules).int32.lte
+        128 : 128
+      Comparing (validate.rules).int32.gte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Int64None
     Comparing val
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Int64Const
     Comparing val
       Comparing (validate.rules).int64.const
         1 : 1
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Int64In
     Comparing val
-      Comparing (validate.rules).int64
+      Comparing (validate.rules).int64.in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Int64NotIn
     Comparing val
-      Comparing (validate.rules).int64
+      Comparing (validate.rules).int64.not_in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Int64LT
     Comparing val
       Comparing (validate.rules).int64.lt
         0 : 0
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Int64LTE
     Comparing val
       Comparing (validate.rules).int64.lte
         64 : 64
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Int64GT
     Comparing val
       Comparing (validate.rules).int64.gt
         16 : 16
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Int64GTE
     Comparing val
       Comparing (validate.rules).int64.gte
         8 : 8
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Int64GTLT
     Comparing val
-      Comparing (validate.rules).int64
+      Comparing (validate.rules).int64.gt
+        0 : 0
+      Comparing (validate.rules).int64.lt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Int64ExLTGT
     Comparing val
-      Comparing (validate.rules).int64
+      Comparing (validate.rules).int64.lt
+        0 : 0
+      Comparing (validate.rules).int64.gt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Int64GTELTE
     Comparing val
-      Comparing (validate.rules).int64
+      Comparing (validate.rules).int64.gte
+        128 : 128
+      Comparing (validate.rules).int64.lte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Int64ExGTELTE
     Comparing val
-      Comparing (validate.rules).int64
+      Comparing (validate.rules).int64.lte
+        128 : 128
+      Comparing (validate.rules).int64.gte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing UInt32None
     Comparing val
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing UInt32Const
     Comparing val
       Comparing (validate.rules).uint32.const
         1 : 1
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing UInt32In
     Comparing val
-      Comparing (validate.rules).uint32
+      Comparing (validate.rules).uint32.in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing UInt32NotIn
     Comparing val
-      Comparing (validate.rules).uint32
+      Comparing (validate.rules).uint32.not_in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing UInt32LT
     Comparing val
       Comparing (validate.rules).uint32.lt
         5 : 5
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing UInt32LTE
     Comparing val
       Comparing (validate.rules).uint32.lte
         64 : 64
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing UInt32GT
     Comparing val
       Comparing (validate.rules).uint32.gt
         16 : 16
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing UInt32GTE
     Comparing val
       Comparing (validate.rules).uint32.gte
         8 : 8
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing UInt32GTLT
     Comparing val
-      Comparing (validate.rules).uint32
+      Comparing (validate.rules).uint32.gt
+        5 : 5
+      Comparing (validate.rules).uint32.lt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing UInt32ExLTGT
     Comparing val
-      Comparing (validate.rules).uint32
+      Comparing (validate.rules).uint32.lt
+        5 : 5
+      Comparing (validate.rules).uint32.gt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing UInt32GTELTE
     Comparing val
-      Comparing (validate.rules).uint32
+      Comparing (validate.rules).uint32.gte
+        128 : 128
+      Comparing (validate.rules).uint32.lte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing UInt32ExGTELTE
     Comparing val
-      Comparing (validate.rules).uint32
+      Comparing (validate.rules).uint32.lte
+        128 : 128
+      Comparing (validate.rules).uint32.gte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing UInt64None
     Comparing val
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing UInt64Const
     Comparing val
       Comparing (validate.rules).uint64.const
         1 : 1
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing UInt64In
     Comparing val
-      Comparing (validate.rules).uint64
+      Comparing (validate.rules).uint64.in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing UInt64NotIn
     Comparing val
-      Comparing (validate.rules).uint64
+      Comparing (validate.rules).uint64.not_in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing UInt64LT
     Comparing val
       Comparing (validate.rules).uint64.lt
         5 : 5
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing UInt64LTE
     Comparing val
       Comparing (validate.rules).uint64.lte
         64 : 64
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing UInt64GT
     Comparing val
       Comparing (validate.rules).uint64.gt
         16 : 16
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing UInt64GTE
     Comparing val
       Comparing (validate.rules).uint64.gte
         8 : 8
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing UInt64GTLT
     Comparing val
-      Comparing (validate.rules).uint64
+      Comparing (validate.rules).uint64.gt
+        5 : 5
+      Comparing (validate.rules).uint64.lt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing UInt64ExLTGT
     Comparing val
-      Comparing (validate.rules).uint64
+      Comparing (validate.rules).uint64.lt
+        5 : 5
+      Comparing (validate.rules).uint64.gt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing UInt64GTELTE
     Comparing val
-      Comparing (validate.rules).uint64
+      Comparing (validate.rules).uint64.gte
+        128 : 128
+      Comparing (validate.rules).uint64.lte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing UInt64ExGTELTE
     Comparing val
-      Comparing (validate.rules).uint64
+      Comparing (validate.rules).uint64.lte
+        128 : 128
+      Comparing (validate.rules).uint64.gte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SInt32None
     Comparing val
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SInt32Const
     Comparing val
       Comparing (validate.rules).sint32.const
         1 : 1
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SInt32In
     Comparing val
-      Comparing (validate.rules).sint32
+      Comparing (validate.rules).sint32.in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SInt32NotIn
     Comparing val
-      Comparing (validate.rules).sint32
+      Comparing (validate.rules).sint32.not_in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SInt32LT
     Comparing val
       Comparing (validate.rules).sint32.lt
         0 : 0
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SInt32LTE
     Comparing val
       Comparing (validate.rules).sint32.lte
         64 : 64
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SInt32GT
     Comparing val
       Comparing (validate.rules).sint32.gt
         16 : 16
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SInt32GTE
     Comparing val
       Comparing (validate.rules).sint32.gte
         8 : 8
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SInt32GTLT
     Comparing val
-      Comparing (validate.rules).sint32
+      Comparing (validate.rules).sint32.gt
+        0 : 0
+      Comparing (validate.rules).sint32.lt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SInt32ExLTGT
     Comparing val
-      Comparing (validate.rules).sint32
+      Comparing (validate.rules).sint32.lt
+        0 : 0
+      Comparing (validate.rules).sint32.gt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SInt32GTELTE
     Comparing val
-      Comparing (validate.rules).sint32
+      Comparing (validate.rules).sint32.gte
+        128 : 128
+      Comparing (validate.rules).sint32.lte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SInt32ExGTELTE
     Comparing val
-      Comparing (validate.rules).sint32
+      Comparing (validate.rules).sint32.lte
+        128 : 128
+      Comparing (validate.rules).sint32.gte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SInt64None
     Comparing val
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SInt64Const
     Comparing val
       Comparing (validate.rules).sint64.const
         1 : 1
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SInt64In
     Comparing val
-      Comparing (validate.rules).sint64
+      Comparing (validate.rules).sint64.in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SInt64NotIn
     Comparing val
-      Comparing (validate.rules).sint64
+      Comparing (validate.rules).sint64.not_in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SInt64LT
     Comparing val
       Comparing (validate.rules).sint64.lt
         0 : 0
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SInt64LTE
     Comparing val
       Comparing (validate.rules).sint64.lte
         64 : 64
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SInt64GT
     Comparing val
       Comparing (validate.rules).sint64.gt
         16 : 16
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SInt64GTE
     Comparing val
       Comparing (validate.rules).sint64.gte
         8 : 8
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SInt64GTLT
     Comparing val
-      Comparing (validate.rules).sint64
+      Comparing (validate.rules).sint64.gt
+        0 : 0
+      Comparing (validate.rules).sint64.lt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SInt64ExLTGT
     Comparing val
-      Comparing (validate.rules).sint64
+      Comparing (validate.rules).sint64.lt
+        0 : 0
+      Comparing (validate.rules).sint64.gt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SInt64GTELTE
     Comparing val
-      Comparing (validate.rules).sint64
+      Comparing (validate.rules).sint64.gte
+        128 : 128
+      Comparing (validate.rules).sint64.lte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SInt64ExGTELTE
     Comparing val
-      Comparing (validate.rules).sint64
+      Comparing (validate.rules).sint64.lte
+        128 : 128
+      Comparing (validate.rules).sint64.gte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Fixed32None
     Comparing val
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Fixed32Const
     Comparing val
       Comparing (validate.rules).fixed32.const
         1 : 1
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Fixed32In
     Comparing val
-      Comparing (validate.rules).fixed32
+      Comparing (validate.rules).fixed32.in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Fixed32NotIn
     Comparing val
-      Comparing (validate.rules).fixed32
+      Comparing (validate.rules).fixed32.not_in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Fixed32LT
     Comparing val
       Comparing (validate.rules).fixed32.lt
         5 : 5
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Fixed32LTE
     Comparing val
       Comparing (validate.rules).fixed32.lte
         64 : 64
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Fixed32GT
     Comparing val
       Comparing (validate.rules).fixed32.gt
         16 : 16
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Fixed32GTE
     Comparing val
       Comparing (validate.rules).fixed32.gte
         8 : 8
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Fixed32GTLT
     Comparing val
-      Comparing (validate.rules).fixed32
+      Comparing (validate.rules).fixed32.gt
+        5 : 5
+      Comparing (validate.rules).fixed32.lt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Fixed32ExLTGT
     Comparing val
-      Comparing (validate.rules).fixed32
+      Comparing (validate.rules).fixed32.lt
+        5 : 5
+      Comparing (validate.rules).fixed32.gt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Fixed32GTELTE
     Comparing val
-      Comparing (validate.rules).fixed32
+      Comparing (validate.rules).fixed32.gte
+        128 : 128
+      Comparing (validate.rules).fixed32.lte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Fixed32ExGTELTE
     Comparing val
-      Comparing (validate.rules).fixed32
+      Comparing (validate.rules).fixed32.lte
+        128 : 128
+      Comparing (validate.rules).fixed32.gte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Fixed64None
     Comparing val
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Fixed64Const
     Comparing val
       Comparing (validate.rules).fixed64.const
         1 : 1
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Fixed64In
     Comparing val
-      Comparing (validate.rules).fixed64
+      Comparing (validate.rules).fixed64.in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Fixed64NotIn
     Comparing val
-      Comparing (validate.rules).fixed64
+      Comparing (validate.rules).fixed64.not_in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Fixed64LT
     Comparing val
       Comparing (validate.rules).fixed64.lt
         5 : 5
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Fixed64LTE
     Comparing val
       Comparing (validate.rules).fixed64.lte
         64 : 64
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Fixed64GT
     Comparing val
       Comparing (validate.rules).fixed64.gt
         16 : 16
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Fixed64GTE
     Comparing val
       Comparing (validate.rules).fixed64.gte
         8 : 8
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing Fixed64GTLT
     Comparing val
-      Comparing (validate.rules).fixed64
+      Comparing (validate.rules).fixed64.gt
+        5 : 5
+      Comparing (validate.rules).fixed64.lt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Fixed64ExLTGT
     Comparing val
-      Comparing (validate.rules).fixed64
+      Comparing (validate.rules).fixed64.lt
+        5 : 5
+      Comparing (validate.rules).fixed64.gt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Fixed64GTELTE
     Comparing val
-      Comparing (validate.rules).fixed64
+      Comparing (validate.rules).fixed64.gte
+        128 : 128
+      Comparing (validate.rules).fixed64.lte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing Fixed64ExGTELTE
     Comparing val
-      Comparing (validate.rules).fixed64
+      Comparing (validate.rules).fixed64.lte
+        128 : 128
+      Comparing (validate.rules).fixed64.gte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SFixed32None
     Comparing val
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SFixed32Const
     Comparing val
       Comparing (validate.rules).sfixed32.const
         1 : 1
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SFixed32In
     Comparing val
-      Comparing (validate.rules).sfixed32
+      Comparing (validate.rules).sfixed32.in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SFixed32NotIn
     Comparing val
-      Comparing (validate.rules).sfixed32
+      Comparing (validate.rules).sfixed32.not_in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SFixed32LT
     Comparing val
       Comparing (validate.rules).sfixed32.lt
         0 : 0
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SFixed32LTE
     Comparing val
       Comparing (validate.rules).sfixed32.lte
         64 : 64
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SFixed32GT
     Comparing val
       Comparing (validate.rules).sfixed32.gt
         16 : 16
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SFixed32GTE
     Comparing val
       Comparing (validate.rules).sfixed32.gte
         8 : 8
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SFixed32GTLT
     Comparing val
-      Comparing (validate.rules).sfixed32
+      Comparing (validate.rules).sfixed32.gt
+        0 : 0
+      Comparing (validate.rules).sfixed32.lt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SFixed32ExLTGT
     Comparing val
-      Comparing (validate.rules).sfixed32
+      Comparing (validate.rules).sfixed32.lt
+        0 : 0
+      Comparing (validate.rules).sfixed32.gt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SFixed32GTELTE
     Comparing val
-      Comparing (validate.rules).sfixed32
+      Comparing (validate.rules).sfixed32.gte
+        128 : 128
+      Comparing (validate.rules).sfixed32.lte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SFixed32ExGTELTE
     Comparing val
-      Comparing (validate.rules).sfixed32
+      Comparing (validate.rules).sfixed32.lte
+        128 : 128
+      Comparing (validate.rules).sfixed32.gte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SFixed64None
     Comparing val
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SFixed64Const
     Comparing val
       Comparing (validate.rules).sfixed64.const
         1 : 1
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SFixed64In
     Comparing val
-      Comparing (validate.rules).sfixed64
+      Comparing (validate.rules).sfixed64.in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SFixed64NotIn
     Comparing val
-      Comparing (validate.rules).sfixed64
+      Comparing (validate.rules).sfixed64.not_in
+         : 
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SFixed64LT
     Comparing val
       Comparing (validate.rules).sfixed64.lt
         0 : 0
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SFixed64LTE
     Comparing val
       Comparing (validate.rules).sfixed64.lte
         64 : 64
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SFixed64GT
     Comparing val
       Comparing (validate.rules).sfixed64.gt
         16 : 16
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SFixed64GTE
     Comparing val
       Comparing (validate.rules).sfixed64.gte
         8 : 8
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
+         : 
   Comparing SFixed64GTLT
     Comparing val
-      Comparing (validate.rules).sfixed64
+      Comparing (validate.rules).sfixed64.gt
+        0 : 0
+      Comparing (validate.rules).sfixed64.lt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SFixed64ExLTGT
     Comparing val
-      Comparing (validate.rules).sfixed64
+      Comparing (validate.rules).sfixed64.lt
+        0 : 0
+      Comparing (validate.rules).sfixed64.gt
+        10 : 10
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SFixed64GTELTE
     Comparing val
-      Comparing (validate.rules).sfixed64
+      Comparing (validate.rules).sfixed64.gte
+        128 : 128
+      Comparing (validate.rules).sfixed64.lte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
   Comparing SFixed64ExGTELTE
     Comparing val
-      Comparing (validate.rules).sfixed64
+      Comparing (validate.rules).sfixed64.lte
+        128 : 128
+      Comparing (validate.rules).sfixed64.gte
+        256 : 256
+      Comparing NULL-TERMINATOR-NULL-TERMINATOR
          : 
 ======================
 {
@@ -3343,16 +3713,6 @@ Comparing numbers.proto
         "def": {
           "messages": [
             {
-              "name": "FloatNone",
-              "fields": [
-                {
-                  "id": 1,
-                  "name": "val",
-                  "type": "float"
-                }
-              ]
-            },
-            {
               "name": "FloatConst",
               "fields": [
                 {
@@ -3412,7 +3772,7 @@ Comparing numbers.proto
                   "options": [
                     {
                       "name": "(validate.rules).float.lt",
-                      "value": "0"
+                      "value": "1"
                     }
                   ]
                 }
@@ -6114,5 +6474,24 @@ Comparing numbers.proto
         }
       }
     ]
-  }
+  },
+  "protolock_warnings": [
+    {
+      "filepath": "numbers.proto",
+      "message": "\"FloatNone\" field: \"val\" has been removed, but is not reserved",
+      "rulename": "NoRemovingFieldsWithoutReserve"
+    },
+    {
+      "filepath": "numbers.proto",
+      "message": "\"FloatNone\" ID: \"1\" has been removed, but is not reserved",
+      "rulename": "NoRemovingFieldsWithoutReserve"
+    }
+  ],
+  "plugin_warnings": [
+    {
+      "filepath": "numbers.proto",
+      "message": "\"FloatLT\" field: \"val\" constraint: \"(validate.rules).float.lt\" has changed from 0 to 1",
+      "rulename": "PGV"
+    }
+  ]
 }
