@@ -120,6 +120,7 @@
     "github.com/iancoleman/strcase",
     "github.com/lyft/protoc-gen-star",
     "github.com/lyft/protoc-gen-star/lang/go",
+    "github.com/nilslice/protolock",
     "github.com/nilslice/protolock/extend",
     "golang.org/x/net/context",
   ]
