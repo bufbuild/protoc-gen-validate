@@ -29,6 +29,8 @@ GOGO_IMPORT:=$(subst $(space),,$(GOGO_IMPORT_SPACES))
 build: validate/validate.pb.go
 	# generates the PGV binary and installs it into $$GOPATH/bin
 	go install .
+	# generates the protolock PGV binary and installs it into $$GOPATH/bin
+	go install ./protolock-pgv
 
 .PHONY: bazel
 bazel:
