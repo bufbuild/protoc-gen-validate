@@ -48,10 +48,9 @@ func compareMessages(current []protolock.Message, updated []protolock.Message, f
 
 		if cur.Name == upd.Name {
 			warnings = append(warnings, compareFields(fmt.Sprintf("%q", cur.Name), cur.Fields, upd.Fields, filepath)...)
-			// warnings = append(warnings, compareFields("\""+cur.Name+"\"", cur.Fields, upd.Fields, filepath)...)
 			c++
 			u++
-		} else if cur.Name < upd.Name {
+		} else if cur.Name > upd.Name {
 			c++
 		} else {
 			u++
@@ -70,10 +69,9 @@ func compareFields(where string, current []protolock.Field, updated []protolock.
 
 		if cur.Name == upd.Name {
 			warnings = append(warnings, compareOptions(fmt.Sprintf("%s field: %q", where, cur.Name), flatOptions(cur.Options), flatOptions(upd.Options), filepath)...)
-			// warnings = append(warnings, compareOptions(where+" field: \""+cur.Name+"\"", flatOptions(cur.Options), flatOptions(upd.Options), filepath)...)
 			c++
 			u++
-		} else if cur.Name < upd.Name {
+		} else if cur.Name > upd.Name {
 			c++
 		} else {
 			u++
@@ -122,15 +120,14 @@ func compareOptions(where string, current []protolock.Option, updated []protoloc
 			warnings = append(warnings, compareOption(where, cur, upd, filepath)...)
 			c++
 			u++
-		} else if cur.Name < upd.Name {
+		} else if cur.Name > upd.Name {
+			c++
+		} else {
 			warnings = append(warnings, protolock.Warning{
 				Filepath: filepath,
 				Message:  fmt.Sprintf("%s constraint: %q has been removed", where, cur.Name),
-				// Message:  where + " constraint: \"" + cur.Name + "\" has been removed",
 				RuleName: "PGV",
 			})
-			c++
-		} else {
 			u++
 		}
 	}
@@ -145,7 +142,6 @@ func compareOption(where string, current protolock.Option, updated protolock.Opt
 		warnings = append(warnings, protolock.Warning{
 			Filepath: filepath,
 			Message:  fmt.Sprintf("%s constraint: %q has changed from %s to %s", where, current.Name, current.Value, updated.Value),
-			// Message:  where + " constraint: \"" + current.Name + "\" has changed from " + current.Value + " to " + updated.Value,
 			RuleName: "PGV",
 		})
 	}
