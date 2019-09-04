@@ -17,6 +17,7 @@ proto_library(
         "bool.proto",
         "bytes.proto",
         "enums.proto",
+        "filename-with-dash.proto",
         "kitchen_sink.proto",
         "maps.proto",
         "messages.proto",

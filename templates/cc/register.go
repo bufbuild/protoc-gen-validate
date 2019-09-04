@@ -11,6 +11,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
+	"github.com/iancoleman/strcase"
 	pgs "github.com/lyft/protoc-gen-star"
 	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
 )
@@ -95,9 +96,9 @@ func RegisterHeader(tpl *template.Template, params pgs.Parameters) {
 	fns := CCFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
-		"class":  fns.className,
-		"output": fns.output,
-		"upper":  strings.ToUpper,
+		"class":                fns.className,
+		"output":               fns.output,
+		"screaming_snake_case": strcase.ToScreamingSnake,
 	})
 
 	template.Must(tpl.Parse(headerFileTpl))
