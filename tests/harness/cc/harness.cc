@@ -15,6 +15,8 @@
 #include "tests/harness/cases/bytes.pb.validate.h"
 #include "tests/harness/cases/enums.pb.h"
 #include "tests/harness/cases/enums.pb.validate.h"
+#include "tests/harness/cases/filename-with-dash.pb.h"
+#include "tests/harness/cases/filename-with-dash.pb.validate.h"
 #include "tests/harness/cases/maps.pb.h"
 #include "tests/harness/cases/maps.pb.validate.h"
 #include "tests/harness/cases/messages.pb.h"

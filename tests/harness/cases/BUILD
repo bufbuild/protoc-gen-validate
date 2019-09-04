@@ -4,9 +4,9 @@ load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 load(
     "//bazel:pgv_proto_library.bzl",
-    "pgv_gogo_proto_library",
-    "pgv_go_proto_library",
     "pgv_cc_proto_library",
+    "pgv_go_proto_library",
+    "pgv_gogo_proto_library",
     "pgv_java_proto_library",
     "pgv_python_proto_library",
 )
@@ -17,6 +17,7 @@ proto_library(
         "bool.proto",
         "bytes.proto",
         "enums.proto",
+        "filename-with-dash.proto",
         "kitchen_sink.proto",
         "maps.proto",
         "messages.proto",
@@ -31,8 +32,8 @@ proto_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//validate:validate_proto",
         "//tests/harness/cases/other_package:embed_proto",
+        "//validate:validate_proto",
         "@com_google_protobuf//:any_proto",
         "@com_google_protobuf//:duration_proto",
         "@com_google_protobuf//:timestamp_proto",
@@ -70,34 +71,34 @@ pgv_gogo_proto_library(
 
 pgv_cc_proto_library(
     name = "cc",
-    deps = [":cases_proto"],
     cc_deps = [
         "//tests/harness/cases/other_package:cc",
     ],
     visibility = ["//tests:__subpackages__"],
+    deps = [":cases_proto"],
 )
 
 java_proto_library(
     name = "cases_java_proto",
-    deps = [":cases_proto"],
     visibility = ["//visibility:public"],
+    deps = [":cases_proto"],
 )
 
 pgv_java_proto_library(
     name = "java",
-    deps = [":cases_proto"],
-    visibility = ["//visibility:public"],
     java_deps = [
         ":cases_java_proto",
         "//tests/harness/cases/other_package:java",
     ],
+    visibility = ["//visibility:public"],
+    deps = [":cases_proto"],
 )
 
 pgv_python_proto_library(
     name = "python",
-    deps = [":cases_proto"],
-    visibility = ["//visibility:public"],
     python_deps = [
         "//tests/harness/cases/other_package:python",
     ],
+    visibility = ["//visibility:public"],
+    deps = [":cases_proto"],
 )
