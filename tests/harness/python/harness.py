@@ -6,6 +6,8 @@ from tests.harness.harness_pb2 import TestCase, TestResult
 from tests.harness.cases.bool_pb2 import *
 from tests.harness.cases.bytes_pb2 import *
 from tests.harness.cases.enums_pb2 import *
+from tests.harness.cases.enums_pb2 import *
+from tests.harness.cases.filename_with_dash_pb2 import *
 from tests.harness.cases.messages_pb2 import *
 from tests.harness.cases.numbers_pb2 import *
 from tests.harness.cases.oneofs_pb2 import *
