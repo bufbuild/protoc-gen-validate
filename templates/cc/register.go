@@ -98,7 +98,6 @@ func RegisterHeader(tpl *template.Template, params pgs.Parameters) {
 	tpl.Funcs(map[string]interface{}{
 		"class":                fns.className,
 		"output":               fns.output,
-		"upper":                strings.ToUpper,
 		"screaming_snake_case": strcase.ToScreamingSnake,
 	})
 
