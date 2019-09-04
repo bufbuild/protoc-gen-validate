@@ -100,6 +100,7 @@ def _protoc_gen_validate_python_impl(ctx):
         package_command = "true",
     )
 
+
 def _protoc_gen_validate_impl(ctx, lang, protos, out_files, protoc_args, package_command):
     protoc_args.append("--plugin=protoc-gen-validate=" + ctx.executable._plugin.path)
 
