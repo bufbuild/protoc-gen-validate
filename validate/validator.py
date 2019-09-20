@@ -163,7 +163,7 @@ def string_template(option_value, name):
         raise ValidationFailed(\"{{ name }} does not contain {{ s['contains'] }}\")
     {%- endif -%}
     {%- if s['not_contains'] %}
-    if \"{{ s['not_contains'] }}\" in p.{{ name }}:
+    if \"{{ s['not_contains'] }}\" in {{ name }}:
         raise ValidationFailed(\"{{ name }} contains {{ s['not_contains'] }}\")
     {%- endif -%}
     {%- if s['email'] %}
