@@ -5,40 +5,32 @@ const strTpl = `
 	{{ template "const" . }}
 	{{ template "in" . }}
 	{{ if or $r.Len (and $r.MinLen $r.MaxLen (eq $r.GetMinLen $r.GetMaxLen)) }}
-		{{ unimplemented }}
 		{{ if $r.Len }}
-			{{/* TODO(akonradi) implement UTF-8 length constraints
-			if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetLen }} {
-				return {{ err . "value length must be " $r.GetLen " runes" }}
+			if (pgv::Utf8Len({{ accessor . }}) != {{ $r.GetLen }}) {
+				{{ err . "value must be " $r.GetLen " runes" }}
 			}
-			*/}}
 		{{ else }}
-			{{/* TODO(akonradi) implement UTF-8 length constraints
-			if utf8.RuneCountInString({{ accessor . }}) != {{ $r.GetMinLen }} {
-				return {{ err . "value length must be " $r.GetMinLen " runes" }}
+			if (pgv::Utf8Len({{ accessor . }}) != {{ $r.GetMinLen }}) {
+				{{ err . "value must be " $r.GetMinLen " runes" }}
 			}
-			*/}}
 		{{ end }}
 	{{ else if $r.MinLen }}
-		{{ unimplemented }}
-		{{/* TODO(akonradi) implement UTF-8 length constraints
 		{{ if $r.MaxLen }}
-			if l := utf8.RuneCountInString({{ accessor . }}); l < {{ $r.GetMinLen }} || l > {{ $r.GetMaxLen }} {
-				return {{ err . "value length must be between " $r.GetMinLen " and " $r.GetMaxLen " runes, inclusive" }}
+			{
+				const auto length = pgv::Utf8Len({{ accessor . }});
+				if (length < {{ $r.GetMinLen }} || length > {{ $r.GetMaxLen }}) {
+					{{ err . "value must have between " $r.GetMinLen " and " $r.GetMaxLen " runes inclusive" }}
+				}
 			}
 		{{ else }}
-			if utf8.RuneCountInString({{ accessor . }}) < {{ $r.GetMinLen }} {
-				return {{ err . "value length must be at least " $r.GetMinLen " runes" }}
+			if (pgv::Utf8Len({{ accessor . }}) < {{ $r.GetMinLen }}) {
+				{{ err . "value length must be at least " $r.GetMinLen " runes" }}
 			}
 		{{ end }}
-		*/}}
 	{{ else if $r.MaxLen }}
-		{{ unimplemented }}
-		{{/* TODO(akonradi) implement UTF-8 length constraints
-		if utf8.RuneCountInString({{ accessor . }}) > {{ $r.GetMaxLen }} {
-			return {{ err . "value length must be at most " $r.GetMaxLen " runes" }}
+		if (pgv::Utf8Len({{ accessor . }}) > {{ $r.GetMaxLen }}) {
+			{{ err . "value length must be at most " $r.GetMaxLen " runes" }}
 		}
-		*/}}
 	{{ end }}
 
 	{{ if or $r.LenBytes (and $r.MinBytes $r.MaxBytes (eq $r.GetMinBytes $r.GetMaxBytes)) }}

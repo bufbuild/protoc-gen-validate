@@ -75,7 +75,7 @@ def _protoc_python_output_files(proto_file_sources):
     for p in proto_file_sources:
         basename = p.basename[:-len(".proto")]
 
-        python_srcs.append(basename + "_pb2.py")
+        python_srcs.append(basename.replace("-", "_", maxsplit = None) + "_pb2.py")
     return python_srcs
 
 def _protoc_gen_validate_python_impl(ctx):

@@ -1,6 +1,7 @@
 #ifndef _VALIDATE_H
 #define _VALIDATE_H
 
+#include <codecvt>
 #include <functional>
 #include <regex>
 #include <stdexcept>
@@ -15,13 +16,14 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
-// <windows.h> uses macros to #define a ton of symbols, two of which (DELETE and GetMessage)
-// interfere with our code. DELETE shows up in the base.pb.h header generated from
-// api/envoy/api/core/base.proto. Since it's a generated header, we can't #undef DELETE at
-// the top of that header to avoid the collision. Similarly, GetMessage shows up in generated
-// protobuf code so we can't #undef the symbol there.
+// <windows.h> uses macros to #define a ton of symbols,
+// many of which interfere with our code here and down
+// the line in various extensions.
 #undef DELETE
+#undef ERROR
 #undef GetMessage
+#undef interface
+#undef TRUE
 
 #endif
 
@@ -131,6 +133,11 @@ static inline bool IsHostname(const string& to_validate) {
   }
 
   return true;
+}
+
+static inline size_t Utf8Len(const string& narrow_string) {
+  std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> converter;
+  return converter.from_bytes(narrow_string).size();
 }
 
 } // namespace pgv
