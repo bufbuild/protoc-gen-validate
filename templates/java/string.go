@@ -56,6 +56,9 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Contains }}
 			io.envoyproxy.pgv.StringValidation.contains("{{ $f.FullyQualifiedName }}", {{ accessor . }}, "{{ $r.GetContains }}");
 {{- end -}}
+{{- if $r.NotContains }}
+			io.envoyproxy.pgv.StringValidation.notContains("{{ $f.FullyQualifiedName }}", {{ accessor . }}, "{{ $r.GetNotContains }}");
+{{- end -}}
 {{- if $r.Suffix }}
 			io.envoyproxy.pgv.StringValidation.suffix("{{ $f.FullyQualifiedName }}", {{ accessor . }}, "{{ $r.GetSuffix }}");
 {{- end -}}

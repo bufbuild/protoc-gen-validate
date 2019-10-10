@@ -23,6 +23,7 @@ message StringPattern        { string val = 1 [(validate.rules).string.pattern =
 message StringPatternEscapes { string val = 1 [(validate.rules).string.pattern = "\\* \\\\ \\w"]; }
 message StringPrefix         { string val = 1 [(validate.rules).string.prefix = "foo"]; }
 message StringContains       { string val = 1 [(validate.rules).string.contains = "bar"]; }
+message StringNotContains    { string val = 1 [(validate.rules).string.not_contains = "bar"]; }
 message StringSuffix         { string val = 1 [(validate.rules).string.suffix = "baz"]; }
 message StringEmail          { string val = 1 [(validate.rules).string.email = true]; }
 message StringAddress        { string val = 1 [(validate.rules).string.address = true]; }

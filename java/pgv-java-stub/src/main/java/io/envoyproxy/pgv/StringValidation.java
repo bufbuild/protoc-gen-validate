@@ -88,6 +88,13 @@ public final class StringValidation {
         }
     }
 
+    public static void notContains(String field, String value, String contains) throws ValidationException {
+        if (value.contains(contains)) {
+            throw new ValidationException(field, enquote(value), "should not contain " + contains);
+        }
+    }
+
+
     public static void suffix(String field, String value, String suffix) throws ValidationException {
         if (!value.endsWith(suffix)) {
             throw new ValidationException(field, enquote(value), "should end with " + suffix);

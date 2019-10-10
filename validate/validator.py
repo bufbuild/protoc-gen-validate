@@ -162,10 +162,14 @@ def string_template(option_value, name):
     if not \"{{ s['contains'] }}\" in {{ name }}:
         raise ValidationFailed(\"{{ name }} does not contain {{ s['contains'] }}\")
     {%- endif -%}
+    {%- if s['not_contains'] %}
+    if \"{{ s['not_contains'] }}\" in {{ name }}:
+        raise ValidationFailed(\"{{ name }} contains {{ s['not_contains'] }}\")
+    {%- endif -%}
     {%- if s['email'] %}
     if not _validateEmail({{ name }}):
         raise ValidationFailed(\"{{ name }} is not a valid email\")
-    {%- endif -%}    
+    {%- endif -%}
     {%- if s['hostname'] %}
     if not _validateHostName({{ name }}):
         raise ValidationFailed(\"{{ name }} is not a valid email\")

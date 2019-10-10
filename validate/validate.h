@@ -87,6 +87,11 @@ static inline bool Contains(const string& search_in, const string& to_find)
   return search_in.find(to_find) != string::npos;
 }
 
+static inline bool NotContains(const string& search_in, const string& to_find)
+{
+  return not Contains(search_in, to_find);
+}
+
 static inline bool IsIpv4(const string& to_validate) {
 	struct sockaddr_in sa;
 	return !(inet_pton(AF_INET, to_validate.c_str(), &sa.sin_addr) < 1);

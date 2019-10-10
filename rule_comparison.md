@@ -24,6 +24,7 @@
 | min\_bytes/max\_bytes  |✅|✅|✅|✅|✅|
 | pattern                |✅|✅|❌|✅|✅|
 | prefix/suffix/contains |✅|✅|✅|✅|✅|
+| contains/not_contains  |✅|✅|✅|✅|✅|
 | in/not_in              |✅|✅|✅|✅|✅|
 | email                  |✅|✅|❌|✅|✅|
 | hostname               |✅|✅|✅|✅|✅|
