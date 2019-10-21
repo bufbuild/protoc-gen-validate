@@ -84,6 +84,7 @@ def pgv_python_proto_library(
       name: the name of the pgv_python_proto_library
       deps: proto_library rules that contain the necessary .proto files
       python_deps: Python dependencies of the protos being compiled. Likely py_proto_library or pgv_python_proto_library.
+      **kwargs: other keyword arguments that are passed to the py_library.
     """
 
     python_proto_gen_validate(
