@@ -128,7 +128,7 @@ const strTpl = `
 		}
 	}
 	{{ else if $r.GetEmail }}
-		{{ unimplemented }}
+		{{ unimplemented "C++ email address validation is not implemented" }}
 		{{/* TODO(akonradi) implement email address constraints
 		if err := m._validateEmail({{ accessor . }}); err != nil {
 			return {{ errCause . "err" "value must be a valid email address" }}
@@ -151,7 +151,7 @@ const strTpl = `
 		}
 	}
 	{{ else if $r.GetUri }}
-		{{ unimplemented }}
+		{{ unimplemented "C++ URI validation is not implemented" }}
 		{{/* TODO(akonradi) implement URI constraints
 		if uri, err := url.Parse({{ accessor . }}); err != nil {
 			return {{ errCause . "err" "value must be a valid URI" }}
@@ -160,14 +160,14 @@ const strTpl = `
 		}
 		*/}}
 	{{ else if $r.GetUriRef }}
-		{{ unimplemented }}
+		{{ unimplemented "C++ URI validation is not implemented" }}
 		{{/* TODO(akonradi) implement URI constraints
 		if _, err := url.Parse({{ accessor . }}); err != nil {
 			return {{ errCause . "err" "value must be a valid URI" }}
 		}
 		*/}}
 	{{ else if $r.GetUuid }}
-		{{ unimplemented }}
+		{{ unimplemented "C++ UUID validation is not implemented" }}
 		{{/* TODO(akonradi) implement UUID constraints
                 if err := m._validateUuid({{ accessor . }}); err != nil {
                         return {{ errCause . "err" "value must be a valid UUID" }}
@@ -176,7 +176,7 @@ const strTpl = `
 	{{ end }}
 
 	{{ if $r.Pattern }}
-	{{ unimplemented }}
+	{{ unimplemented "C++ pattern validation is not implemented" }}
 	{{/* TODO(akonradi) implement regular expression constraints.
 	if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
 		return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}

@@ -6,7 +6,7 @@ const enumTpl = `
 		{{ template "in" . }}
 
 		{{ if $r.GetDefinedOnly }}
-			{{ if $f.Type.IsRepeated }}
+			{{ if or $f.Type.IsRepeated $f.Type.IsMap }}
 				if (!{{ class $f.Type.Element.Enum }}_IsValid({{ accessor . }})) {
 			{{ else }}
 				if (!{{ class $f.Type.Enum }}_IsValid({{ accessor . }})) {

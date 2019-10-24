@@ -30,21 +30,19 @@ const mapTpl = `
 	{{ end }}
 
 	{{ if or $r.GetNoSparse (ne (.Elem "" "").Typ "none") (ne (.Key "" "").Typ "none") }}
-		{{ unimplemented }}
-		{{/*
-		for key, val := range {{ accessor . }} {
-			_ = key
-
-			{{ if $r.GetNoSparse }}
-				if val == nil {
-					return {{ errIdx . "key" "value cannot be sparse, all pairs must be non-nil" }}
-				}
-			{{ end }}
+		for (const auto& kv : {{ accessor . }}) {
+			const auto& key = kv.first;
+			const auto& val = kv.second;
+			(void)key;
+			(void)val;
 
 			{{ render (.Key "key" "key") }}
 
 			{{ render (.Elem "val" "key") }}
 		}
-		*/}}
+
+		{{ if $r.GetNoSparse }}
+			{{ unimplemented "no_sparse validation is not implemented for C++ because protobuf maps cannot be sparse in C++" }}
+		{{ end }}
 	{{ end }}
 `

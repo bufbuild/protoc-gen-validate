@@ -61,7 +61,7 @@ lint:
 	test -z "$(gofmt -d -s ./*.go)" || (gofmt -d -s ./*.go && exit 1)
 	# golint -set_exit_status
 	# check for variable shadowing
-	go vet -vettool=$(which shadow) *.go
+	go vet -vettool=$$(which shadow) *.go
 
 gogofast:
 	go build -o $@ vendor/github.com/gogo/protobuf/protoc-gen-gogofast/main.go
