@@ -8,14 +8,14 @@ import (
 	"github.com/envoyproxy/protoc-gen-validate/gogoproto"
 	"github.com/envoyproxy/protoc-gen-validate/validate"
 	"github.com/golang/protobuf/proto"
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 )
 
 type RuleContext struct {
-	Field pgs.Field
-	Rules proto.Message
+	Field        pgs.Field
+	Rules        proto.Message
 	MessageRules *validate.MessageRules
-	Gogo  Gogo
+	Gogo         Gogo
 
 	Typ        string
 	WrapperTyp string
@@ -117,7 +117,7 @@ func (ctx RuleContext) Unwrap(name string) (out RuleContext, err error) {
 	return RuleContext{
 		Field:            ctx.Field,
 		Rules:            ctx.Rules,
-		MessageRules:	  ctx.MessageRules,
+		MessageRules:     ctx.MessageRules,
 		Typ:              ctx.WrapperTyp,
 		AccessorOverride: name,
 		Gogo:             ctx.Gogo,
@@ -179,6 +179,8 @@ func resolveRules(typ interface{ IsEmbed() bool }, rules *validate.FieldRules) (
 	case nil:
 		if ft, ok := typ.(pgs.FieldType); ok && ft.IsRepeated() {
 			return "repeated", &validate.RepeatedRules{}, rules.Message, false
+		} else if ok && ft.IsMap() && ft.Element().IsEmbed() {
+			return "map", &validate.MapRules{}, rules.Message, false
 		} else if typ.IsEmbed() {
 			return "message", rules.GetMessage(), rules.GetMessage(), false
 		}
