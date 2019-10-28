@@ -3,6 +3,10 @@ package goshared
 const mapTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 
+	{{if .Rules.GetOmitempty}}
+		if {{accessor .}} != nil {
+	{{end}}
+
 	{{ if $r.GetMinPairs }}
 		{{ if eq $r.GetMinPairs $r.GetMaxPairs }}
 			if len({{ accessor . }}) != {{ $r.GetMinPairs }} {
@@ -38,4 +42,9 @@ const mapTpl = `
 			{{ render (.Elem "val" "key") }}
 		}
 	{{ end }}
+
+	{{if .Rules.GetOmitempty}}
+		}
+	{{end}}
+
 `
