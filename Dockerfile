@@ -64,4 +64,4 @@ COPY . .
 RUN make build
 
 ENTRYPOINT ["make"]
-CMD ["quick"]
+CMD ["build"]
