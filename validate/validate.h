@@ -90,7 +90,7 @@ static inline bool Contains(const string& search_in, const string& to_find)
 
 static inline bool NotContains(const string& search_in, const string& to_find)
 {
-  return not Contains(search_in, to_find);
+  return !Contains(search_in, to_find);
 }
 
 static inline bool IsIpv4(const string& to_validate) {
