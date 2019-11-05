@@ -138,6 +138,9 @@ cc_proto_gen_validate = rule(
             mandatory = True,
             providers = [ProtoInfo],
         ),
+        "_validate_deps": attr.label_list(
+            default = [Label("@com_googlesource_code_re2//:re2")],
+        ),
         "_protoc": attr.label(
             cfg = "host",
             default = Label("@com_google_protobuf//:protoc"),

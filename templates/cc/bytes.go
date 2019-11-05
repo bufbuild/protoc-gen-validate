@@ -63,6 +63,14 @@ const bytesTpl = `
 	}
 	{{ end }}
 
+        {{ if $r.Pattern }}
+        {
+                if (!RE2::FullMatch({{ accessor . }}, {{ lookup $f "Pattern" }})) {
+		        {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+	        }
+        }
+	{{ end }}
+
 	{{ if $r.GetIp }}
 		{{ unimplemented "C++ ip address validation is not implemented" }}
 		{{/* TODO(akonradi) implement all of this
@@ -84,14 +92,5 @@ const bytesTpl = `
 			return {{ err . "value must be a valid IPv6 address" }}
 		}
 		*/}}
-	{{ end }}
-
-	{{ if $r.Pattern }}
-	{{ unimplemented "C++ pattern validation is not implemented" }}
-	{{/* TODO(akonradi) implement regular expression matching
-	if !{{ lookup $f "Pattern" }}.Match({{ accessor . }}) {
-		return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
-	}
-	*/}}
 	{{ end }}
 `

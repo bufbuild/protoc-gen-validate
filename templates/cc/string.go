@@ -106,6 +106,14 @@ const strTpl = `
 	}
 	{{ end }}
 
+        {{ if $r.Pattern }}
+        {
+                if (!RE2::FullMatch({{ accessor . }}, {{ lookup $f "Pattern" }})) {
+		        {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+	        }
+        }
+	{{ end }}
+
 	{{ if $r.GetIp }}
 	{
 		const std::string& value = {{ accessor . }};
@@ -173,14 +181,5 @@ const strTpl = `
                         return {{ errCause . "err" "value must be a valid UUID" }}
                 }
 		*/}}
-	{{ end }}
-
-	{{ if $r.Pattern }}
-	{{ unimplemented "C++ pattern validation is not implemented" }}
-	{{/* TODO(akonradi) implement regular expression constraints.
-	if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
-		return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
-	}
-	*/}}
 	{{ end }}
 `

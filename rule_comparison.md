@@ -22,7 +22,7 @@
 | const                  |✅|✅|✅|✅|✅|
 | len/min\_len/max_len   |✅|✅|✅|✅|✅|
 | min\_bytes/max\_bytes  |✅|✅|✅|✅|✅|
-| pattern                |✅|✅|❌|✅|✅|
+| pattern                |✅|✅|✅|✅|✅|
 | prefix/suffix/contains |✅|✅|✅|✅|✅|
 | contains/not_contains  |✅|✅|✅|✅|✅|
 | in/not_in              |✅|✅|✅|✅|✅|
