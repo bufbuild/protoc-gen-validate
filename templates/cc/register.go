@@ -312,6 +312,12 @@ func (fns CCFuncs) cType(t pgs.FieldType) string {
 		}
 		// Strip the leading []
 		return fns.cTypeOfString(fns.Type(t.Field()).String()[2:])
+	} else if t.IsMap() {
+		if t.Element().IsEmbed() {
+			return fns.className(t.Element().Embed())
+		}
+
+		return fns.cTypeOfString(fns.Type(t.Field()).Element().String())
 	}
 
 	return fns.cTypeOfString(fns.Type(t.Field()).String())
@@ -405,8 +411,12 @@ func (fns CCFuncs) unwrap(ctx shared.RuleContext, name string) (shared.RuleConte
 	return ctx, nil
 }
 
-func (fns CCFuncs) failUnimplemented() string {
-	return "throw pgv::UnimplementedException();"
+func (fns CCFuncs) failUnimplemented(message string) string {
+	if len(message) == 0 {
+		return "throw pgv::UnimplementedException();"
+	}
+
+	return fmt.Sprintf(`throw pgv::UnimplementedException(%q);`, message)
 }
 
 func (fns CCFuncs) staticVarName(msg pgs.Message) string {

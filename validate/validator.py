@@ -810,6 +810,9 @@ def map_template(option_value, name, field):
         {%- set values = o.map['values'] -%}
         {{ switcher_template(values, name +'[key]', field, True) }}
         pass
+    {%- elif field.message_type.fields[1].message_type %}
+    for key in {{ name }}:
+        validate({{ name }}[key])({{ name }}[key])
     {%- endif %}
     """
     return Template(map_tmpl).render(o = option_value, name = name, message_type = field.message_type, str = str, field = field, switcher_template = switcher_template, num_template = num_template, string_template = string_template, bool_template = bool_template)

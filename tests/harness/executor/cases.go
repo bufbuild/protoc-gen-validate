@@ -1088,6 +1088,9 @@ var mapCases = []TestCase{
 	{"map - values - valid (pattern)", &cases.MapValuesPattern{Val: map[string]string{"a": "A"}}, true},
 	{"map - values - invalid", &cases.MapValues{Val: map[string]string{"a": "A", "b": "B"}}, false},
 	{"map - values - invalid (pattern)", &cases.MapValuesPattern{Val: map[string]string{"a": "A", "b": "!@#$%^&*()"}}, false},
+
+	{"map - recursive - valid", &cases.MapRecursive{Val: map[uint32]*cases.MapRecursive_Msg{1: {Val: "abc"}}}, true},
+	{"map - recursive - invalid", &cases.MapRecursive{Val: map[uint32]*cases.MapRecursive_Msg{1: {}}}, false},
 }
 
 var oneofCases = []TestCase{
