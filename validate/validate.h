@@ -27,6 +27,8 @@
 
 #endif
 
+#include "google/protobuf/stubs/strutil.h" // for UTF8Len
+
 namespace pgv {
 using std::string;
 
