@@ -144,7 +144,7 @@ static inline size_t Utf8Len(const string& narrow_string) {
   size_t unicode_len = 0;
   int char_len = 1;
   while (byte_len > 0 && char_len > 0) {
-    char_len = google:protobuf:UTF8FirstLetterNumBytes(str_char, byte_len);
+    char_len = google::protobuf::UTF8FirstLetterNumBytes(str_char, byte_len);
     str_char += char_len;
     byte_len -= char_len;
     ++unicode_len;
