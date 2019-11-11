@@ -1,7 +1,6 @@
 #ifndef _VALIDATE_H
 #define _VALIDATE_H
 
-#include <codecvt>
 #include <functional>
 #include <regex>
 #include <stdexcept>
