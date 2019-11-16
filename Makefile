@@ -68,7 +68,7 @@ lint:
 	# check for variable shadowing
 	go vet -vettool=$(which shadow) *.go
 	buf check lint
-	buf check breaking --against-input '.git#branch=master' --limit-to-input-files
+	buf check breaking --against-input 'https://github.com/envoyproxy/protoc-gen-validate.git#branch=master' --limit-to-input-files
 
 gogofast:
 	go build -o $@ vendor/github.com/gogo/protobuf/protoc-gen-gogofast/main.go
