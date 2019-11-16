@@ -25,6 +25,8 @@ GOGO_IMPORT_SPACES := ${VALIDATE_IMPORT},\
 	Mgogoproto/gogo.proto=github.com/gogo/protobuf/gogoproto
 GOGO_IMPORT:=$(subst $(space),,$(GOGO_IMPORT_SPACES))
 
+BUF_VERSION := v0.3.0
+
 .PHONY: build
 build: validate/validate.pb.go
 	# generates the PGV binary and installs it into $$GOPATH/bin
@@ -58,10 +60,15 @@ lint:
 	# lints the package for common code smells
 	which golint || go get -u golang.org/x/lint/golint
 	which shadow || go get -u golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
+	# protoc-gen-validate uses go1.10.3 so modules are not available, but we want to lock to a given
+	# version of buf since it is in beta
+	which buf || curl -sSL https://github.com/bufbuild/buf/releases/download/$(BUF_VERSION)/buf-$(shell uname -s)-$(shell uname -m) -o $(GOPATH)/bin/buf && chmod +x $(GOPATH)/bin/buf
 	test -z "$(gofmt -d -s ./*.go)" || (gofmt -d -s ./*.go && exit 1)
 	# golint -set_exit_status
 	# check for variable shadowing
 	go vet -vettool=$(which shadow) *.go
+	buf check lint
+	buf check breaking --against-input '.git#branch=master' --limit-to-input-files
 
 gogofast:
 	go build -o $@ vendor/github.com/gogo/protobuf/protoc-gen-gogofast/main.go

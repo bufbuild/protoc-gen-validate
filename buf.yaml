@@ -1,0 +1,23 @@
+build:
+  roots:
+    - .
+  excludes:
+    - vendor
+lint:
+  use:
+    - DEFAULT
+  except:
+    - PACKAGE_VERSION_SUFFIX
+  ignore:
+    - gogoproto
+    - java/pgv-java-grpc/src/test/proto
+    - java/pgv-java-stub/src/test/proto
+    - tests
+breaking:
+  use:
+    - FILE
+  ignore:
+    - gogoproto
+    - java/pgv-java-grpc/src/test/proto
+    - java/pgv-java-stub/src/test/proto
+    - tests
