@@ -28,20 +28,49 @@ const msgTpl = `
 		};
 	{{ end }}{{ end }}
 
-	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
-	{{ if has .Rules.Items.GetString_ "In" }} {{ if .Rules.Items.GetString_.In }}
+	{{ if has .Rules "Items" }}{{ if .Rules.Items }}
+	{{ if has .Rules.Items.GetString_ "In" }}{{ if .Rules.Items.GetString_.In }}
 	const std::set<string> {{ lookup .Field "InLookup" }} = {
 			{{- range .Rules.Items.GetString_.In }}
 				{{ inKey $f . }},
 			{{- end }}
 		};
 	{{ end }}{{ end }}
-	{{ end }}{{ end }}
-
-	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
-	{{ if has .Rules.Items.GetString_ "NotIn" }} {{ if .Rules.Items.GetString_.NotIn }}
+	{{ if has .Rules.Items.GetString_ "NotIn" }}{{ if .Rules.Items.GetString_.NotIn }}
 	const std::set<string> {{ lookup .Field "NotInLookup" }} = {
 			{{- range .Rules.Items.GetString_.NotIn }}
+				{{ inKey $f . }},
+			{{- end }}
+		};
+	{{ end }}{{ end }}
+	{{ end }}{{ end }}
+	{{ if has .Rules "Keys" }}{{ if .Rules.Keys }}
+	{{ if has .Rules.Keys.GetString_ "In" }}{{ if .Rules.Keys.GetString_.In }}
+	const std::set<string> {{ lookup .Field "Key_InLookup" }} = {
+			{{- range .Rules.Keys.GetString_.In }}
+				{{ inKey $f . }},
+			{{- end }}
+		};
+	{{ end }}{{ end }}
+	{{ if has .Rules.Keys.GetString_ "NotIn" }}{{ if .Rules.Keys.GetString_.NotIn }}
+	const std::set<string> {{ lookup .Field "Key_NotInLookup" }} = {
+			{{- range .Rules.Keys.GetString_.NotIn }}
+				{{ inKey $f . }},
+			{{- end }}
+		};
+	{{ end }}{{ end }}
+	{{ end }}{{ end }}
+	{{ if has .Rules "Values" }}{{ if .Rules.Values }}
+	{{ if has .Rules.Values.GetString_ "In" }}{{ if .Rules.Values.GetString_.In }}
+	const std::set<string> {{ lookup .Field "Val_InLookup" }} = {
+			{{- range .Rules.Values.GetString_.In }}
+				{{ inKey $f . }},
+			{{- end }}
+		};
+	{{ end }}{{ end }}
+	{{ if has .Rules.Values.GetString_ "NotIn" }}{{ if .Rules.Values.GetString_.NotIn }}
+	const std::set<string> {{ lookup .Field "Val_NotInLookup" }} = {
+			{{- range .Rules.Values.GetString_.NotIn }}
 				{{ inKey $f . }},
 			{{- end }}
 		};

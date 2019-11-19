@@ -22,6 +22,10 @@ message MapValues { map<string, string> val = 1 [(validate.rules).map.values.str
 
 message MapKeysPattern   { map<string, string> val = 1 [(validate.rules).map.keys.string.pattern = "(?i)^[a-z0-9]+$"]; }
 message MapValuesPattern { map<string, string> val = 1 [(validate.rules).map.values.string.pattern = "(?i)^[a-z0-9]+$"]; }
+message MapKeysIn { map<string, string> val = 1 [(validate.rules).map.keys.string = {in: ["test"]}]; }
+message MapValuesIn { map<string, string> val = 1 [(validate.rules).map.values.string = {in: ["test"]}]; }
+message MapKeysNotIn { map<string, string> val = 1 [(validate.rules).map.keys.string = {not_in: ["test"]}]; }
+message MapValuesNotIn { map<string, string> val = 1 [(validate.rules).map.values.string = {not_in: ["test"]}]; }
 
 message MapRecursive {
     map<uint32, Msg> val = 1;

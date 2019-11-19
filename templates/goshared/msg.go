@@ -122,7 +122,7 @@ var _ interface{
 	{{ end }}{{ end }}
 	{{ end }}{{ end }}
 
-	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
+	{{ if has .Rules "Items" }}{{ if .Rules.Items }}
 	{{ if has .Rules.Items.GetString_ "In" }} {{ if .Rules.Items.GetString_.In }}
 		var {{ lookup .Field "InLookup" }} = map[string]struct{}{
 			{{- range .Rules.Items.GetString_.In }}
@@ -130,9 +130,6 @@ var _ interface{
 			{{- end }}
 		}
 	{{ end }}{{ end }}
-	{{ end }}{{ end }}
-
-	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
 	{{ if has .Rules.Items.GetString_ "NotIn" }} {{ if .Rules.Items.GetString_.NotIn }}
 		var {{ lookup .Field "NotInLookup" }} = map[string]struct{}{
 			{{- range .Rules.Items.GetString_.NotIn }}
@@ -146,11 +143,39 @@ var _ interface{
 	{{ if has .Rules.Keys.GetString_ "Pattern" }} {{ if .Rules.Keys.GetString_.Pattern }}
 		var {{ lookup .Field "Pattern" }} = regexp.MustCompile({{ lit .Rules.Keys.GetString_.GetPattern }})
 	{{ end }}{{ end }}
+	{{ if has .Rules.Keys.GetString_ "In" }} {{ if .Rules.Keys.GetString_.In }}
+		var {{ lookup .Field "Key_InLookup" }} = map[{{ inType .Field .Rules.Keys.GetString_.In }}]struct{}{
+            {{- range .Rules.Keys.GetString_.In }}
+                {{ inKey $f . }}: {},
+            {{- end }}
+        }
+	{{ end }}{{ end }}
+	{{ if has .Rules.Keys.GetString_ "NotIn" }} {{ if .Rules.Keys.GetString_.NotIn }}
+		var {{ lookup .Field "Key_NotInLookup" }} = map[{{ inType .Field .Rules.Keys.GetString_.NotIn }}]struct{}{
+            {{- range .Rules.Keys.GetString_.NotIn }}
+                {{ inKey $f . }}: {},
+            {{- end }}
+        }
+	{{ end }}{{ end }}
 	{{ end }}{{ end }}
 
 	{{ if has .Rules "Values"}}{{ if .Rules.Values }}
 	{{ if has .Rules.Values.GetString_ "Pattern" }} {{ if .Rules.Values.GetString_.Pattern }}
 		var {{ lookup .Field "Pattern" }} = regexp.MustCompile({{ lit .Rules.Values.GetString_.GetPattern }})
+	{{ end }}{{ end }}
+	{{ if has .Rules.Values.GetString_ "In" }} {{ if .Rules.Values.GetString_.In }}
+		var {{ lookup .Field "Val_InLookup" }} = map[{{ inType .Field .Rules.Values.GetString_.In }}]struct{}{
+            {{- range .Rules.Values.GetString_.In }}
+                {{ inKey $f . }}: {},
+            {{- end }}
+        }
+	{{ end }}{{ end }}
+	{{ if has .Rules.Values.GetString_ "NotIn" }} {{ if .Rules.Values.GetString_.NotIn }}
+		var {{ lookup .Field "Val_NotInLookup" }} = map[{{ inType .Field .Rules.Values.GetString_.NotIn }}]struct{}{
+            {{- range .Rules.Values.GetString_.NotIn }}
+                {{ inKey $f . }}: {},
+            {{- end }}
+        }
 	{{ end }}{{ end }}
 	{{ end }}{{ end }}
 
