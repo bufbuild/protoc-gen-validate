@@ -25,3 +25,4 @@ message RepeatedItemIn { repeated string val = 1 [(validate.rules).repeated.item
 message RepeatedItemNotIn { repeated string val = 1 [(validate.rules).repeated.items.string = {not_in: ["foo", "bar"]}]; }
 message RepeatedMinAndItemLen { repeated string val = 1 [(validate.rules).repeated = { items { string { len: 3 } }, min_items: 1 }]; }
 message RepeatedDuration { repeated google.protobuf.Duration val = 1 [(validate.rules).repeated = { items { duration { gte { nanos: 1000000}}}}]; }
+message RepeatedExactIgnore { repeated uint32 val = 1 [(validate.rules).repeated = {min_items: 3, max_items: 3, ignore_empty: true}]; }
