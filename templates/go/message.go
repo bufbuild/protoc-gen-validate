@@ -7,8 +7,8 @@ const messageTpl = `
 	{{ if .MessageRules.GetSkip }}
 		// skipping validation for {{ $f.Name }}
 	{{ else }}
-		if v, ok := interface{}({{ accessor . }}).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
+		if v, ok := interface{}({{ accessor . }}).(interface{ Validate{{ if .AllErrors }}All{{ end }}() error }); ok {
+			if err := v.Validate{{ if .AllErrors }}All{{ end }}(); err != nil {
 				return {{ errCause . "err" "embedded message failed validation" }}
 			}
 		}

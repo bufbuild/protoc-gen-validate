@@ -23,6 +23,8 @@ type RuleContext struct {
 	OnKey            bool
 	Index            string
 	AccessorOverride string
+
+	AllErrors bool
 }
 
 type Gogo struct {
@@ -83,6 +85,7 @@ func (ctx RuleContext) Elem(name, idx string) (out RuleContext, err error) {
 	out.AccessorOverride = name
 	out.Index = idx
 	out.Gogo = ctx.Gogo
+	out.AllErrors = ctx.AllErrors
 
 	var rules *validate.FieldRules
 	switch r := ctx.Rules.(type) {
@@ -122,6 +125,12 @@ func (ctx RuleContext) Unwrap(name string) (out RuleContext, err error) {
 		AccessorOverride: name,
 		Gogo:             ctx.Gogo,
 	}, nil
+}
+
+func (ctx RuleContext) WithAllErrors() (out RuleContext, err error) {
+	out = ctx
+	out.AllErrors = true
+	return
 }
 
 func Render(tpl *template.Template) func(ctx RuleContext) (string, error) {

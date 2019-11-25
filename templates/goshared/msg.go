@@ -6,35 +6,149 @@ const msgTpl = `
 {{- else -}}
 	{{ cmt "Validate checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, an error is returned." }}
 {{- end -}}
+
+{{ $msg := . }}
 func (m {{ (msgTyp .).Pointer }}) Validate() error {
 	{{ if disabled . -}}
 		return nil
 	{{ else -}}
 		if m == nil { return nil }
 
-		{{ range .NonOneOfFields }}
-			{{ render (context .) }}
+		var validationFunctions = []func() error {
+		{{ range .NonOneOfFields }}m.Validate{{ (msgTyp $msg).String }}{{ (name .) }},
+		{{ end }}{{ range .OneOfs }}m.Validate{{ (msgTyp $msg).String }}{{ (name .) }},
 		{{ end }}
+		}
 
-		{{ range .OneOfs }}
-			switch m.{{ name . }}.(type) {
-				{{ range .Fields }}
-					case {{ oneof . }}:
-						{{ render (context .) }}
-				{{ end }}
-				{{ if required . }}
-					default:
-						return {{ errname .Message }}{
-							field: "{{ name . }}",
-							reason: "value is required",
-						}
-				{{ end }}
+		for _, validationFunction := range validationFunctions {
+			if err := validationFunction(); err != nil {
+				return err
 			}
-		{{ end }}
+		}
 
 		return nil
 	{{ end -}}
 }
+
+func (m {{ (msgTyp .).Pointer }}) ValidateAll() error {
+	{{ if disabled . -}}
+		return nil
+	{{ else -}}
+		if m == nil { return nil }
+
+		var validationFunctions = []func() error {
+		{{ range .NonOneOfFields }}m.Validate{{ (msgTyp $msg).String }}{{ (name .) }}{{ if or ((.Type).IsRepeated) ((.Type).IsMap) ((.Type).IsEmbed) -}}All{{ end }},
+		{{ end }}{{ range .OneOfs }}m.Validate{{ (msgTyp $msg).String }}{{ (name .) }}All,
+		{{ end }}
+		}
+
+		var wg sync.WaitGroup
+		wg.Add(len(validationFunctions))
+		var errorsChan = make(chan error, len(validationFunctions))
+		for _, validateFunction := range validationFunctions {
+			go func(f func() error) {
+				defer wg.Done()
+				if err := f(); err != nil {
+					errorsChan <- err
+				}
+			}(validateFunction)
+		}
+		wg.Wait()
+
+		var result {{ errname . }}s
+	loop:
+		for {
+			var err error
+			select {
+			case err = <- errorsChan:
+				err, ok := err.({{ errname . }})
+				if !ok {
+					return err
+				} else {
+					result = append(result, err)
+				}
+			default:
+				break loop
+			}
+		}
+	
+		if len(result) > 0 {
+			return result
+		} else {
+			return nil
+		}
+
+	{{ end -}}
+}
+
+{{ range .NonOneOfFields }}
+	func (m {{ (msgTyp $msg).Pointer }}) Validate{{ (msgTyp $msg).String }}{{ (name .) }}() error {
+		{{ render (context .) }}
+		return nil
+	}
+	{{ if or ((.Type).IsRepeated) ((.Type).IsMap) ((.Type).IsEmbed) -}}
+	func (m {{ (msgTyp $msg).Pointer }}) Validate{{ (msgTyp $msg).String }}{{ (name .) }}All() error {
+		{{ render ((context .).WithAllErrors) }}
+		return nil
+	}
+	{{ end -}}
+{{ end }}
+
+{{ range .OneOfs }}
+
+	{{ $oneOfField := . }}
+
+	func (m {{ (msgTyp $msg).Pointer }}) Validate{{ (msgTyp $msg).String }}{{ (name .) }}() error {
+		switch m.{{ name . }}.(type) {
+			{{ range .Fields }}
+				case {{ oneof . }}:
+					if err := m.Validate{{ (msgTyp $msg).String }}{{ (name $oneOfField) }}{{ (name .) }}(); err != nil {
+						return err
+					}
+			{{ end }}
+			{{ if required . }}
+				default:
+					return {{ errname .Message }}{
+						field: "{{ name . }}",
+						reason: "value is required",
+					}
+			{{ end }}
+		}
+		return nil
+	}
+
+	func (m {{ (msgTyp $msg).Pointer }}) Validate{{ (msgTyp $msg).String }}{{ (name .) }}All() error {
+		switch m.{{ name . }}.(type) {
+			{{ range .Fields }}
+				case {{ oneof . }}:
+					if err := m.Validate{{ (msgTyp $msg).String }}{{ (name $oneOfField) }}{{ (name .) }}{{ if or ((.Type).IsRepeated) ((.Type).IsMap) ((.Type).IsEmbed) -}}All{{ end }}(); err != nil {
+						return err
+					}
+			{{ end }}
+			{{ if required . }}
+				default:
+					return {{ errname .Message }}{
+						field: "{{ name . }}",
+						reason: "value is required",
+					}
+			{{ end }}
+		}
+		return nil
+	}
+
+	{{ range .Fields }}
+		func (m {{ (msgTyp $msg).Pointer }}) Validate{{ (msgTyp $msg).String }}{{ (name $oneOfField) }}{{ (name .) }}() error {
+			{{ render (context .) }}
+			return nil
+		}
+		{{ if or ((.Type).IsRepeated) ((.Type).IsMap) ((.Type).IsEmbed) -}}
+			func (m {{ (msgTyp $msg).Pointer }}) Validate{{ (msgTyp $msg).String }}{{ (name $oneOfField) }}{{ (name .) }}All() error {
+				{{ render ((context .).WithAllErrors) }}
+				return nil
+			}
+		{{ end -}}
+	{{ end }}
+{{ end }}
 
 {{ if needs . "hostname" }}{{ template "hostname" . }}{{ end }}
 
@@ -83,6 +197,17 @@ func (e {{ errname . }}) Error() string {
 		e.field,
 		e.reason,
 		cause)
+}
+
+type {{ errname . }}s []{{ errname . }}
+
+func (e {{ errname . }}s) Error() string {
+	var fields []string
+	for _, err := range e {
+		fields = append(fields, strings.ToLower(err.Field()))
+	}
+
+	return fmt.Sprintf("invalid fields: %s", strings.Join(fields, ", "))
 }
 
 var _ error = {{ errname . }}{}
