@@ -108,7 +108,8 @@ const strTpl = `
 
         {{ if $r.Pattern }}
         {
-                if (!RE2::FullMatch({{ accessor . }}, {{ lookup $f "Pattern" }})) {
+                if (!RE2::FullMatch(re2::StringPiece({{ accessor . }}.c_str(), {{ accessor . }}.size()),
+                                    {{ lookup $f "Pattern" }})) {
 		        {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
 	        }
         }
