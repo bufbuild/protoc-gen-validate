@@ -1,7 +1,9 @@
 package goshared
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/envoyproxy/protoc-gen-validate/validate"
 	"github.com/iancoleman/strcase"
 	"reflect"
 	"strings"
@@ -21,7 +23,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	tpl.Funcs(map[string]interface{}{
 		"accessor":      fns.accessor,
 		"byteStr":       fns.byteStr,
-		"snakeCase":	 fns.snakeCase,
+		"snakeCase":     fns.snakeCase,
 		"cmt":           pgs.C80,
 		"durGt":         fns.durGt,
 		"durLit":        fns.durLit,
@@ -125,16 +127,99 @@ func (fns goSharedFuncs) errIdxCause(ctx shared.RuleContext, idx, cause string, 
 		keyFld = "key: true,"
 	}
 
+	var rulesMapCode string
+	rulesMapCode = fns.rulesMapToCode(fns.rulesMap(ctx))
+	if rulesMapCode == "" {
+		rulesMapCode = "map[string]interface{}{}"
+	}
+
 	return fmt.Sprintf(`%s{
 		field: %s,
+		rules: %s,
 		reason: %q,
 		%s%s
 	}`,
 		fns.errName(f.Message()),
 		fld,
+		rulesMapCode,
 		fmt.Sprint(reason...),
 		causeFld,
 		keyFld)
+}
+
+func (fns goSharedFuncs) rulesMap(ctx shared.RuleContext) map[string]interface{} {
+	f := ctx.Field
+	var rules validate.FieldRules
+	_, _ = f.Extension(validate.E_Rules, &rules)
+
+	rulesType := rules.GetType()
+	var wellKnown string
+	if _, ok := rulesType.(*validate.FieldRules_String_); ok {
+		wellKnownObject := rulesType.(*validate.FieldRules_String_).String_.GetWellKnown()
+		if wellKnownObject != nil {
+			var wellKnownMap map[string]interface{}
+			wellKnownJson, err := json.Marshal(wellKnownObject)
+			if err == nil {
+				if err := json.Unmarshal(wellKnownJson, &wellKnownMap); err == nil {
+					for k, v := range wellKnownMap {
+						if v == true {
+							wellKnown = strings.ToLower(k)
+							break
+						}
+					}
+				}
+			}
+		}
+	}
+
+	var rulesMap = make(map[string]interface{})
+	rulesJson, _ := json.Marshal(rulesType)
+	_ = json.Unmarshal(rulesJson, &rulesMap)
+
+	for _, v := range rulesMap {
+		if _, ok := v.(map[string]interface{}); ok {
+			rulesMap = v.(map[string]interface{})
+			break
+		}
+	}
+	delete(rulesMap, "WellKnown")
+	if wellKnown != "" {
+		rulesMap["well_known"] = wellKnown
+	}
+
+	return rulesMap
+}
+
+func (fns goSharedFuncs) rulesMapToCode(val interface{}) string {
+	if val == nil {
+		return "\"\""
+	}
+
+	switch reflect.TypeOf(val).Kind() {
+	case reflect.Map:
+		m, ok := val.(map[string]interface{})
+		if ok {
+			var body []string
+			for k, v := range m {
+				body = append(body, fmt.Sprintf("\"%s\":%s", k, fns.rulesMapToCode(v)))
+			}
+			return fmt.Sprintf("map[string]interface{}{%s}", strings.Join(body, ","))
+		}
+	case reflect.Slice:
+		s, ok := val.([]interface{})
+		if ok {
+			var body []string
+			for _, v := range s {
+				body = append(body, fns.rulesMapToCode(v))
+			}
+			return fmt.Sprintf("[]interface{}{%s}", strings.Join(body, ","))
+		}
+	case reflect.String:
+		return fmt.Sprintf("%q", val)
+	case reflect.Float64:
+		return fmt.Sprintf("%v", val)
+	}
+	return "\"\""
 }
 
 func (fns goSharedFuncs) err(ctx shared.RuleContext, reason ...interface{}) string {
