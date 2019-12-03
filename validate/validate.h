@@ -1,7 +1,6 @@
 #ifndef _VALIDATE_H
 #define _VALIDATE_H
 
-#include <codecvt>
 #include <functional>
 #include <regex>
 #include <stdexcept>
@@ -26,6 +25,8 @@
 #undef TRUE
 
 #endif
+
+#include "google/protobuf/stubs/strutil.h" // for UTF8Len
 
 namespace pgv {
 using std::string;
@@ -137,8 +138,17 @@ static inline bool IsHostname(const string& to_validate) {
 }
 
 static inline size_t Utf8Len(const string& narrow_string) {
-  std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> converter;
-  return converter.from_bytes(narrow_string).size();
+  const char *str_char = narrow_string.c_str();
+  ptrdiff_t byte_len = narrow_string.length();
+  size_t unicode_len = 0;
+  int char_len = 1;
+  while (byte_len > 0 && char_len > 0) {
+    char_len = google::protobuf::UTF8FirstLetterNumBytes(str_char, byte_len);
+    str_char += char_len;
+    byte_len -= char_len;
+    ++unicode_len;
+  }
+  return unicode_len;
 }
 
 } // namespace pgv
