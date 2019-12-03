@@ -48,10 +48,30 @@ const msgTpl = `
 	{{ end }}{{ end }}
 	{{ end }}{{ end }}
 
-	{{ if has .Rules "Pattern"}}{{ if .Rules.Pattern }}
-	{{/* TODO(akonradi) implement pattern matching
-		var {{ lookup .Field "Pattern" }} = regexp.MustCompile({{ lit .Rules.GetPattern }})
-	*/}}
+        {{ if has .Rules "Pattern"}}{{ if .Rules.Pattern }}
+               const re2::RE2 {{ lookup .Field "Pattern" }}(re2::StringPiece({{ lit .Rules.GetPattern }},
+                                                            sizeof({{ lit .Rules.GetPattern }}) - 1));
+	{{ end }}{{ end }}
+
+	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
+        {{ if has .Rules.Items.GetString_ "Pattern" }} {{ if .Rules.Items.GetString_.Pattern }}
+               const re2::RE2 {{ lookup .Field "Pattern" }}(re2::StringPiece({{ lit .Rules.Items.GetString_.GetPattern }},
+                                              sizeof({{ lit .Rules.Items.GetString_.GetPattern }}) - 1));
+	{{ end }}{{ end }}
+        {{ end }}{{ end }}
+
+        {{ if has .Rules "Keys"}}{{ if .Rules.Keys }}
+	{{ if has .Rules.Keys.GetString_ "Pattern" }} {{ if .Rules.Keys.GetString_.Pattern }}
+		const re2::RE2 {{ lookup .Field "Pattern" }}(re2::StringPiece({{ lit .Rules.Keys.GetString_.GetPattern }},
+                                              sizeof({{ lit .Rules.Keys.GetString_.GetPattern }}) - 1));
+	{{ end }}{{ end }}
+	{{ end }}{{ end }}
+
+	{{ if has .Rules "Values"}}{{ if .Rules.Values }}
+	{{ if has .Rules.Values.GetString_ "Pattern" }} {{ if .Rules.Values.GetString_.Pattern }}
+		const re2::RE2 {{ lookup .Field "Pattern" }}(re2::StringPiece({{ lit .Rules.Values.GetString_.GetPattern }},
+                                              sizeof({{ lit .Rules.Values.GetString_.GetPattern }}) - 1));
+	{{ end }}{{ end }}
 	{{ end }}{{ end }}
 
 {{ end }}{{ end }}

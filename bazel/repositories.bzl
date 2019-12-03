@@ -63,6 +63,14 @@ def pgv_dependencies():
             artifact = "com.google.re2j:re2j:1.2",
         )
 
+    if not native.existing_rule("com_googlesource_code_re2"):
+        http_archive(
+            name = "com_googlesource_code_re2",
+            sha256 = "38bc0426ee15b5ed67957017fd18201965df0721327be13f60496f2b356e3e01",
+            strip_prefix = "re2-2019-08-01",
+            urls = ["https://github.com/google/re2/archive/2019-08-01.tar.gz"],
+        )
+
     if not native.existing_rule("com_google_guava"):
         native.maven_jar(
             name = "com_google_guava",
