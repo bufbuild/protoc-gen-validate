@@ -120,8 +120,15 @@ const strTpl = `
 		if err := m._validateUuid({{ accessor . }}); err != nil {
 			return {{ errCause . "err" "value must be a valid UUID" }}
 		}
+	{{ else if $r.GetHeaderName }}
+		if err := m._validateHeaderName({{ accessor . }}); err != nil {
+			return {{ errCause . "err" "value must be a valid HTTP header name" }}
+		}
+	{{ else if $r.GetHeaderValue }}
+		if err := m._validateHeaderValue({{ accessor . }}); err != nil {
+			return {{ errCause . "err" "value must be a valid HTTP header value" }}
+		}
 	{{ end }}
-
 	{{ if $r.Pattern }}
 	if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
 		return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}

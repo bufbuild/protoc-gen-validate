@@ -8,9 +8,11 @@ import (
 type WellKnown string
 
 const (
-	Email    WellKnown = "email"
-	Hostname WellKnown = "hostname"
-	UUID     WellKnown = "uuid"
+	Email       WellKnown = "email"
+	Hostname    WellKnown = "hostname"
+	UUID        WellKnown = "uuid"
+	HeaderName  WellKnown = "headername"
+	HeaderValue WellKnown = "headervalue"
 )
 
 // Needs returns true if a well-known string validator is needed for this
@@ -59,6 +61,14 @@ func strRulesNeeds(rules *validate.StringRules, wk WellKnown) bool {
 		}
 	case UUID:
 		if rules.GetUuid() {
+			return true
+		}
+	case HeaderName:
+		if rules.GetHeaderName() {
+			return true
+		}
+	case HeaderValue:
+		if rules.GetHeaderValue() {
 			return true
 		}
 	}

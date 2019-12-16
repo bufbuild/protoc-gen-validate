@@ -72,6 +72,18 @@ def _validateEmail(addr):
         return False
     return _validateHostName(parts[1])
 
+def _validateHeaderName(header):
+  for r in header:
+    if (r < 'A' or r > 'Z') and (r < 'a' or r > 'z') and (r < '0' or r > '9') and (r not in "!#$%&'*+-.^_`|~"):
+      return False
+  return True
+  
+def _validateHeaderValue(header):
+  for r in header:
+    if not (r == '\t' or r == ' ' or ('!' <= r and r <= '~') or '\x7f' < r):
+      return False
+  return True
+
 def _has_field(message_pb, property_name):
     # NOTE: As of proto3, HasField() only works for message fields, not for
     #       singular (non-message) fields. First try to use HasField and
@@ -213,7 +225,15 @@ def string_template(option_value, name):
     try:
         uuid.UUID({{ name }})
     except ValueError:
-        raise ValidationFailed(\"{{ name }} is not a valid UUID\")     
+        raise ValidationFailed(\"{{ name }} is not a valid UUID\")
+    {%- endif -%}
+    {%- if s['header_name'] %}
+    if not _validateHeaderName({{ name }}):
+        raise ValidationFailed(\"{{ name }} is not a valid header name\")
+    {%- endif -%}
+    {%- if s['header_value'] %}
+    if not _validateHeaderValue({{ name }}):
+        raise ValidationFailed(\"{{ name }} is not a valid header value\")
     {%- endif -%}
     """
     return Template(str_templ).render(o = option_value, name = name, const_template = const_template, in_template = in_template)

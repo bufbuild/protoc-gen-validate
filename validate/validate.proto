@@ -553,6 +553,14 @@ message StringRules {
         // Uuid specifies that the field must be a valid UUID as defined by
         // RFC 4122
         bool uuid     = 22;
+
+        // HeaderName specified that the field must be a valid header name as
+        // defined by RFC 7230.
+        bool header_name = 24;
+
+        // HeaderValue specified that the field must be a valid header value as
+        // defined by RFC 7230.
+        bool header_value = 25;
     }
 }
 

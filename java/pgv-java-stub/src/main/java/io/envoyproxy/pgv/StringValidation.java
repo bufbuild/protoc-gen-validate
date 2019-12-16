@@ -208,6 +208,32 @@ public final class StringValidation {
         throw new ValidationException(field, enquote(value), "invalid UUID string");
     }
 
+  public static void headerName(final String field, final String value) throws ValidationException {
+    final char[] chars = value.toCharArray();
+
+    final String whitelist = "!#$%&'`*+-.^_|~";
+
+    for (int i = 0; i < chars.length; i++) {
+      final char c = chars[i];
+      if ((c < '0' || c > '9') && (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && whitelist.indexOf(c) < 0) {
+            throw new ValidationException(field, enquote(value), "invalid header name string");
+      }
+    }
+    return;
+  }
+
+  public static void headerValue(final String field, final String value) throws ValidationException {
+    final char[] chars = value.toCharArray();
+
+    for (int i = 0; i < chars.length; i++) {
+      final char c = chars[i];
+      if (!(c == '\t' || c == ' ' || ('!' <= c && c <= '~') || 127 < c)) {
+            throw new ValidationException(field, enquote(value), "invalid header value string");
+      }
+    }
+    return;
+  }
+
     private static String enquote(String value) {
         return "\"" + value + "\"";
     }

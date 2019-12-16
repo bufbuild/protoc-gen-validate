@@ -864,6 +864,23 @@ var stringCases = []TestCase{
 	{"string - UUID - valid (v5 - case-insensitive)", &cases.StringUUID{Val: "A6EDC906-2F9F-5FB2-A373-EFAC406F0EF2"}, true},
 	{"string - UUID - invalid", &cases.StringUUID{Val: "foobar"}, false},
 	{"string - UUID - invalid (bad UUID)", &cases.StringUUID{Val: "ffffffff-ffff-ffff-ffff-fffffffffffff"}, false},
+
+	{"string - header name - valid", &cases.StringHeaderName{Val: "clustername"}, true},
+	{"string - header name - valid (nums)", &cases.StringHeaderName{Val: "cluster-123"}, true},
+	{"string - header name - valid (special token)", &cases.StringHeaderName{Val: "!+#&.%"}, true},
+	{"string - header name - valid (period)", &cases.StringHeaderName{Val: "cluster.name"}, true},
+	{"string - header name - invalid (space)", &cases.StringHeaderName{Val: "cluster name"}, false},
+	{"string - header name - invalid (return)", &cases.StringHeaderName{Val: "example\r"}, false},
+	{"string - header name - invalid (tab)", &cases.StringHeaderName{Val: "example\t"}, false},
+
+	{"string - header value - valid", &cases.StringHeaderValue{Val: "cluster.name.123"}, true},
+	{"string - header value - valid (uppercase)", &cases.StringHeaderValue{Val: "/TEST/LONG/URL"}, true},
+	{"string - header value - valid (spaces)", &cases.StringHeaderValue{Val: "cluster name"}, true},
+	{"string - header value - valid (tab)", &cases.StringHeaderValue{Val: "example\t"}, true},
+	{"string - header value - valid (special token)", &cases.StringHeaderValue{Val: "!#%&./+"}, true},
+	{"string - header value - invalid (NUL)", &cases.StringHeaderValue{Val: "foo\000bar"}, false},
+	{"string - header value - invalid (DEL)", &cases.StringHeaderValue{Val: "\x7f"}, false},
+	{"string - header value - invalid", &cases.StringHeaderValue{Val: "example\r"}, false},
 }
 
 var bytesCases = []TestCase{

@@ -253,4 +253,33 @@ public class StringValidationTest {
         assertValidationException(() -> uuid("4_dash_at_22", "00000000-0000-0000-000-0000000000000"));
         assertValidationException(() -> uuid("4_dash_at_24", "00000000-0000-0000-00000-00000000000"));
     }
+
+    @Test
+    public void headerNameWorks() throws ValidationException {
+        // Match
+        StringValidation.header_name("x", "cluster.name");
+        StringValidation.header_name("x", "/TEST/LONG/URL");
+        StringValidation.header_name("x", "clustername");
+        StringValidation.header_name("x", "!#%&./+");
+
+        // No Match
+        assertThatThrownBy(() -> StringValidation.header_name("x", "foo\000bar")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.header_name("x", "cluster name")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.header_name("x", "example\r")).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
+    public void headerValueWorks() throws ValidationException {
+        // Match
+        StringValidation.header_value("x", "cluster.name");
+        StringValidation.header_value("x", "/TEST/LONG/URL");
+        StringValidation.header_value("x", "cluster name");
+        StringValidation.header_value("x", "!#%&./+");
+
+        // No Match
+        assertThatThrownBy(() -> StringValidation.header_value("x", "foo\000bar")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.header_value("x", "\x7f")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.header_value("x", "example\r")).isInstanceOf(ValidationException.class);
+    }
+
 }

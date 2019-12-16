@@ -176,11 +176,24 @@ const strTpl = `
 		}
 		*/}}
 	{{ else if $r.GetUuid }}
-		{{ unimplemented "C++ UUID validation is not implemented" }}
-		{{/* TODO(akonradi) implement UUID constraints
-                if err := m._validateUuid({{ accessor . }}); err != nil {
-                        return {{ errCause . "err" "value must be a valid UUID" }}
+                if (!RE2::FullMatch(re2::StringPiece({{ accessor . }}), pgv::validate::_uuidPattern)) {
+                        {{ err . "value must be a valid UUID" }}
                 }
-		*/}}
+	{{ else if $r.GetHeaderName }}
+        {
+                const std::string& name = {{ accessor . }};
+
+                if (!pgv::IsHeaderName(name)) {
+			{{ err . "value must be a valid HTTP header name" }}
+                }
+        }
+	{{ else if $r.GetHeaderValue }}
+        {
+                const std::string& value = {{ accessor . }};
+
+                if (!pgv::IsHeaderValue(value)) {
+			{{ err . "value must be a valid HTTP header value" }}
+                }
+        }
 	{{ end }}
 `

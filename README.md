@@ -398,6 +398,12 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
 
   // x must be a valid UUID (via RFC 4122)
   string x = 1 [(validate.rules).string.uuid = true];
+  
+  // x must be a valid header name (via RFC 7230)
+  string x = 1 [(validate.rules).string.header_name = true];
+  
+  // x must be a valid header value (via RFC 7230)
+  string x = 1 [(validate.rules).string.header_value = true];
   ```
 
 ### Bytes
