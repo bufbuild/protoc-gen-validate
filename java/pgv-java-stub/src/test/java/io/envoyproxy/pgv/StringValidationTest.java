@@ -257,28 +257,28 @@ public class StringValidationTest {
     @Test
     public void headerNameWorks() throws ValidationException {
         // Match
-        StringValidation.header_name("x", "cluster.name");
-        StringValidation.header_name("x", "/TEST/LONG/URL");
-        StringValidation.header_name("x", "clustername");
-        StringValidation.header_name("x", "!#%&./+");
+        StringValidation.headerName("x", "cluster.name");
+        StringValidation.headerName("x", "/TEST/LONG/URL");
+        StringValidation.headerName("x", "clustername");
+        StringValidation.headerName("x", "!#%&./+");
 
         // No Match
-        assertThatThrownBy(() -> StringValidation.header_name("x", "foo\000bar")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.header_name("x", "cluster name")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.header_name("x", "example\r")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.headerName("x", "foo\000bar")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.headerName("x", "cluster name")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.headerName("x", "example\r")).isInstanceOf(ValidationException.class);
     }
 
     @Test
     public void headerValueWorks() throws ValidationException {
         // Match
-        StringValidation.header_value("x", "cluster.name");
-        StringValidation.header_value("x", "/TEST/LONG/URL");
-        StringValidation.header_value("x", "cluster name");
-        StringValidation.header_value("x", "!#%&./+");
+        StringValidation.headerValue("x", "cluster.name");
+        StringValidation.headerValue("x", "/TEST/LONG/URL");
+        StringValidation.headerValue("x", "cluster name");
+        StringValidation.headerValue("x", "!#%&./+");
 
         // No Match
-        assertThatThrownBy(() -> StringValidation.header_value("x", "foo\000bar")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.header_value("x", "example\r")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.headerValue("x", "foo\000bar")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.headerValue("x", "example\r")).isInstanceOf(ValidationException.class);
     }
 
 }
