@@ -211,7 +211,7 @@ public final class StringValidation {
   public static void headerName(final String field, final String value) throws ValidationException {
     final char[] chars = value.toCharArray();
 
-    final String whitelist = "!#$%&'`*+-.^_|~";
+    final String whitelist = "!#$%&\'`*+-.^_|~";
 
     for (int i = 0; i < chars.length; i++) {
       final char c = chars[i];
