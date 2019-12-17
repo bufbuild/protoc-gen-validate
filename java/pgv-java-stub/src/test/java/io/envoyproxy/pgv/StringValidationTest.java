@@ -268,7 +268,6 @@ public class StringValidationTest {
         assertThatThrownBy(() -> StringValidation.headerName("x", "cluster name")).isInstanceOf(ValidationException.class);
         assertThatThrownBy(() -> StringValidation.headerName("x", "example\r")).isInstanceOf(ValidationException.class);
         assertThatThrownBy(() -> StringValidation.headerName("x", ":")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.headerName("x", "")).isInstanceOf(ValidationException.class);
     }
 
     @Test
