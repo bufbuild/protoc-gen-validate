@@ -866,12 +866,16 @@ var stringCases = []TestCase{
 	{"string - UUID - invalid (bad UUID)", &cases.StringUUID{Val: "ffffffff-ffff-ffff-ffff-fffffffffffff"}, false},
 
 	{"string - header name - valid", &cases.StringHeaderName{Val: "clustername"}, true},
+	{"string - header name - valid", &cases.StringHeaderName{Val: ":path"}, true},
 	{"string - header name - valid (nums)", &cases.StringHeaderName{Val: "cluster-123"}, true},
 	{"string - header name - valid (special token)", &cases.StringHeaderName{Val: "!+#&.%"}, true},
-	{"string - header name - valid (period)", &cases.StringHeaderName{Val: "cluster.name"}, true},
+	{"string - header name - valid (period)", &cases.StringHeaderName{Val: "CLUSTER.NAME"}, true},
+	{"string - header name - invalid", &cases.StringHeaderName{Val: ":"}, false},
+	{"string - header name - invalid", &cases.StringHeaderName{Val: ":path:"}, false},
 	{"string - header name - invalid (space)", &cases.StringHeaderName{Val: "cluster name"}, false},
 	{"string - header name - invalid (return)", &cases.StringHeaderName{Val: "example\r"}, false},
 	{"string - header name - invalid (tab)", &cases.StringHeaderName{Val: "example\t"}, false},
+	{"string - header name - invalid (slash)", &cases.StringHeaderName{Val: "/test/long/url"}, false},
 
 	{"string - header value - valid", &cases.StringHeaderValue{Val: "cluster.name.123"}, true},
 	{"string - header value - valid (uppercase)", &cases.StringHeaderValue{Val: "/TEST/LONG/URL"}, true},

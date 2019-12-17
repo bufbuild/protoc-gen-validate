@@ -66,7 +66,14 @@ const uuidTpl = `
 
 const headerNameTpl = `
 	func (m {{ (msgTyp .).Pointer }}) _validateHeaderName(hdr string) error {
-		for _, r := range hdr {
+                var start = 0;
+                if hdr[0] == ':' {
+                        if len(hdr) == 1 {
+                                 return fmt.Errorf("invalid HTTP header name")
+                        }
+                        start += 1;
+                }
+		for _, r := range hdr[start:] {
 			if ((r < 'A' || r > 'Z') && (r < 'a' || r > 'z') && (r < '0' || r > '9') &&
                             !strings.ContainsRune("!#$%&'*+-.^_|~", r)) {
 				return fmt.Errorf("invalid header name character, got %q", string(r))

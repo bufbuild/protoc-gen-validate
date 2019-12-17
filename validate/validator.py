@@ -73,7 +73,13 @@ def _validateEmail(addr):
     return _validateHostName(parts[1])
 
 def _validateHeaderName(header):
-  for r in header:
+  start = 0
+  if header[0] == ":":
+    if len(header) == 1:
+      return False
+    start = 1
+ 
+  for r in header[start:]:
     if (r < 'A' or r > 'Z') and (r < 'a' or r > 'z') and (r < '0' or r > '9') and (r not in "!#$%&'*+-.^_`|~"):
       return False
   return True

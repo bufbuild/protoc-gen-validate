@@ -138,8 +138,16 @@ static inline bool IsHostname(const string& to_validate) {
 }
 
 static inline bool IsHeaderName(const string& to_validate) {
+  int start = 0;
+  if (to_validate[0] == ':') {
+    if (to_validate.size() == 1) {
+      return false;
+    }
+    start = 1;
+  }
+
   const std::string whitelist = "!#$%&'*+-.^_`|~";
-  for (const char& r : to_validate) {
+  for (const char& r : to_validate.substr(start)) {
     if ((r < 'A' || r > 'Z') && (r < 'a' || r > 'z') && (r < '0' || r > '9') &&
         whitelist.find(r) == std::string::npos) {
         return false;

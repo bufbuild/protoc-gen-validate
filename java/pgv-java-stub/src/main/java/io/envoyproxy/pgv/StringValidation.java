@@ -211,9 +211,17 @@ public final class StringValidation {
   public static void headerName(final String field, final String value) throws ValidationException {
     final char[] chars = value.toCharArray();
 
+    int start = 0;
+    if (chars[0] == ':') {
+      if (chars.length == 1) {
+        throw new ValidationException(field, enquote(value), "invalid header name string");
+      }
+      start = 1;
+    }
+
     final String whitelist = "!#$%&\'`*+-.^_|~";
 
-    for (int i = 0; i < chars.length; i++) {
+    for (int i = start; i < chars.length; i++) {
       final char c = chars[i];
       if ((c < '0' || c > '9') && (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && whitelist.indexOf(c) < 0) {
             throw new ValidationException(field, enquote(value), "invalid header name string");
