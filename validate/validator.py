@@ -77,10 +77,10 @@ def _validateHeaderName(header):
     if (r < 'A' or r > 'Z') and (r < 'a' or r > 'z') and (r < '0' or r > '9') and (r not in "!#$%&'*+-.^_`|~"):
       return False
   return True
-  
+
 def _validateHeaderValue(header):
   for r in header:
-    if not (r == '\t' or r == ' ' or ('!' <= r and r <= '~') or '\x7f' < r):
+    if (ord(r) < 32 and (r != '\t')) or (ord(r) == 127):
       return False
   return True
 

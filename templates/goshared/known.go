@@ -80,7 +80,7 @@ const headerNameTpl = `
 const headerValueTpl = `
 	func (m {{ (msgTyp .).Pointer }}) _validateHeaderValue(hdr string) error {
 		for _, r := range hdr {
-			if !(r == '\t' || r == ' ' ||  '!' <= r && r <= '~' || '\x7f' < r) {
+			if unicode.IsControl(r) && (r != '\t') {
 				return fmt.Errorf("invalid header value character, got %q", string(r))
 			}
 		}

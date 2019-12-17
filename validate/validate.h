@@ -149,8 +149,8 @@ static inline bool IsHeaderName(const string& to_validate) {
 }
 
 static inline bool IsHeaderValue(const string& to_validate) {
-  for (const char& r : to_validate) {
-    if (!((r == '\t') || (r == ' ') ||  ('!' <= r && r <= '~') || ('\x7f' < r))) {
+  for (const unsigned char& r : to_validate) {
+    if (std::iscntrl(r)  && r != '\t') {
         return false;
     }
   }

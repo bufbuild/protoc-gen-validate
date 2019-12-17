@@ -227,7 +227,7 @@ public final class StringValidation {
 
     for (int i = 0; i < chars.length; i++) {
       final char c = chars[i];
-      if (!(c == '\t' || c == ' ' || ('!' <= c && c <= '~') || 127 < c)) {
+      if (c < 32 && c != '\t' || c == 127) {
             throw new ValidationException(field, enquote(value), "invalid header value string");
       }
     }

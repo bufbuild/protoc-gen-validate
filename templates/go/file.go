@@ -15,6 +15,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
+        "unicode"
 	"unicode/utf8"
 
 	"github.com/golang/protobuf/ptypes"
@@ -37,6 +38,7 @@ var (
 	_ = (*url.URL)(nil)
 	_ = (*mail.Address)(nil)
 	_ = ptypes.DynamicAny{}
+        _ = unicode.IsControl
 
 	{{ range (externalEnums .) }}
 		_ = {{ pkg . }}.{{ name . }}(0)
