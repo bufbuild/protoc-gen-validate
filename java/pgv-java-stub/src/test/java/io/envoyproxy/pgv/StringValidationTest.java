@@ -258,12 +258,12 @@ public class StringValidationTest {
     public void headerNameWorks() throws ValidationException {
         // Match
         StringValidation.headerName("x", "cluster.name");
-        StringValidation.headerName("x", "/TEST/LONG/URL");
         StringValidation.headerName("x", "clustername");
         StringValidation.headerName("x", "!#%&./+");
 
         // No Match
         assertThatThrownBy(() -> StringValidation.headerName("x", "foo\000bar")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.headerName("x", "test/long/url")).isInstanceOf(ValidationException.class);
         assertThatThrownBy(() -> StringValidation.headerName("x", "cluster name")).isInstanceOf(ValidationException.class);
         assertThatThrownBy(() -> StringValidation.headerName("x", "example\r")).isInstanceOf(ValidationException.class);
     }
