@@ -278,7 +278,6 @@ public class StringValidationTest {
 
         // No Match
         assertThatThrownBy(() -> StringValidation.header_value("x", "foo\000bar")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.header_value("x", "\x7f")).isInstanceOf(ValidationException.class);
         assertThatThrownBy(() -> StringValidation.header_value("x", "example\r")).isInstanceOf(ValidationException.class);
     }
 
