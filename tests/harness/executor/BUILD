@@ -16,9 +16,9 @@ go_library(
     importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/executor",
     visibility = ["//visibility:private"],
     deps = [
+        "//tests/harness:harness_go_proto",
         "//tests/harness/cases:go",
         "//tests/harness/cases/other_package:go",
-        "//tests/harness:harness_go_proto",
         "//vendor/golang.org/x/net/context:go_default_library",
         "@com_github_golang_protobuf//proto:go_default_library",
         "@com_github_golang_protobuf//ptypes:go_default_library",

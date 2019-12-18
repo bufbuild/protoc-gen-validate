@@ -1,12 +1,12 @@
-load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
-
 # gazelle:exclude go
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
 load(
     "//bazel:pgv_proto_library.bzl",
+    "pgv_cc_proto_library",
     "pgv_go_proto_library",
     "pgv_gogo_proto_library",
-    "pgv_cc_proto_library",
     "pgv_java_proto_library",
     "pgv_python_proto_library",
 )
@@ -68,8 +68,8 @@ go_library(
 
 java_proto_library(
     name = "embed_java_proto",
-    deps = [":embed_proto"],
     visibility = ["//visibility:public"],
+    deps = [":embed_proto"],
 )
 
 pgv_java_proto_library(
