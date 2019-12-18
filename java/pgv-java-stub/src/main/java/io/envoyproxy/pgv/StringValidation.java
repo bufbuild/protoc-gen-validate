@@ -19,6 +19,8 @@ public final class StringValidation {
     private static final int UUID_DASH_3 = 18;
     private static final int UUID_DASH_4 = 23;
     private static final int UUID_LEN = 36;
+    private static final Pattern HTTP_HEADER_NAME_PATTERN = Pattern.compile("^:?[0-9a-zA-Z!#$%&'*+-.^_|~\u002C]+$");
+    private static final Pattern HTTP_HEADER_VALUE_PATTERN = Pattern.compile("^[ \t]*(?:[\u0020-\u007E\u0080-\u00FF](?:[ \t]+[\u0020-\u007E\u0080-\u00FF])?)*[ \t]*$");
 
     private StringValidation() {
         // Intentionally left blank.
@@ -208,37 +210,19 @@ public final class StringValidation {
         throw new ValidationException(field, enquote(value), "invalid UUID string");
     }
 
-  public static void headerName(final String field, final String value) throws ValidationException {
-    final char[] chars = value.toCharArray();
-
-    int start = 0;
-    if (chars[0] == ':') {
-      if (chars.length == 1) {
-        throw new ValidationException(field, enquote(value), "invalid header name string");
-      }
-      start = 1;
+  public static void httpHeaderName(final String field, final String value) throws ValidationException {
+    if (!HTTP_HEADER_NAME_PATTERN.matches(value)) {
+      throw new ValidationException(field, enquote(value), "invalid HTTP header name string");
     }
 
-    final String whitelist = "!#$%&\'`*+-.^_|~";
-
-    for (int i = start; i < chars.length; i++) {
-      final char c = chars[i];
-      if ((c < '0' || c > '9') && (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && whitelist.indexOf(c) < 0) {
-            throw new ValidationException(field, enquote(value), "invalid header name string");
-      }
-    }
     return;
   }
 
-  public static void headerValue(final String field, final String value) throws ValidationException {
-    final char[] chars = value.toCharArray();
-
-    for (int i = 0; i < chars.length; i++) {
-      final char c = chars[i];
-      if (c < 32 && c != '\t' || c == 127) {
-            throw new ValidationException(field, enquote(value), "invalid header value string");
-      }
+  public static void httpHeaderValue(final String field, final String value) throws ValidationException {
+    if (!HTTP_HEADER_VALUE_PATTERN.matches(value)) {
+      throw new ValidationException(field, enquote(value), "invalid HTTP header value string");
     }
+
     return;
   }
 

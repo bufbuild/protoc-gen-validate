@@ -89,10 +89,10 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.GetUuid }}
 			io.envoyproxy.pgv.StringValidation.uuid("{{ $f.FullyQualifiedName }}", {{ accessor . }});
 {{- end -}}
-{{- if $r.GetHeaderName }}
-			io.envoyproxy.pgv.StringValidation.headerName("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+{{- if $r.GetHttpHeaderName }}
+			io.envoyproxy.pgv.StringValidation.httpHeaderName("{{ $f.FullyQualifiedName }}", {{ accessor . }});
 {{- end -}}
-{{- if $r.GetHeaderValue }}
-			io.envoyproxy.pgv.StringValidation.headerValue("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+{{- if $r.GetHttpHeaderValue }}
+			io.envoyproxy.pgv.StringValidation.httpHeaderValue("{{ $f.FullyQualifiedName }}", {{ accessor . }});
 {{- end -}}
 `

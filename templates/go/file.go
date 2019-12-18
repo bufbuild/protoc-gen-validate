@@ -15,7 +15,6 @@ import (
 	"regexp"
 	"strings"
 	"time"
-        "unicode"
 	"unicode/utf8"
 
 	"github.com/golang/protobuf/ptypes"
@@ -38,7 +37,6 @@ var (
 	_ = (*url.URL)(nil)
 	_ = (*mail.Address)(nil)
 	_ = ptypes.DynamicAny{}
-        _ = unicode.IsControl
 
 	{{ range (externalEnums .) }}
 		_ = {{ pkg . }}.{{ name . }}(0)
@@ -47,6 +45,13 @@ var (
 
 // define the regex for a UUID once up-front
 var _{{ snakeCase .File.InputPath.BaseName }}_uuidPattern = regexp.MustCompile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+
+// define the regex for an HTTP header name once up-front
+var _{{ snakeCase .File.InputPath.BaseName }}_httpHeaderName = regexp.MustCompile("^:?[0-9a-zA-Z!#$%&'*+-.^_|~\x2C]+$")
+
+// define the regex for an HTTP header value once up-front
+var _{{ snakeCase .File.InputPath.BaseName }}_httpHeaderValue = regexp.MustCompile("^[ \t]*(?:[\x20-\x7E\u0080-\u00FF](?:[ \t]+[\x20-\x7E\u0080-\u00FF])?)*[ \t]*$")
+
 
 {{ range .AllMessages }}
 	{{ template "msg" . }}

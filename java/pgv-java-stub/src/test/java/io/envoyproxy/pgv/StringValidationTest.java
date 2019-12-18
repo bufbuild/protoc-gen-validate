@@ -255,32 +255,32 @@ public class StringValidationTest {
     }
 
     @Test
-    public void headerNameWorks() throws ValidationException {
+    public void httpHeaderNameWorks() throws ValidationException {
         // Match
-        StringValidation.headerName("x", "cluster.name");
-        StringValidation.headerName("x", ":path");
-        StringValidation.headerName("x", "clustername");
-        StringValidation.headerName("x", "!#%&.+");
+        StringValidation.httpHeaderName("x", "cluster.name");
+        StringValidation.httpHeaderName("x", ":path");
+        StringValidation.httpHeaderName("x", "clustername");
+        StringValidation.httpHeaderName("x", "!#%&.+");
 
         // No Match
-        assertThatThrownBy(() -> StringValidation.headerName("x", "foo\000bar")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.headerName("x", "test/long/url")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.headerName("x", "cluster name")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.headerName("x", "example\r")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.headerName("x", ":")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.httpHeaderName("x", "foo\000bar")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.httpHeaderName("x", "test/long/url")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.httpHeaderName("x", "cluster name")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.httpHeaderName("x", "example\r")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.httpHeaderName("x", ":")).isInstanceOf(ValidationException.class);
     }
 
     @Test
-    public void headerValueWorks() throws ValidationException {
+    public void httpHeaderValueWorks() throws ValidationException {
         // Match
-        StringValidation.headerValue("x", "cluster.name");
-        StringValidation.headerValue("x", "/TEST/LONG/URL");
-        StringValidation.headerValue("x", "cluster name");
-        StringValidation.headerValue("x", "!#%&./+");
+        StringValidation.httpHeaderValue("x", "cluster.name");
+        StringValidation.httpHeaderValue("x", "/TEST/LONG/URL");
+        StringValidation.httpHeaderValue("x", "cluster name");
+        StringValidation.httpHeaderValue("x", "!#%&./+");
 
         // No Match
-        assertThatThrownBy(() -> StringValidation.headerValue("x", "foo\000bar")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.headerValue("x", "example\r")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.httpHeaderValue("x", "foo\000bar")).isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> StringValidation.httpHeaderValue("x", "example\r")).isInstanceOf(ValidationException.class);
     }
 
 }

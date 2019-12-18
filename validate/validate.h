@@ -137,34 +137,6 @@ static inline bool IsHostname(const string& to_validate) {
   return true;
 }
 
-static inline bool IsHeaderName(const string& to_validate) {
-  int start = 0;
-  if (to_validate[0] == ':') {
-    if (to_validate.size() == 1) {
-      return false;
-    }
-    start = 1;
-  }
-
-  const std::string whitelist = "!#$%&'*+-.^_`|~";
-  for (const char& r : to_validate.substr(start)) {
-    if ((r < 'A' || r > 'Z') && (r < 'a' || r > 'z') && (r < '0' || r > '9') &&
-        whitelist.find(r) == std::string::npos) {
-        return false;
-    }
-  }
-  return true;
-}
-
-static inline bool IsHeaderValue(const string& to_validate) {
-  for (const unsigned char& r : to_validate) {
-    if (std::iscntrl(r)  && r != '\t') {
-        return false;
-    }
-  }
-  return true;
-}
-
 static inline size_t Utf8Len(const string& narrow_string) {
   const char *str_char = narrow_string.c_str();
   ptrdiff_t byte_len = narrow_string.length();

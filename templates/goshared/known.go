@@ -64,32 +64,20 @@ const uuidTpl = `
 	}
 `
 
-const headerNameTpl = `
-	func (m {{ (msgTyp .).Pointer }}) _validateHeaderName(hdr string) error {
-                var start = 0;
-                if hdr[0] == ':' {
-                        if len(hdr) == 1 {
-                                 return fmt.Errorf("invalid HTTP header name")
-                        }
-                        start += 1;
-                }
-		for _, r := range hdr[start:] {
-			if ((r < 'A' || r > 'Z') && (r < 'a' || r > 'z') && (r < '0' || r > '9') &&
-                            !strings.ContainsRune("!#$%&'*+-.^_|~", r)) {
-				return fmt.Errorf("invalid header name character, got %q", string(r))
-			}
+const httpHeaderNameTpl = `
+	func (m {{ (msgTyp .).Pointer }}) _validateHttpHeaderName(hdr string) error {
+                if matched := _{{ snakeCase .File.InputPath.BaseName }}_httpHeaderName.MatchString(hdr); !matched {
+			return errors.New("invalid HTTP header name format")
 		}
 
 		return nil
 	}
 `
 
-const headerValueTpl = `
-	func (m {{ (msgTyp .).Pointer }}) _validateHeaderValue(hdr string) error {
-		for _, r := range hdr {
-			if unicode.IsControl(r) && (r != '\t') {
-				return fmt.Errorf("invalid header value character, got %q", string(r))
-			}
+const httpHeaderValueTpl = `
+	func (m {{ (msgTyp .).Pointer }}) _validateHttpHeaderValue(hdr string) error {
+                if matched := _{{ snakeCase .File.InputPath.BaseName }}_httpHeaderValue.MatchString(hdr); !matched {
+			return errors.New("invalid HTTP header name format")
 		}
 
 		return nil

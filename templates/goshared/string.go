@@ -120,12 +120,12 @@ const strTpl = `
 		if err := m._validateUuid({{ accessor . }}); err != nil {
 			return {{ errCause . "err" "value must be a valid UUID" }}
 		}
-	{{ else if $r.GetHeaderName }}
-		if err := m._validateHeaderName({{ accessor . }}); err != nil {
+	{{ else if $r.GetHttpHeaderName }}
+		if err := m._validateHttpHeaderName({{ accessor . }}); err != nil {
 			return {{ errCause . "err" "value must be a valid HTTP header name" }}
 		}
-	{{ else if $r.GetHeaderValue }}
-		if err := m._validateHeaderValue({{ accessor . }}); err != nil {
+	{{ else if $r.GetHttpHeaderValue }}
+		if err := m._validateHttpHeaderValue({{ accessor . }}); err != nil {
 			return {{ errCause . "err" "value must be a valid HTTP header value" }}
 		}
 	{{ end }}

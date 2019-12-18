@@ -21,6 +21,12 @@ using std::string;
 // define the regex for a UUID once up-front
 const re2::RE2 _uuidPattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
 
+// define the regex for an HTTP header name once up-front
+const re2::RE2 _httpHeaderName("^:?[0-9a-zA-Z!#$%&'*+-.^_|~\x2C]+$");
+
+// define the regex for an HTTP header value once up-front
+const re2::RE2 _httpHeaderValue("^[ \t]*(?:[\x20-\x7E\u0080-\u00FF](?:[ \t]+[\x20-\x7E\u0080-\u00FF])?)*[ \t]*$");
+
 {{ range .AllMessages }}
 {{- if not (disabled .) -}}
 
