@@ -56,8 +56,22 @@ const emailTpl = `
 
 const uuidTpl = `
 	func (m {{ (msgTyp .).Pointer }}) _validateUuid(uuid string) error {
-		if matched := _{{ snakeCase .File.InputPath.BaseName }}_uuidPattern.MatchString(uuid); !matched {
-			return errors.New("invalid uuid format")
+		err := func() error {
+			return errors.New("invalid UUID string")
+		}
+
+		if len(uuid) != 36 {
+			return err()
+		}
+
+		for i, c := range uuid {
+			if i == 8 || i == 13 || i == 18 || i == 23 {
+				if c != '-' {
+					return err()
+				}
+			} else if (c < '0' || c > '9') && (c < 'a' || c > 'f') && (c < 'A' || c > 'F') {
+				return err()
+			}
 		}
 
 		return nil

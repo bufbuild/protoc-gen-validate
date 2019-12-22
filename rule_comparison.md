@@ -34,7 +34,7 @@
 | ipv6                   |✅|✅|✅|✅|✅|
 | uri                    |✅|✅|✅|✅|✅|
 | uri_ref                |✅|✅|✅|✅|✅|
-| uuid                   |✅|✅|❌|✅|✅|
+| uuid                   |✅|✅|✅|✅|✅|
 
 ## Bytes
 | Constraint Rule | Go | GoGo | C++ | Java | Python |

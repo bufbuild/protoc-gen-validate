@@ -43,9 +43,6 @@ var (
 	{{ end }}
 )
 
-// define the regex for a UUID once up-front
-var _{{ snakeCase .File.InputPath.BaseName }}_uuidPattern = regexp.MustCompile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
-
 {{ range .AllMessages }}
 	{{ template "msg" . }}
 {{ end }}

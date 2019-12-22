@@ -176,11 +176,10 @@ const strTpl = `
 		}
 		*/}}
 	{{ else if $r.GetUuid }}
-		{{ unimplemented "C++ UUID validation is not implemented" }}
-		{{/* TODO(akonradi) implement UUID constraints
-                if err := m._validateUuid({{ accessor . }}); err != nil {
-                        return {{ errCause . "err" "value must be a valid UUID" }}
-                }
-		*/}}
+		const std::string& value = {{ accessor . }};
+
+		if (!pgv::IsUuid(value)) {
+			{{ err . "value must be a valid UUID" }}
+		}
 	{{ end }}
 `
