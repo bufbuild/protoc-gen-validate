@@ -1,5 +1,5 @@
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 def pgv_dependencies():
     if not native.existing_rule("io_bazel_rules_go"):
@@ -63,6 +63,14 @@ def pgv_dependencies():
             artifact = "com.google.re2j:re2j:1.2",
         )
 
+    if not native.existing_rule("com_googlesource_code_re2"):
+        http_archive(
+            name = "com_googlesource_code_re2",
+            sha256 = "38bc0426ee15b5ed67957017fd18201965df0721327be13f60496f2b356e3e01",
+            strip_prefix = "re2-2019-08-01",
+            urls = ["https://github.com/google/re2/archive/2019-08-01.tar.gz"],
+        )
+
     if not native.existing_rule("com_google_guava"):
         native.maven_jar(
             name = "com_google_guava",
@@ -111,4 +119,12 @@ def pgv_dependencies():
             remote = "https://github.com/bazelbuild/rules_python.git",
             commit = "fdbb17a4118a1728d19e638a5291b4c4266ea5b8",
             shallow_since = "1557865590 -0400",
+        )
+
+    if not native.existing_rule("rules_proto"):
+        git_repository(
+            name = "rules_proto",
+            remote = "https://github.com/bazelbuild/rules_proto.git",
+            commit = "2c0468366367d7ed97a1f702f9cd7155ab3f73c5",
+            shallow_since = "1575470667 +0100"
         )

@@ -2,6 +2,7 @@ load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 load("@io_bazel_rules_python//python:pip.bzl", "pip_import", "pip_repositories")
+load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
 
 # Only needed for PIP support:
 
@@ -29,3 +30,7 @@ def pgv_dependency_imports():
 
     # Import rules for the Go compiler.
     _pgv_go_dependencies()
+
+    # Setup rules_proto.
+    rules_proto_dependencies()
+    rules_proto_toolchains()
