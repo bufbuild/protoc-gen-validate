@@ -73,8 +73,8 @@
 | ---| :---: | :---: | :---: | :---: | :---: |
 | min\_pairs/max_pairs   |✅|✅|✅|✅|✅|
 | no_sparse              |✅|✅|❌|❌|❌|
-| keys                   |✅|✅|❌|✅|✅|
-| values                 |✅|✅|❌|✅|✅|
+| keys                   |✅|✅|✅|✅|✅|
+| values                 |✅|✅|✅|✅|✅|
 
 ## OneOf
 | Constraint Rule | Go | GoGo | C++ | Java | Python |
