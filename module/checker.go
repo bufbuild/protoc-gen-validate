@@ -14,6 +14,17 @@ import (
 	"github.com/lyft/protoc-gen-star"
 )
 
+var unknown = ""
+var httpHeaderName = "^:?[0-9a-zA-Z!#$%&'*+-.^_|~\x2C]+$"
+var httpHeaderValue = "^[ \t]*(?:[\x20-\x7E\u0080-\u00FF](?:[ \t]+[\x20-\x7E\u0080-\u00FF])?)*[ \t]*$"
+
+// Map from well known regex to regex pattern.
+var regex_map = map[string]*string{
+	"UNKNOWN":           &unknown,
+	"HTTP_HEADER_NAME":  &httpHeaderName,
+	"HTTP_HEADER_VALUE": &httpHeaderValue,
+}
+
 type FieldType interface {
 	ProtoType() pgs.ProtoType
 	Embed() pgs.Message
@@ -196,6 +207,7 @@ func (m *Module) CheckString(r *validate.StringRules) {
 	m.checkMinMax(r.MinLen, r.MaxLen)
 	m.checkMinMax(r.MinBytes, r.MaxBytes)
 	m.checkIns(len(r.In), len(r.NotIn))
+	m.checkWellKnownRegex(r.GetWellKnownRegex(), r)
 	m.checkPattern(r.Pattern, len(r.In))
 
 	if r.MaxLen != nil {
@@ -452,6 +464,13 @@ func (m *Module) checkLen(len, min, max *uint64) {
 		"cannot have both `len` and `max_len` rules on the same field")
 }
 
+func (m *Module) checkWellKnownRegex(wk validate.KnownRegex, r *validate.StringRules) {
+	if wk != 0 {
+		m.Assert(r.Pattern == nil, "regex `well_known_regex` and regex `pattern` are incompatible")
+		r.Pattern = regex_map[wk.String()]
+	}
+}
+
 func (m *Module) checkPattern(p *string, in int) {
 	if p != nil {
 		m.Assert(in == 0, "regex `pattern` and `in` rules are incompatible")
@@ -479,4 +498,3 @@ func (m *Module) checkTS(ts *timestamp.Timestamp) *int64 {
 	m.CheckErr(err, "could not resolve timestamp")
 	return proto.Int64(t.UnixNano())
 }
-

@@ -554,14 +554,20 @@ message StringRules {
         // RFC 4122
         bool uuid     = 22;
 
-        // HttpHeaderName specified that the field must be a valid HTTP header name
-        // as defined by RFC 7230.
-        bool http_header_name = 24;
-
-        // HttpHeaderValue specified that the field must be a valid HTTP header value
-        // as defined by RFC 7230.
-        bool http_header_value = 25;
+        // WellKnownRegex specifies a common well known pattern defined as a regex.
+        KnownRegex well_known_regex = 24;
     }
+}
+
+// WellKnownRegex contain some well-known patterns.
+enum KnownRegex {
+  UNKNOWN = 0;
+
+  // HTTP header name as defined by RFC 7230.
+  HTTP_HEADER_NAME = 1;
+
+  // HTTP header value as defined by RFC 7230.
+  HTTP_HEADER_VALUE = 2;
 }
 
 // BytesRules describe the constraints applied to `bytes` values

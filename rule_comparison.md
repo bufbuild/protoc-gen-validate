@@ -35,8 +35,7 @@
 | uri                    |✅|✅|❌|✅|✅|
 | uri_ref                |✅|✅|❌|✅|✅|
 | uuid                   |✅|✅|✅|✅|✅|
-| http_header_name       |✅|✅|✅|✅|✅|
-| http_header_value      |✅|✅|✅|✅|✅|
+| well_known_regex       |✅|✅|✅|✅|✅|
 
 ## Bytes
 | Constraint Rule | Go | GoGo | C++ | Java | Python |

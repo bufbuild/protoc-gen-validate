@@ -253,34 +253,4 @@ public class StringValidationTest {
         assertValidationException(() -> uuid("4_dash_at_22", "00000000-0000-0000-000-0000000000000"));
         assertValidationException(() -> uuid("4_dash_at_24", "00000000-0000-0000-00000-00000000000"));
     }
-
-    @Test
-    public void httpHeaderNameWorks() throws ValidationException {
-        // Match
-        StringValidation.httpHeaderName("x", "cluster.name");
-        StringValidation.httpHeaderName("x", ":path");
-        StringValidation.httpHeaderName("x", "clustername");
-        StringValidation.httpHeaderName("x", "!#%&.+");
-
-        // No Match
-        assertThatThrownBy(() -> StringValidation.httpHeaderName("x", "foo\000bar")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.httpHeaderName("x", "test/long/url")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.httpHeaderName("x", "cluster name")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.httpHeaderName("x", "example\r")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.httpHeaderName("x", ":")).isInstanceOf(ValidationException.class);
-    }
-
-    @Test
-    public void httpHeaderValueWorks() throws ValidationException {
-        // Match
-        StringValidation.httpHeaderValue("x", "cluster.name");
-        StringValidation.httpHeaderValue("x", "/TEST/LONG/URL");
-        StringValidation.httpHeaderValue("x", "cluster name");
-        StringValidation.httpHeaderValue("x", "!#%&./+");
-
-        // No Match
-        assertThatThrownBy(() -> StringValidation.httpHeaderValue("x", "foo\000bar")).isInstanceOf(ValidationException.class);
-        assertThatThrownBy(() -> StringValidation.httpHeaderValue("x", "example\r")).isInstanceOf(ValidationException.class);
-    }
-
 }

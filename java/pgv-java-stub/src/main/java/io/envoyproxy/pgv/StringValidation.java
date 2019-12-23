@@ -19,8 +19,6 @@ public final class StringValidation {
     private static final int UUID_DASH_3 = 18;
     private static final int UUID_DASH_4 = 23;
     private static final int UUID_LEN = 36;
-    private static final Pattern HTTP_HEADER_NAME_PATTERN = Pattern.compile("^:?[0-9a-zA-Z!#$%&'*+-.^_|~\u002C]+$");
-    private static final Pattern HTTP_HEADER_VALUE_PATTERN = Pattern.compile("^[ \t]*(?:[\u0020-\u007E\u0080-\u00FF](?:[ \t]+[\u0020-\u007E\u0080-\u00FF])?)*[ \t]*$");
 
     private StringValidation() {
         // Intentionally left blank.
@@ -209,22 +207,6 @@ public final class StringValidation {
 
         throw new ValidationException(field, enquote(value), "invalid UUID string");
     }
-
-  public static void httpHeaderName(final String field, final String value) throws ValidationException {
-    if (!HTTP_HEADER_NAME_PATTERN.matches(value)) {
-      throw new ValidationException(field, enquote(value), "invalid HTTP header name string");
-    }
-
-    return;
-  }
-
-  public static void httpHeaderValue(final String field, final String value) throws ValidationException {
-    if (!HTTP_HEADER_VALUE_PATTERN.matches(value)) {
-      throw new ValidationException(field, enquote(value), "invalid HTTP header value string");
-    }
-
-    return;
-  }
 
     private static String enquote(String value) {
         return "\"" + value + "\"";

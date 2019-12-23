@@ -179,17 +179,5 @@ const strTpl = `
                 if (!RE2::FullMatch(re2::StringPiece({{ accessor . }}), pgv::validate::_uuidPattern)) {
                         {{ err . "value must be a valid UUID" }}
                 }
-	{{ else if $r.GetHttpHeaderName }}
-        {
-                if (!RE2::FullMatch(re2::StringPiece({{ accessor . }}), pgv::validate::_httpHeaderName)) {
-                        {{ err . "value must be a valid HTTP Header Name" }}
-                }
-        }
-	{{ else if $r.GetHttpHeaderValue }}
-        {
-                if (!RE2::FullMatch(re2::StringPiece({{ accessor . }}), pgv::validate::_httpHeaderValue)) {
-                        {{ err . "value must be a valid HTTP Header Value" }}
-                }
-        }
 	{{ end }}
 `

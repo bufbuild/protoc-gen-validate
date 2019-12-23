@@ -13,6 +13,13 @@ import sys
 
 printer = ""
 
+# Well known regex mapping.
+regex_map = {
+    0: "",  # UNKNOWN
+    1: r'^:?[0-9a-zA-Z!#$%&\'*+-.^_|~\x2C]+$', # HTTP_HEADER_NAME
+    2: r'^[ \t]*(?:[\x20-\x7E\u0080-\u00FF](?:[ \t]+[\x20-\x7E\u0080-\u00FF])?)*[ \t]*$' #HTTP_HEADER_VALUE
+}
+
 def validate(proto_message):
     func = file_template(proto_message)
     global printer
@@ -118,6 +125,8 @@ def in_template(value, name):
     return Template(in_tmpl).render(value = value, name = name)
 
 def string_template(option_value, name):
+    if option_value.string.well_known_regex:
+      option_value.string.pattern = regex_map[option_value.string.well_known_regex]
     str_templ = """
     {{ const_template(o, name) -}}
     {{ in_template(o.string, name) -}}
@@ -214,14 +223,6 @@ def string_template(option_value, name):
         uuid.UUID({{ name }})
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid UUID\")
-    {%- endif -%}
-    {%- if s['http_header_name'] %}
-    if not re.match("^:?[0-9a-zA-Z!#$%&'*+-.^_|~\x2C]+$", {{ name}}):
-        raise ValidationFailed(\"{{ name }} is not a valid HTTP header name\")
-    {%- endif -%}
-    {%- if s['http_header_value'] %}
-    if not re.match("^[ \t]*(?:[\x20-\x7E\u0080-\u00FF](?:[ \t]+[\x20-\x7E\u0080-\u00FF])?)*[ \t]*$", {{ name }}):
-        raise ValidationFailed(\"{{ name }} is not a valid HTTP header value\")
     {%- endif -%}
     """
     return Template(str_templ).render(o = option_value, name = name, const_template = const_template, in_template = in_template)

@@ -2,10 +2,11 @@ package goshared
 
 import (
 	"fmt"
-	"github.com/iancoleman/strcase"
 	"reflect"
 	"strings"
 	"text/template"
+
+	"github.com/iancoleman/strcase"
 
 	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 	"github.com/golang/protobuf/ptypes"
@@ -76,8 +77,6 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("hostname").Parse(hostTpl))
 	template.Must(tpl.New("address").Parse(hostTpl))
 	template.Must(tpl.New("uuid").Parse(uuidTpl))
-	template.Must(tpl.New("httpheadername").Parse(httpHeaderNameTpl))	
-	template.Must(tpl.New("httpheadervalue").Parse(httpHeaderValueTpl))
 
 	template.Must(tpl.New("enum").Parse(enumTpl))
 	template.Must(tpl.New("repeated").Parse(repTpl))

@@ -399,11 +399,11 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
   // x must be a valid UUID (via RFC 4122)
   string x = 1 [(validate.rules).string.uuid = true];
   
-  // x must be a valid HTTP header name (via RFC 7230)
-  string x = 1 [(validate.rules).string.http_header_name = true];
+  // x must conform to a well known regex for HTTP header names (via RFC 7230)
+  string x = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_NAME]
   
-  // x must be a valid HTTP header value (via RFC 7230)
-  string x = 1 [(validate.rules).string.http_header_value = true];
+  // x must conform to a well known regex for HTTP header values (via RFC 7230) 
+  string x = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_VALUE];
   ```
 
 ### Bytes

@@ -15,7 +15,6 @@ import (
 	"regexp"
 	"strings"
 	"time"
-        "unicode"
 	"unicode/utf8"
 
 	"github.com/gogo/protobuf/types"
@@ -38,7 +37,6 @@ var (
 	_ = (*url.URL)(nil)
 	_ = (*mail.Address)(nil)
 	_ = types.DynamicAny{}
-        _ = unicode.IsControl
 
 	{{ range (externalEnums .) }}
 		_ = {{ pkg . }}.{{ name . }}(0)
