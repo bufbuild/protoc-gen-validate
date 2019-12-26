@@ -1,4 +1,5 @@
 load("@bazel_tools//tools/jdk:toolchain_utils.bzl", "find_java_runtime_toolchain", "find_java_toolchain")
+load("@rules_proto//proto:defs.bzl", "ProtoInfo")
 
 def _proto_path(proto):
     """
