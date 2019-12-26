@@ -1,6 +1,7 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:jvm.bzl", "jvm_maven_import_external")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:jvm.bzl", "jvm_maven_import_external")
 
 def pgv_dependencies():
     if not native.existing_rule("io_bazel_rules_go"):
@@ -92,7 +93,7 @@ def pgv_dependencies():
         jvm_maven_import_external(
             name = "com_google_gson",
             artifact = "com.google.code.gson:gson:2.8.5",
-            artifact_sha256 = "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81",
+	    artifact_sha256 = "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81",
             server_urls = ["http://central.maven.org/maven2"],
         )
 
