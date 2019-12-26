@@ -62,8 +62,6 @@ RUN go get github.com/bazelbuild/buildtools/buildozer
 WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
 COPY . .
 
-RUN bazel --version
-
 RUN make build
 
 ENTRYPOINT ["make"]
