@@ -11,7 +11,8 @@ ENV INSTALL_DEPS \
   unzip \
   wget \
   maven \
-  patch
+  patch \
+  python
 RUN apt-get update \
   && apt-get install -y -q --no-install-recommends curl openjdk-8-jdk \
   && echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list \
@@ -60,6 +61,8 @@ RUN go get github.com/bazelbuild/buildtools/buildozer
 
 WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
 COPY . .
+
+RUN bazel --version
 
 RUN make build
 
