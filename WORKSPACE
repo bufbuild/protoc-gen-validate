@@ -1,6 +1,5 @@
 workspace(name = "com_envoyproxy_protoc_gen_validate")
 
-load("@bazel_tools//tools/build_defs/repo:jvm.bzl", "jvm_maven_import_external")
 load("//bazel:repositories.bzl", "pgv_dependencies")
 
 pgv_dependencies()
