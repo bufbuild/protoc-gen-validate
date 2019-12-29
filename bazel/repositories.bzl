@@ -1,5 +1,6 @@
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:jvm.bzl", "jvm_maven_import_external")
 
 def pgv_dependencies():
     if not native.existing_rule("io_bazel_rules_go"):
@@ -58,15 +59,27 @@ def pgv_dependencies():
         )
 
     if not native.existing_rule("com_google_re2j"):
-        native.maven_jar(
+        jvm_maven_import_external(
             name = "com_google_re2j",
             artifact = "com.google.re2j:re2j:1.2",
+	    artifact_sha256 = "e9dc705fd4c570344b54a7146b2e3a819cdc271a29793f4acc1a93b56a388e59",
+            server_urls = ["http://central.maven.org/maven2"],
+        )
+
+    if not native.existing_rule("com_googlesource_code_re2"):
+        http_archive(
+            name = "com_googlesource_code_re2",
+            sha256 = "38bc0426ee15b5ed67957017fd18201965df0721327be13f60496f2b356e3e01",
+            strip_prefix = "re2-2019-08-01",
+            urls = ["https://github.com/google/re2/archive/2019-08-01.tar.gz"],
         )
 
     if not native.existing_rule("com_google_guava"):
-        native.maven_jar(
+        jvm_maven_import_external(
             name = "com_google_guava",
             artifact = "com.google.guava:guava:27.0-jre",
+	    artifact_sha256 = "63b09db6861011e7fb2481be7790c7fd4b03f0bb884b3de2ecba8823ad19bf3f",
+            server_urls = ["http://central.maven.org/maven2"],
         )
 
     if not native.existing_rule("guava"):
@@ -76,9 +89,11 @@ def pgv_dependencies():
         )
 
     if not native.existing_rule("com_google_gson"):
-        native.maven_jar(
+        jvm_maven_import_external(
             name = "com_google_gson",
             artifact = "com.google.code.gson:gson:2.8.5",
+	    artifact_sha256 = "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81",
+            server_urls = ["http://central.maven.org/maven2"],
         )
 
     if not native.existing_rule("gson"):
@@ -88,9 +103,11 @@ def pgv_dependencies():
         )
 
     if not native.existing_rule("error_prone_annotations_maven"):
-        native.maven_jar(
+        jvm_maven_import_external(
             name = "error_prone_annotations_maven",
             artifact = "com.google.errorprone:error_prone_annotations:2.3.2",
+	    artifact_sha256 = "357cd6cfb067c969226c442451502aee13800a24e950fdfde77bcdb4565a668d",
+            server_urls = ["http://central.maven.org/maven2"],
         )
 
     if not native.existing_rule("error_prone_annotations"):
@@ -100,9 +117,11 @@ def pgv_dependencies():
         )
 
     if not native.existing_rule("org_apache_commons_validator"):
-        native.maven_jar(
+        jvm_maven_import_external(
             name = "org_apache_commons_validator",
             artifact = "commons-validator:commons-validator:1.6",
+	    artifact_sha256 = "bd62795d7068a69cbea333f6dbf9c9c1a6ad7521443fb57202a44874f240ba25",
+            server_urls = ["http://central.maven.org/maven2"],
         )
 
     if not native.existing_rule("io_bazel_rules_python"):
@@ -111,4 +130,12 @@ def pgv_dependencies():
             remote = "https://github.com/bazelbuild/rules_python.git",
             commit = "fdbb17a4118a1728d19e638a5291b4c4266ea5b8",
             shallow_since = "1557865590 -0400",
+        )
+
+    if not native.existing_rule("rules_proto"):
+        git_repository(
+            name = "rules_proto",
+            remote = "https://github.com/bazelbuild/rules_proto.git",
+            commit = "2c0468366367d7ed97a1f702f9cd7155ab3f73c5",
+            shallow_since = "1575470667 +0100"
         )

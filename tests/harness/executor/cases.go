@@ -770,6 +770,7 @@ var stringCases = []TestCase{
 	{"string - pattern - valid", &cases.StringPattern{Val: "Foo123"}, true},
 	{"string - pattern - invalid", &cases.StringPattern{Val: "!@#$%^&*()"}, false},
 	{"string - pattern - invalid (empty)", &cases.StringPattern{Val: ""}, false},
+	{"string - pattern - invalid (null)", &cases.StringPattern{Val: "a\000"}, false},
 
 	{"string - pattern (escapes) - valid", &cases.StringPatternEscapes{Val: "* \\ x"}, true},
 	{"string - pattern (escapes) - invalid", &cases.StringPatternEscapes{Val: "invalid"}, false},

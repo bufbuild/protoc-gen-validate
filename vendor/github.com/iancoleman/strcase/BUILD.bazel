@@ -11,6 +11,5 @@ go_library(
     importpath = "github.com/iancoleman/strcase",
     visibility = ["//visibility:public"],
     deps = [
-
     ],
 )

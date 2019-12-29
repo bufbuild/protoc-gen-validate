@@ -1,4 +1,5 @@
 load("@bazel_tools//tools/jdk:toolchain_utils.bzl", "find_java_runtime_toolchain", "find_java_toolchain")
+load("@rules_proto//proto:defs.bzl", "ProtoInfo")
 
 def _proto_path(proto):
     """
@@ -137,6 +138,9 @@ cc_proto_gen_validate = rule(
         "deps": attr.label_list(
             mandatory = True,
             providers = [ProtoInfo],
+        ),
+        "_validate_deps": attr.label_list(
+            default = [Label("@com_googlesource_code_re2//:re2")],
         ),
         "_protoc": attr.label(
             cfg = "host",
