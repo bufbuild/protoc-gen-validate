@@ -11,6 +11,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
+	"github.com/iancoleman/strcase"
 	pgs "github.com/lyft/protoc-gen-star"
 	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
 )
@@ -95,9 +96,9 @@ func RegisterHeader(tpl *template.Template, params pgs.Parameters) {
 	fns := CCFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
-		"class":  fns.className,
-		"output": fns.output,
-		"upper":  strings.ToUpper,
+		"class":                fns.className,
+		"output":               fns.output,
+		"screaming_snake_case": strcase.ToScreamingSnake,
 	})
 
 	template.Must(tpl.Parse(headerFileTpl))
@@ -241,7 +242,7 @@ func (fns CCFuncs) lit(x interface{}) string {
 	case reflect.String:
 		return fmt.Sprintf("%q", x)
 	case reflect.Uint8:
-		return fmt.Sprintf("0x%X", x)
+		return fmt.Sprintf("%d", x)
 	case reflect.Slice:
 		els := make([]string, val.Len())
 		switch reflect.TypeOf(x).Elem().Kind() {
@@ -311,6 +312,12 @@ func (fns CCFuncs) cType(t pgs.FieldType) string {
 		}
 		// Strip the leading []
 		return fns.cTypeOfString(fns.Type(t.Field()).String()[2:])
+	} else if t.IsMap() {
+		if t.Element().IsEmbed() {
+			return fns.className(t.Element().Embed())
+		}
+
+		return fns.cTypeOfString(fns.Type(t.Field()).Element().String())
 	}
 
 	return fns.cTypeOfString(fns.Type(t.Field()).String())
@@ -404,8 +411,12 @@ func (fns CCFuncs) unwrap(ctx shared.RuleContext, name string) (shared.RuleConte
 	return ctx, nil
 }
 
-func (fns CCFuncs) failUnimplemented() string {
-	return "throw pgv::UnimplementedException();"
+func (fns CCFuncs) failUnimplemented(message string) string {
+	if len(message) == 0 {
+		return "throw pgv::UnimplementedException();"
+	}
+
+	return fmt.Sprintf(`throw pgv::UnimplementedException(%q);`, message)
 }
 
 func (fns CCFuncs) staticVarName(msg pgs.Message) string {

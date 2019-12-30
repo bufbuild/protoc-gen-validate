@@ -19,6 +19,8 @@ bazel-*
 /tests/harness/cc/cc-harness
 /tests/harness/cc/cc-harness.exe
 
+/validate/__pycache__
+
 /tests/harness/cases/**/*.cc
 /tests/harness/cases/**/*.h
 

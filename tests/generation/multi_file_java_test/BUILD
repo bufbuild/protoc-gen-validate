@@ -1,3 +1,4 @@
+load("@rules_proto//proto:defs.bzl", "proto_library")
 load(
     "//bazel:pgv_proto_library.bzl",
     "pgv_cc_proto_library",
@@ -13,11 +14,10 @@ proto_library(
 )
 
 pgv_cc_proto_library(
-  name = "test_cc_proto",
-  deps = [":test_proto"],
-  visibility = ["//visibility:public"],
+    name = "test_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":test_proto"],
 )
-
 
 cc_binary(
     name = "cc-mfjt-test",

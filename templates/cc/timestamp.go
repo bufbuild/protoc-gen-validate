@@ -3,8 +3,8 @@ package cc
 const timestampTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 	{{ template "required" . }}
 
-	{{ if or $r.Lt $r.Lte $r.Gt $r.Gte $r.LtNow $r.GtNow $r.Within }}
-		{{ unimplemented }}
+	{{ if or $r.Lt $r.Lte $r.Gt $r.Gte $r.LtNow $r.GtNow $r.Within $r.Const }}
+		{{ unimplemented "C++ timestamp comparison validations are not implemented" }}
 		{{/*
 		if t := {{ accessor . }}; t != nil {
 			ts, err := ptypes.Timestamp(t)

@@ -74,6 +74,12 @@ const strTpl = `
 		}
 	{{ end }}
 
+	{{ if $r.NotContains }}
+		if strings.Contains({{ accessor . }}, {{ lit $r.GetNotContains }}) {
+			return {{ err . "value contains substring " (lit $r.GetNotContains) }}
+		}
+	{{ end }}
+
 	{{ if $r.GetIp }}
 		if ip := net.ParseIP({{ accessor . }}); ip == nil {
 			return {{ err . "value must be a valid IP address" }}

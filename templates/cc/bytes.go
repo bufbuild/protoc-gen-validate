@@ -63,35 +63,35 @@ const bytesTpl = `
 	}
 	{{ end }}
 
+        {{ if $r.Pattern }}
+        {
+                if (!RE2::FullMatch(re2::StringPiece({{ accessor . }}.c_str(), {{ accessor . }}.size()),
+                                    {{ lookup $f "Pattern" }})) {
+		        {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+	        }
+        }
+	{{ end }}
+
 	{{ if $r.GetIp }}
-		{{ unimplemented }}
+		{{ unimplemented "C++ ip address validation is not implemented" }}
 		{{/* TODO(akonradi) implement all of this
 		if ip := net.IP({{ accessor . }}); ip.To16() == nil {
 			return {{ err . "value must be a valid IP address" }}
 		}
 		*/}}
 	{{ else if $r.GetIpv4 }}
-		{{ unimplemented }}
+		{{ unimplemented "C++ ip address validation is not implemented" }}
 		{{/* TODO(akonradi) implement all of this
 		if ip := net.IP({{ accessor . }}); ip.To4() == nil {
 			return {{ err . "value must be a valid IPv4 address" }}
 		}
 		*/}}
 	{{ else if $r.GetIpv6 }}
-		{{ unimplemented }}
+		{{ unimplemented "C++ ip address validation is not implemented" }}
 		{{/* TODO(akonradi) implement all of this
 		if ip := net.IP({{ accessor . }}); ip.To16() == nil || ip.To4() != nil {
 			return {{ err . "value must be a valid IPv6 address" }}
 		}
 		*/}}
-	{{ end }}
-
-	{{ if $r.Pattern }}
-	{{ unimplemented }}
-	{{/* TODO(akonradi) implement regular expression matching
-	if !{{ lookup $f "Pattern" }}.Match({{ accessor . }}) {
-		return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
-	}
-	*/}}
 	{{ end }}
 `

@@ -84,8 +84,7 @@ make build
   - `gogo` for [gogo proto](https://github.com/gogo/protobuf) (experimental)
   - `cc` for c++ (partially implemented)
   - `java`
-
-Support for `python` is planned.
+  - `python`
 
 ### Examples
 
@@ -213,6 +212,31 @@ clientStub = clientStub.withInterceptors(new ValidatingClientInterceptor(index))
 serverBuilder.addService(ServerInterceptors.intercept(svc, new ValidatingServerInterceptor(index)));
 ```
 
+#### Python
+
+Since Python is a dynamically typed language, it works with JIT code generation. So protoc does not need to be run to generate code.
+
+The file `validate/validator.py` has a `validate()` method which needs to be run with an instance of the proto you are validating. 
+
+You must install all the dependencies in the `requirements.txt` before running the validator.
+
+To run `validate()`, do the following: 
+```
+from validator import validate, FailedValidation
+
+p = Person()
+validate(p) # This should either return None or raise a ValidationFailed exception.
+```
+
+To see what code has been generated and run, you can do the following:
+```
+from validator import validate, print_validate, FailedValidation
+
+p = Person()
+validate(p)
+printer = print_validate(p)
+```
+
 ## Constraint Rules
 
 [The provided constraints](validate/validate.proto) are modeled largerly after those in JSON Schema. PGV rules can be mixed for the same field; the plugin ensures the rules applied to a field cannot contradict before code generation.
@@ -311,7 +335,7 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
   string x = 1 [(validate.rules).string.pattern = "(?i)^[0-9a-f]+$"];
   ```
 
-- **prefix/suffix/contains**: the field must contain the specified substring in an optionally explicit location.
+- **prefix/suffix/contains/not_contains**: the field must contain the specified substring in an optionally explicit location, or not contain the specified substring.
 
   ```protobuf
   // x must begin with "foo"
@@ -322,6 +346,9 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
 
   // x must contain "baz" anywhere inside it
   string x = 1 [(validate.rules).string.contains = "baz"];
+  
+  // x cannot contain "baz" anywhere inside it
+  string x = 1 [(validate.rules).string.not_contains = "baz"];
 
   // x must begin with "fizz" and end with "buzz"
   string x = 1 [(validate.rules).string = {prefix: "fizz", suffix: "buzz"}];

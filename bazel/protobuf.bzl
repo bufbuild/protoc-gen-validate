@@ -1,4 +1,5 @@
 load("@bazel_tools//tools/jdk:toolchain_utils.bzl", "find_java_runtime_toolchain", "find_java_toolchain")
+load("@rules_proto//proto:defs.bzl", "ProtoInfo")
 
 def _proto_path(proto):
     """
@@ -75,7 +76,7 @@ def _protoc_python_output_files(proto_file_sources):
     for p in proto_file_sources:
         basename = p.basename[:-len(".proto")]
 
-        python_srcs.append(basename + "_pb2.py")
+        python_srcs.append(basename.replace("-", "_") + "_pb2.py")
     return python_srcs
 
 def _protoc_gen_validate_python_impl(ctx):
@@ -99,7 +100,6 @@ def _protoc_gen_validate_python_impl(ctx):
         protoc_args = args,
         package_command = "true",
     )
-
 
 def _protoc_gen_validate_impl(ctx, lang, protos, out_files, protoc_args, package_command):
     protoc_args.append("--plugin=protoc-gen-validate=" + ctx.executable._plugin.path)
@@ -138,6 +138,9 @@ cc_proto_gen_validate = rule(
         "deps": attr.label_list(
             mandatory = True,
             providers = [ProtoInfo],
+        ),
+        "_validate_deps": attr.label_list(
+            default = [Label("@com_googlesource_code_re2//:re2")],
         ),
         "_protoc": attr.label(
             cfg = "host",
@@ -278,7 +281,7 @@ python_proto_gen_validate = rule(
     attrs = {
         "deps": attr.label_list(
             mandatory = True,
-            providers = ["proto"],
+            providers = [ProtoInfo],
         ),
         "_protoc": attr.label(
             cfg = "host",

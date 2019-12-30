@@ -15,6 +15,8 @@
 #include "tests/harness/cases/bytes.pb.validate.h"
 #include "tests/harness/cases/enums.pb.h"
 #include "tests/harness/cases/enums.pb.validate.h"
+#include "tests/harness/cases/filename-with-dash.pb.h"
+#include "tests/harness/cases/filename-with-dash.pb.validate.h"
 #include "tests/harness/cases/maps.pb.h"
 #include "tests/harness/cases/maps.pb.validate.h"
 #include "tests/harness/cases/messages.pb.h"
@@ -32,8 +34,11 @@
 #include "tests/harness/cases/wkt_duration.pb.h"
 #include "tests/harness/cases/wkt_duration.pb.validate.h"
 #include "tests/harness/cases/wkt_timestamp.pb.h"
+#include "tests/harness/cases/wkt_timestamp.pb.validate.h"
 #include "tests/harness/cases/wkt_wrappers.pb.h"
 #include "tests/harness/cases/wkt_wrappers.pb.validate.h"
+#include "tests/harness/cases/kitchen_sink.pb.h"
+#include "tests/harness/cases/kitchen_sink.pb.validate.h"
 
 #include "tests/harness/harness.pb.h"
 
@@ -110,7 +115,9 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
   X_TESTS_HARNESS_CASES_STRINGS(TRY_RETURN_VALIDATE_CALLABLE)
   X_TESTS_HARNESS_CASES_WKT_ANY(TRY_RETURN_VALIDATE_CALLABLE)
   X_TESTS_HARNESS_CASES_WKT_DURATION(TRY_RETURN_VALIDATE_CALLABLE)
+  X_TESTS_HARNESS_CASES_WKT_TIMESTAMP(TRY_RETURN_VALIDATE_CALLABLE)
   X_TESTS_HARNESS_CASES_WKT_WRAPPERS(TRY_RETURN_VALIDATE_CALLABLE)
+  X_TESTS_HARNESS_CASES_KITCHEN_SINK(TRY_RETURN_VALIDATE_CALLABLE)
   // TODO(akonradi) add macros as the C++ validation code gets fleshed out for
   // more field types.
 

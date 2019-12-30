@@ -770,6 +770,7 @@ var stringCases = []TestCase{
 	{"string - pattern - valid", &cases.StringPattern{Val: "Foo123"}, true},
 	{"string - pattern - invalid", &cases.StringPattern{Val: "!@#$%^&*()"}, false},
 	{"string - pattern - invalid (empty)", &cases.StringPattern{Val: ""}, false},
+	{"string - pattern - invalid (null)", &cases.StringPattern{Val: "a\000"}, false},
 
 	{"string - pattern (escapes) - valid", &cases.StringPatternEscapes{Val: "* \\ x"}, true},
 	{"string - pattern (escapes) - invalid", &cases.StringPatternEscapes{Val: "invalid"}, false},
@@ -784,6 +785,11 @@ var stringCases = []TestCase{
 	{"string - contains - valid (only)", &cases.StringContains{Val: "bar"}, true},
 	{"string - contains - invalid", &cases.StringContains{Val: "candy bazs"}, false},
 	{"string - contains - invalid (case-sensitive)", &cases.StringContains{Val: "Candy Bars"}, false},
+
+	{"string - not contains - valid", &cases.StringNotContains{Val: "candy bazs"}, true},
+	{"string - not contains - valid (case-sensitive)", &cases.StringNotContains{Val: "Candy Bars"}, true},
+	{"string - not contains - invalid", &cases.StringNotContains{Val: "candy bars"}, false},
+	{"string - not contains - invalid (equal)", &cases.StringNotContains{Val: "bar"}, false},
 
 	{"string - suffix - valid", &cases.StringSuffix{Val: "foobaz"}, true},
 	{"string - suffix - valid (only)", &cases.StringSuffix{Val: "baz"}, true},
@@ -1040,6 +1046,11 @@ var repeatedCases = []TestCase{
 	{"repeated - min and items len - valid", &cases.RepeatedMinAndItemLen{Val: []string{"aaa", "bbb"}}, true},
 	{"repeated - min and items len - invalid (min)", &cases.RepeatedMinAndItemLen{Val: []string{}}, false},
 	{"repeated - min and items len - invalid (len)", &cases.RepeatedMinAndItemLen{Val: []string{"x"}}, false},
+
+	{"repeated - duration - gte - valid", &cases.RepeatedDuration{Val: []*duration.Duration{{Seconds: 3}}}, true},
+	{"repeated - duration - gte - valid (empty)", &cases.RepeatedDuration{}, true},
+	{"repeated - duration - gte - valid (equal)", &cases.RepeatedDuration{Val: []*duration.Duration{{Nanos: 1000000}}}, true},
+	{"repeated - duration - gte - invalid", &cases.RepeatedDuration{Val: []*duration.Duration{{Seconds: -1}}}, false},
 }
 
 var mapCases = []TestCase{
@@ -1067,10 +1078,10 @@ var mapCases = []TestCase{
 	{"map - no sparse - valid (empty)", &cases.MapNoSparse{Val: map[uint32]*cases.MapNoSparse_Msg{}}, true},
 	{"map - no sparse - invalid", &cases.MapNoSparse{Val: map[uint32]*cases.MapNoSparse_Msg{1: {}, 2: nil}}, false},
 
-	{"map - keys - valid", &cases.MapKeys{Val: map[int32]string{-1: "a", -2: "b"}}, true},
-	{"map - keys - valid (empty)", &cases.MapKeys{Val: map[int32]string{}}, true},
+	{"map - keys - valid", &cases.MapKeys{Val: map[int64]string{-1: "a", -2: "b"}}, true},
+	{"map - keys - valid (empty)", &cases.MapKeys{Val: map[int64]string{}}, true},
 	{"map - keys - valid (pattern)", &cases.MapKeysPattern{Val: map[string]string{"A": "a"}}, true},
-	{"map - keys - invalid", &cases.MapKeys{Val: map[int32]string{1: "a"}}, false},
+	{"map - keys - invalid", &cases.MapKeys{Val: map[int64]string{1: "a"}}, false},
 	{"map - keys - invalid (pattern)", &cases.MapKeysPattern{Val: map[string]string{"A": "a", "!@#$%^&*()": "b"}}, false},
 
 	{"map - values - valid", &cases.MapValues{Val: map[string]string{"a": "Alpha", "b": "Beta"}}, true},
@@ -1088,6 +1099,8 @@ var mapCases = []TestCase{
 	{"map - combination - invalid values (below)", &cases.MapCombination{Val: map[string]string{"a": "A", "b": ""}}, false},
 	{"map - combination - invalid values (above)", &cases.MapCombination{Val: map[string]string{"a": "A", "b": "BBBBB"}}, false},
 	{"map - combination - invalid values (pattern)", &cases.MapCombination{Val: map[string]string{"a": "A", "b": "b"}}, false},
+	{"map - recursive - valid", &cases.MapRecursive{Val: map[uint32]*cases.MapRecursive_Msg{1: {Val: "abc"}}}, true},
+	{"map - recursive - invalid", &cases.MapRecursive{Val: map[uint32]*cases.MapRecursive_Msg{1: {}}}, false},
 }
 
 var oneofCases = []TestCase{
@@ -1315,7 +1328,7 @@ var anyCases = []TestCase{
 }
 
 var kitchenSink = []TestCase{
-	{"kitchensink - field - valid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", IntConst: 5, BoolConst: false, FloatVal: &wrappers.FloatValue{Value: 1}, DurVal: &duration.Duration{Seconds: 3}, TsVal: &timestamp.Timestamp{Seconds: 17}, FloatConst: 7, DoubleIn: 123, EnumConst: cases.ComplexTestEnum_ComplexTWO, AnyVal: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}}}, true},
+	{"kitchensink - field - valid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", IntConst: 5, BoolConst: false, FloatVal: &wrappers.FloatValue{Value: 1}, DurVal: &duration.Duration{Seconds: 3}, TsVal: &timestamp.Timestamp{Seconds: 17}, FloatConst: 7, DoubleIn: 123, EnumConst: cases.ComplexTestEnum_ComplexTWO, AnyVal: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}, RepTsVal: []*timestamp.Timestamp{{Seconds: 3}}, MapVal: map[int32]string{-1: "a", -2: "b"}, BytesVal: []byte("\x00\x99"), O: &cases.ComplexTestMsg_X{X: "foobar"}}}, true},
 	{"kitchensink - valid (unset)", &cases.KitchenSinkMessage{}, true},
 	{"kitchensink - field - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{}}, false},
 	{"kitchensink - field - embedded - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Another: &cases.ComplexTestMsg{}}}, false},
