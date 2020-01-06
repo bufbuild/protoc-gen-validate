@@ -882,8 +882,8 @@ var stringCases = []TestCase{
 	{"string - http header value - valid (spaces)", &cases.StringHttpHeaderValue{Val: "cluster name"}, true},
 	{"string - http header value - valid (tab)", &cases.StringHttpHeaderValue{Val: "example\t"}, true},
 	{"string - http header value - valid (special token)", &cases.StringHttpHeaderValue{Val: "!#%&./+"}, true},
-	{"string - http header value - invalid (NUL)", &cases.StringHttpHeaderValue{Val: "foo\000bar"}, false},
-	{"string - http header value - invalid (DEL)", &cases.StringHttpHeaderValue{Val: "\x7f"}, false},
+	{"string - http header value - invalid (NUL)", &cases.StringHttpHeaderValue{Val: "foo\u0000bar"}, false},
+	{"string - http header value - invalid (DEL)", &cases.StringHttpHeaderValue{Val: "\u007f"}, false},
 	{"string - http header value - invalid", &cases.StringHttpHeaderValue{Val: "example\r"}, false},
 }
 

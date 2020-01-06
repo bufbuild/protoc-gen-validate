@@ -58,7 +58,8 @@ if __name__ == "__main__":
         result.Error = False
         result.AllowFailure = True
         result.Reason = repr(e)
+    sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8')
     try:
-        sys.stdout.write(result.SerializeToString())
+        sys.stdout.write(result.SerializeToString().decode("utf-8"))
     except TypeError:
-        sys.stdout.write(result.SerializeToString().decode(errors='surrogateescape'))
+        sys.stdout.write(result.SerializeToString().decode("utf-8", errors='surrogateescape'))
