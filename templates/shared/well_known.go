@@ -62,5 +62,6 @@ func strRulesNeeds(rules *validate.StringRules, wk WellKnown) bool {
 			return true
 		}
 	}
+
 	return false
 }

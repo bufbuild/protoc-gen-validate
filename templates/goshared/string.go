@@ -121,6 +121,7 @@ const strTpl = `
 			return {{ errCause . "err" "value must be a valid UUID" }}
 		}
 	{{ end }}
+
 	{{ if $r.Pattern }}
 	if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
 		return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}

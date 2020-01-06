@@ -1,6 +1,6 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-load("@bazel_tools//tools/build_defs/repo:jvm.bzl", "jvm_maven_import_external")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:jvm.bzl", "jvm_maven_import_external")
 
 def pgv_dependencies():
     if not native.existing_rule("io_bazel_rules_go"):
@@ -62,7 +62,7 @@ def pgv_dependencies():
         jvm_maven_import_external(
             name = "com_google_re2j",
             artifact = "com.google.re2j:re2j:1.2",
-            artifact_sha256 = "e9dc705fd4c570344b54a7146b2e3a819cdc271a29793f4acc1a93b56a388e59",
+	    artifact_sha256 = "e9dc705fd4c570344b54a7146b2e3a819cdc271a29793f4acc1a93b56a388e59",
             server_urls = ["http://central.maven.org/maven2"],
         )
 
@@ -78,7 +78,7 @@ def pgv_dependencies():
         jvm_maven_import_external(
             name = "com_google_guava",
             artifact = "com.google.guava:guava:27.0-jre",
-            artifact_sha256 = "63b09db6861011e7fb2481be7790c7fd4b03f0bb884b3de2ecba8823ad19bf3f",
+	    artifact_sha256 = "63b09db6861011e7fb2481be7790c7fd4b03f0bb884b3de2ecba8823ad19bf3f",
             server_urls = ["http://central.maven.org/maven2"],
         )
 
@@ -106,7 +106,7 @@ def pgv_dependencies():
         jvm_maven_import_external(
             name = "error_prone_annotations_maven",
             artifact = "com.google.errorprone:error_prone_annotations:2.3.2",
-            artifact_sha256 = "357cd6cfb067c969226c442451502aee13800a24e950fdfde77bcdb4565a668d",
+	    artifact_sha256 = "357cd6cfb067c969226c442451502aee13800a24e950fdfde77bcdb4565a668d",
             server_urls = ["http://central.maven.org/maven2"],
         )
 
@@ -120,7 +120,7 @@ def pgv_dependencies():
         jvm_maven_import_external(
             name = "org_apache_commons_validator",
             artifact = "commons-validator:commons-validator:1.6",
-            artifact_sha256 = "bd62795d7068a69cbea333f6dbf9c9c1a6ad7521443fb57202a44874f240ba25",
+	    artifact_sha256 = "bd62795d7068a69cbea333f6dbf9c9c1a6ad7521443fb57202a44874f240ba25",
             server_urls = ["http://central.maven.org/maven2"],
         )
 
