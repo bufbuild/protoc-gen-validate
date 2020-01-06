@@ -1099,10 +1099,10 @@ var mapCases = []TestCase{
 	{"map - no sparse - valid (empty)", &cases.MapNoSparse{Val: map[uint32]*cases.MapNoSparse_Msg{}}, true},
 	{"map - no sparse - invalid", &cases.MapNoSparse{Val: map[uint32]*cases.MapNoSparse_Msg{1: {}, 2: nil}}, false},
 
-	{"map - keys - valid", &cases.MapKeys{Val: map[int32]string{-1: "a", -2: "b"}}, true},
-	{"map - keys - valid (empty)", &cases.MapKeys{Val: map[int32]string{}}, true},
+	{"map - keys - valid", &cases.MapKeys{Val: map[int64]string{-1: "a", -2: "b"}}, true},
+	{"map - keys - valid (empty)", &cases.MapKeys{Val: map[int64]string{}}, true},
 	{"map - keys - valid (pattern)", &cases.MapKeysPattern{Val: map[string]string{"A": "a"}}, true},
-	{"map - keys - invalid", &cases.MapKeys{Val: map[int32]string{1: "a"}}, false},
+	{"map - keys - invalid", &cases.MapKeys{Val: map[int64]string{1: "a"}}, false},
 	{"map - keys - invalid (pattern)", &cases.MapKeysPattern{Val: map[string]string{"A": "a", "!@#$%^&*()": "b"}}, false},
 
 	{"map - values - valid", &cases.MapValues{Val: map[string]string{"a": "Alpha", "b": "Beta"}}, true},
