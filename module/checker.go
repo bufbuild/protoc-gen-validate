@@ -11,11 +11,11 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 )
 
 var unknown = ""
-var httpHeaderName = "^:?[0-9a-zA-Z!#$%&'*+-.^_|~\x2C]+$"
+var httpHeaderName = "^:?[0-9a-zA-Z!#$%&'*+-.^_|~\x60]+$"
 var httpHeaderValue = "^[ \t]*(?:[\x20-\x7E\u0080-\u00FF](?:[ \t]+[\x20-\x7E\u0080-\u00FF])?)*[ \t]*$"
 
 // Map from well known regex to regex pattern.
