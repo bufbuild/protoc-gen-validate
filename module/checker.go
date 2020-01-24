@@ -16,7 +16,7 @@ import (
 
 var unknown = ""
 var httpHeaderName = "^:?[0-9a-zA-Z!#$%&'*+-.^_|~\x60]+$"
-var httpHeaderValue = "^[^\x00-\x08\x0A-\x1F\x7F]"
+var httpHeaderValue = "^[^\u0000-\u0008\u000A-\u001F\u007F]*$"
 
 // Map from well known regex to regex pattern.
 var regex_map = map[string]*string{

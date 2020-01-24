@@ -6,8 +6,8 @@ def pgv_dependencies():
     if not native.existing_rule("io_bazel_rules_go"):
         http_archive(
             name = "io_bazel_rules_go",
-            urls = ["https://github.com/bazelbuild/rules_go/releases/download/0.18.5/rules_go-0.18.5.tar.gz"],
-            sha256 = "a82a352bffae6bee4e95f68a8d80a70e87f42c4741e6a448bec11998fcc82329",
+            urls = ["https://github.com/bazelbuild/rules_go/releases/download/v0.21.0/rules_go-v0.21.0.tar.gz"],
+            sha256 = "b27e55d2dcc9e6020e17614ae6e0374818a3e3ce6f2024036e688ada24110444",
         )
 
     if not native.existing_rule("bazel_gazelle"):
@@ -63,7 +63,7 @@ def pgv_dependencies():
             name = "com_google_re2j",
             artifact = "com.google.re2j:re2j:1.2",
 	    artifact_sha256 = "e9dc705fd4c570344b54a7146b2e3a819cdc271a29793f4acc1a93b56a388e59",
-            server_urls = ["http://central.maven.org/maven2"],
+            server_urls = ["https://repo.maven.apache.org/maven2"],
         )
 
     if not native.existing_rule("com_googlesource_code_re2"):
@@ -79,7 +79,7 @@ def pgv_dependencies():
             name = "com_google_guava",
             artifact = "com.google.guava:guava:27.0-jre",
 	    artifact_sha256 = "63b09db6861011e7fb2481be7790c7fd4b03f0bb884b3de2ecba8823ad19bf3f",
-            server_urls = ["http://central.maven.org/maven2"],
+            server_urls = ["https://repo.maven.apache.org/maven2"],
         )
 
     if not native.existing_rule("guava"):
@@ -93,7 +93,7 @@ def pgv_dependencies():
             name = "com_google_gson",
             artifact = "com.google.code.gson:gson:2.8.5",
 	    artifact_sha256 = "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81",
-            server_urls = ["http://central.maven.org/maven2"],
+            server_urls = ["https://repo.maven.apache.org/maven2"],
         )
 
     if not native.existing_rule("gson"):
@@ -107,7 +107,7 @@ def pgv_dependencies():
             name = "error_prone_annotations_maven",
             artifact = "com.google.errorprone:error_prone_annotations:2.3.2",
 	    artifact_sha256 = "357cd6cfb067c969226c442451502aee13800a24e950fdfde77bcdb4565a668d",
-            server_urls = ["http://central.maven.org/maven2"],
+            server_urls = ["https://repo.maven.apache.org/maven2"],
         )
 
     if not native.existing_rule("error_prone_annotations"):
@@ -121,7 +121,7 @@ def pgv_dependencies():
             name = "org_apache_commons_validator",
             artifact = "commons-validator:commons-validator:1.6",
 	    artifact_sha256 = "bd62795d7068a69cbea333f6dbf9c9c1a6ad7521443fb57202a44874f240ba25",
-            server_urls = ["http://central.maven.org/maven2"],
+            server_urls = ["https://repo.maven.apache.org/maven2"],
         )
 
     if not native.existing_rule("io_bazel_rules_python"):
