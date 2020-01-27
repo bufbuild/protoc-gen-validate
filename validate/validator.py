@@ -16,8 +16,8 @@ printer = ""
 # Well known regex mapping.
 regex_map = {
     0: "",  # UNKNOWN
-    1: r'^:?[0-9a-zA-Z!#$%&\'*+-.^_|~\x2C]+$', # HTTP_HEADER_NAME
-    2: r'^[ \t]*(?:[\x20-\x7E\u0080-\u00FF](?:[ \t]+[\x20-\x7E\u0080-\u00FF])?)*[ \t]*$' #HTTP_HEADER_VALUE
+    1: r'^:?[0-9a-zA-Z!#$%&\'*+-.^_|~\x60]+$', # HTTP_HEADER_NAME
+    2: r'^[^\u0000-\u0008\u000A-\u001F\u007F]*$' #HTTP_HEADER_VALUE
 }
 
 def validate(proto_message):
