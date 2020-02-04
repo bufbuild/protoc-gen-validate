@@ -15,9 +15,9 @@ printer = ""
 
 # Well known regex mapping.
 regex_map = {
-    0: "",  # UNKNOWN
-    1: r'^:?[0-9a-zA-Z!#$%&\'*+-.^_|~\x60]+$', # HTTP_HEADER_NAME
-    2: r'^[^\u0000-\u0008\u000A-\u001F\u007F]*$' #HTTP_HEADER_VALUE
+    "UNKNOWN": "",
+    "HTTP_HEADER_NAME": r'^:?[0-9a-zA-Z!#$%&\'*+-.^_|~\x60]+$',
+    "HTTP_HEADER_VALUE": r'^[^\u0000-\u0008\u000A-\u001F\u007F]*$'
 }
 
 def validate(proto_message):
@@ -126,7 +126,10 @@ def in_template(value, name):
 
 def string_template(option_value, name):
     if option_value.string.well_known_regex:
-      option_value.string.pattern = regex_map[option_value.string.well_known_regex]
+      known_regex_type = option_value.string.DESCRIPTOR.fields_by_name['well_known_regex'].enum_type
+      regex_value = option_value.string.well_known_regex
+      regex_name = known_regex_type.values_by_number[regex_value].name
+      option_value.string.pattern = regex_map[regex_name]
     str_templ = """
     {{ const_template(o, name) -}}
     {{ in_template(o.string, name) -}}
@@ -317,7 +320,7 @@ def num_template(option_value, name, num):
         raise ValidationFailed(\"{{ name }} is not greater than {{ num['gt'] }}\")
     {%- elif num.HasField('gte') %}
     if {{ name }} < {{ num['gte'] }}:
-        raise ValidationFailed(\"{{ name }} is not greater than or equal to {{ num['gte'] }}\")    
+        raise ValidationFailed(\"{{ name }} is not greater than or equal to {{ num['gte'] }}\")
     {%- endif -%}
     """
     return Template(num_tmpl).render(o = option_value, name = name, num = num, in_template = in_template, str = str)
