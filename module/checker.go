@@ -11,7 +11,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
-	pgs "github.com/lyft/protoc-gen-star"
+	"github.com/lyft/protoc-gen-star"
 )
 
 var unknown = ""
