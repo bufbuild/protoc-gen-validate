@@ -18,6 +18,9 @@ namespace protobuf_wkt = google::protobuf;
 namespace validate {
 using std::string;
 
+// define the regex for a UUID once up-front
+const re2::RE2 _uuidPattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+
 {{ range .AllMessages }}
 {{- if not (disabled .) -}}
 

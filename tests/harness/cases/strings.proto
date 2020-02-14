@@ -34,3 +34,5 @@ message StringIPv6           { string val = 1 [(validate.rules).string.ipv6 = tr
 message StringURI            { string val = 1 [(validate.rules).string.uri = true]; }
 message StringURIRef         { string val = 1 [(validate.rules).string.uri_ref = true]; }
 message StringUUID           { string val = 1 [(validate.rules).string.uuid = true]; }
+message StringHttpHeaderName { string val = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_NAME]; }
+message StringHttpHeaderValue     { string val = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_VALUE]; }
