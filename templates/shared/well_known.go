@@ -41,6 +41,10 @@ func Needs(m pgs.Message, wk WellKnown) bool {
 			if strRulesNeeds(rules.GetString_(), wk) {
 				return true
 			}
+		case f.Type().ProtoType() == pgs.MessageT && f.Type().IsEmbed() && f.Type().Embed().WellKnownType() == pgs.StringValueWKT:
+			if strRulesNeeds(rules.GetString_(), wk) {
+				return true
+			}
 		}
 	}
 
