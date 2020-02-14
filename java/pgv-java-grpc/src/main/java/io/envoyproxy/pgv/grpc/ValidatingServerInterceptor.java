@@ -29,9 +29,9 @@ public class ValidatingServerInterceptor implements ServerInterceptor {
                     index.validatorFor(message.getClass()).assertValid(message);
                     super.onMessage(message);
                 } catch (ValidationException ex) {
-                    Status status = ValidationExceptions.asStatus(ex);
+                    StatusRuntimeException status = ValidationExceptions.asStatusRuntimeException(ex);
                     aborted = true;
-                    call.close(status, new Metadata());
+                    call.close(status.getStatus(), status.getTrailers());
                 }
             }
 
