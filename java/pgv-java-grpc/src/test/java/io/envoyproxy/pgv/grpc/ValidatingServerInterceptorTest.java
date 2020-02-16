@@ -21,72 +21,76 @@ import org.assertj.core.api.Condition;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.function.Predicate;
-
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ValidatingServerInterceptorTest {
-	@Rule public GrpcServerRule serverRule = new GrpcServerRule();
+    @Rule
+    public GrpcServerRule serverRule = new GrpcServerRule();
 
-	private BindableService svc = new GreeterGrpc.GreeterImplBase() {
-		@Override public void sayHello(HelloJKRequest request, StreamObserver<HelloResponse> responseObserver) {
-			responseObserver.onNext(HelloResponse.newBuilder().setMessage("Hello " + request.getName()).build());
-			responseObserver.onCompleted();
-		}
-	};
+    private BindableService svc = new GreeterGrpc.GreeterImplBase() {
+        @Override
+        public void sayHello(HelloJKRequest request, StreamObserver<HelloResponse> responseObserver) {
+            responseObserver.onNext(HelloResponse.newBuilder().setMessage("Hello " + request.getName()).build());
+            responseObserver.onCompleted();
+        }
+    };
 
-	@Test public void InterceptorPassesValidMessages() {
-		ValidatingServerInterceptor interceptor = new ValidatingServerInterceptor(ValidatorIndex.ALWAYS_VALID);
+    @Test
+    public void InterceptorPassesValidMessages() {
+        ValidatingServerInterceptor interceptor = new ValidatingServerInterceptor(ValidatorIndex.ALWAYS_VALID);
 
-		serverRule.getServiceRegistry().addService(ServerInterceptors.intercept(svc, interceptor));
+        serverRule.getServiceRegistry().addService(ServerInterceptors.intercept(svc, interceptor));
 
-		GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel());
-		stub.sayHello(HelloJKRequest.newBuilder().setName("World").build());
-	}
+        GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel());
+        stub.sayHello(HelloJKRequest.newBuilder().setName("World").build());
+    }
 
-	@Test public void InterceptorPassesValidMessagesGenerated() {
-		ValidatingServerInterceptor interceptor = new ValidatingServerInterceptor(new ReflectiveValidatorIndex());
+    @Test
+    public void InterceptorPassesValidMessagesGenerated() {
+        ValidatingServerInterceptor interceptor = new ValidatingServerInterceptor(new ReflectiveValidatorIndex());
 
-		serverRule.getServiceRegistry().addService(ServerInterceptors.intercept(svc, interceptor));
+        serverRule.getServiceRegistry().addService(ServerInterceptors.intercept(svc, interceptor));
 
-		GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel());
-		stub.sayHello(HelloJKRequest.newBuilder().setName("World").build());
-	}
+        GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel());
+        stub.sayHello(HelloJKRequest.newBuilder().setName("World").build());
+    }
 
-	@Test public void InterceptorRejectsInvalidMessages() {
-		ValidatingServerInterceptor interceptor = new ValidatingServerInterceptor(new ValidatorIndex() {
-			@Override public <T> Validator<T> validatorFor(Class clazz) {
-				return proto -> {
-					throw new ValidationException("one", "", "is invalid");
-				};
-			}
-		});
+    @Test
+    public void InterceptorRejectsInvalidMessages() {
+        ValidatingServerInterceptor interceptor = new ValidatingServerInterceptor(new ValidatorIndex() {
+            @Override
+            public <T> Validator<T> validatorFor(Class clazz) {
+                return proto -> {
+                    throw new ValidationException("one", "", "is invalid");
+                };
+            }
+        });
 
-		serverRule.getServiceRegistry().addService(ServerInterceptors.intercept(svc, interceptor));
+        serverRule.getServiceRegistry().addService(ServerInterceptors.intercept(svc, interceptor));
 
-		GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel());
-		assertThatExceptionOfType(StatusRuntimeException.class).isThrownBy(() -> stub.sayHello(HelloJKRequest.newBuilder().setName("World").build()))
-				.withMessage("INVALID_ARGUMENT: one: is invalid - Got ")
-				.has(new Condition<>(e -> {
-					try {
-						Status status = StatusProto.fromThrowable(e);
-						Any any = status.getDetailsList().get(0);
-						BadRequest badRequest = any.unpack(BadRequest.class);
-						return badRequest.getFieldViolationsCount() == 1 && badRequest.getFieldViolations(0).getField().equals("one")
-								&& badRequest.getFieldViolations(0).getDescription().equals("is invalid");
-					} catch (InvalidProtocolBufferException ex) {
-						return false;
-					}
-				}, "BadRequest details"));
-	}
+        GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel());
+        assertThatExceptionOfType(StatusRuntimeException.class).isThrownBy(() -> stub.sayHello(HelloJKRequest.newBuilder().setName("World").build()))
+                .withMessage("INVALID_ARGUMENT: one: is invalid - Got ")
+                .has(new Condition<>(e -> {
+                    try {
+                        Status status = StatusProto.fromThrowable(e);
+                        Any any = status.getDetailsList().get(0);
+                        BadRequest badRequest = any.unpack(BadRequest.class);
+                        return badRequest.getFieldViolationsCount() == 1 && badRequest.getFieldViolations(0).getField().equals("one")
+                                && badRequest.getFieldViolations(0).getDescription().equals("is invalid");
+                    } catch (InvalidProtocolBufferException ex) {
+                        return false;
+                    }
+                }, "BadRequest details"));
+    }
 
-	@Test public void InterceptorRejectsInvalidMessagesGenerated() {
-		ValidatingServerInterceptor interceptor = new ValidatingServerInterceptor(new ReflectiveValidatorIndex());
+    @Test
+    public void InterceptorRejectsInvalidMessagesGenerated() {
+        ValidatingServerInterceptor interceptor = new ValidatingServerInterceptor(new ReflectiveValidatorIndex());
 
-		serverRule.getServiceRegistry().addService(ServerInterceptors.intercept(svc, interceptor));
+        serverRule.getServiceRegistry().addService(ServerInterceptors.intercept(svc, interceptor));
 
-		GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel());
+        GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel());
 
         assertThatExceptionOfType(StatusRuntimeException.class).isThrownBy(() -> stub.sayHello(HelloJKRequest.newBuilder().setName("Bananas").build()))
                 .withMessageStartingWith("INVALID_ARGUMENT: .io.envoyproxy.pgv.grpc.HelloJKRequest.name: must equal World")
@@ -101,5 +105,5 @@ public class ValidatingServerInterceptorTest {
                         return false;
                     }
                 }, "BadRequest details"));
-	}
+    }
 }
