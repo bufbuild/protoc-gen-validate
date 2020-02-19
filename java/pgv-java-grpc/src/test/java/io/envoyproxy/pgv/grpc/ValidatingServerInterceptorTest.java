@@ -1,5 +1,9 @@
 package io.envoyproxy.pgv.grpc;
 
+import com.google.protobuf.Any;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.rpc.BadRequest;
+import com.google.rpc.Status;
 import io.envoyproxy.pgv.ReflectiveValidatorIndex;
 import io.envoyproxy.pgv.ValidationException;
 import io.envoyproxy.pgv.Validator;
@@ -10,12 +14,14 @@ import io.envoyproxy.pgv.grpc.asubpackage.HelloResponse;
 import io.grpc.BindableService;
 import io.grpc.ServerInterceptors;
 import io.grpc.StatusRuntimeException;
+import io.grpc.protobuf.StatusProto;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcServerRule;
+import org.assertj.core.api.Condition;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class ValidatingServerInterceptorTest {
     @Rule
@@ -63,9 +69,19 @@ public class ValidatingServerInterceptorTest {
         serverRule.getServiceRegistry().addService(ServerInterceptors.intercept(svc, interceptor));
 
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel());
-        assertThatThrownBy(() -> stub.sayHello(HelloJKRequest.newBuilder().setName("World").build()))
-            .isInstanceOf(StatusRuntimeException.class)
-            .hasMessage("INVALID_ARGUMENT: one: is invalid - Got ");
+        assertThatExceptionOfType(StatusRuntimeException.class).isThrownBy(() -> stub.sayHello(HelloJKRequest.newBuilder().setName("World").build()))
+                .withMessage("INVALID_ARGUMENT: one: is invalid - Got ")
+                .has(new Condition<>(e -> {
+                    try {
+                        Status status = StatusProto.fromThrowable(e);
+                        Any any = status.getDetailsList().get(0);
+                        BadRequest badRequest = any.unpack(BadRequest.class);
+                        return badRequest.getFieldViolationsCount() == 1 && badRequest.getFieldViolations(0).getField().equals("one")
+                                && badRequest.getFieldViolations(0).getDescription().equals("is invalid");
+                    } catch (InvalidProtocolBufferException ex) {
+                        return false;
+                    }
+                }, "BadRequest details"));
     }
 
     @Test
@@ -75,8 +91,19 @@ public class ValidatingServerInterceptorTest {
         serverRule.getServiceRegistry().addService(ServerInterceptors.intercept(svc, interceptor));
 
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel());
-        assertThatThrownBy(() -> stub.sayHello(HelloJKRequest.newBuilder().setName("Bananas").build()))
-                .isInstanceOf(StatusRuntimeException.class)
-                .hasMessageStartingWith("INVALID_ARGUMENT: .io.envoyproxy.pgv.grpc.HelloJKRequest.name: must equal World");
+
+        assertThatExceptionOfType(StatusRuntimeException.class).isThrownBy(() -> stub.sayHello(HelloJKRequest.newBuilder().setName("Bananas").build()))
+                .withMessageStartingWith("INVALID_ARGUMENT: .io.envoyproxy.pgv.grpc.HelloJKRequest.name: must equal World")
+                .has(new Condition<>(e -> {
+                    try {
+                        Status status = StatusProto.fromThrowable(e);
+                        Any any = status.getDetailsList().get(0);
+                        BadRequest badRequest = any.unpack(BadRequest.class);
+                        return badRequest.getFieldViolationsCount() == 1 && badRequest.getFieldViolations(0).getField().equals(".io.envoyproxy.pgv.grpc.HelloJKRequest.name")
+                                && badRequest.getFieldViolations(0).getDescription().equals("must equal World");
+                    } catch (InvalidProtocolBufferException ex) {
+                        return false;
+                    }
+                }, "BadRequest details"));
     }
 }
