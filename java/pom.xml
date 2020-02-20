@@ -4,7 +4,7 @@
 
     <groupId>io.envoyproxy.protoc-gen-validate</groupId>
     <artifactId>pgv-java</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0-SNAPSHOT</version>
     <modules>
         <module>pgv-java-stub</module>
         <module>pgv-java-validation</module>
@@ -192,7 +192,7 @@
         <url>https://github.com/envoyproxy/protoc-gen-validate</url>
         <connection>scm:git:git@github.com:lyft/protoc-gen-validate.git</connection>
         <developerConnection>scm:git:git@github.com:lyft/protoc-gen-validate.git</developerConnection>
-      <tag>v0.3.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <distributionManagement>
