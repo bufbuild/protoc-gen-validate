@@ -4,7 +4,7 @@
 
     <groupId>io.envoyproxy.protoc-gen-validate</groupId>
     <artifactId>pgv-java</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>0.4.0-SNAPSHOT</version>
     <modules>
         <module>pgv-java-stub</module>
         <module>pgv-java-validation</module>
@@ -49,8 +49,8 @@
         <grpc.version>1.12.0</grpc.version>
         <junit.version>4.12</junit.version>
         <assertj.version>3.11.1</assertj.version>
-
         <java.version>1.8</java.version>
+        <proto-google-common-protos.version>1.17.0</proto-google-common-protos.version>
     </properties>
 
     <dependencies>

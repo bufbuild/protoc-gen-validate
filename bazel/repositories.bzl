@@ -8,8 +8,8 @@ def pgv_dependencies():
     if not native.existing_rule("io_bazel_rules_go"):
         http_archive(
             name = "io_bazel_rules_go",
-            urls = ["https://github.com/bazelbuild/rules_go/releases/download/0.18.5/rules_go-0.18.5.tar.gz"],
-            sha256 = "a82a352bffae6bee4e95f68a8d80a70e87f42c4741e6a448bec11998fcc82329",
+            urls = ["https://github.com/bazelbuild/rules_go/releases/download/v0.21.0/rules_go-v0.21.0.tar.gz"],
+            sha256 = "b27e55d2dcc9e6020e17614ae6e0374818a3e3ce6f2024036e688ada24110444",
         )
 
     if not native.existing_rule("bazel_gazelle"):
@@ -135,9 +135,9 @@ def pgv_dependencies():
         )
 
     if not native.existing_rule("rules_proto"):
-        git_repository(
+        http_archive(
             name = "rules_proto",
-            remote = "https://github.com/bazelbuild/rules_proto.git",
-            commit = "2c0468366367d7ed97a1f702f9cd7155ab3f73c5",
-            shallow_since = "1575470667 +0100"
+	    sha256 = "73ebe9d15ba42401c785f9d0aeebccd73bd80bf6b8ac78f74996d31f2c0ad7a6",
+	    strip_prefix = "rules_proto-2c0468366367d7ed97a1f702f9cd7155ab3f73c5",
+            urls = ["https://github.com/bazelbuild/rules_proto/archive/2c0468366367d7ed97a1f702f9cd7155ab3f73c5.tar.gz"],
         )

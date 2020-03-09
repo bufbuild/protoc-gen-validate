@@ -24,7 +24,7 @@ public class ValidatingClientInterceptor implements ClientInterceptor {
                     index.validatorFor(message.getClass()).assertValid(message);
                     super.sendMessage(message);
                 } catch (ValidationException ex) {
-                    throw ValidationExceptions.asStatus(ex).asRuntimeException();
+                    throw ValidationExceptions.asStatusRuntimeException(ex);
                 }
             }
         };

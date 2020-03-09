@@ -1,22 +1,38 @@
 package io.envoyproxy.pgv.grpc;
 
+import com.google.protobuf.Any;
+import com.google.rpc.BadRequest;
+import com.google.rpc.Code;
+import com.google.rpc.Status;
 import io.envoyproxy.pgv.ValidationException;
-import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
+import io.grpc.protobuf.StatusProto;
 
 /**
  * {@code ValidationExceptions} provides utilities for converting {@link ValidationException} objects into gRPC
- * {@code Status} objects.
+ * {@code StatusRuntimeException} objects.
  */
 public final class ValidationExceptions {
-    private ValidationExceptions() { }
+    private ValidationExceptions() {
+    }
 
     /**
-     * Convert a {@link ValidationException} into a gRPC {@code Status.INVALID_ARGUMENT} with appropriate message
-     * and cause.
+     * Convert a {@link ValidationException} into a gRPC {@code StatusRuntimeException}
+     * with status code {@code Code.INVALID_ARGUMENT},
+     * the {@link ValidationException} exception message,
+     * and {@link Any} error details containing {@link BadRequest} with field violation details.
+     *
      * @param ex the {@code ValidationException} to convert.
-     * @return a gRPC {@code Status.INVALID_ARGUMENT}
+     * @return a gRPC {@code StatusRuntimeException}
      */
-    public static Status asStatus(ValidationException ex) {
-        return Status.INVALID_ARGUMENT.withDescription(ex.getMessage()).withCause(ex);
+    public static StatusRuntimeException asStatusRuntimeException(ValidationException ex) {
+        BadRequest badRequestElement = BadRequest.newBuilder()
+                .addFieldViolations(BadRequest.FieldViolation.newBuilder().setField(ex.getField()).setDescription(ex.getReason()).build())
+                .build();
+
+        return StatusProto.toStatusRuntimeException(Status.newBuilder()
+                .setCode(Code.INVALID_ARGUMENT.getNumber())
+                .setMessage(ex.getMessage())
+                .addDetails(Any.pack(badRequestElement)).build());
     }
 }

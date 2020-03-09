@@ -864,6 +864,27 @@ var stringCases = []TestCase{
 	{"string - UUID - valid (v5 - case-insensitive)", &cases.StringUUID{Val: "A6EDC906-2F9F-5FB2-A373-EFAC406F0EF2"}, true},
 	{"string - UUID - invalid", &cases.StringUUID{Val: "foobar"}, false},
 	{"string - UUID - invalid (bad UUID)", &cases.StringUUID{Val: "ffffffff-ffff-ffff-ffff-fffffffffffff"}, false},
+
+	{"string - http header name - valid", &cases.StringHttpHeaderName{Val: "clustername"}, true},
+	{"string - http header name - valid", &cases.StringHttpHeaderName{Val: ":path"}, true},
+	{"string - http header name - valid (nums)", &cases.StringHttpHeaderName{Val: "cluster-123"}, true},
+	{"string - http header name - valid (special token)", &cases.StringHttpHeaderName{Val: "!+#&.%"}, true},
+	{"string - http header name - valid (period)", &cases.StringHttpHeaderName{Val: "CLUSTER.NAME"}, true},
+	{"string - http header name - invalid", &cases.StringHttpHeaderName{Val: ":"}, false},
+	{"string - http header name - invalid", &cases.StringHttpHeaderName{Val: ":path:"}, false},
+	{"string - http header name - invalid (space)", &cases.StringHttpHeaderName{Val: "cluster name"}, false},
+	{"string - http header name - invalid (return)", &cases.StringHttpHeaderName{Val: "example\r"}, false},
+	{"string - http header name - invalid (tab)", &cases.StringHttpHeaderName{Val: "example\t"}, false},
+	{"string - http header name - invalid (slash)", &cases.StringHttpHeaderName{Val: "/test/long/url"}, false},
+
+	{"string - http header value - valid", &cases.StringHttpHeaderValue{Val: "cluster.name.123"}, true},
+	{"string - http header value - valid (uppercase)", &cases.StringHttpHeaderValue{Val: "/TEST/LONG/URL"}, true},
+	{"string - http header value - valid (spaces)", &cases.StringHttpHeaderValue{Val: "cluster name"}, true},
+	{"string - http header value - valid (tab)", &cases.StringHttpHeaderValue{Val: "example\t"}, true},
+	{"string - http header value - valid (special token)", &cases.StringHttpHeaderValue{Val: "!#%&./+"}, true},
+	{"string - http header value - invalid (NUL)", &cases.StringHttpHeaderValue{Val: "foo\u0000bar"}, false},
+	{"string - http header value - invalid (DEL)", &cases.StringHttpHeaderValue{Val: "\u007f"}, false},
+	{"string - http header value - invalid", &cases.StringHttpHeaderValue{Val: "example\r"}, false},
 }
 
 var bytesCases = []TestCase{
@@ -1157,6 +1178,10 @@ var wrapperCases = []TestCase{
 	{"wrapper - required - string (empty) - valid", &cases.WrapperRequiredEmptyString{Val: &wrappers.StringValue{Value: ""}}, true},
 	{"wrapper - required - string (empty) - invalid", &cases.WrapperRequiredEmptyString{Val: &wrappers.StringValue{Value: "foo"}}, false},
 	{"wrapper - required - string (empty) - invalid (empty)", &cases.WrapperRequiredEmptyString{}, false},
+
+	{"wrapper - optional - string (uuid) - valid", &cases.WrapperOptionalUuidString{Val: &wrappers.StringValue{Value: "8b72987b-024a-43b3-b4cf-647a1f925c5d"}}, true},
+	{"wrapper - optional - string (uuid) - valid (empty)", &cases.WrapperOptionalUuidString{}, true},
+	{"wrapper - optional - string (uuid) - invalid", &cases.WrapperOptionalUuidString{Val: &wrappers.StringValue{Value: "foo"}}, false},
 
 	{"wrapper - required - float - valid", &cases.WrapperRequiredFloat{Val: &wrappers.FloatValue{Value: 1}}, true},
 	{"wrapper - required - float - invalid", &cases.WrapperRequiredFloat{Val: &wrappers.FloatValue{Value: -5}}, false},
