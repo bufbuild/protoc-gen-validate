@@ -18,6 +18,7 @@ regex_map = {
     "UNKNOWN": "",
     "HTTP_HEADER_NAME": r'^:?[0-9a-zA-Z!#$%&\'*+-.^_|~\x60]+$',
     "HTTP_HEADER_VALUE": r'^[^\u0000-\u0008\u000A-\u001F\u007F]*$'
+    "ENVOY_VALID_HEADER": r'^[^\u0000\u000A\u000D]*$'
 }
 
 def validate(proto_message):

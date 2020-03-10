@@ -17,12 +17,14 @@ import (
 var unknown = ""
 var httpHeaderName = "^:?[0-9a-zA-Z!#$%&'*+-.^_|~\x60]+$"
 var httpHeaderValue = "^[^\u0000-\u0008\u000A-\u001F\u007F]*$"
+var envoyValidHeader = "^[^\u0000\u000A\u000D]*$"
 
 // Map from well known regex to regex pattern.
 var regex_map = map[string]*string{
-	"UNKNOWN":           &unknown,
-	"HTTP_HEADER_NAME":  &httpHeaderName,
-	"HTTP_HEADER_VALUE": &httpHeaderValue,
+	"UNKNOWN":            &unknown,
+	"HTTP_HEADER_NAME":   &httpHeaderName,
+	"HTTP_HEADER_VALUE":  &httpHeaderValue,
+	"ENVOY_VALID_HEADER": &envoyValidHeader,
 }
 
 type FieldType interface {
