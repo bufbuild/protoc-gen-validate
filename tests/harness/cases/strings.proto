@@ -36,4 +36,4 @@ message StringURIRef         { string val = 1 [(validate.rules).string.uri_ref =
 message StringUUID           { string val = 1 [(validate.rules).string.uuid = true]; }
 message StringHttpHeaderName { string val = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_NAME]; }
 message StringHttpHeaderValue     { string val = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_VALUE]; }
-message StringEnvoyValidHeader    { string val = 1 [(validate.rules).string.well_known_regex = ENVOY_VALID_HEADER]; }
+message StringValidHeader    { string val = 1 [(validate.rules).string = {well_known_regex: HTTP_HEADER_VALUE, strict: false}]; }

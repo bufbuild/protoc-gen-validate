@@ -18,7 +18,7 @@ regex_map = {
     "UNKNOWN": "",
     "HTTP_HEADER_NAME": r'^:?[0-9a-zA-Z!#$%&\'*+-.^_|~\x60]+$',
     "HTTP_HEADER_VALUE": r'^[^\u0000-\u0008\u000A-\u001F\u007F]*$',
-    "ENVOY_VALID_HEADER": r'^[^\u0000\u000A\u000D]*$'
+    "HEADER_STRING": r'^[^\u0000\u000A\u000D]*$'
 }
 
 def validate(proto_message):
@@ -130,7 +130,10 @@ def string_template(option_value, name):
       known_regex_type = option_value.string.DESCRIPTOR.fields_by_name['well_known_regex'].enum_type
       regex_value = option_value.string.well_known_regex
       regex_name = known_regex_type.values_by_number[regex_value].name
-      option_value.string.pattern = regex_map[regex_name]
+      if regex_name in ["HTTP_HEADER_NAME", "HTTP_HEADER_VALUE"] and not option_value.string.strict:
+        option_value.string.pattern = regex_map["HEADER_STRING"]
+      else:
+        option_value.string.pattern = regex_map[regex_name]
     str_templ = """
     {{ const_template(o, name) -}}
     {{ in_template(o.string, name) -}}

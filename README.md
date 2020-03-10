@@ -409,8 +409,8 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
   // x must conform to a well known regex for HTTP header values (via RFC 7230) 
   string x = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_VALUE];
   
-// x must conform to a well known regex that guards against \r\n\0 (via Envoy's validation)
-  string x = 1 [(validate.rules).string.well_known_regex = ENVOY_VALID_HEADER];
+  // x must conform to a well known regex for headers, disallowing \r\n\0 characters.
+  string x = 1 [(validate.rules).string {well_known_regex: HTTP_HEADER_VALUE, strict: false}];
   ```
 
 ### Bytes
