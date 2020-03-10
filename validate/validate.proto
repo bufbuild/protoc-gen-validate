@@ -570,6 +570,7 @@ enum KnownRegex {
   HTTP_HEADER_VALUE = 2;
 
   // Envoy's header validation that specifies a regex against \r\n\0 characters.
+  // See https://github.com/envoyproxy/envoy/blob/5dde5d97b90aa6f6cbe7a8dc3ac13a650fa6cbf7/include/envoy/http/header_map.h#L26.
   ENVOY_VALID_HEADER = 3;
 }
 
