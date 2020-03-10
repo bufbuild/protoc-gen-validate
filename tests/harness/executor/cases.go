@@ -886,14 +886,14 @@ var stringCases = []TestCase{
 	{"string - http header value - invalid (DEL)", &cases.StringHttpHeaderValue{Val: "\u007f"}, false},
 	{"string - http header value - invalid", &cases.StringHttpHeaderValue{Val: "example\r"}, false},
 
-	{"string - envoy valid header - valid", &cases.StringHttpHeaderValue{Val: "cluster.name.123"}, true},
-	{"string - envoy valid header - valid (uppercase)", &cases.StringHttpHeaderValue{Val: "/TEST/LONG/URL"}, true},
-	{"string - envoy valid header - valid (spaces)", &cases.StringHttpHeaderValue{Val: "cluster name"}, true},
-	{"string - envoy valid header - valid (tab)", &cases.StringHttpHeaderValue{Val: "example\t"}, true},
-	{"string - envoy valid header - valid (DEL)", &cases.StringHttpHeaderValue{Val: "\u007f"}, true},
-	{"string - envoy valid header - invalid (NUL)", &cases.StringHttpHeaderValue{Val: "foo\u0000bar"}, false},
-	{"string - envoy valid header - invalid (CR)", &cases.StringHttpHeaderValue{Val: "example\r"}, false},
-	{"string - envoy valid header - invalid (NL)", &cases.StringHttpHeaderValue{Val: "exa\u000Ample"}, false},
+	{"string - envoy valid header - valid", &cases.StringEnvoyValidHeader{Val: "cluster.name.123"}, true},
+	{"string - envoy valid header - valid (uppercase)", &cases.StringEnvoyValidHeader{Val: "/TEST/LONG/URL"}, true},
+	{"string - envoy valid header - valid (spaces)", &cases.StringEnvoyValidHeader{Val: "cluster name"}, true},
+	{"string - envoy valid header - valid (tab)", &cases.StringEnvoyValidHeader{Val: "example\t"}, true},
+	{"string - envoy valid header - valid (DEL)", &cases.StringEnvoyValidHeader{Val: "\u007f"}, true},
+	{"string - envoy valid header - invalid (NUL)", &cases.StringEnvoyValidHeader{Val: "foo\u0000bar"}, false},
+	{"string - envoy valid header - invalid (CR)", &cases.StringEnvoyValidHeader{Val: "example\r"}, false},
+	{"string - envoy valid header - invalid (NL)", &cases.StringEnvoyValidHeader{Val: "exa\u000Ample"}, false},
 }
 
 var bytesCases = []TestCase{

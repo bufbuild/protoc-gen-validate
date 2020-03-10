@@ -568,6 +568,9 @@ enum KnownRegex {
 
   // HTTP header value as defined by RFC 7230.
   HTTP_HEADER_VALUE = 2;
+
+  // Envoy's header validation that specifies a regex against \r\n\0 characters.
+  ENVOY_VALID_HEADER = 3;
 }
 
 // BytesRules describe the constraints applied to `bytes` values
