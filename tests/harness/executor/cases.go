@@ -885,6 +885,15 @@ var stringCases = []TestCase{
 	{"string - http header value - invalid (NUL)", &cases.StringHttpHeaderValue{Val: "foo\u0000bar"}, false},
 	{"string - http header value - invalid (DEL)", &cases.StringHttpHeaderValue{Val: "\u007f"}, false},
 	{"string - http header value - invalid", &cases.StringHttpHeaderValue{Val: "example\r"}, false},
+
+	{"string - non-strict valid header - valid", &cases.StringValidHeader{Val: "cluster.name.123"}, true},
+	{"string - non-strict valid header - valid (uppercase)", &cases.StringValidHeader{Val: "/TEST/LONG/URL"}, true},
+	{"string - non-strict valid header - valid (spaces)", &cases.StringValidHeader{Val: "cluster name"}, true},
+	{"string - non-strict valid header - valid (tab)", &cases.StringValidHeader{Val: "example\t"}, true},
+	{"string - non-strict valid header - valid (DEL)", &cases.StringValidHeader{Val: "\u007f"}, true},
+	{"string - non-strict valid header - invalid (NUL)", &cases.StringValidHeader{Val: "foo\u0000bar"}, false},
+	{"string - non-strict valid header - invalid (CR)", &cases.StringValidHeader{Val: "example\r"}, false},
+	{"string - non-strict valid header - invalid (NL)", &cases.StringValidHeader{Val: "exa\u000Ample"}, false},
 }
 
 var bytesCases = []TestCase{
