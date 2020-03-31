@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_binary")
+
 java_binary(
     name = "java-harness",
     main_class = "io.envoyproxy.pgv.validation.JavaHarness",

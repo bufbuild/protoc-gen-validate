@@ -1,6 +1,4 @@
-# gazelle:exclude go
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+load("@rules_java//java:defs.bzl", "java_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 load(
     "//bazel:pgv_proto_library.bzl",
