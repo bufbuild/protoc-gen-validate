@@ -1,5 +1,7 @@
 load("@io_bazel_rules_go//proto:compiler.bzl", "go_proto_compiler")
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+load("@rules_cc//cc:defs.bzl", "cc_library")
+load("@rules_python//python:defs.bzl", "py_library")
 load(":protobuf.bzl", "cc_proto_gen_validate", "java_proto_gen_validate", "python_proto_gen_validate")
 
 def pgv_go_proto_library(name, proto = None, deps = [], **kwargs):
@@ -56,8 +58,7 @@ def pgv_cc_proto_library(
         name = name + "_validate",
         deps = deps,
     )
-
-    native.cc_library(
+    cc_library(
         name = name,
         hdrs = [":" + name + "_validate"],
         srcs = [":" + name + "_validate"],
@@ -92,8 +93,7 @@ def pgv_python_proto_library(
         name = name + "_validate",
         deps = deps,
     )
-
-    native.py_library(
+    py_library(
         name = name,
         srcs = [name + "_validate"],
         deps = python_deps + [

@@ -8,8 +8,8 @@ def pgv_dependencies():
     if not native.existing_rule("io_bazel_rules_go"):
         http_archive(
             name = "io_bazel_rules_go",
-            urls = ["https://github.com/bazelbuild/rules_go/releases/download/v0.21.0/rules_go-v0.21.0.tar.gz"],
-            sha256 = "b27e55d2dcc9e6020e17614ae6e0374818a3e3ce6f2024036e688ada24110444",
+            urls = ["https://github.com/bazelbuild/rules_go/releases/download/v0.22.2/rules_go-v0.22.2.tar.gz"],
+            sha256 = "142dd33e38b563605f0d20e89d9ef9eda0fc3cb539a14be1bdb1350de2eda659",
         )
 
     if not native.existing_rule("bazel_gazelle"):
@@ -22,9 +22,9 @@ def pgv_dependencies():
     if not native.existing_rule("com_google_protobuf"):
         http_archive(
             name = "com_google_protobuf",
-            url = "https://github.com/protocolbuffers/protobuf/releases/download/v3.9.1/protobuf-all-3.9.1.tar.gz",
-            sha256 = "3040a5b946d9df7aa89c0bf6981330bf92b7844fd90e71b61da0c721e421a421",
-            strip_prefix = "protobuf-3.9.1",
+            url = "https://github.com/protocolbuffers/protobuf/archive/v3.11.4.tar.gz",
+            sha256 = "a79d19dcdf9139fa4b81206e318e33d245c4c9da1ffed21c87288ed4380426f9",
+            strip_prefix = "protobuf-3.11.4",
         )
 
     # TODO(akonradi): This shouldn't be necesary since the same http_archive block is imported by
@@ -47,40 +47,34 @@ def pgv_dependencies():
         )
 
     if not native.existing_rule("six"):
-        native.bind(
-            name = "six",
-            actual = "@six_archive//:six",
-        )
-
-    if not native.existing_rule("six_archive"):
         http_archive(
-            name = "six_archive",
-            build_file = "@com_google_protobuf//:six.BUILD",
-            sha256 = "105f8d68616f8248e24bf0e9372ef04d3cc10104f1980f54d57b2ce73a5ad56a",
-            url = "https://pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz#md5=34eed507548117b2ab523ab14b2f8b55",
+            name = "six",
+            build_file = "@com_google_protobuf//:third_party/six.BUILD",
+            sha256 = "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73",
+            urls = ["https://pypi.python.org/packages/source/s/six/six-1.12.0.tar.gz"],
         )
 
     if not native.existing_rule("com_google_re2j"):
         jvm_maven_import_external(
             name = "com_google_re2j",
             artifact = "com.google.re2j:re2j:1.2",
-	    artifact_sha256 = "e9dc705fd4c570344b54a7146b2e3a819cdc271a29793f4acc1a93b56a388e59",
+            artifact_sha256 = "e9dc705fd4c570344b54a7146b2e3a819cdc271a29793f4acc1a93b56a388e59",
             server_urls = MAVEN_SERVER_URLS,
         )
 
     if not native.existing_rule("com_googlesource_code_re2"):
         http_archive(
             name = "com_googlesource_code_re2",
-            sha256 = "38bc0426ee15b5ed67957017fd18201965df0721327be13f60496f2b356e3e01",
-            strip_prefix = "re2-2019-08-01",
-            urls = ["https://github.com/google/re2/archive/2019-08-01.tar.gz"],
+            sha256 = "04ee2aaebaa5038554683329afc494e684c30f82f2a1e47eb62450e59338f84d",
+            strip_prefix = "re2-2020-03-03",
+            urls = ["https://github.com/google/re2/archive/2020-03-03.tar.gz"],
         )
 
     if not native.existing_rule("com_google_guava"):
         jvm_maven_import_external(
             name = "com_google_guava",
             artifact = "com.google.guava:guava:27.0-jre",
-	    artifact_sha256 = "63b09db6861011e7fb2481be7790c7fd4b03f0bb884b3de2ecba8823ad19bf3f",
+            artifact_sha256 = "63b09db6861011e7fb2481be7790c7fd4b03f0bb884b3de2ecba8823ad19bf3f",
             server_urls = MAVEN_SERVER_URLS,
         )
 
@@ -94,7 +88,7 @@ def pgv_dependencies():
         jvm_maven_import_external(
             name = "com_google_gson",
             artifact = "com.google.code.gson:gson:2.8.5",
-	    artifact_sha256 = "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81",
+            artifact_sha256 = "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81",
             server_urls = MAVEN_SERVER_URLS,
         )
 
@@ -108,7 +102,7 @@ def pgv_dependencies():
         jvm_maven_import_external(
             name = "error_prone_annotations_maven",
             artifact = "com.google.errorprone:error_prone_annotations:2.3.2",
-	    artifact_sha256 = "357cd6cfb067c969226c442451502aee13800a24e950fdfde77bcdb4565a668d",
+            artifact_sha256 = "357cd6cfb067c969226c442451502aee13800a24e950fdfde77bcdb4565a668d",
             server_urls = MAVEN_SERVER_URLS,
         )
 
@@ -122,7 +116,7 @@ def pgv_dependencies():
         jvm_maven_import_external(
             name = "org_apache_commons_validator",
             artifact = "commons-validator:commons-validator:1.6",
-	    artifact_sha256 = "bd62795d7068a69cbea333f6dbf9c9c1a6ad7521443fb57202a44874f240ba25",
+            artifact_sha256 = "bd62795d7068a69cbea333f6dbf9c9c1a6ad7521443fb57202a44874f240ba25",
             server_urls = MAVEN_SERVER_URLS,
         )
 
@@ -137,7 +131,7 @@ def pgv_dependencies():
     if not native.existing_rule("rules_proto"):
         http_archive(
             name = "rules_proto",
-	    sha256 = "73ebe9d15ba42401c785f9d0aeebccd73bd80bf6b8ac78f74996d31f2c0ad7a6",
-	    strip_prefix = "rules_proto-2c0468366367d7ed97a1f702f9cd7155ab3f73c5",
-            urls = ["https://github.com/bazelbuild/rules_proto/archive/2c0468366367d7ed97a1f702f9cd7155ab3f73c5.tar.gz"],
+            sha256 = "2490dca4f249b8a9a3ab07bd1ba6eca085aaf8e45a734af92aad0c42d9dc7aaf",
+            strip_prefix = "rules_proto-218ffa7dfa5408492dc86c01ee637614f8695c45",
+            urls = ["https://github.com/bazelbuild/rules_proto/archive/218ffa7dfa5408492dc86c01ee637614f8695c45.tar.gz"],
         )
