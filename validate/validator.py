@@ -759,11 +759,14 @@ def repeated_template(option_value, name, field):
             seen.add(item)
     {%- endif %}
     {%- if message_type %}
+    tmp_fn = None
     for item in {{ name }}:
         {%- if o and o.repeated and o.repeated.items.message.skip %}
         pass
         {% else %}
-        validate(item)(item)
+        if tmp_fn is None:
+            tmp_fn = validate(item)
+        tmp_fn(item)
         {% endif %}
     {%- endif %}
     {%- if o and str(o.repeated['items']) %}
