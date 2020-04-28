@@ -25,7 +25,7 @@ func (m {{ (msgTyp .).Pointer }}) Validate() error {
 				{{ if required . }}
 					default:
 						return {{ errname .Message }}{
-							field: "{{ name . }}",
+							field: "{{ errFieldName . }}",
 							reason: "value is required",
 						}
 				{{ end }}

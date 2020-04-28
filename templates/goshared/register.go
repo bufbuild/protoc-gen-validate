@@ -21,7 +21,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	tpl.Funcs(map[string]interface{}{
 		"accessor":      fns.accessor,
 		"byteStr":       fns.byteStr,
-		"snakeCase":	 fns.snakeCase,
+		"snakeCase":     fns.snakeCase,
 		"cmt":           pgs.C80,
 		"durGt":         fns.durGt,
 		"durLit":        fns.durLit,
@@ -38,6 +38,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"lookup":        fns.lookup,
 		"msgTyp":        fns.msgTyp,
 		"name":          fns.Name,
+		"errFieldName":  fns.errFieldName,
 		"oneof":         fns.oneofTypeName,
 		"pkg":           fns.PackageName,
 		"tsGt":          fns.tsGt,
@@ -102,9 +103,24 @@ func (fns goSharedFuncs) errName(m pgs.Message) pgs.Name {
 	return fns.Name(m) + "ValidationError"
 }
 
+func (fns goSharedFuncs) errFieldName(node pgs.Node) pgs.Name {
+	useProtoName, _ := fns.Params().BoolDefault("error_proto_field_name", false)
+	if useProtoName {
+		switch en := node.(type) {
+		case pgs.OneOf:
+			return en.Name()
+		case pgs.Field: // field names cannot conflict with other generated methods
+			return en.Name()
+		default:
+			return fns.Name(node)
+		}
+	}
+	return fns.Name(node)
+}
+
 func (fns goSharedFuncs) errIdxCause(ctx shared.RuleContext, idx, cause string, reason ...interface{}) string {
 	f := ctx.Field
-	n := fns.Name(f)
+	n := fns.errFieldName(f)
 
 	var fld string
 	if idx != "" {
