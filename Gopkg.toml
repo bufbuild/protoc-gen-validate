@@ -1,6 +1,6 @@
 [[constraint]]
   name = "github.com/golang/protobuf"
-  version = "1.2.0"
+  version = "1.4.1"
 
 [[constraint]]
   name = "github.com/lyft/protoc-gen-star"

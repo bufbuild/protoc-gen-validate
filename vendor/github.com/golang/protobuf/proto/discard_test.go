@@ -1,33 +1,6 @@
-// Go support for Protocol Buffers - Google's data interchange format
-//
-// Copyright 2017 The Go Authors.  All rights reserved.
-// https://github.com/golang/protobuf
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
-//
-//     * Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above
-// copyright notice, this list of conditions and the following disclaimer
-// in the documentation and/or other materials provided with the
-// distribution.
-//     * Neither the name of Google Inc. nor the names of its
-// contributors may be used to endorse or promote products derived from
-// this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// Copyright 2017 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 package proto_test
 
@@ -35,10 +8,15 @@ import (
 	"testing"
 
 	"github.com/golang/protobuf/proto"
+	"google.golang.org/protobuf/testing/protopack"
 
-	proto3pb "github.com/golang/protobuf/proto/proto3_proto"
-	pb "github.com/golang/protobuf/proto/test_proto"
+	pb2 "github.com/golang/protobuf/internal/testprotos/proto2_proto"
+	pb3 "github.com/golang/protobuf/internal/testprotos/proto3_proto"
 )
+
+var rawFields = protopack.Message{
+	protopack.Tag{5, protopack.Fixed32Type}, protopack.Uint32(4041331395),
+}.Marshal()
 
 func TestDiscardUnknown(t *testing.T) {
 	tests := []struct {
@@ -49,103 +27,84 @@ func TestDiscardUnknown(t *testing.T) {
 		in:   nil, want: nil, // Should not panic
 	}, {
 		desc: "NilPtr",
-		in:   (*proto3pb.Message)(nil), want: (*proto3pb.Message)(nil), // Should not panic
+		in:   (*pb3.Message)(nil), want: (*pb3.Message)(nil), // Should not panic
 	}, {
 		desc: "Nested",
-		in: &proto3pb.Message{
+		in: &pb3.Message{
 			Name:             "Aaron",
-			Nested:           &proto3pb.Nested{Cute: true, XXX_unrecognized: []byte("blah")},
-			XXX_unrecognized: []byte("blah"),
+			Nested:           &pb3.Nested{Cute: true, XXX_unrecognized: []byte(rawFields)},
+			XXX_unrecognized: []byte(rawFields),
 		},
-		want: &proto3pb.Message{
+		want: &pb3.Message{
 			Name:   "Aaron",
-			Nested: &proto3pb.Nested{Cute: true},
+			Nested: &pb3.Nested{Cute: true},
 		},
 	}, {
 		desc: "Slice",
-		in: &proto3pb.Message{
+		in: &pb3.Message{
 			Name: "Aaron",
-			Children: []*proto3pb.Message{
-				{Name: "Sarah", XXX_unrecognized: []byte("blah")},
-				{Name: "Abraham", XXX_unrecognized: []byte("blah")},
+			Children: []*pb3.Message{
+				{Name: "Sarah", XXX_unrecognized: []byte(rawFields)},
+				{Name: "Abraham", XXX_unrecognized: []byte(rawFields)},
 			},
-			XXX_unrecognized: []byte("blah"),
+			XXX_unrecognized: []byte(rawFields),
 		},
-		want: &proto3pb.Message{
+		want: &pb3.Message{
 			Name: "Aaron",
-			Children: []*proto3pb.Message{
+			Children: []*pb3.Message{
 				{Name: "Sarah"},
 				{Name: "Abraham"},
 			},
 		},
 	}, {
 		desc: "OneOf",
-		in: &pb.Communique{
-			Union: &pb.Communique_Msg{&pb.Strings{
+		in: &pb2.Communique{
+			Union: &pb2.Communique_Msg{&pb2.Strings{
 				StringField:      proto.String("123"),
-				XXX_unrecognized: []byte("blah"),
+				XXX_unrecognized: []byte(rawFields),
 			}},
-			XXX_unrecognized: []byte("blah"),
+			XXX_unrecognized: []byte(rawFields),
 		},
-		want: &pb.Communique{
-			Union: &pb.Communique_Msg{&pb.Strings{StringField: proto.String("123")}},
+		want: &pb2.Communique{
+			Union: &pb2.Communique_Msg{&pb2.Strings{StringField: proto.String("123")}},
 		},
 	}, {
 		desc: "Map",
-		in: &pb.MessageWithMap{MsgMapping: map[int64]*pb.FloatingPoint{
-			0x4002: &pb.FloatingPoint{
+		in: &pb2.MessageWithMap{MsgMapping: map[int64]*pb2.FloatingPoint{
+			0x4002: &pb2.FloatingPoint{
 				Exact:            proto.Bool(true),
-				XXX_unrecognized: []byte("blah"),
+				XXX_unrecognized: []byte(rawFields),
 			},
 		}},
-		want: &pb.MessageWithMap{MsgMapping: map[int64]*pb.FloatingPoint{
-			0x4002: &pb.FloatingPoint{Exact: proto.Bool(true)},
+		want: &pb2.MessageWithMap{MsgMapping: map[int64]*pb2.FloatingPoint{
+			0x4002: &pb2.FloatingPoint{Exact: proto.Bool(true)},
 		}},
 	}, {
 		desc: "Extension",
 		in: func() proto.Message {
-			m := &pb.MyMessage{
+			m := &pb2.MyMessage{
 				Count: proto.Int32(42),
-				Somegroup: &pb.MyMessage_SomeGroup{
+				Somegroup: &pb2.MyMessage_SomeGroup{
 					GroupField:       proto.Int32(6),
-					XXX_unrecognized: []byte("blah"),
+					XXX_unrecognized: []byte(rawFields),
 				},
-				XXX_unrecognized: []byte("blah"),
+				XXX_unrecognized: []byte(rawFields),
 			}
-			proto.SetExtension(m, pb.E_Ext_More, &pb.Ext{
+			proto.SetExtension(m, pb2.E_Ext_More, &pb2.Ext{
 				Data:             proto.String("extension"),
-				XXX_unrecognized: []byte("blah"),
+				XXX_unrecognized: []byte(rawFields),
 			})
 			return m
 		}(),
 		want: func() proto.Message {
-			m := &pb.MyMessage{
+			m := &pb2.MyMessage{
 				Count:     proto.Int32(42),
-				Somegroup: &pb.MyMessage_SomeGroup{GroupField: proto.Int32(6)},
+				Somegroup: &pb2.MyMessage_SomeGroup{GroupField: proto.Int32(6)},
 			}
-			proto.SetExtension(m, pb.E_Ext_More, &pb.Ext{Data: proto.String("extension")})
+			proto.SetExtension(m, pb2.E_Ext_More, &pb2.Ext{Data: proto.String("extension")})
 			return m
 		}(),
 	}}
-
-	// Test the legacy code path.
-	for _, tt := range tests {
-		// Clone the input so that we don't alter the original.
-		in := tt.in
-		if in != nil {
-			in = proto.Clone(tt.in)
-		}
-
-		var m LegacyMessage
-		m.Message, _ = in.(*proto3pb.Message)
-		m.Communique, _ = in.(*pb.Communique)
-		m.MessageWithMap, _ = in.(*pb.MessageWithMap)
-		m.MyMessage, _ = in.(*pb.MyMessage)
-		proto.DiscardUnknown(&m)
-		if !proto.Equal(in, tt.want) {
-			t.Errorf("test %s/Legacy, expected unknown fields to be discarded\ngot  %v\nwant %v", tt.desc, in, tt.want)
-		}
-	}
 
 	for _, tt := range tests {
 		proto.DiscardUnknown(tt.in)
@@ -154,17 +113,3 @@ func TestDiscardUnknown(t *testing.T) {
 		}
 	}
 }
-
-// LegacyMessage is a proto.Message that has several nested messages.
-// This does not have the XXX_DiscardUnknown method and so forces DiscardUnknown
-// to use the legacy fallback logic.
-type LegacyMessage struct {
-	Message        *proto3pb.Message
-	Communique     *pb.Communique
-	MessageWithMap *pb.MessageWithMap
-	MyMessage      *pb.MyMessage
-}
-
-func (m *LegacyMessage) Reset()         { *m = LegacyMessage{} }
-func (m *LegacyMessage) String() string { return proto.CompactTextString(m) }
-func (*LegacyMessage) ProtoMessage()    {}
