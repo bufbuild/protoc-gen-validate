@@ -27,15 +27,13 @@ const mapTpl = `
 		for key, val := range {{ accessor . }} {
 			_ = val
 
-			{{ if $r.GetNoSparse }}
-				if val == nil {
-					return {{ errIdx . "key" "value cannot be sparse, all pairs must be non-nil" }}
-				}
-			{{ end }}
-
 			{{ render (.Key "key" "key") }}
 
 			{{ render (.Elem "val" "key") }}
 		}
+
+		{{ if $r.GetNoSparse }}
+			{{ unimplemented "no_sparse validation is not implemented for Go because protobuf maps cannot be sparse in Go" }}
+		{{ end }}
 	{{ end }}
 `

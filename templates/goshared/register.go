@@ -2,17 +2,19 @@ package goshared
 
 import (
 	"fmt"
-	"github.com/iancoleman/strcase"
 	"reflect"
 	"strings"
 	"text/template"
 
-	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
+	"github.com/iancoleman/strcase"
+
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/lyft/protoc-gen-star"
 	"github.com/lyft/protoc-gen-star/lang/go"
+
+	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 )
 
 func Register(tpl *template.Template, params pgs.Parameters) {
@@ -44,6 +46,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"tsLit":         fns.tsLit,
 		"tsStr":         fns.tsStr,
 		"typ":           fns.Type,
+		"unimplemented": fns.unimplemented,
 		"unwrap":        fns.unwrap,
 		"externalEnums": fns.externalEnums,
 		"enumPackages":  fns.enumPackages,
@@ -316,4 +319,8 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.FilePath]pgs.Nam
 
 func (fns goSharedFuncs) snakeCase(name string) string {
 	return strcase.ToSnake(name)
+}
+
+func (fns goSharedFuncs) unimplemented(_ string) string {
+	return ""
 }
