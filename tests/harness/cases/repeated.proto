@@ -9,6 +9,10 @@ import "validate/validate.proto";
 import "google/protobuf/duration.proto";
 
 message Embed { int64 val = 1 [(validate.rules).int64.gt = 0]; }
+enum AnEnum {
+  X = 0;
+  Y = 1;
+}
 
 message RepeatedNone      { repeated int64  val = 1; }
 message RepeatedEmbedNone { repeated Embed val = 1; }
@@ -23,5 +27,7 @@ message RepeatedItemPattern  { repeated string val = 1 [(validate.rules).repeate
 message RepeatedEmbedSkip { repeated Embed val = 1 [(validate.rules).repeated.items.message.skip = true]; }
 message RepeatedItemIn { repeated string val = 1 [(validate.rules).repeated.items.string = {in: ["foo", "bar"]}]; }
 message RepeatedItemNotIn { repeated string val = 1 [(validate.rules).repeated.items.string = {not_in: ["foo", "bar"]}]; }
+message RepeatedEnumIn { repeated AnEnum val = 1 [(validate.rules).repeated.items.enum = {in: [0]}]; }
+message RepeatedEnumNotIn { repeated AnEnum val = 1 [(validate.rules).repeated.items.enum = {not_in: [0]}]; }
 message RepeatedMinAndItemLen { repeated string val = 1 [(validate.rules).repeated = { items { string { len: 3 } }, min_items: 1 }]; }
 message RepeatedDuration { repeated google.protobuf.Duration val = 1 [(validate.rules).repeated = { items { duration { gte { nanos: 1000000}}}}]; }
