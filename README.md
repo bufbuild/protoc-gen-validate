@@ -184,6 +184,10 @@ plugins {
     ...
 }
 
+dependencies {
+    implementation "io.envoyproxy.protoc-gen-validate:pgv-java-stub:0.1.0"
+}
+
 protobuf {
     protoc {
         artifact = "com.google.protobuf:protoc:3.5.1"
