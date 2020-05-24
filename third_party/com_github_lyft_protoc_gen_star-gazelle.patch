@@ -1,0 +1,224 @@
+diff -urN a/BUILD b/BUILD
+--- a/BUILD	1969-12-31 16:00:00.000000000 -0800
++++ b/BUILD	2020-05-23 15:13:02.000000000 -0700
+@@ -0,0 +1,95 @@
++load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
++
++go_library(
++    name = "go_default_library",
++    srcs = [
++        "artifact.go",
++        "ast.go",
++        "build_context.go",
++        "comment.go",
++        "debug.go",
++        "docs.go",
++        "entity.go",
++        "enum.go",
++        "enum_value.go",
++        "extension.go",
++        "field.go",
++        "field_type.go",
++        "field_type_elem.go",
++        "file.go",
++        "generator.go",
++        "init_option.go",
++        "message.go",
++        "method.go",
++        "module.go",
++        "name.go",
++        "node.go",
++        "oneof.go",
++        "package.go",
++        "parameters.go",
++        "persister.go",
++        "post_process.go",
++        "proto.go",
++        "service.go",
++        "source_code_info.go",
++        "wkt.go",
++        "workflow.go",
++    ],
++    importpath = "github.com/lyft/protoc-gen-star",
++    visibility = ["//visibility:public"],
++    deps = [
++        "@com_github_golang_protobuf//proto:go_default_library",
++        "@com_github_golang_protobuf//protoc-gen-go/descriptor:go_default_library",
++        "@com_github_golang_protobuf//protoc-gen-go/plugin:go_default_library",
++        "@com_github_spf13_afero//:go_default_library",
++    ],
++)
++
++go_test(
++    name = "go_default_test",
++    srcs = [
++        "artifact_test.go",
++        "ast_test.go",
++        "build_context_test.go",
++        "comment_test.go",
++        "debug_test.go",
++        "enum_test.go",
++        "enum_value_test.go",
++        "extension_test.go",
++        "field_test.go",
++        "field_type_elem_test.go",
++        "field_type_test.go",
++        "file_test.go",
++        "generator_test.go",
++        "init_option_test.go",
++        "message_test.go",
++        "method_test.go",
++        "module_test.go",
++        "name_test.go",
++        "node_nilvisitor_test.go",
++        "node_passvisitor_test.go",
++        "node_test.go",
++        "oneof_test.go",
++        "package_test.go",
++        "parameters_test.go",
++        "persister_test.go",
++        "post_process_test.go",
++        "proto_test.go",
++        "service_test.go",
++        "source_code_info_test.go",
++        "wkt_test.go",
++        "workflow_test.go",
++    ],
++    embed = [":go_default_library"],
++    deps = [
++        "@com_github_golang_protobuf//descriptor:go_default_library",
++        "@com_github_golang_protobuf//proto:go_default_library",
++        "@com_github_golang_protobuf//protoc-gen-go/descriptor:go_default_library",
++        "@com_github_golang_protobuf//protoc-gen-go/generator:go_default_library",
++        "@com_github_golang_protobuf//protoc-gen-go/plugin:go_default_library",
++        "@com_github_golang_protobuf//ptypes/any:go_default_library",
++        "@com_github_spf13_afero//:go_default_library",
++        "@com_github_stretchr_testify//assert:go_default_library",
++        "@com_github_stretchr_testify//require:go_default_library",
++    ],
++)
+diff -urN a/lang/go/BUILD.bazel b/lang/go/BUILD.bazel
+--- a/lang/go/BUILD.bazel	1969-12-31 16:00:00.000000000 -0800
++++ b/lang/go/BUILD.bazel	2020-05-23 15:13:02.000000000 -0700
+@@ -0,0 +1,42 @@
++load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
++
++go_library(
++    name = "go_default_library",
++    srcs = [
++        "context.go",
++        "docs.go",
++        "gofmt.go",
++        "name.go",
++        "package.go",
++        "parameters.go",
++        "type_name.go",
++    ],
++    importpath = "github.com/lyft/protoc-gen-star/lang/go",
++    visibility = ["//visibility:public"],
++    deps = [
++        "//:go_default_library",
++        "@com_github_golang_protobuf//protoc-gen-go/generator:go_default_library",
++    ],
++)
++
++go_test(
++    name = "go_default_test",
++    srcs = [
++        "context_test.go",
++        "gofmt_test.go",
++        "helpers_test.go",
++        "name_test.go",
++        "package_test.go",
++        "parameters_test.go",
++        "type_name_test.go",
++    ],
++    data = glob(["testdata/**"]),
++    embed = [":go_default_library"],
++    deps = [
++        "//:go_default_library",
++        "@com_github_golang_protobuf//proto:go_default_library",
++        "@com_github_golang_protobuf//protoc-gen-go/plugin:go_default_library",
++        "@com_github_stretchr_testify//assert:go_default_library",
++        "@com_github_stretchr_testify//require:go_default_library",
++    ],
++)
+diff -urN a/protoc-gen-debug/BUILD.bazel b/protoc-gen-debug/BUILD.bazel
+--- a/protoc-gen-debug/BUILD.bazel	1969-12-31 16:00:00.000000000 -0800
++++ b/protoc-gen-debug/BUILD.bazel	2020-05-23 15:13:02.000000000 -0700
+@@ -0,0 +1,18 @@
++load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
++
++go_library(
++    name = "go_default_library",
++    srcs = ["main.go"],
++    importpath = "github.com/lyft/protoc-gen-star/protoc-gen-debug",
++    visibility = ["//visibility:private"],
++    deps = [
++        "@com_github_golang_protobuf//proto:go_default_library",
++        "@com_github_golang_protobuf//protoc-gen-go/plugin:go_default_library",
++    ],
++)
++
++go_binary(
++    name = "protoc-gen-debug",
++    embed = [":go_default_library"],
++    visibility = ["//visibility:public"],
++)
+diff -urN a/testdata/protoc-gen-example/BUILD.bazel b/testdata/protoc-gen-example/BUILD.bazel
+--- a/testdata/protoc-gen-example/BUILD.bazel	1969-12-31 16:00:00.000000000 -0800
++++ b/testdata/protoc-gen-example/BUILD.bazel	2020-05-23 15:13:02.000000000 -0700
+@@ -0,0 +1,22 @@
++load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
++
++go_library(
++    name = "go_default_library",
++    srcs = [
++        "jsonify.go",
++        "main.go",
++        "printer.go",
++    ],
++    importpath = "github.com/lyft/protoc-gen-star/testdata/protoc-gen-example",
++    visibility = ["//visibility:private"],
++    deps = [
++        "//:go_default_library",
++        "//lang/go:go_default_library",
++    ],
++)
++
++go_binary(
++    name = "protoc-gen-example",
++    embed = [":go_default_library"],
++    visibility = ["//visibility:public"],
++)
+diff -urN a/testutils/BUILD.bazel b/testutils/BUILD.bazel
+--- a/testutils/BUILD.bazel	1969-12-31 16:00:00.000000000 -0800
++++ b/testutils/BUILD.bazel	2020-05-23 15:13:02.000000000 -0700
+@@ -0,0 +1,27 @@
++load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
++
++go_library(
++    name = "go_default_library",
++    srcs = ["loader.go"],
++    importpath = "github.com/lyft/protoc-gen-star/testutils",
++    visibility = ["//visibility:public"],
++    deps = [
++        "//:go_default_library",
++        "@com_github_golang_protobuf//proto:go_default_library",
++        "@com_github_golang_protobuf//protoc-gen-go/descriptor:go_default_library",
++        "@com_github_spf13_afero//:go_default_library",
++    ],
++)
++
++go_test(
++    name = "go_default_test",
++    srcs = ["loader_test.go"],
++    embed = [":go_default_library"],
++    deps = [
++        "@com_github_golang_protobuf//proto:go_default_library",
++        "@com_github_golang_protobuf//protoc-gen-go/descriptor:go_default_library",
++        "@com_github_spf13_afero//:go_default_library",
++        "@com_github_stretchr_testify//assert:go_default_library",
++        "@com_github_stretchr_testify//require:go_default_library",
++    ],
++)

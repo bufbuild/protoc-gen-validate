@@ -22,24 +22,6 @@ def pgv_go_proto_library(name, proto = None, deps = [], **kwargs):
         **kwargs
     )
 
-def pgv_gogo_proto_library(name, proto = None, deps = [], **kwargs):
-    go_proto_compiler(
-        name = "pgv_plugin_gogo",
-        suffix = ".pb.validate.go",
-        valid_archive = False,
-        plugin = "//:protoc-gen-validate",
-        options = ["lang=gogo"],
-    )
-
-    go_proto_library(
-        name = name,
-        proto = proto,
-        deps = ["//validate:go_default_library"] + deps,
-        compilers = ["@io_bazel_rules_go//proto:gogo_proto", "pgv_plugin_gogo"],
-        visibility = ["//visibility:public"],
-        **kwargs
-    )
-
 def pgv_cc_proto_library(
         name,
         deps = [],
@@ -63,13 +45,13 @@ def pgv_cc_proto_library(
         hdrs = [":" + name + "_validate"],
         srcs = [":" + name + "_validate"],
         deps = cc_deps + [
-            "@com_envoyproxy_protoc_gen_validate//validate:cc_validate",
-            "@com_envoyproxy_protoc_gen_validate//validate:validate_cc",
+            "@com_github_envoyproxy_protoc_gen_validate//validate:cc_validate",
+            "@com_github_envoyproxy_protoc_gen_validate//validate:validate_cc",
             "@com_google_protobuf//:protobuf",
             "@com_googlesource_code_re2//:re2",
         ],
         copts = copts + select({
-            "@com_envoyproxy_protoc_gen_validate//bazel:windows_x86_64": ["-DWIN32"],
+            "@com_github_envoyproxy_protoc_gen_validate//bazel:windows_x86_64": ["-DWIN32"],
             "//conditions:default": [],
         }),
         alwayslink = 1,
@@ -97,7 +79,7 @@ def pgv_python_proto_library(
         name = name,
         srcs = [name + "_validate"],
         deps = python_deps + [
-            "@com_envoyproxy_protoc_gen_validate//validate:validate_py",
+            "@com_github_envoyproxy_protoc_gen_validate//validate:validate_py",
         ],
         **kwargs
     )

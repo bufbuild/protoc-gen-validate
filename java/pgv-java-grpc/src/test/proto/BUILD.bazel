@@ -15,7 +15,7 @@ proto_library(
 go_proto_library(
     name = "io_envoyproxy_pgv_grpc_go_proto",
     compilers = ["@io_bazel_rules_go//proto:go_grpc"],
-    importpath = "java/pgv-java-grpc/src/test/proto",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/java/pgv-java-grpc/src/test/proto",
     proto = ":io_envoyproxy_pgv_grpc_proto",
     visibility = ["//visibility:public"],
     deps = ["//validate:go_default_library"],
@@ -24,6 +24,6 @@ go_proto_library(
 go_library(
     name = "go_default_library",
     embed = [":io_envoyproxy_pgv_grpc_go_proto"],
-    importpath = "java/pgv-java-grpc/src/test/proto",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/java/pgv-java-grpc/src/test/proto",
     visibility = ["//visibility:public"],
 )

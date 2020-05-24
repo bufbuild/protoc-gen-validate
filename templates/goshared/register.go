@@ -21,7 +21,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	tpl.Funcs(map[string]interface{}{
 		"accessor":      fns.accessor,
 		"byteStr":       fns.byteStr,
-		"snakeCase":	 fns.snakeCase,
+		"snakeCase":     fns.snakeCase,
 		"cmt":           pgs.C80,
 		"durGt":         fns.durGt,
 		"durLit":        fns.durLit,

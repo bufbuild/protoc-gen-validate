@@ -14,7 +14,7 @@ proto_library(
 
 go_proto_library(
     name = "io_envoyproxy_pvg_cases_go_proto",
-    importpath = "java/pgv-java-stub/src/test/proto",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/java/pgv-java-stub/src/test/proto",
     proto = ":io_envoyproxy_pvg_cases_proto",
     visibility = ["//visibility:public"],
     deps = ["//validate:go_default_library"],
@@ -23,6 +23,6 @@ go_proto_library(
 go_library(
     name = "go_default_library",
     embed = [":io_envoyproxy_pvg_cases_go_proto"],
-    importpath = "java/pgv-java-stub/src/test/proto",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/java/pgv-java-stub/src/test/proto",
     visibility = ["//visibility:public"],
 )

@@ -8,23 +8,24 @@ def pgv_dependencies():
     if not native.existing_rule("io_bazel_rules_go"):
         http_archive(
             name = "io_bazel_rules_go",
-            urls = ["https://github.com/bazelbuild/rules_go/releases/download/v0.22.2/rules_go-v0.22.2.tar.gz"],
-            sha256 = "142dd33e38b563605f0d20e89d9ef9eda0fc3cb539a14be1bdb1350de2eda659",
+            sha256 = "c007d3ba5af5f00a4cb204b3c55cf9ca7a26df5cfc8bb52d7ee12300719cc173",
+            strip_prefix = "rules_go-740ada94dfda52f2a079f718858e8b2b8ee0fdc6",
+            urls = ["https://github.com/bazelbuild/rules_go/archive/740ada94dfda52f2a079f718858e8b2b8ee0fdc6.tar.gz"],
         )
 
     if not native.existing_rule("bazel_gazelle"):
         http_archive(
             name = "bazel_gazelle",
-            urls = ["https://github.com/bazelbuild/bazel-gazelle/releases/download/0.17.0/bazel-gazelle-0.17.0.tar.gz"],
-            sha256 = "3c681998538231a2d24d0c07ed5a7658cb72bfb5fd4bf9911157c0e9ac6a2687",
+            urls = ["https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.21.0/bazel-gazelle-v0.21.0.tar.gz"],
+            sha256 = "bfd86b3cbe855d6c16c6fce60d76bd51f5c8dbc9cfcaef7a2bb5c1aafd0710e8",
         )
 
     if not native.existing_rule("com_google_protobuf"):
         http_archive(
             name = "com_google_protobuf",
-            url = "https://github.com/protocolbuffers/protobuf/archive/v3.11.4.tar.gz",
-            sha256 = "a79d19dcdf9139fa4b81206e318e33d245c4c9da1ffed21c87288ed4380426f9",
-            strip_prefix = "protobuf-3.11.4",
+            url = "https://github.com/protocolbuffers/protobuf/archive/v3.12.1.tar.gz",
+            sha256 = "cb9b3f9d625b5739a358268eb3421de11cacd90025f5f7672c3930553eca810e",
+            strip_prefix = "protobuf-3.12.1",
         )
 
     # TODO(akonradi): This shouldn't be necesary since the same http_archive block is imported by
@@ -41,9 +42,9 @@ def pgv_dependencies():
     if not native.existing_rule("bazel_skylib"):
         http_archive(
             name = "bazel_skylib",
-            url = "https://github.com/bazelbuild/bazel-skylib/archive/0.5.0.tar.gz",
-            sha256 = "b5f6abe419da897b7901f90cbab08af958b97a8f3575b0d3dd062ac7ce78541f",
-            strip_prefix = "bazel-skylib-0.5.0",
+            sha256 = "e5d90f0ec952883d56747b7604e2a15ee36e288bb556c3d0ed33e818a4d971f2",
+            strip_prefix = "bazel-skylib-1.0.2",
+            urls = ["https://github.com/bazelbuild/bazel-skylib/archive/1.0.2.tar.gz"],
         )
 
     if not native.existing_rule("six"):
