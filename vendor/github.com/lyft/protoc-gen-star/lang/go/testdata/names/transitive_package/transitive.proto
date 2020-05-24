@@ -1,6 +1,0 @@
-syntax="proto3";
-package names.transitive_package;
-
-message Transitive {
-    bool value = 1;
-}
