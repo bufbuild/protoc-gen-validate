@@ -3,6 +3,7 @@ FROM ubuntu:xenial
 
 # apt packages
 ENV INSTALL_DEPS \
+  build-essential \
   ca-certificates \
   git \
   make \
@@ -56,10 +57,6 @@ RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 # buildozer
 RUN go get github.com/bazelbuild/buildtools/buildozer
 RUN go get github.com/bazelbuild/bazelisk && mv $(go env GOPATH)/bin/bazelisk $(go env GOPATH)/bin/bazel && export PATH=$PATH:$(go env GOPATH)/bin
-
-RUN apt-get update && apt-get install -y -q build-essential \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
 COPY . .
