@@ -44,10 +44,13 @@ lint:
 	# check for variable shadowing
 	go vet -vettool=$(which shadow) ./...
 
+tests/harness-bin: tests/harness/executor/*.go
+	cd tests && go build -o harness-bin ./harness/executor/*.go
+
 .PHONY: harness
-harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harness tests/harness/cc/cc-harness
+harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harness tests/harness/cc/cc-harness tests/harness-bin
  	# runs the test harness, validating a series of test cases in all supported languages
-	cd tests && go run ./harness/executor/*.go -go -cc
+	./tests/harness-bin -go -cc
 
 .PHONY: bazel-harness
 bazel-harness:

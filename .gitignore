@@ -23,6 +23,7 @@ bazel-*
 
 /tests/harness/cases/**/*.cc
 /tests/harness/cases/**/*.h
+/tests/harness-bin
 
 /java/.idea
 /java/**/.project
