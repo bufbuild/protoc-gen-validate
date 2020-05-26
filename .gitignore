@@ -2,8 +2,10 @@ bazel-*
 
 !vendor/*
 
-/gogofast
-/gogofast.exe
+/bin/gogofast
+/bin/gogofast.exe
+/bin/protoc-gen-go
+/bin/protoc-gen-go.exe
 /protoc-gen-validate
 
 /tests/harness/cases/go
