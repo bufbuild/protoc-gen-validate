@@ -15,7 +15,7 @@ jobs:
       MAVEN_OPTS: -Xms512m -Xmx1024m # Customize the JVM maximum heap limit
       GO111MODULE: on
     steps:
-      - run: rm -rf /usr/local/go && curl -O https://dl.google.com/go/go1.14.3.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.14.3.linux-amd64.tar.gz
+      - run: rm -rf /usr/local/go && curl -O https://dl.google.com/go/go1.14.3.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.14.3.linux-amd64.tar.gz && go version
       - checkout:
           path: ~/.go_workspace/src/github.com/envoyproxy/protoc-gen-validate
       - run: mvn -B verify  
