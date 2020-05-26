@@ -59,7 +59,7 @@ lint: bin/golint bin/shadow
 	test -z "$(gofmt -d -s ./*.go)" || (gofmt -d -s ./*.go && exit 1)
 	# golint -set_exit_status
 	# check for variable shadowing
-	go vet -vettool=$(pwd)/bin/shadow *.go
+	go vet -vettool=$(shell pwd)/bin/shadow ./...
 
 bin/shadow:
 	go build -o $@ ./vendor/golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
@@ -73,10 +73,13 @@ bin/gogofast:
 bin/protoc-gen-go:
 	go build -o $@ ./vendor/github.com/golang/protobuf/protoc-gen-go
 
+bin/harness:
+	cd tests && go build -o ../bin/harness-bin ./harness/executor
+
 .PHONY: harness
-harness: testcases tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.go tests/harness/go/main/go-harness tests/harness/gogo/main/go-harness tests/harness/cc/cc-harness
+harness: testcases tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.go tests/harness/go/main/go-harness tests/harness/gogo/main/go-harness tests/harness/cc/cc-harness bin/harness
  	# runs the test harness, validating a series of test cases in all supported languages
-	go run ./tests/harness/executor/*.go -go -gogo -cc
+	./bin/harness -go -gogo -cc
 
 .PHONY: bazel-harness
 bazel-harness:
@@ -132,11 +135,11 @@ tests/harness/gogo/harness.pb.go: bin/gogofast
 
 tests/harness/go/main/go-harness:
 	# generates the go-specific test harness
-	go build -o ./tests/harness/go/main/go-harness ./tests/harness/go/main
+	cd tests && go build -o ./harness/go/main/go-harness ./harness/go/main
 
 tests/harness/gogo/main/go-harness:
 	# generates the gogo-specific test harness
-	go build -o ./tests/harness/gogo/main/go-harness ./tests/harness/gogo/main
+	cd tests && go build -o ./harness/gogo/main/go-harness ./harness/gogo/main
 
 tests/harness/cc/cc-harness: tests/harness/cc/harness.cc
 	# generates the C++-specific test harness
@@ -158,6 +161,7 @@ clean:
 	rm -f \
 		bin/gogofast \
 		bin/protoc-gen-go \
+		bin/harness \
 		tests/harness/cc/cc-harness \
 		tests/harness/go/main/go-harness \
 		tests/harness/gogo/main/go-harness \

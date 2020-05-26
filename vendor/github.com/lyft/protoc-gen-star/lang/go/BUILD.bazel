@@ -1,0 +1,43 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "context.go",
+        "docs.go",
+        "gofmt.go",
+        "name.go",
+        "package.go",
+        "parameters.go",
+        "type_name.go",
+    ],
+    importmap = "github.com/envoyproxy/protoc-gen-validate/vendor/github.com/lyft/protoc-gen-star/lang/go",
+    importpath = "github.com/lyft/protoc-gen-star/lang/go",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/protoc-gen-go/generator:go_default_library",
+        "//vendor/github.com/lyft/protoc-gen-star:go_default_library",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = [
+        "context_test.go",
+        "gofmt_test.go",
+        "helpers_test.go",
+        "name_test.go",
+        "package_test.go",
+        "parameters_test.go",
+        "type_name_test.go",
+    ],
+    data = glob(["testdata/**"]),
+    embed = [":go_default_library"],
+    deps = [
+        "//vendor/github.com/golang/protobuf/proto:go_default_library",
+        "//vendor/github.com/lyft/protoc-gen-star:go_default_library",
+        "@com_github_stretchr_testify//assert:go_default_library",
+        "@com_github_stretchr_testify//require:go_default_library",
+        "@io_bazel_rules_go//proto/wkt:compiler_plugin_go_proto",
+    ],
+)
