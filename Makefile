@@ -87,7 +87,7 @@ bazel-harness:
 	bazel run //tests/harness/executor:executor --incompatible_new_actions_api=false -- -go -gogo -cc -java -python
 
 .PHONY: testcases
-testcases: bin/gogofast
+testcases: bin/gogofast bin/protoc-gen-go
 	# generate the test harness case protos
 	rm -r tests/harness/cases/go || true
 	mkdir tests/harness/cases/go
