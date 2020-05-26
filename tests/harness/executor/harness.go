@@ -17,13 +17,10 @@ import (
 	"golang.org/x/net/context"
 )
 
-func Harnesses(goFlag bool, gogoFlag bool, ccFlag bool, javaFlag bool, pythonFlag bool) []Harness {
+func Harnesses(goFlag, ccFlag, javaFlag, pythonFlag bool) []Harness {
 	harnesses := make([]Harness, 0)
 	if goFlag {
 		harnesses = append(harnesses, InitHarness("tests/harness/go/main/go-harness"))
-	}
-	if gogoFlag {
-		harnesses = append(harnesses, InitHarness("tests/harness/gogo/main/go-harness"))
 	}
 	if ccFlag {
 		harnesses = append(harnesses, InitHarness("tests/harness/cc/cc-harness"))
