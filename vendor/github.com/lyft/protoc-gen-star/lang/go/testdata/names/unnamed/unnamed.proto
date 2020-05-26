@@ -1,5 +1,0 @@
-syntax = "proto3";
-
-package names.unnamed;
-
-message Unnamed {}
