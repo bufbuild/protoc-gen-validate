@@ -13,6 +13,7 @@ jobs:
     working_directory: ~/.go_workspace/src/github.com/envoyproxy/protoc-gen-validate/java
     environment:
       MAVEN_OPTS: -Xms512m -Xmx1024m # Customize the JVM maximum heap limit
+      GO111MODULE: on
     steps:
       - checkout:
           path: ~/.go_workspace/src/github.com/envoyproxy/protoc-gen-validate
