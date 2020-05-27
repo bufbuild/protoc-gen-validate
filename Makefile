@@ -74,7 +74,7 @@ bin/protoc-gen-go:
 	go build -o $@ ./vendor/github.com/golang/protobuf/protoc-gen-go
 
 bin/harness:
-	cd tests && go build -o ../bin/harness-bin ./harness/executor
+	cd tests && go build -o ../bin/harness ./harness/executor
 
 .PHONY: harness
 harness: testcases tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.go tests/harness/go/main/go-harness tests/harness/gogo/main/go-harness tests/harness/cc/cc-harness bin/harness
