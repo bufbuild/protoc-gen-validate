@@ -68,6 +68,7 @@ def pgv_dependencies():
             sha256 = "04ee2aaebaa5038554683329afc494e684c30f82f2a1e47eb62450e59338f84d",
             strip_prefix = "re2-2020-03-03",
             urls = ["https://github.com/google/re2/archive/2020-03-03.tar.gz"],
+            patches = ["//bazel:re2.patch"],
         )
 
     if not native.existing_rule("com_google_guava"):
