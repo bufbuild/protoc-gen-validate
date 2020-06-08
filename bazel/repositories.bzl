@@ -65,11 +65,9 @@ def pgv_dependencies():
     if not native.existing_rule("com_googlesource_code_re2"):
         http_archive(
             name = "com_googlesource_code_re2",
-            sha256 = "fb8e0f4ed7a212e3420507f27933ef5a8c01aec70e5148c6a35313573269fae6",
-            strip_prefix = "re2-2020-06-01",
-            urls = ["https://github.com/google/re2/archive/2020-06-01.tar.gz"],
-            patch_args = ["-p1"],
-            patches = ["//bazel:re2.patch"],
+            sha256 = "455bcacd2b94fca8897decd81172c5a93e5303ea0e5816b410877c51d6179ffb",
+            strip_prefix = "re2-2b25567a8ee3b6e97c3cd05d616f296756c52759",
+            urls = ["https://github.com/google/re2/archive/2b25567a8ee3b6e97c3cd05d616f296756c52759.tar.gz"],
         )
 
     if not native.existing_rule("com_google_guava"):
