@@ -68,6 +68,7 @@ def pgv_dependencies():
             sha256 = "fb8e0f4ed7a212e3420507f27933ef5a8c01aec70e5148c6a35313573269fae6",
             strip_prefix = "re2-2020-06-01",
             urls = ["https://github.com/google/re2/archive/2020-06-01.tar.gz"],
+            patch_args = ["-p1"],
             patches = ["//bazel:re2.patch"],
         )
 
