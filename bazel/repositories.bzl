@@ -63,6 +63,9 @@ def pgv_dependencies():
         )
 
     if not native.existing_rule("com_googlesource_code_re2"):
+        # TODO(shikugawa): replace this with release tag after released package which includes
+        # disable pthread when build with emscripten. We use hash temporary to enable our changes to
+        # build protoc-gen-validate with emscripten. https://github.com/google/re2/pull/263
         http_archive(
             name = "com_googlesource_code_re2",
             sha256 = "455bcacd2b94fca8897decd81172c5a93e5303ea0e5816b410877c51d6179ffb",
