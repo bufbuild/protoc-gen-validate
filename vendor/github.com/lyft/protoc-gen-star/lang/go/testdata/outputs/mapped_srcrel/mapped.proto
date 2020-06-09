@@ -1,5 +1,0 @@
-syntax="proto3";
-package outputs.mapped;
-option go_package="unaffected";
-
-message Mapped {}

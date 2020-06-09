@@ -1,5 +1,0 @@
-syntax="proto3";
-package names.path_dash;
-option go_package="example.com/path-dash";
-
-message PathDash {}
