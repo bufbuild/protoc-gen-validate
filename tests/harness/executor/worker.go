@@ -8,20 +8,20 @@ import (
 	"sync"
 	"time"
 
+	harness "github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes"
-	harness "github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
 )
 
-func Work(wg *sync.WaitGroup, in <-chan TestCase, out chan<- TestResult, goFlag bool, gogoFlag bool, ccFlag bool, javaFlag bool, pythonFlag bool) {
+func Work(wg *sync.WaitGroup, in <-chan TestCase, out chan<- TestResult, harnesses []Harness) {
 	for tc := range in {
-		ok, skip := execTestCase(tc, goFlag, gogoFlag, ccFlag, javaFlag, pythonFlag)
+		ok, skip := execTestCase(tc, harnesses)
 		out <- TestResult{ok, skip}
 	}
 	wg.Done()
 }
 
-func execTestCase(tc TestCase, goFlag bool, gogoFlag bool, ccFlag bool, javaFlag bool, pythonFlag bool) (ok, skip bool) {
+func execTestCase(tc TestCase, harnesses []Harness) (ok, skip bool) {
 	any, err := ptypes.MarshalAny(tc.Message)
 	if err != nil {
 		log.Printf("unable to convert test case %q to Any - %v", tc.Name, err)
@@ -36,8 +36,6 @@ func execTestCase(tc TestCase, goFlag bool, gogoFlag bool, ccFlag bool, javaFlag
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
-
-	harnesses := Harnesses(goFlag, gogoFlag, ccFlag, javaFlag, pythonFlag)
 
 	wg := new(sync.WaitGroup)
 	wg.Add(len(harnesses))
