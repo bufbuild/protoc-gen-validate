@@ -9,6 +9,7 @@ require (
 	github.com/spf13/afero v1.1.2 // indirect
 	github.com/stretchr/testify v1.5.1 // indirect
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b
-	golang.org/x/net v0.0.0-20200226121028-0de0cce0169b
-	golang.org/x/tools v0.0.0-20200522201501-cb1345f3a375
+	golang.org/x/net v0.0.0-20200602114024-627f9648deb9
+	golang.org/x/text v0.3.0 // indirect
+	golang.org/x/tools v0.0.0-20200609164405-eb789aa7ce50
 )
