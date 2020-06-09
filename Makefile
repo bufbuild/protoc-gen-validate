@@ -11,19 +11,7 @@ GO_IMPORT_SPACES := ${VALIDATE_IMPORT},\
 	Mgoogle/protobuf/timestamp.proto=github.com/golang/protobuf/ptypes/timestamp,\
 	Mgoogle/protobuf/wrappers.proto=github.com/golang/protobuf/ptypes/wrappers,\
 	Mgoogle/protobuf/descriptor.proto=github.com/golang/protobuf/protoc-gen-go/descriptor,\
-	Mgogoproto/gogo.proto=${PACKAGE}/gogoproto
 GO_IMPORT:=$(subst $(space),,$(GO_IMPORT_SPACES))
-
-# protoc-gen-gogo parameters
-GOGO_IMPORT_SPACES := ${VALIDATE_IMPORT},\
-	Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,\
-	Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types,\
-	Mgoogle/protobuf/struct.proto=github.com/gogo/protobuf/types,\
-	Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types,\
-	Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types,\
-	Mgoogle/protobuf/descriptor.proto=github.com/gogo/protobuf/types,\
-	Mgogoproto/gogo.proto=github.com/gogo/protobuf/gogoproto
-GOGO_IMPORT:=$(subst $(space),,$(GOGO_IMPORT_SPACES))
 
 .PHONY: build
 build: validate/validate.pb.go
@@ -47,8 +35,6 @@ gazelle: vendor
 	buildozer 'replace deps @com_github_golang_protobuf//ptypes:go_default_library_gen @com_github_golang_protobuf//ptypes:go_default_library' '//...:%go_library'
 	buildozer 'replace deps @io_bazel_rules_go//proto/wkt:duration_go_proto @com_github_golang_protobuf//ptypes/duration:go_default_library' '//...:%go_library'
 	buildozer 'replace deps @io_bazel_rules_go//proto/wkt:timestamp_go_proto @com_github_golang_protobuf//ptypes/timestamp:go_default_library' '//...:%go_library'
-	buildozer 'replace deps //vendor/github.com/gogo/protobuf/proto:go_default_library @com_github_gogo_protobuf//proto:go_default_library' '//...:%go_library'
-	buildozer 'replace deps //vendor/github.com/gogo/protobuf/types:go_default_library @com_github_gogo_protobuf//types:go_default_library' '//...:%go_library'
 
 vendor:
 	go mod vendor
@@ -67,9 +53,6 @@ bin/shadow:
 bin/golint:
 	go build -o $@ ./vendor/golang.org/x/lint/golint
 
-bin/gogofast:
-	go build -o $@ ./vendor/github.com/gogo/protobuf/protoc-gen-gogofast
-
 bin/protoc-gen-go:
 	go build -o $@ ./vendor/github.com/golang/protobuf/protoc-gen-go
 
@@ -77,48 +60,38 @@ bin/harness:
 	cd tests && go build -o ../bin/harness ./harness/executor
 
 .PHONY: harness
-harness: testcases tests/harness/go/harness.pb.go tests/harness/gogo/harness.pb.go tests/harness/go/main/go-harness tests/harness/gogo/main/go-harness tests/harness/cc/cc-harness bin/harness
+harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harness tests/harness/cc/cc-harness bin/harness
  	# runs the test harness, validating a series of test cases in all supported languages
-	./bin/harness -go -gogo -cc
+	./bin/harness -go -cc
 
 .PHONY: bazel-harness
 bazel-harness:
 	# runs the test harness via bazel
-	bazel run //tests/harness/executor:executor --incompatible_new_actions_api=false -- -go -gogo -cc -java -python
+	bazel run //tests/harness/executor:executor --incompatible_new_actions_api=false -- -go -cc -java -python
 
 .PHONY: testcases
-testcases: bin/gogofast bin/protoc-gen-go
+testcases: bin/protoc-gen-go
 	# generate the test harness case protos
 	rm -r tests/harness/cases/go || true
 	mkdir tests/harness/cases/go
 	rm -r tests/harness/cases/other_package/go || true
 	mkdir tests/harness/cases/other_package/go
-	rm -r tests/harness/cases/gogo || true
-	mkdir tests/harness/cases/gogo
-	rm -r tests/harness/cases/other_package/gogo || true
-	mkdir tests/harness/cases/other_package/gogo
 	# protoc-gen-go makes us go a package at a time
 	cd tests/harness/cases/other_package && \
 	protoc \
 		-I . \
 		-I ../../../.. \
 		--go_out="${GO_IMPORT}:./go" \
-		--plugin=protoc-gen-gogofast=$(shell pwd)/bin/gogofast \
 		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
-		--gogofast_out="${GOGO_IMPORT}:./gogo" \
 		--validate_out="lang=go:./go" \
-		--validate_out="lang=gogo:./gogo" \
 		./*.proto
 	cd tests/harness/cases && \
 	protoc \
 		-I . \
 		-I ../../.. \
 		--go_out="Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go,${GO_IMPORT}:./go" \
-		--plugin=protoc-gen-gogofast=$(shell pwd)/bin/gogofast \
 		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
-		--gogofast_out="Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/gogo,${GOGO_IMPORT}:./gogo" \
 		--validate_out="lang=go,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go:./go" \
-		--validate_out="lang=gogo,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/gogo:./gogo" \
 		./*.proto
 
 tests/harness/go/harness.pb.go: bin/protoc-gen-go
@@ -127,19 +100,9 @@ tests/harness/go/harness.pb.go: bin/protoc-gen-go
 		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
 		--go_out="${GO_IMPORT}:./go" harness.proto
 
-tests/harness/gogo/harness.pb.go: bin/gogofast
-	# generates the test harness protos
-	cd tests/harness && protoc -I . \
-		--plugin=protoc-gen-gogofast=$(shell pwd)/bin/gogofast \
-		--gogofast_out="${GOGO_IMPORT}:./gogo" harness.proto
-
 tests/harness/go/main/go-harness:
 	# generates the go-specific test harness
 	cd tests && go build -o ./harness/go/main/go-harness ./harness/go/main
-
-tests/harness/gogo/main/go-harness:
-	# generates the gogo-specific test harness
-	cd tests && go build -o ./harness/gogo/main/go-harness ./harness/gogo/main
 
 tests/harness/cc/cc-harness: tests/harness/cc/harness.cc
 	# generates the C++-specific test harness
@@ -159,17 +122,11 @@ ci: lint bazel testcases bazel-harness build_generation_tests
 clean:
 	(which bazel && bazel clean) || true
 	rm -f \
-		bin/gogofast \
 		bin/protoc-gen-go \
 		bin/harness \
 		tests/harness/cc/cc-harness \
 		tests/harness/go/main/go-harness \
-		tests/harness/gogo/main/go-harness \
-		tests/harness/gogo/harness.pb.go \
-		tests/harness/gogo/harness.pb.go \
 		tests/harness/go/harness.pb.go
 	rm -rf \
 		tests/harness/cases/go \
-		tests/harness/cases/other_package/go \
-		tests/harness/cases/gogo \
-		tests/harness/cases/other_package/gogo \
+		tests/harness/cases/other_package/go

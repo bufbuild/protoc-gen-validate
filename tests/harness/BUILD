@@ -24,20 +24,6 @@ go_proto_library(
     visibility = ["//visibility:public"],
 )
 
-go_proto_library(
-    name = "harness_gogo_proto",
-    compilers = ["@io_bazel_rules_go//proto:gogo_proto"],
-    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/gogo",
-    proto = ":harness_proto",
-    visibility = ["//visibility:public"],
-    deps = [
-        "@com_github_golang_protobuf//ptypes/any:go_default_library",
-        "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
-        "@com_github_golang_protobuf//ptypes/wrappers:go_default_library",
-        "@io_bazel_rules_go//proto/wkt:descriptor_go_proto",
-    ],
-)
-
 cc_proto_library(
     name = "harness_cc_proto",
     visibility = ["//visibility:public"],

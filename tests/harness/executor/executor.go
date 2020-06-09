@@ -17,7 +17,6 @@ func init() {
 func main() {
 	parallelism := flag.Int("parallelism", runtime.NumCPU(), "Number of test cases to run in parallel")
 	goFlag := flag.Bool("go", false, "Run go test harness")
-	gogoFlag := flag.Bool("gogo", false, "Run gogo test harness")
 	ccFlag := flag.Bool("cc", false, "Run c++ test harness")
 	javaFlag := flag.Bool("java", false, "Run java test harness")
 	pythonFlag := flag.Bool("python", false, "Run python test harness")
@@ -25,7 +24,7 @@ func main() {
 	flag.Parse()
 
 	start := time.Now()
-	harnesses := Harnesses(*goFlag, *gogoFlag, *ccFlag, *javaFlag, *pythonFlag, *externalHarnessFlag)
+	harnesses := Harnesses(*goFlag, *ccFlag, *javaFlag, *pythonFlag, *externalHarnessFlag)
 	successes, failures, skips := run(*parallelism, harnesses)
 
 	log.Printf("Successes: %d | Failures: %d | Skips: %d (%v)",
