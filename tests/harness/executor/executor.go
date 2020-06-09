@@ -20,10 +20,12 @@ func main() {
 	ccFlag := flag.Bool("cc", false, "Run c++ test harness")
 	javaFlag := flag.Bool("java", false, "Run java test harness")
 	pythonFlag := flag.Bool("python", false, "Run python test harness")
+	externalHarnessFlag := flag.String("external_harness", "", "Path to a binary to be executed as an external test harness")
 	flag.Parse()
 
 	start := time.Now()
-	successes, failures, skips := run(*parallelism, *goFlag, *ccFlag, *javaFlag, *pythonFlag)
+	harnesses := Harnesses(*goFlag, *ccFlag, *javaFlag, *pythonFlag, *externalHarnessFlag)
+	successes, failures, skips := run(*parallelism, harnesses)
 
 	log.Printf("Successes: %d | Failures: %d | Skips: %d (%v)",
 		successes, failures, skips, time.Since(start))
@@ -33,12 +35,12 @@ func main() {
 	}
 }
 
-func run(parallelism int, goFlag, ccFlag, javaFlag, pythonFlag bool) (successes, failures, skips uint64) {
+func run(parallelism int, harnesses []Harness) (successes, failures, skips uint64) {
 	wg := new(sync.WaitGroup)
 	if parallelism <= 0 {
 		panic("Parallelism must be > 0")
 	}
-	if !(goFlag || ccFlag || javaFlag || pythonFlag) {
+	if len(harnesses) == 0 {
 		panic("At least one harness must be selected with a flag")
 	}
 	wg.Add(parallelism)
@@ -48,7 +50,7 @@ func run(parallelism int, goFlag, ccFlag, javaFlag, pythonFlag bool) (successes,
 	done := make(chan struct{})
 
 	for i := 0; i < parallelism; i++ {
-		go Work(wg, in, out, goFlag, ccFlag, javaFlag, pythonFlag)
+		go Work(wg, in, out, harnesses)
 	}
 
 	go func() {
