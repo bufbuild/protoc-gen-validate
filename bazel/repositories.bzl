@@ -8,15 +8,17 @@ def pgv_dependencies():
     if not native.existing_rule("io_bazel_rules_go"):
         http_archive(
             name = "io_bazel_rules_go",
-            urls = ["https://github.com/bazelbuild/rules_go/releases/download/v0.22.2/rules_go-v0.22.2.tar.gz"],
-            sha256 = "142dd33e38b563605f0d20e89d9ef9eda0fc3cb539a14be1bdb1350de2eda659",
+            sha256 = "608bb3e3788a21aa0653faaa6a3e00ddf806e26aa97a6f0d960ace2b2c958950",
+            strip_prefix = "rules_go-0.23.3",
+            urls = ["https://github.com/bazelbuild/rules_go/archive/v0.23.3.tar.gz"],
         )
 
     if not native.existing_rule("bazel_gazelle"):
         http_archive(
             name = "bazel_gazelle",
-            urls = ["https://github.com/bazelbuild/bazel-gazelle/releases/download/0.17.0/bazel-gazelle-0.17.0.tar.gz"],
-            sha256 = "3c681998538231a2d24d0c07ed5a7658cb72bfb5fd4bf9911157c0e9ac6a2687",
+            sha256 = "2423201f91471ea87925b81962258e27a22cd8ebb4fe355bf033dcf2ad668541",
+            strip_prefix = "bazel-gazelle-0.21.1",
+            urls = ["https://github.com/bazelbuild/bazel-gazelle/archive/v0.21.1.tar.gz"],
         )
 
     if not native.existing_rule("com_google_protobuf"):
@@ -41,9 +43,9 @@ def pgv_dependencies():
     if not native.existing_rule("bazel_skylib"):
         http_archive(
             name = "bazel_skylib",
-            url = "https://github.com/bazelbuild/bazel-skylib/archive/0.5.0.tar.gz",
-            sha256 = "b5f6abe419da897b7901f90cbab08af958b97a8f3575b0d3dd062ac7ce78541f",
-            strip_prefix = "bazel-skylib-0.5.0",
+            sha256 = "e5d90f0ec952883d56747b7604e2a15ee36e288bb556c3d0ed33e818a4d971f2",
+            strip_prefix = "bazel-skylib-1.0.2",
+            urls = ["https://github.com/bazelbuild/bazel-skylib/archive/1.0.2.tar.gz"],
         )
 
     if not native.existing_rule("six"):

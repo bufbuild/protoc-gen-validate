@@ -17,9 +17,9 @@ def _pgv_pip_dependencies():
     )
 
 def _pgv_go_dependencies():
-    gazelle_dependencies()
     go_rules_dependencies()
     go_register_toolchains()
+    gazelle_dependencies()
 
 def pgv_dependency_imports():
     # Import @com_google_protobuf's dependencies.
