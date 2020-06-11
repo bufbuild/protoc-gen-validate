@@ -28,16 +28,13 @@ build_generation_tests:
 	bazel build //tests/generation/...
 
 .PHONY: gazelle
-gazelle: vendor
+gazelle:
 	# runs gazelle against the codebase to generate Bazel BUILD files
-	bazel run //:gazelle -- -go_prefix=github.com/envoyproxy/protoc-gen-validate
-	buildozer 'replace deps //vendor/github.com/golang/protobuf/proto:go_default_library @com_github_golang_protobuf//proto:go_default_library' '//...:%go_library'
+	bazel run //:gazelle -- update-repos -from_file=go.mod -prune -to_macro=dependencies.bzl%go_third_party
+	bazel run //:gazelle
 	buildozer 'replace deps @com_github_golang_protobuf//ptypes:go_default_library_gen @com_github_golang_protobuf//ptypes:go_default_library' '//...:%go_library'
 	buildozer 'replace deps @io_bazel_rules_go//proto/wkt:duration_go_proto @com_github_golang_protobuf//ptypes/duration:go_default_library' '//...:%go_library'
 	buildozer 'replace deps @io_bazel_rules_go//proto/wkt:timestamp_go_proto @com_github_golang_protobuf//ptypes/timestamp:go_default_library' '//...:%go_library'
-
-vendor:
-	go mod vendor
 
 .PHONY: lint
 lint: bin/golint bin/shadow
@@ -48,13 +45,13 @@ lint: bin/golint bin/shadow
 	go vet -vettool=$(shell pwd)/bin/shadow ./...
 
 bin/shadow:
-	go build -o $@ ./vendor/golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
+	GOBIN=$(shell pwd)/bin go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
 
 bin/golint:
-	go build -o $@ ./vendor/golang.org/x/lint/golint
+	GOBIN=$(shell pwd)/bin go install golang.org/x/lint/golint
 
 bin/protoc-gen-go:
-	go build -o $@ ./vendor/github.com/golang/protobuf/protoc-gen-go
+	GOBIN=$(shell pwd)/bin go install github.com/golang/protobuf/protoc-gen-go
 
 bin/harness:
 	cd tests && go build -o ../bin/harness ./harness/executor

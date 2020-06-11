@@ -1,4 +1,3 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 
@@ -18,11 +17,4 @@ go_proto_library(
     proto = ":io_envoyproxy_pvg_cases_proto",
     visibility = ["//visibility:public"],
     deps = ["//validate:go_default_library"],
-)
-
-go_library(
-    name = "go_default_library",
-    embed = [":io_envoyproxy_pvg_cases_go_proto"],
-    importpath = "java/pgv-java-stub/src/test/proto",
-    visibility = ["//visibility:public"],
 )
