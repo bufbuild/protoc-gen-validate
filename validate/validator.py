@@ -889,7 +889,7 @@ def rule_type(field):
                         str(option_value.double) or str(option_value.uint32) or str(option_value.uint64) or \
                         str(option_value.bool) or str(option_value.string) or str(option_value.bytes):
                     return wrapper_template(option_value, name)
-                elif str(option_value.message) is not "":
+                elif str(option_value.message) != "":
                     return message_template(option_value, field.name)
                 elif str(option_value.any):
                     return any_template(option_value, name)
