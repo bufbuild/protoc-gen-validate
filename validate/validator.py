@@ -25,14 +25,13 @@ regex_map = {
 class ValidatingMessage(object):
     def __init__(self, proto_message):
         self.DESCRIPTOR = proto_message.DESCRIPTOR
-        self._proto_class = type(proto_message)
 
     def __hash__(self):
-        return hash(str(self._proto_class))
+        return hash(self.DESCRIPTOR.name)
 
     def __eq__(self, other):
         if isinstance(other, ValidatingMessage):
-            return self._proto_class == other._proto_class
+            return self.DESCRIPTOR.name == other.DESCRIPTOR.name
         else:
             return False
 
