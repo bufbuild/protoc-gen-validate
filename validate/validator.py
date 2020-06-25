@@ -28,11 +28,11 @@ class ValidatingMessage(object):
         self._proto_class = type(proto_message)
 
     def __hash__(self):
-        return str(self._proto_class).__hash__()
+        return hash(str(self._proto_class))
 
     def __eq__(self, other):
         if isinstance(other, ValidatingMessage):
-            return self.__hash__() == other.__hash__()
+            return self._proto_class == other._proto_class
         else:
             return False
 
