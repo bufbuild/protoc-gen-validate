@@ -11,6 +11,7 @@ import struct
 from jinja2 import Template
 import time
 import sys
+from google.protobuf.message import Message
 
 printer = ""
 
@@ -22,15 +23,27 @@ regex_map = {
     "HEADER_STRING": r'^[^\u0000\u000A\u000D]*$'
 }
 
+class ValidatingMessage(object):
+    def __init__(self, proto_message):
+        self.DESCRIPTOR = proto_message.DESCRIPTOR
+        self._proto_class = type(proto_message)
+
+    def __hash__(self):
+        return str(self._proto_class).__hash__()
+
+    def __eq__(self, other):
+        if isinstance(other, ValidatingMessage):
+            return self.__hash__() == other.__hash__()
+        else:
+            return False
+
 def validate(proto_message):
-    klass = type(proto_message)
-    klass.__hash__ = lambda self: str(klass).__hash__()
-    return validate_inner(klass)
+    return _validate_inner(ValidatingMessage(proto_message))
 
 # Cache generated functions by class name.
 @lru_cache()
-def validate_inner(proto_class):
-    func = file_template(proto_class)
+def _validate_inner(proto_message):
+    func = file_template(proto_message)
     global printer
     printer += func + "\n"
     exec(func)
