@@ -27,11 +27,11 @@ class ValidatingMessage(object):
         self.DESCRIPTOR = proto_message.DESCRIPTOR
 
     def __hash__(self):
-        return hash(self.DESCRIPTOR.name)
+        return hash(self.DESCRIPTOR.full_name)
 
     def __eq__(self, other):
         if isinstance(other, ValidatingMessage):
-            return self.DESCRIPTOR.name == other.DESCRIPTOR.name
+            return self.DESCRIPTOR.full_name == other.DESCRIPTOR.full_name
         else:
             return False
 
