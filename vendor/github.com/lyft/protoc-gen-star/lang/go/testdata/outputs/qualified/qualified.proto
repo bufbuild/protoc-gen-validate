@@ -1,5 +1,0 @@
-syntax="proto3";
-package outputs.qualified;
-option go_package="example.com/qualified";
-
-message FullyQualified{}

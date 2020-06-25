@@ -1,6 +1,0 @@
-syntax="proto3";
-
-package names.keyword;
-option go_package = "package";
-
-message Package {}
