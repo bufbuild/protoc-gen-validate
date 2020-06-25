@@ -1,4 +1,5 @@
 import re
+from functools import lru_cache
 from validate_email import validate_email
 import ipaddress
 try:
@@ -22,7 +23,14 @@ regex_map = {
 }
 
 def validate(proto_message):
-    func = file_template(proto_message)
+    klass = type(proto_message)
+    klass.__hash__ = lambda self: str(klass).__hash__()
+    return validate_inner(klass)
+
+# Cache generated functions by class name.
+@lru_cache()
+def validate_inner(hashable):
+    func = file_template(hashable)
     global printer
     printer += func + "\n"
     exec(func)
