@@ -29,8 +29,8 @@ def validate(proto_message):
 
 # Cache generated functions by class name.
 @lru_cache()
-def validate_inner(hashable):
-    func = file_template(hashable)
+def validate_inner(proto_message):
+    func = file_template(proto_message)
     global printer
     printer += func + "\n"
     exec(func)
