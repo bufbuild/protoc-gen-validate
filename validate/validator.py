@@ -11,7 +11,6 @@ import struct
 from jinja2 import Template
 import time
 import sys
-from google.protobuf.message import Message
 
 printer = ""
 
