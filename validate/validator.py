@@ -23,6 +23,12 @@ regex_map = {
 }
 
 class ValidatingMessage(object):
+    """Wrap a proto message to cache validate functions with the message class name.
+
+    A validate function is defined per message class in protoc-gen-validate,
+     so we can reuse an already generated function for the same message class.
+    """
+
     def __init__(self, proto_message):
         self.DESCRIPTOR = proto_message.DESCRIPTOR
 
@@ -38,7 +44,8 @@ class ValidatingMessage(object):
 def validate(proto_message):
     return _validate_inner(ValidatingMessage(proto_message))
 
-# Cache generated functions by class name.
+# Cache generated functions to avoid the performance issue caused by repeated proto messages,
+#   which generate the same functions repeatedly.
 @lru_cache()
 def _validate_inner(proto_message):
     func = file_template(proto_message)
