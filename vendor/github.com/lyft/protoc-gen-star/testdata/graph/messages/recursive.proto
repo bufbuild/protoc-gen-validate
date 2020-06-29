@@ -1,6 +1,0 @@
-syntax="proto3";
-package graph.messages;
-
-message Recursive {
-    Recursive recurse = 1;
-}

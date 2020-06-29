@@ -1,5 +1,0 @@
-syntax="proto3";
-
-package names.digit;
-option go_package = "2019fizz";
-

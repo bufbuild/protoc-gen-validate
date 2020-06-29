@@ -1,5 +1,0 @@
-syntax="proto3";
-package outputs.unqualified;
-option go_package="unqualified";
-
-message Unqualified{}

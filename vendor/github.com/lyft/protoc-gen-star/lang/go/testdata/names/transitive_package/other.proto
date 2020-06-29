@@ -1,8 +1,0 @@
-syntax="proto3";
-package names.transitive_package;
-
-option go_package="foobar";
-
-message Other {
-    bool value = 1;
-}

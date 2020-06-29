@@ -1,3 +1,5 @@
+load("@rules_java//java:defs.bzl", "java_proto_library")
+
 # gazelle:exclude go
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
@@ -6,7 +8,6 @@ load(
     "//bazel:pgv_proto_library.bzl",
     "pgv_cc_proto_library",
     "pgv_go_proto_library",
-    "pgv_gogo_proto_library",
     "pgv_java_proto_library",
     "pgv_python_proto_library",
 )
@@ -23,15 +24,6 @@ proto_library(
 pgv_go_proto_library(
     name = "go",
     importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go",
-    proto = ":embed_proto",
-    deps = [
-        "@com_github_golang_protobuf//ptypes:go_default_library",
-    ],
-)
-
-pgv_gogo_proto_library(
-    name = "gogo",
-    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/gogo",
     proto = ":embed_proto",
     deps = [
         "@com_github_golang_protobuf//ptypes:go_default_library",

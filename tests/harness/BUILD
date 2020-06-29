@@ -1,4 +1,6 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@rules_cc//cc:defs.bzl", "cc_proto_library")
+load("@rules_java//java:defs.bzl", "java_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 
 # gazelle:exclude harness.pb.go
@@ -20,20 +22,6 @@ go_proto_library(
     importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/go",
     proto = ":harness_proto",
     visibility = ["//visibility:public"],
-)
-
-go_proto_library(
-    name = "harness_gogo_proto",
-    compilers = ["@io_bazel_rules_go//proto:gogo_proto"],
-    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/gogo",
-    proto = ":harness_proto",
-    visibility = ["//visibility:public"],
-    deps = [
-        "@com_github_golang_protobuf//ptypes/any:go_default_library",
-        "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
-        "@com_github_golang_protobuf//ptypes/wrappers:go_default_library",
-        "@io_bazel_rules_go//proto/wkt:descriptor_go_proto",
-    ],
 )
 
 cc_proto_library(

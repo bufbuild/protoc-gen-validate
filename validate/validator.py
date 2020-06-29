@@ -1,4 +1,5 @@
 import re
+from functools import lru_cache
 from validate_email import validate_email
 import ipaddress
 try:
@@ -21,7 +22,32 @@ regex_map = {
     "HEADER_STRING": r'^[^\u0000\u000A\u000D]*$'
 }
 
+class ValidatingMessage(object):
+    """Wrap a proto message to cache validate functions with the message class name.
+
+    A validate function is defined per message class in protoc-gen-validate,
+     so we can reuse an already generated function for the same message class.
+    """
+
+    def __init__(self, proto_message):
+        self.DESCRIPTOR = proto_message.DESCRIPTOR
+
+    def __hash__(self):
+        return hash(self.DESCRIPTOR.full_name)
+
+    def __eq__(self, other):
+        if isinstance(other, ValidatingMessage):
+            return self.DESCRIPTOR.full_name == other.DESCRIPTOR.full_name
+        else:
+            return False
+
 def validate(proto_message):
+    return _validate_inner(ValidatingMessage(proto_message))
+
+# Cache generated functions to avoid the performance issue caused by repeated proto messages,
+#   which generate the same functions repeatedly.
+@lru_cache()
+def _validate_inner(proto_message):
     func = file_template(proto_message)
     global printer
     printer += func + "\n"
@@ -889,7 +915,7 @@ def rule_type(field):
                         str(option_value.double) or str(option_value.uint32) or str(option_value.uint64) or \
                         str(option_value.bool) or str(option_value.string) or str(option_value.bytes):
                     return wrapper_template(option_value, name)
-                elif str(option_value.message) is not "":
+                elif str(option_value.message) != "":
                     return message_template(option_value, field.name)
                 elif str(option_value.any):
                     return any_template(option_value, name)

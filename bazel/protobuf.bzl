@@ -1,23 +1,25 @@
 load("@bazel_tools//tools/jdk:toolchain_utils.bzl", "find_java_runtime_toolchain", "find_java_toolchain")
 load("@rules_proto//proto:defs.bzl", "ProtoInfo")
 
-def _proto_path(proto):
-    """
-    The proto path is not really a file path
-    It's the path to the proto that was seen when the descriptor file was generated.
-    """
-    path = proto.path
-    root = proto.root.path
-    ws = proto.owner.workspace_root
-    if path.startswith(root):
-        path = path[len(root):]
-    if path.startswith("/"):
-        path = path[1:]
-    if path.startswith(ws):
-        path = path[len(ws):]
-    if path.startswith("/"):
-        path = path[1:]
-    return path
+# Borrowed from https://github.com/grpc/grpc-java/blob/v1.28.0/java_grpc_library.bzl#L59
+# "repository" here is for Bazel builds that span multiple WORKSPACES.
+def _path_ignoring_repository(f):
+    # Bazel creates a _virtual_imports directory in case the .proto source files
+    # need to be accessed at a path that's different from their source path:
+    # https://github.com/bazelbuild/bazel/blob/0.27.1/src/main/java/com/google/devtools/build/lib/rules/proto/ProtoCommon.java#L289
+    #
+    # In that case, the import path of the .proto file is the path relative to
+    # the virtual imports directory of the rule in question.
+    virtual_imports = "/_virtual_imports/"
+    if virtual_imports in f.path:
+        return f.path.split(virtual_imports)[1].split("/", 1)[1]
+    elif len(f.owner.workspace_root) == 0:
+        # |f| is in the main repository
+        return f.short_path
+    else:
+        # If |f| is a generated file, it will have "bazel-out/*/genfiles" prefix
+        # before "external/workspace", so we need to add the starting index of "external/workspace"
+        return f.path[f.path.find(f.owner.workspace_root) + len(f.owner.workspace_root) + 1:]
 
 def _protoc_cc_output_files(proto_file_sources):
     cc_hdrs = []
@@ -112,7 +114,7 @@ def _protoc_gen_validate_impl(ctx, lang, protos, out_files, protoc_args, package
     descriptor_args = [ds.path for ds in tds.to_list()]
 
     if len(descriptor_args) != 0:
-        protoc_args += ["--descriptor_set_in=%s" % ctx.configuration.host_path_separator.join(descriptor_args)]
+        protoc_args.append("--descriptor_set_in=%s" % ctx.configuration.host_path_separator.join(descriptor_args))
 
     package_command = package_command.format(dir_out = dir_out)
 
@@ -124,7 +126,7 @@ def _protoc_gen_validate_impl(ctx, lang, protos, out_files, protoc_args, package
             ctx.executable._protoc.path + " $@",
             package_command,
         ]),
-        arguments = protoc_args + [_proto_path(proto) for proto in protos],
+        arguments = protoc_args + [_path_ignoring_repository(proto) for proto in protos],
         mnemonic = "ProtoGenValidate" + lang.capitalize() + "Generate",
         use_default_shell_env = True,
     )
@@ -166,7 +168,7 @@ _ProtoValidateSourceInfo = provider(
 )
 
 def _create_include_path(include):
-    return "--proto_path={0}={1}".format(_proto_path(include), include.path)
+    return "--proto_path={0}={1}".format(_path_ignoring_repository(include), include.path)
 
 def _java_proto_gen_validate_aspect_impl(target, ctx):
     proto_info = target[ProtoInfo]
@@ -179,7 +181,7 @@ def _java_proto_gen_validate_aspect_impl(target, ctx):
     args.add(ctx.executable._plugin.path, format = "--plugin=protoc-gen-validate=%s")
     args.add("--validate_out={0}:{1}".format(options, srcjar.path))
     args.add_all(includes, map_each = _create_include_path)
-    args.add_all(srcs, map_each = _proto_path)
+    args.add_all(srcs, map_each = _path_ignoring_repository)
 
     ctx.actions.run(
         inputs = depset(transitive = [proto_info.transitive_imports]),
