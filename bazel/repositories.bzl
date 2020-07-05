@@ -70,9 +70,9 @@ def pgv_dependencies():
         # build protoc-gen-validate with emscripten. https://github.com/google/re2/pull/263
         http_archive(
             name = "com_googlesource_code_re2",
-            sha256 = "455bcacd2b94fca8897decd81172c5a93e5303ea0e5816b410877c51d6179ffb",
-            strip_prefix = "re2-2b25567a8ee3b6e97c3cd05d616f296756c52759",
-            urls = ["https://github.com/google/re2/archive/2b25567a8ee3b6e97c3cd05d616f296756c52759.tar.gz"],
+            sha256 = "116c74f4490b5d348492bc3822292320c9e5effe18c87bcafb616be464043321",
+            strip_prefix = "re2-2020-07-01",
+            urls = ["https://github.com/google/re2/archive/2020-07-01.tar.gz"],
         )
 
     if not native.existing_rule("com_google_guava"):
