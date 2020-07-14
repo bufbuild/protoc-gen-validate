@@ -1331,7 +1331,7 @@ var timestampCases = []TestCase{
 
 	{"timestamp - lt now - valid", &cases.TimestampLTNow{Val: &timestamp.Timestamp{}}, true},
 	{"timestamp - lt now - valid (empty)", &cases.TimestampLTNow{}, true},
-	{"timestamp - lt - now - invalid", &cases.TimestampLTNow{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, false},
+	{"timestamp - lt now - invalid", &cases.TimestampLTNow{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, false},
 
 	{"timestamp - gt now - valid", &cases.TimestampGTNow{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, true},
 	{"timestamp - gt now - valid (empty)", &cases.TimestampGTNow{}, true},
@@ -1341,6 +1341,16 @@ var timestampCases = []TestCase{
 	{"timestamp - within - valid (empty)", &cases.TimestampWithin{}, true},
 	{"timestamp - within - invalid (below)", &cases.TimestampWithin{Val: &timestamp.Timestamp{}}, false},
 	{"timestamp - within - invalid (above)", &cases.TimestampWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, false},
+
+	{"timestamp - lt now within - valid", &cases.TimestampLTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() - 1800}}, true},
+	{"timestamp - lt now within - valid (empty)", &cases.TimestampLTNowWithin{}, true},
+	{"timestamp - lt now within - invalid (lt)", &cases.TimestampLTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 1800}}, false},
+	{"timestamp - lt now within - invalid (within)", &cases.TimestampLTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() - 7200}}, false},
+
+	{"timestamp - gt now within - valid", &cases.TimestampGTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 1800}}, true},
+	{"timestamp - gt now within - valid (empty)", &cases.TimestampGTNowWithin{}, true},
+	{"timestamp - gt now within - invalid (gt)", &cases.TimestampGTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() - 1800}}, false},
+	{"timestamp - gt now within - invalid (within)", &cases.TimestampGTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, false},
 }
 
 var anyCases = []TestCase{
