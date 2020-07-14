@@ -23,3 +23,6 @@ message TimestampLTNow { google.protobuf.Timestamp val = 1 [(validate.rules).tim
 message TimestampGTNow { google.protobuf.Timestamp val = 1 [(validate.rules).timestamp.gt_now = true]; }
 
 message TimestampWithin { google.protobuf.Timestamp val = 1 [(validate.rules).timestamp.within.seconds = 3600]; }
+
+message TimestampLTNowWithin { google.protobuf.Timestamp val = 1 [(validate.rules).timestamp = {lt_now: true, within: {seconds: 3600}}]; }
+message TimestampGTNowWithin { google.protobuf.Timestamp val = 1 [(validate.rules).timestamp = {gt_now: true, within: {seconds: 3600}}]; }
