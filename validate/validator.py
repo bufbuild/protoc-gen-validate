@@ -75,17 +75,20 @@ def byte_len(s):
         return len(s)
 
 def _validateHostName(host):
+    if not host:
+        return False
     if len(host) > 253:
         return False
 
-    s = host.rsplit(".",1)[0].lower()
+    if host[-1] == '.':
+        host = host[:-1]
 
-    for part in s.split("."):
+    for part in host.split("."):
         if len(part) == 0 or len(part) > 63:
             return False
 
         # Host names cannot begin or end with hyphens
-        if s[0] == "-" or s[len(s)-1] == '-':
+        if part[0] == "-" or part[-1] == '-':
             return False
         for r in part:
             if (r < 'A' or r > 'Z') and (r < 'a' or r > 'z') and (r < '0' or r > '9') and r != '-':
