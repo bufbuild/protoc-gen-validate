@@ -17,7 +17,7 @@ import (
 	"golang.org/x/net/context"
 )
 
-func Harnesses(goFlag, ccFlag, javaFlag, pythonFlag bool, externalHarnessFlag string) []Harness {
+func Harnesses(goFlag, ccFlag, javaFlag, pythonFlag, dotnetFlag bool, externalHarnessFlag string) []Harness {
 	harnesses := make([]Harness, 0)
 	if goFlag {
 		harnesses = append(harnesses, InitHarness("tests/harness/go/main/go-harness"))
@@ -30,6 +30,9 @@ func Harnesses(goFlag, ccFlag, javaFlag, pythonFlag bool, externalHarnessFlag st
 	}
 	if pythonFlag {
 		harnesses = append(harnesses, InitHarness("tests/harness/python/python-harness"))
+	}
+	if dotnetFlag {
+		harnesses = append(harnesses, InitHarness("tests/harness/dotnet/out/Harness"))
 	}
 	if externalHarnessFlag != "" {
 		harnesses = append(harnesses, InitHarness(externalHarnessFlag))

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Pack="true" PackagePath="build/" Include="build/**/*.xml; build/**/*.props; build/**/*.targets;" />
+
+    <!-- TODO: Pack plugin -->
+
+    <None Pack="true" PackagePath="proto/validate" Include="../../valdiate/validate.proto" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Reference Include="Microsoft.Build.Framework; Microsoft.Build.Utilities.v4.0" Pack="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">
+    <PackageReference Include="Microsoft.Build.Framework; Microsoft.Build.Utilities.Core" Version="15.6.*" />
+    <!--  Set PrivateAssets="All" on all items, even those implicitly added,
+          so that they do not become dependencies of this package. -->
+    <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>

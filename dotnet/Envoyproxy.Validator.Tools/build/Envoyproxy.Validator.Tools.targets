@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+
+    <!-- TODO: Swich to packaged files -->
+    <!--_Validator_MsBuildAssembly Condition=" '$(MSBuildRuntimeType)' == 'Core' ">netstandard2.0/Envoyproxy.Validator.Tools.dll</_Validator_MsBuildAssembly>
+    <_Validator_MsBuildAssembly Condition=" '$(MSBuildRuntimeType)' != 'Core' ">net45/Envoyproxy.Validator.Tools.dll</_Validator_MsBuildAssembly>
+    <_Validator_ValidateProtoPath>$(MSBuildThisFileDirectory)../proto</_Validator_ValidateProtoPath-->
+    <_Validator_MsBuildAssembly>$(MSBuildThisFileDirectory)../bin/Debug/netstandard2.0/Envoyproxy.Validator.Tools.dll</_Validator_MsBuildAssembly>
+    <_Validator_ValidateProtoPath>$(MSBuildThisFileDirectory)../../..</_Validator_ValidateProtoPath>
+  </PropertyGroup>
+
+  <UsingTask AssemblyFile="$(_Validator_MsBuildAssembly)" TaskName="Envoyproxy.Validator.ValidatorGenerate" />
+  <UsingTask AssemblyFile="$(_Validator_MsBuildAssembly)" TaskName="Envoyproxy.Validator.ValidatorGeneratorOutputs" />
+
+  <PropertyGroup Condition=" '$(Protobuf_ProjectSupported)' == 'true' ">
+    <Validator_DepFilesPath Condition=" '$(Validator_DepFilesPath)' == '' ">$(IntermediateOutputPath)validator.deps</Validator_DepFilesPath>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(Protobuf_ProjectSupported)' == 'true' and '$(Language)' == 'C#' ">
+    <!-- Extend property pages with Validator properties. -->
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)Envoyproxy.Validator.CSharp.xml">
+      <Context>File;BrowseObject</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
+
+  <ItemDefinitionGroup Condition=" '$(Protobuf_ProjectSupported)' == 'true' and '$(Language)' == 'C#' ">
+    <Protobuf>
+      <Validator Condition=" '%(Protobuf.Validator)' == '' ">Enabled</Validator>
+    </Protobuf>
+  </ItemDefinitionGroup>
+
+  <!-- Include validate proto -->
+  <ItemGroup>
+    <Protobuf Include="$(_Validator_ValidateProtoPath)/validate/validate.proto" GrpcServices="None" Validator="Disabled" />
+  </ItemGroup>
+
+  <!-- This target is invoked in a C# project, or can be called in a customized project. -->
+  <Target Name="Validator_ResolvePluginFullPath" AfterTargets="Protobuf_ResolvePlatform">
+    <PropertyGroup>
+      <!-- TODO: Swich to packaged files -->
+      <!-- TODO(kkm): Do not use Protobuf_PackagedToolsPath, roll gRPC's own. -->
+      <!--Validator_PluginFullPath Condition=" '$(gRPC_PluginFullPath)' == '' and '$(Protobuf_ToolsOs)' == 'windows' "
+           >$(Protobuf_PackagedToolsPath)\$(Protobuf_ToolsOs)_$(Protobuf_ToolsCpu)\$(gRPC_PluginFileName).exe</Validator_PluginFullPath>
+      <Validator_PluginFullPath Condition=" '$(gRPC_PluginFullPath)' == '' "
+           >$(Protobuf_PackagedToolsPath)/$(Protobuf_ToolsOs)_$(Protobuf_ToolsCpu)/$(gRPC_PluginFileName)</Validator_PluginFullPath-->
+      <Validator_PluginFullPath Condition=" '$(Validator_PluginFullPath)' == '' ">$(MSBuildThisFileDirectory)../tools/protoc-gen-validate</Validator_PluginFullPath>
+    </PropertyGroup>
+  </Target>
+
+  <!-- All inferred ExpectedOutputs will be added to code compile (C#) in a C# project
+       by default. This is controlled per-proto by the CompileOutputs metadata. -->
+  <Target
+    Name="Validator_PrepareGenerate"
+    Condition=" '@(Protobuf_Compile)' != '' "
+    AfterTargets="Protobuf_PrepareCompile"
+    BeforeTargets="_Protobuf_EnforceInvariants"
+  >
+    <ValidatorGeneratorOutputs Condition=" '$(Language)' == 'C#' " Protobuf="@(Protobuf_Compile)">
+      <Output TaskParameter="PossibleOutputs" ItemName="Validator_ExpectedOutputs" />
+    </ValidatorGeneratorOutputs>
+
+    <!-- Import validate proto -->
+    <ItemGroup>
+      <Protobuf_Compile>
+        <AdditionalImportDirs>$(_Validator_ValidateProtoPath)</AdditionalImportDirs>
+      </Protobuf_Compile>
+    </ItemGroup>
+  </Target>
+
+  <!-- Add all expected outputs, and only these, to language compile.  -->
+  <!-- TODO: Add targets and dependencies such as "_xxx_EnforceInvariants", etc.  -->
+  <Target
+    Name="_Validator_AugmentLanguageCompile"
+    Condition=" '$(Language)' == 'C#' "
+    AfterTargets="_Protobuf_AugmentLanguageCompile"
+    BeforeTargets="Protobuf_ReconcileOutputs"
+  >
+    <ItemGroup>
+      <_Validator_CodeCompile Include="@(Validator_ExpectedOutputs->Distinct())"
+         Condition=" '%(Source)' != '' and '@(Protobuf_Compile->WithMetadataValue('CompileOutputs', 'true'))' != '' " />
+      <Compile Include="@(_Validator_CodeCompile)" />
+    </ItemGroup>
+  </Target>
+
+  <Target
+    Name="_Validator_CoreGenerate"
+    Condition=" '$(DisableProtobufDesignTimeBuild)' != 'true' "
+    DependsOnTargets="Validator_PrepareGenerate;Validator_ResolvePluginFullPath;_Protobuf_CoreCompile"
+    BeforeTargets="Protobuf_ReconcileOutputs"
+  >
+    <!-- Ensure output directories. -->
+    <MakeDir Directories="$(Validator_DepFilesPath)" />
+
+    <ValidatorGenerate
+      Condition=" '@(_Protobuf_OutOfDateProto)' != '' and '%(_Protobuf_OutOfDateProto.Validator)' == 'Enabled' "
+      ToolExe="$(Protobuf_ProtocFullPath)"
+      Protobuf="%(_Protobuf_OutOfDateProto.Source)"
+      ProtoPath="%(_Protobuf_OutOfDateProto.AdditionalImportDirs);$(Protobuf_StandardImportsPath);%(_Protobuf_OutOfDateProto.ProtoRoot)"
+      ProtoDepDir="$(Validator_DepFilesPath)"
+      OutputDir="%(_Protobuf_OutOfDateProto.OutputDir)"
+      ValidatePluginExe="$(Validator_PluginFullPath)"
+    >
+      <Output TaskParameter="GeneratedFiles" ItemName="_Validator_GeneratedFiles"/>
+    </ValidatorGenerate>
+  </Target>
+</Project>

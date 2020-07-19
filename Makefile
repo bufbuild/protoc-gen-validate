@@ -57,9 +57,9 @@ bin/harness:
 	cd tests && go build -o ../bin/harness ./harness/executor
 
 .PHONY: harness
-harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harness tests/harness/cc/cc-harness bin/harness
+harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harness tests/harness/cc/cc-harness tests/harness/dotnet/out/Harness bin/harness
  	# runs the test harness, validating a series of test cases in all supported languages
-	./bin/harness -go -cc
+	./bin/harness -go -cc -dotnet
 
 .PHONY: bazel-harness
 bazel-harness:
@@ -112,6 +112,12 @@ tests/harness/java/java-harness:
 	# generates the Java-specific test harness
 	mvn -q -f java/pom.xml clean package -DskipTests
 
+tests/harness/dotnet/out/Harness: dotnet-build
+	# generates the .NET-specific test harness
+	dotnet publish tests/harness/dotnet -o tests/harness/dotnet/out
+	# Use local nuget packages
+	#dotnet publish --source $(PWD)/dotnet/nuget tests/harness/dotnet -o tests/harness/dotnet/out
+
 .PHONY: ci
 ci: lint bazel testcases bazel-harness build_generation_tests
 
@@ -127,3 +133,30 @@ clean:
 	rm -rf \
 		tests/harness/cases/go \
 		tests/harness/cases/other_package/go
+
+.PHONY: build-dotnet
+dotnet-build:
+	# Build plugin
+	mkdir -p dotnet/Envoyproxy.Validator.Tools/tools/
+	go build -o dotnet/Envoyproxy.Validator.Tools/tools/
+
+	# Build packages
+	dotnet build dotnet/Envoyproxy.Validator
+	dotnet build dotnet/Envoyproxy.Validator.Tools
+
+	# Generate nuget
+	#dotnet pack -o dotnet/nuget dotnet/Envoyproxy.Validator
+	#dotnet pack -o dotnet/nuget dotnet/Envoyproxy.Validator.Tools
+
+.PHONY: dotnet-test
+dotnet-test:
+	cd dotnet/Envoyproxy.Validator.Tests && dotnet test .
+
+.PHONY: dotnet-clean
+dotnet-clean:
+	rm -rf \
+		dotnet/nuget
+	dotnet clean dotnet/Envoyproxy.Validator
+	dotnet clean dotnet/Envoyproxy.Validator.Tests
+	dotnet clean dotnet/Envoyproxy.Validator.Tools
+	dotnet clean tests/harness/dotnet

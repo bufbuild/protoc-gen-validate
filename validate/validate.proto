@@ -3,6 +3,7 @@ package validate;
 
 option go_package = "github.com/envoyproxy/protoc-gen-validate/validate";
 option java_package = "io.envoyproxy.pgv.validate";
+option csharp_namespace = "Envoyproxy.Validate";
 
 import "google/protobuf/descriptor.proto";
 import "google/protobuf/duration.proto";

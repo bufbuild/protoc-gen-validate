@@ -2,17 +2,18 @@ package goshared
 
 import (
 	"fmt"
-	"github.com/iancoleman/strcase"
 	"reflect"
 	"strings"
 	"text/template"
+
+	"github.com/iancoleman/strcase"
 
 	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
-	"github.com/lyft/protoc-gen-star"
-	"github.com/lyft/protoc-gen-star/lang/go"
+	pgs "github.com/lyft/protoc-gen-star"
+	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
 )
 
 func Register(tpl *template.Template, params pgs.Parameters) {
@@ -20,12 +21,9 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 
 	tpl.Funcs(map[string]interface{}{
 		"accessor":      fns.accessor,
-		"byteStr":       fns.byteStr,
-		"snakeCase":	 fns.snakeCase,
+		"snakeCase":     fns.snakeCase,
 		"cmt":           pgs.C80,
-		"durGt":         fns.durGt,
 		"durLit":        fns.durLit,
-		"durStr":        fns.durStr,
 		"err":           fns.err,
 		"errCause":      fns.errCause,
 		"errIdx":        fns.errIdx,
@@ -40,9 +38,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"name":          fns.Name,
 		"oneof":         fns.oneofTypeName,
 		"pkg":           fns.PackageName,
-		"tsGt":          fns.tsGt,
 		"tsLit":         fns.tsLit,
-		"tsStr":         fns.tsStr,
 		"typ":           fns.Type,
 		"unwrap":        fns.unwrap,
 		"externalEnums": fns.externalEnums,
@@ -191,15 +187,6 @@ func (fns goSharedFuncs) isBytes(f interface {
 	return f.ProtoType() == pgs.BytesT
 }
 
-func (fns goSharedFuncs) byteStr(x []byte) string {
-	elms := make([]string, len(x))
-	for i, b := range x {
-		elms[i] = fmt.Sprintf(`\x%X`, b)
-	}
-
-	return fmt.Sprintf(`"%s"`, strings.Join(elms, ""))
-}
-
 func (fns goSharedFuncs) oneofTypeName(f pgs.Field) pgsgo.TypeName {
 	return pgsgo.TypeName(fns.OneofOption(f)).Pointer()
 }
@@ -229,7 +216,7 @@ func (fns goSharedFuncs) inType(f pgs.Field, x interface{}) string {
 func (fns goSharedFuncs) inKey(f pgs.Field, x interface{}) string {
 	switch f.Type().ProtoType() {
 	case pgs.BytesT:
-		return fns.byteStr(x.([]byte))
+		return shared.ByteStr(x.([]byte))
 	case pgs.MessageT:
 		switch x := x.(type) {
 		case *duration.Duration:
@@ -249,35 +236,11 @@ func (fns goSharedFuncs) durLit(dur *duration.Duration) string {
 		dur.GetSeconds(), dur.GetNanos())
 }
 
-func (fns goSharedFuncs) durStr(dur *duration.Duration) string {
-	d, _ := ptypes.Duration(dur)
-	return d.String()
-}
-
-func (fns goSharedFuncs) durGt(a, b *duration.Duration) bool {
-	ad, _ := ptypes.Duration(a)
-	bd, _ := ptypes.Duration(b)
-
-	return ad > bd
-}
-
 func (fns goSharedFuncs) tsLit(ts *timestamp.Timestamp) string {
 	return fmt.Sprintf(
 		"time.Unix(%d, %d)",
 		ts.GetSeconds(), ts.GetNanos(),
 	)
-}
-
-func (fns goSharedFuncs) tsGt(a, b *timestamp.Timestamp) bool {
-	at, _ := ptypes.Timestamp(a)
-	bt, _ := ptypes.Timestamp(b)
-
-	return bt.Before(at)
-}
-
-func (fns goSharedFuncs) tsStr(ts *timestamp.Timestamp) string {
-	t, _ := ptypes.Timestamp(ts)
-	return t.String()
 }
 
 func (fns goSharedFuncs) unwrap(ctx shared.RuleContext, name string) (shared.RuleContext, error) {

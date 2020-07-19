@@ -1,0 +1,28 @@
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule Name="Protobuf"
+        DisplayName="File Properties"
+        PageTemplate="generic"
+        Description="File Properties"
+        OverrideMode="Extend">
+    <Rule.DataSource>
+      <DataSource Persistence="ProjectFile" Label="Configuration" ItemType="Protobuf"
+                  HasConfigurationCondition="false" SourceOfDefaultValue="AfterContext" />
+    </Rule.DataSource>
+
+    <Rule.Categories>
+      <Category Name="Validator" DisplayName="Validator" />
+    </Rule.Categories>
+
+    <EnumProperty Name="Validator" DisplayName="protoc-gen-validate Classes"
+                  Category="Validator" Default="Both"
+                  Description="Generate protoc-gen-validate classes.">
+      <EnumValue Name="Enabled" DisplayName="Enabled" IsDefault="true" />
+      <EnumValue Name="Disabled" DisplayName="Disabled" />
+      <EnumProperty.DataSource>
+        <DataSource ItemType="Protobuf" SourceOfDefaultValue="AfterContext"
+                    PersistenceStyle="Attribute" HasConfigurationCondition="false" />
+      </EnumProperty.DataSource>
+    </EnumProperty>
+
+  </Rule>
+</ProjectSchemaDefinitions>

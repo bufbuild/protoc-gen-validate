@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.Tools" Version="2.30.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <!--PackageReference Include="Envoyproxy.Validator" Version="1.0.0" />
+    <PackageReference Include="Envoyproxy.Validator.Tools" Version="1.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../../dotnet/Envoyproxy.Validator/Envoyproxy.Validator.csproj" />
+  </ItemGroup>
+
+  <Import Project="../../../dotnet/Envoyproxy.Validator.Tools/build/Envoyproxy.Validator.Tools.targets"/>
+
+  <ItemGroup>
+    <Protobuf Include="../harness.proto" GrpcServices="None" Validator="Disabled" />
+    <Protobuf Include="../cases/**/*.proto" ProtoRoot="../cases" GrpcServices="None" />
+  </ItemGroup>
+
+</Project>

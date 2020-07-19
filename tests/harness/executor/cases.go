@@ -817,11 +817,13 @@ var stringCases = []TestCase{
 	{"string - address - valid ip (v4)", &cases.StringAddress{Val: "192.168.0.1"}, true},
 	{"string - address - valid ip (v6)", &cases.StringAddress{Val: "3e::99"}, true},
 	{"string - address - invalid ip", &cases.StringAddress{Val: "ff::fff::0b"}, false},
+	{"string - address - invalid (empty string)", &cases.StringAddress{Val: ""}, false},
 
 	{"string - hostname - valid", &cases.StringHostname{Val: "example.com"}, true},
 	{"string - hostname - valid (uppercase)", &cases.StringHostname{Val: "ASD.example.com"}, true},
 	{"string - hostname - valid (hyphens)", &cases.StringHostname{Val: "foo-bar.com"}, true},
 	{"string - hostname - valid (trailing dot)", &cases.StringHostname{Val: "example.com."}, true},
+	{"string - hostname - invalid (trailing dots)", &cases.StringHostname{Val: "example.com...."}, false},
 	{"string - hostname - invalid", &cases.StringHostname{Val: "!@#$%^&"}, false},
 	{"string - hostname - invalid (underscore)", &cases.StringHostname{Val: "foo_bar.com"}, false},
 	{"string - hostname - invalid (too long)", &cases.StringHostname{Val: "x0123456789012345678901234567890123456789012345678901234567890123456789.com"}, false},
@@ -829,6 +831,7 @@ var stringCases = []TestCase{
 	{"string - hostname - invalid (leading hyphens)", &cases.StringHostname{Val: "foo-bar.-com"}, false},
 	{"string - hostname - invalid (empty)", &cases.StringHostname{Val: "asd..asd.com"}, false},
 	{"string - hostname - invalid (IDNs)", &cases.StringHostname{Val: "你好.com"}, false},
+	{"string - hostname - invalid (empty string)", &cases.StringHostname{Val: ""}, false},
 
 	{"string - IP - valid (v4)", &cases.StringIP{Val: "192.168.0.1"}, true},
 	{"string - IP - valid (v6)", &cases.StringIP{Val: "3e::99"}, true},

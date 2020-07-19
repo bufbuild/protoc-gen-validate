@@ -12,11 +12,15 @@ ENV INSTALL_DEPS \
   wget \
   maven \
   patch \
-  python
+  python \
+  dotnet-sdk-3.1
 RUN apt-get update \
-  && apt-get install -y -q --no-install-recommends curl openjdk-8-jdk \
+  && apt-get install -y -q --no-install-recommends apt-transport-https curl openjdk-8-jdk \
   && echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list \
   && curl https://bazel.build/bazel-release.pub.gpg | apt-key add - \
+  && curl https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb \
+  && dpkg -i packages-microsoft-prod.deb \
+  && rm packages-microsoft-prod.deb \
   && apt-get update \
   && apt-get install -y -q --no-install-recommends ${INSTALL_DEPS} \
   && apt-get clean \
