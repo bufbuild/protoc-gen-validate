@@ -38,6 +38,7 @@ message ComplexTestMsg {
         string       x = 16;
         int32        y = 17;
     }
+    ComplexTestMsg                      a_third = 18;
 }
 
 message KitchenSinkMessage { ComplexTestMsg val = 1; }

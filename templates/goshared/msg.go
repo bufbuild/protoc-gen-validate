@@ -7,6 +7,10 @@ const msgTpl = `
 	{{ cmt "Validate checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, an error is returned." }}
 {{- end -}}
 func (m {{ (msgTyp .).Pointer }}) Validate() error {
+	return m.ValidateWithMask(nil)
+}
+
+func (m {{ (msgTyp .).Pointer }}) ValidateWithMask(mask *field_mask.FieldMask) error {
 	{{ if disabled . -}}
 		return nil
 	{{ else -}}
@@ -24,9 +28,11 @@ func (m {{ (msgTyp .).Pointer }}) Validate() error {
 				{{ end }}
 				{{ if required . }}
 					default:
-						return {{ errname .Message }}{
-							field: "{{ name . }}",
-							reason: "value is required",
+						if m.maskHas(mask, "{{ .Name }}") {
+							return {{ errname .Message }}{
+								field: "{{ name . }}",
+								reason: "value is required",
+							}
 						}
 				{{ end }}
 			}
@@ -34,6 +40,45 @@ func (m {{ (msgTyp .).Pointer }}) Validate() error {
 
 		return nil
 	{{ end -}}
+}
+
+func (m {{ (msgTyp .).Pointer }}) maskHas(mask *field_mask.FieldMask, name string) bool {
+	// if we don't have a mask, allow everything
+	if mask == nil {
+		return true
+	}
+	for _, path := range mask.GetPaths() {
+		if name == path || strings.HasPrefix(path, name+".") {
+			return true
+		}
+	}
+	return false
+}
+
+func (m {{ (msgTyp .).Pointer }}) updateMask(mask *field_mask.FieldMask, prefix string) *field_mask.FieldMask {
+	// update the mask to remove the outer level
+	if mask != nil {
+		paths := []string{}
+		prefix += "."
+		for _, path := range mask.GetPaths() {
+			if strings.HasPrefix(path, prefix) {
+				paths = append(paths, strings.TrimPrefix(path, prefix))
+			}
+		}
+		if len(paths) > 0 {
+			// if fields were explicitly given within the sub-message, we only
+			// validate those specific fields. We remove the prefix and pass the
+			// remaining fields down as a new FieldMask for sub-message validation.
+			mask = &field_mask.FieldMask{Paths: paths}
+		} else {
+			// if a sub-message is specified in the last position of the field mask,
+			// then we validate the entire sub-message. This matches the expectation
+			// of FieldMask on Update operations to overwrite the entire sub-message.
+			// https://developers.google.com/protocol-buffers/docs/reference/csharp/class/google/protobuf/well-known-types/field-mask
+			mask = nil
+		}
+	}
+	return mask
 }
 
 {{ if needs . "hostname" }}{{ template "hostname" . }}{{ end }}

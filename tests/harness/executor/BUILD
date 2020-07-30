@@ -24,6 +24,7 @@ go_library(
         "@com_github_golang_protobuf//ptypes/duration:go_default_library",
         "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
         "@io_bazel_rules_go//proto/wkt:any_go_proto",
+        "@io_bazel_rules_go//proto/wkt:field_mask_go_proto",
         "@io_bazel_rules_go//proto/wkt:wrappers_go_proto",
         "@org_golang_x_net//context:go_default_library",
     ],

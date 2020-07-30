@@ -5,7 +5,7 @@ const wrapperTpl = `
 
 	if wrapper := {{ accessor . }}; wrapper != nil {
 		{{ render (unwrap . "wrapper") }}
-	} {{ if .MessageRules.GetRequired }} else {
+	} {{ if .MessageRules.GetRequired }} else if m.maskHas(mask, "{{ $f.Name }}") {
 		return {{ err . "value is required and must not be nil." }}
 	} {{ end }}
 `

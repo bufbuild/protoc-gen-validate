@@ -11,6 +11,7 @@ go_library(
         "//tests/harness/cases/other_package:go",
         "@com_github_golang_protobuf//proto:go_default_library",
         "@com_github_golang_protobuf//ptypes:go_default_library",
+        "@io_bazel_rules_go//proto/wkt:field_mask_go_proto",
     ],
 )
 

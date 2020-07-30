@@ -18,6 +18,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/golang/protobuf/ptypes"
+	"google.golang.org/genproto/protobuf/field_mask"
 
 	{{ range $path, $pkg := enumPackages (externalEnums .) }}
 		{{ $pkg }} "{{ $path }}"
@@ -37,6 +38,7 @@ var (
 	_ = (*url.URL)(nil)
 	_ = (*mail.Address)(nil)
 	_ = ptypes.DynamicAny{}
+	_ = field_mask.FieldMask{}
 
 	{{ range (externalEnums .) }}
 		_ = {{ pkg . }}.{{ name . }}(0)

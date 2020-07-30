@@ -28,4 +28,5 @@ message MapRecursive {
     message Msg {
         string val = 1 [(validate.rules).string.min_len = 3];
     }
+    
 }

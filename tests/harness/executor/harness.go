@@ -85,6 +85,9 @@ func initHarness(cmd string, args ...string) func(context.Context, io.Reader) (*
 		if err := cmd.Run(); err != nil {
 			return nil, fmt.Errorf("[%s] failed execution (%v) - captured stderr:\n%s", cmdStr(cmd), err, errs.String())
 		}
+		if errs.Len() > 0 {
+			fmt.Printf("captured stderr:\n%s", errs.String())
+		}
 
 		res := new(harness.TestResult)
 		if err := proto.Unmarshal(out.Bytes(), res); err != nil {

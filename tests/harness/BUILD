@@ -14,6 +14,7 @@ proto_library(
     visibility = ["//visibility:public"],
     deps = [
         "@com_google_protobuf//:any_proto",
+        "@com_google_protobuf//:field_mask_proto",
     ],
 )
 

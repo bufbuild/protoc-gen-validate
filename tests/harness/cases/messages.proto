@@ -24,7 +24,7 @@ message MessageDisabled {
 
 message Message { TestMsg val = 1; }
 message MessageCrossPackage { tests.harness.cases.other_package.Embed val = 1; }
-message MessageSkip { TestMsg val = 1 [(validate.rules).message.skip = true];}
+message MessageSkip { TestMsg val = 1 [(validate.rules).message.skip = true]; }
 message MessageRequired { TestMsg val = 1 [(validate.rules).message.required = true]; }
 
 message MessageWith3dInside {}

@@ -30,4 +30,5 @@ message DurationExGTELTE { google.protobuf.Duration val = 1 [(validate.rules).du
 message DurationFieldWithOtherFields {
   google.protobuf.Duration duration_val = 1 [(validate.rules).duration.lte = {seconds: 1}];
   int32 int_val = 2 [(validate.rules).int32.gt = 16];
+  
 }

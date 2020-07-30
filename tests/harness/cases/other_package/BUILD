@@ -27,6 +27,7 @@ pgv_go_proto_library(
     proto = ":embed_proto",
     deps = [
         "@com_github_golang_protobuf//ptypes:go_default_library",
+        "@com_github_iancoleman_strcase//:go_default_library",
     ],
 )
 
