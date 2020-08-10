@@ -8,9 +8,9 @@ load("//bazel:dependency_imports.bzl", "pgv_dependency_imports")
 
 pgv_dependency_imports()
 
-load("//bazel:pip_dependencies.bzl", "pgv_pip_dependencies")
+# load("//bazel:pip_dependencies.bzl", "pgv_pip_dependencies")
 
-pgv_pip_dependencies()
+# pgv_pip_dependencies()
 
 load("//:dependencies.bzl", "go_third_party")
 
