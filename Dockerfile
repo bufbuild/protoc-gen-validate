@@ -45,7 +45,7 @@ RUN wget -q https://dl.google.com/go/$GORELEASE \
 # protoc-gen-go
 ENV PGG_PKG "github.com/golang/protobuf/protoc-gen-go"
 ENV PGG_PATH "${GOPATH}/src/${PGG_PKG}"
-ENV PGG_VER=v1.3.5
+ENV PGG_VER=v1.4.2
 RUN go get -d ${PGG_PKG} \
   && cd ${PGG_PATH} \
   && git checkout ${PGG_VER} \
