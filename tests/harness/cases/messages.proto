@@ -22,6 +22,11 @@ message MessageDisabled {
     uint64 val = 1 [(validate.rules).uint64.gt = 123];
 }
 
+message MessageIgnored {
+    option (validate.ignored) = true;
+    uint64 val = 1 [(validate.rules).uint64.gt = 123];
+}
+
 message Message { TestMsg val = 1; }
 message MessageCrossPackage { tests.harness.cases.other_package.Embed val = 1; }
 message MessageSkip { TestMsg val = 1 [(validate.rules).message.skip = true];}

@@ -776,6 +776,20 @@ message X { google.protobuf.Int32Value age = 1 [(validate.rules).int32.gt = -1, 
   }
   ```
 
+- **ignored**: Don't generate a validate method or any related validation code for this message.
+
+  ```protobuf
+  message Person {
+    option (validate.ignored) = true;
+
+    // x will not be required to be greater than 123
+    uint64 x = 1 [(validate.rules).uint64.gt = 123];
+
+    // y's fields will not be validated
+    Person y = 2;
+  }
+  ```
+
 ### OneOfs
 
 - **required**: require that one of the fields in a `oneof` must be set. By default, none or one of the unioned fields can be set. Enabling this rules disallows having all of them unset.
