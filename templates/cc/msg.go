@@ -5,6 +5,7 @@ extern bool Validate(const {{ class . }}& m, pgv::ValidationMsg* err);
 `
 
 const msgTpl = `
+{{ if not (ignored .) -}}
 {{ if disabled . -}}
 	{{ cmt "Validate is disabled for " (class .) ". This method will always return true." }}
 {{- else -}}
@@ -117,4 +118,5 @@ bool Validate(const {{ class . }}& m, pgv::ValidationMsg* err) {
 	return true;
 {{ end -}}
 }
+{{- end -}}
 `
