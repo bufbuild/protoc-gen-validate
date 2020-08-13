@@ -1,7 +1,9 @@
 package cc
 
 const declTpl = `
+{{ if not (ignored .) -}}
 extern bool Validate(const {{ class . }}& m, pgv::ValidationMsg* err);
+{{- end -}}
 `
 
 const msgTpl = `
