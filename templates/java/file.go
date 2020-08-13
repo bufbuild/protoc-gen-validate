@@ -10,7 +10,7 @@ public class {{ classNameFile . }}Validator {
 		{{ range .AllMessages }}
 		{{ if not (ignored .) -}}
 		if (clazz.equals({{ qualifiedName . }}.class)) return new {{ simpleName .}}Validator();
-		{{- endif }}
+		{{- end }}
 		{{- end }}
 		return null;
 	}
@@ -29,7 +29,7 @@ public class {{ classNameMessage .}}Validator implements io.envoyproxy.pgv.Valid
 		{{ range .AllMessages }}
 		{{ if not (ignored .) -}}
 		if (clazz.equals({{ qualifiedName . }}.class)) return new {{ simpleName .}}Validator();
-		{{- endif }}
+		{{- end }}
 		{{- end }}
 		return null;
 	}
