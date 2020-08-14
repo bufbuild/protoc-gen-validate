@@ -802,6 +802,7 @@ var stringCases = []TestCase{
 	{"string - email - invalid (local segment too long)", &cases.StringEmail{Val: "x0123456789012345678901234567890123456789012345678901234567890123456789@example.com"}, false},
 	{"string - email - invalid (hostname too long)", &cases.StringEmail{Val: "foo@x0123456789012345678901234567890123456789012345678901234567890123456789.com"}, false},
 	{"string - email - invalid (bad hostname)", &cases.StringEmail{Val: "foo@-bar.com"}, false},
+	{"string - email - empty", &cases.StringEmail{Val: ""}, false},
 
 	{"string - address - valid hostname", &cases.StringAddress{Val: "example.com"}, true},
 	{"string - address - valid hostname (uppercase)", &cases.StringAddress{Val: "ASD.example.com"}, true},
