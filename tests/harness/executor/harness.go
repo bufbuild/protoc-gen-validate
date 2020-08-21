@@ -21,6 +21,7 @@ func Harnesses(goFlag, ccFlag, javaFlag, pythonFlag bool, externalHarnessFlag st
 	harnesses := make([]Harness, 0)
 	if goFlag {
 		harnesses = append(harnesses, InitHarness("tests/harness/go/main/go-harness"))
+		harnesses = append(harnesses, InitHarness("tests/harness/go/proto_names/go-harness"))
 	}
 	if ccFlag {
 		harnesses = append(harnesses, InitHarness("tests/harness/cc/cc-harness"))

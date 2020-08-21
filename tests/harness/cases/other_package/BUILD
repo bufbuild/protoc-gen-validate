@@ -30,6 +30,18 @@ pgv_go_proto_library(
     ],
 )
 
+pgv_go_proto_library(
+    name = "go_proto_field_name",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go_proto_field_name",
+    proto = ":embed_proto",
+    deps = [
+        "//tests/harness/cases/other_package:go",
+        "@com_github_golang_protobuf//ptypes:go_default_library",
+    ],
+    options = ["proto_field_name=true"],
+)
+
+
 pgv_cc_proto_library(
     name = "cc",
     visibility = ["//tests:__subpackages__"],

@@ -57,7 +57,7 @@ bin/harness:
 	cd tests && go build -o ../bin/harness ./harness/executor
 
 .PHONY: harness
-harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harness tests/harness/cc/cc-harness bin/harness
+harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harness tests/harness/go/proto_names/go-harness tests/harness/cc/cc-harness bin/harness
  	# runs the test harness, validating a series of test cases in all supported languages
 	./bin/harness -go -cc
 
@@ -73,6 +73,10 @@ testcases: bin/protoc-gen-go
 	mkdir tests/harness/cases/go
 	rm -r tests/harness/cases/other_package/go || true
 	mkdir tests/harness/cases/other_package/go
+	rm -r tests/harness/cases/go_proto_field_name || true
+	mkdir tests/harness/cases/go_proto_field_name
+	rm -r tests/harness/cases/other_package/go_proto_field_name || true
+	mkdir tests/harness/cases/other_package/go_proto_field_name
 	# protoc-gen-go makes us go a package at a time
 	cd tests/harness/cases/other_package && \
 	protoc \
@@ -81,6 +85,14 @@ testcases: bin/protoc-gen-go
 		--go_out="${GO_IMPORT}:./go" \
 		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
 		--validate_out="lang=go:./go" \
+		./*.proto \
+	&& \
+	protoc \
+		-I . \
+		-I ../../../.. \
+		--go_out="${GO_IMPORT}:./go_proto_field_name" \
+		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
+		--validate_out="lang=go,proto_field_name=true:./go_proto_field_name" \
 		./*.proto
 	cd tests/harness/cases && \
 	protoc \
@@ -89,6 +101,14 @@ testcases: bin/protoc-gen-go
 		--go_out="Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go,${GO_IMPORT}:./go" \
 		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
 		--validate_out="lang=go,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go:./go" \
+		./*.proto \
+	&& \
+	protoc \
+		-I . \
+		-I ../../.. \
+		--go_out="Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go,${GO_IMPORT}:./go_proto_field_name" \
+		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
+		--validate_out="lang=go,proto_field_name=true,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go:./go_proto_field_name" \
 		./*.proto
 
 tests/harness/go/harness.pb.go: bin/protoc-gen-go
@@ -100,6 +120,10 @@ tests/harness/go/harness.pb.go: bin/protoc-gen-go
 tests/harness/go/main/go-harness:
 	# generates the go-specific test harness
 	cd tests && go build -o ./harness/go/main/go-harness ./harness/go/main
+
+tests/harness/go/proto_names/go-harness:
+	# generates the go-specific test harness for proto names
+	cd tests && go build -o ./harness/go/proto_names/go-harness ./harness/go/proto_names
 
 tests/harness/cc/cc-harness: tests/harness/cc/harness.cc
 	# generates the C++-specific test harness
@@ -123,8 +147,11 @@ clean:
 		bin/harness \
 		tests/harness/cc/cc-harness \
 		tests/harness/go/main/go-harness \
+		tests/harness/go/proto_names/go-harness \
 		tests/harness/go/harness.pb.go
 	rm -rf \
 		tests/harness/cases/go \
-		tests/harness/cases/other_package/go
+		tests/harness/cases/other_package/go \
+		tests/harness/cases/go_proto_field_name \
+        tests/harness/cases/other_package/go_proto_field_name
 

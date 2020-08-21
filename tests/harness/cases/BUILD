@@ -52,6 +52,23 @@ pgv_go_proto_library(
     ],
 )
 
+pgv_go_proto_library(
+    name = "go_proto_field_name",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go_proto_field_name",
+    proto = ":cases_proto",
+    deps = [
+        ":go",
+        "//tests/harness/cases/other_package:go",
+        "//tests/harness/cases/other_package:go_proto_field_name",
+        "@com_github_golang_protobuf//ptypes:go_default_library",
+        "@com_github_golang_protobuf//ptypes/any:go_default_library",
+        "@com_github_golang_protobuf//ptypes/duration:go_default_library",
+        "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
+        "@com_github_golang_protobuf//ptypes/wrappers:go_default_library",
+    ],
+    options = ["proto_field_name=true"],
+)
+
 pgv_cc_proto_library(
     name = "cc",
     cc_deps = [

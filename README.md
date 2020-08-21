@@ -103,6 +103,8 @@ protoc \
 
 All messages generated include the new `Validate() error` method. PGV requires no additional runtime dependencies from the existing generated code.
 
+The field names reported in the validation error messages are the Go variable names by default. You can change this using the protoc parameter `proto_field_name=true`. Then the field names in validation error messages are the proto names.
+
 **Note**: by default **example.pb.validate.go** is nested in a directory structure that matches your `option go_package` name. You can change this using the protoc parameter `paths=source_relative:.`. Then `--validate_out` will output the file where it is expected. See Google's protobuf documenation or [packages and input paths](https://github.com/golang/protobuf#packages-and-input-paths) or [parameters](https://github.com/golang/protobuf#parameters) for more information.
 
 #### Java

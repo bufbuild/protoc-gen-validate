@@ -34,9 +34,11 @@ go_binary(
     data = ["//tests/harness/cc:cc-harness"] + select({
         ":windows_x86_64": [
             "//tests/harness/go/main:go-harness-exe",
+            "//tests/harness/go/proto_names:go-harness-exe",
         ],
         "//conditions:default": [
             "//tests/harness/go/main:go-harness-bin",
+            "//tests/harness/go/proto_names:go-harness-bin",
             "//tests/harness/java:java-harness",
             "//tests/harness/python:python-harness",
         ],
