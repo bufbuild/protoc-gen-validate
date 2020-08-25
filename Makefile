@@ -127,3 +127,4 @@ clean:
 	rm -rf \
 		tests/harness/cases/go \
 		tests/harness/cases/other_package/go
+
