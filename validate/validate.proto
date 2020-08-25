@@ -489,6 +489,8 @@ message StringRules {
     // regular expression (RE2 syntax). The included expression should elide
     // any delimiters.
     optional string pattern  = 6;
+    // PatternMessage provides a custom error message for the 'pattern' constraint
+    optional string pattern_message = 26;
 
     // Prefix specifies that this field must have the specified substring at
     // the beginning of the string.

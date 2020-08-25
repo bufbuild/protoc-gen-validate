@@ -124,7 +124,7 @@ const strTpl = `
 
 	{{ if $r.Pattern }}
 	if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
-		return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+		return {{ errf . (coalesce $r.GetPatternMessage "value does not match regex pattern %s") (regexLit $r.GetPattern) }}
 	}
 {{ end }}
 `

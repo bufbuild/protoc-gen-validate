@@ -21,6 +21,9 @@ message StringMinMaxBytes    { string val = 1 [(validate.rules).string = {min_by
 message StringEqualMinMaxBytes    { string val = 1 [(validate.rules).string = {min_bytes: 4, max_bytes: 8}]; }
 message StringPattern        { string val = 1 [(validate.rules).string.pattern = "(?i)^[a-z0-9]+$"]; }
 message StringPatternEscapes { string val = 1 [(validate.rules).string.pattern = "\\* \\\\ \\w"]; }
+message StringPatternI18n    { string val = 1 [(validate.rules).string.pattern = "[\\pL\\pM\\pN][\\pL\\pM\\pN .,'’&+_\\-/\\|\\(\\)\\[\\]]"]; }
+message StringPatternErrParam     { string val = 1 [(validate.rules).string = {pattern: "(?i)^[\\pL\\pM\\pN]+$", pattern_message: "value must match this regex: %s"}]; }
+message StringPatternErrOverride  { string val = 1 [(validate.rules).string = {pattern: "(?i)^[\\pL\\pM\\pN]+$", pattern_message: "allowed special characters: .,'&+_-/|()[]%.s"}]; }
 message StringPrefix         { string val = 1 [(validate.rules).string.prefix = "foo"]; }
 message StringContains       { string val = 1 [(validate.rules).string.contains = "bar"]; }
 message StringNotContains    { string val = 1 [(validate.rules).string.not_contains = "bar"]; }
