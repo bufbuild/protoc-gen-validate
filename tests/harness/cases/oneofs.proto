@@ -30,5 +30,7 @@ message OneOfRequired {
 
         string       x = 1;
         int32        y = 2;
+        int32        name_with_underscores = 3;
+        int32        under_and_1_number = 4;
     }
 }
