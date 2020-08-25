@@ -78,6 +78,8 @@ using std::string;
 
 #define X_{{ .Package.ProtoName.ScreamingSnakeCase }}_{{ .File.InputPath.BaseName | screaming_snake_case }}(X) \
 {{ range .AllMessages -}}
+{{- if not (ignored .) -}}
 	X({{class . }}) \
+{{ end -}}
 {{ end }}
 `
