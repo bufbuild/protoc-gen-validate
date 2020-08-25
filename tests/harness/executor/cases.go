@@ -802,6 +802,7 @@ var stringCases = []TestCase{
 	{"string - email - invalid (local segment too long)", &cases.StringEmail{Val: "x0123456789012345678901234567890123456789012345678901234567890123456789@example.com"}, false},
 	{"string - email - invalid (hostname too long)", &cases.StringEmail{Val: "foo@x0123456789012345678901234567890123456789012345678901234567890123456789.com"}, false},
 	{"string - email - invalid (bad hostname)", &cases.StringEmail{Val: "foo@-bar.com"}, false},
+	{"string - email - empty", &cases.StringEmail{Val: ""}, false},
 
 	{"string - address - valid hostname", &cases.StringAddress{Val: "example.com"}, true},
 	{"string - address - valid hostname (uppercase)", &cases.StringAddress{Val: "ASD.example.com"}, true},
@@ -1077,6 +1078,10 @@ var repeatedCases = []TestCase{
 	{"repeated - items - valid (enum in)", &cases.RepeatedEnumIn{Val: []cases.AnEnum{0}}, true},
 	{"repeated - items - invalid (enum not_in)", &cases.RepeatedEnumNotIn{Val: []cases.AnEnum{0}}, false},
 	{"repeated - items - valid (enum not_in)", &cases.RepeatedEnumNotIn{Val: []cases.AnEnum{1}}, true},
+	{"repeated - items - invalid (embedded enum in)", &cases.RepeatedEmbeddedEnumIn{Val: []cases.RepeatedEmbeddedEnumIn_AnotherInEnum{1}}, false},
+	{"repeated - items - valid (embedded enum in)", &cases.RepeatedEmbeddedEnumIn{Val: []cases.RepeatedEmbeddedEnumIn_AnotherInEnum{0}}, true},
+	{"repeated - items - invalid (embedded enum not_in)", &cases.RepeatedEmbeddedEnumNotIn{Val: []cases.RepeatedEmbeddedEnumNotIn_AnotherNotInEnum{0}}, false},
+	{"repeated - items - valid (embedded enum not_in)", &cases.RepeatedEmbeddedEnumNotIn{Val: []cases.RepeatedEmbeddedEnumNotIn_AnotherNotInEnum{1}}, true},
 
 	{"repeated - embed skip - valid", &cases.RepeatedEmbedSkip{Val: []*cases.Embed{{Val: 1}}}, true},
 	{"repeated - embed skip - valid (invalid element)", &cases.RepeatedEmbedSkip{Val: []*cases.Embed{{Val: -1}}}, true},

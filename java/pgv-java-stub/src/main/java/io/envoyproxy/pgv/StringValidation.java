@@ -102,7 +102,7 @@ public final class StringValidation {
     }
 
     public static void email(final String field, String value) throws ValidationException {
-        if (value.charAt(value.length() - 1) == '>') {
+        if (!value.isEmpty() && value.charAt(value.length() - 1) == '>') {
             final char[] chars = value.toCharArray();
             final StringBuilder sb = new StringBuilder();
             boolean insideQuotes = false;

@@ -217,7 +217,7 @@ func (fns goSharedFuncs) inType(f pgs.Field, x interface{}) string {
 		}
 	case pgs.EnumT:
 		if f.Type().IsRepeated() {
-			return f.Type().Element().Enum().Name().String()
+			return strings.TrimLeft(fns.Type(f).String(), "[]")
 		} else {
 			return fns.Type(f).String()
 		}
