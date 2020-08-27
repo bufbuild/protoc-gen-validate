@@ -709,7 +709,7 @@ message X { google.protobuf.Int32Value age = 1 [(validate.rules).int32.gt = -1, 
 
   ```protobuf
   // x must equal 2009/11/10T23:00:00.500Z exactly
-  google.protobuf.Timestamp x = 1 [(validate.rules).timestamp = {
+  google.protobuf.Timestamp x = 1 [(validate.rules).timestamp.const = {
       seconds: 63393490800,
       nanos:   500000000
     }];

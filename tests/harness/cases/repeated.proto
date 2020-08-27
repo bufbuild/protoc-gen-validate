@@ -30,4 +30,5 @@ message RepeatedItemNotIn { repeated string val = 1 [(validate.rules).repeated.i
 message RepeatedEnumIn { repeated AnEnum val = 1 [(validate.rules).repeated.items.enum = {in: [0]}]; }
 message RepeatedEnumNotIn { repeated AnEnum val = 1 [(validate.rules).repeated.items.enum = {not_in: [0]}]; }
 message RepeatedMinAndItemLen { repeated string val = 1 [(validate.rules).repeated = { items { string { len: 3 } }, min_items: 1 }]; }
+message RepeatedMinAndMaxItemLen { repeated string val = 1 [(validate.rules).repeated.min_items = 1, (validate.rules).repeated.max_items = 3]; }
 message RepeatedDuration { repeated google.protobuf.Duration val = 1 [(validate.rules).repeated = { items { duration { gte { nanos: 1000000}}}}]; }

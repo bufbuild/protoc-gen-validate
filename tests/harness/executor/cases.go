@@ -810,7 +810,8 @@ var stringCases = []TestCase{
 	{"string - address - invalid hostname", &cases.StringAddress{Val: "!@#$%^&"}, false},
 	{"string - address - invalid hostname (underscore)", &cases.StringAddress{Val: "foo_bar.com"}, false},
 	{"string - address - invalid hostname (too long)", &cases.StringAddress{Val: "x0123456789012345678901234567890123456789012345678901234567890123456789.com"}, false},
-	{"string - address - invalid hostname (hyphens)", &cases.StringAddress{Val: "foo-bar-.com"}, false},
+	{"string - address - invalid hostname (trailing hyphens)", &cases.StringAddress{Val: "foo-bar-.com"}, false},
+	{"string - address - invalid hostname (leading hyphens)", &cases.StringAddress{Val: "foo-bar.-com"}, false},
 	{"string - address - invalid hostname (empty)", &cases.StringAddress{Val: "asd..asd.com"}, false},
 	{"string - address - invalid hostname (IDNs)", &cases.StringAddress{Val: "你好.com"}, false},
 	{"string - address - valid ip (v4)", &cases.StringAddress{Val: "192.168.0.1"}, true},
@@ -824,7 +825,8 @@ var stringCases = []TestCase{
 	{"string - hostname - invalid", &cases.StringHostname{Val: "!@#$%^&"}, false},
 	{"string - hostname - invalid (underscore)", &cases.StringHostname{Val: "foo_bar.com"}, false},
 	{"string - hostname - invalid (too long)", &cases.StringHostname{Val: "x0123456789012345678901234567890123456789012345678901234567890123456789.com"}, false},
-	{"string - hostname - invalid (hyphens)", &cases.StringHostname{Val: "foo-bar-.com"}, false},
+	{"string - hostname - invalid (trailing hyphens)", &cases.StringHostname{Val: "foo-bar-.com"}, false},
+	{"string - hostname - invalid (leading hyphens)", &cases.StringHostname{Val: "foo-bar.-com"}, false},
 	{"string - hostname - invalid (empty)", &cases.StringHostname{Val: "asd..asd.com"}, false},
 	{"string - hostname - invalid (IDNs)", &cases.StringHostname{Val: "你好.com"}, false},
 
@@ -1081,6 +1083,9 @@ var repeatedCases = []TestCase{
 	{"repeated - min and items len - valid", &cases.RepeatedMinAndItemLen{Val: []string{"aaa", "bbb"}}, true},
 	{"repeated - min and items len - invalid (min)", &cases.RepeatedMinAndItemLen{Val: []string{}}, false},
 	{"repeated - min and items len - invalid (len)", &cases.RepeatedMinAndItemLen{Val: []string{"x"}}, false},
+	{"repeated - min and max items len - valid", &cases.RepeatedMinAndMaxItemLen{Val: []string{"aaa", "bbb"}}, true},
+	{"repeated - min and max items len - invalid (min_len)", &cases.RepeatedMinAndMaxItemLen{}, false},
+	{"repeated - min and max items len - invalid (max_len)", &cases.RepeatedMinAndMaxItemLen{Val: []string{"aaa", "bbb", "ccc", "ddd"}}, false},
 
 	{"repeated - duration - gte - valid", &cases.RepeatedDuration{Val: []*duration.Duration{{Seconds: 3}}}, true},
 	{"repeated - duration - gte - valid (empty)", &cases.RepeatedDuration{}, true},
@@ -1331,7 +1336,7 @@ var timestampCases = []TestCase{
 
 	{"timestamp - lt now - valid", &cases.TimestampLTNow{Val: &timestamp.Timestamp{}}, true},
 	{"timestamp - lt now - valid (empty)", &cases.TimestampLTNow{}, true},
-	{"timestamp - lt - now - invalid", &cases.TimestampLTNow{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, false},
+	{"timestamp - lt now - invalid", &cases.TimestampLTNow{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, false},
 
 	{"timestamp - gt now - valid", &cases.TimestampGTNow{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, true},
 	{"timestamp - gt now - valid (empty)", &cases.TimestampGTNow{}, true},
@@ -1341,6 +1346,16 @@ var timestampCases = []TestCase{
 	{"timestamp - within - valid (empty)", &cases.TimestampWithin{}, true},
 	{"timestamp - within - invalid (below)", &cases.TimestampWithin{Val: &timestamp.Timestamp{}}, false},
 	{"timestamp - within - invalid (above)", &cases.TimestampWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, false},
+
+	{"timestamp - lt now within - valid", &cases.TimestampLTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() - 1800}}, true},
+	{"timestamp - lt now within - valid (empty)", &cases.TimestampLTNowWithin{}, true},
+	{"timestamp - lt now within - invalid (lt)", &cases.TimestampLTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 1800}}, false},
+	{"timestamp - lt now within - invalid (within)", &cases.TimestampLTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() - 7200}}, false},
+
+	{"timestamp - gt now within - valid", &cases.TimestampGTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 1800}}, true},
+	{"timestamp - gt now within - valid (empty)", &cases.TimestampGTNowWithin{}, true},
+	{"timestamp - gt now within - invalid (gt)", &cases.TimestampGTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() - 1800}}, false},
+	{"timestamp - gt now within - invalid (within)", &cases.TimestampGTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, false},
 }
 
 var anyCases = []TestCase{
