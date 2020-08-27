@@ -29,6 +29,8 @@ message RepeatedItemIn { repeated string val = 1 [(validate.rules).repeated.item
 message RepeatedItemNotIn { repeated string val = 1 [(validate.rules).repeated.items.string = {not_in: ["foo", "bar"]}]; }
 message RepeatedEnumIn { repeated AnEnum val = 1 [(validate.rules).repeated.items.enum = {in: [0]}]; }
 message RepeatedEnumNotIn { repeated AnEnum val = 1 [(validate.rules).repeated.items.enum = {not_in: [0]}]; }
+message RepeatedEmbeddedEnumIn { repeated AnotherInEnum val = 1 [(validate.rules).repeated.items.enum = {in: [0]}]; enum AnotherInEnum {A = 0; B = 1; }}
+message RepeatedEmbeddedEnumNotIn { repeated AnotherNotInEnum val = 1 [(validate.rules).repeated.items.enum = {not_in: [0]}]; enum AnotherNotInEnum {A = 0; B = 1; }}
 message RepeatedMinAndItemLen { repeated string val = 1 [(validate.rules).repeated = { items { string { len: 3 } }, min_items: 1 }]; }
 message RepeatedMinAndMaxItemLen { repeated string val = 1 [(validate.rules).repeated.min_items = 1, (validate.rules).repeated.max_items = 3]; }
 message RepeatedDuration { repeated google.protobuf.Duration val = 1 [(validate.rules).repeated = { items { duration { gte { nanos: 1000000}}}}]; }

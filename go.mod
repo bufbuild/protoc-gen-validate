@@ -1,6 +1,6 @@
 module github.com/envoyproxy/protoc-gen-validate
 
-go 1.14
+go 1.12
 
 require (
 	github.com/golang/protobuf v1.4.2
