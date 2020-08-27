@@ -32,7 +32,7 @@ jobs:
               if [[ -n "${RELEASE}" && -n "${NEXT}" ]]; then
                 git config --global user.email "envoy-bot@users.noreply.github.com"
                 git config --global user.name "envoy-bot"
-                mvn -B -s ../.circleci/settings.xml release:prepare -Darguments="-s ../.circleci/settings.xml" -DreleaseVersion=$RELEASE -DdevelopmentVersion=$NEXT -DtagNameFormat="@{version}-java" -DscmCommentPrefix="java release: "
+                mvn -B -s ../.circleci/settings.xml release:prepare -Darguments="-s ../.circleci/settings.xml" -DreleaseVersion=$RELEASE -DdevelopmentVersion=$NEXT -DscmCommentPrefix="java release: "
               else
                 mvn -B -s ../.circleci/settings.xml deploy
               fi

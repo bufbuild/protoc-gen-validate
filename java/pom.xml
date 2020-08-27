@@ -139,7 +139,7 @@
                         <version>2.5.3</version>
                         <configuration>
                             <autoVersionSubmodules>true</autoVersionSubmodules>
-                            <tagNameFormat>v@{project.version}</tagNameFormat>
+                            <tagNameFormat>v@{project.version}-java</tagNameFormat>
                         </configuration>
                         <!-- No executions -->
                     </plugin>
