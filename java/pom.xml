@@ -140,6 +140,7 @@
                         <configuration>
                             <autoVersionSubmodules>true</autoVersionSubmodules>
                             <tagNameFormat>v@{project.version}-java</tagNameFormat>
+                            <scmCommentPrefix>java release: </scmCommentPrefix>
                         </configuration>
                         <!-- No executions -->
                     </plugin>
