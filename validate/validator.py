@@ -42,7 +42,7 @@ class ValidatingMessage(object):
             return False
 
 def validate(proto_message):
-    return _validate_inner(ValidatingMessage(proto_message))
+    return _validate_inner(ValidatingMessage(proto_message))(proto_message)
 
 # Cache generated functions to avoid the performance issue caused by repeated proto messages,
 #   which generate the same functions repeatedly.
