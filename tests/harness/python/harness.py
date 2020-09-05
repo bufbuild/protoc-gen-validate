@@ -48,8 +48,7 @@ if __name__ == "__main__":
     test_class = unpack(testcase.message)
     try:
         result = TestResult()
-        valid = validate(test_class)
-        valid(test_class)
+        assert validate(test_class) is None
         result.Valid = True
     except ValidationFailed as e:
         result.Valid = False
