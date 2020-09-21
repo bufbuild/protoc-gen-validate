@@ -3,7 +3,7 @@
     <parent>
         <artifactId>pgv-java</artifactId>
         <groupId>io.envoyproxy.protoc-gen-validate</groupId>
-        <version>0.4.0-SNAPSHOT</version>
+        <version>0.4.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
