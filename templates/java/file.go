@@ -8,7 +8,9 @@ package {{ javaPackage .File }};
 public class {{ classNameFile . }}Validator {
 	public static io.envoyproxy.pgv.ValidatorImpl validatorFor(Class clazz) {
 		{{ range .AllMessages }}
+		{{ if not (ignored .) -}}
 		if (clazz.equals({{ qualifiedName . }}.class)) return new {{ simpleName .}}Validator();
+		{{- end }}
 		{{- end }}
 		return null;
 	}
@@ -25,7 +27,9 @@ public class {{ classNameMessage .}}Validator implements io.envoyproxy.pgv.Valid
 	public static io.envoyproxy.pgv.ValidatorImpl validatorFor(Class clazz) {
 		if (clazz.equals({{ qualifiedName . }}.class)) return new {{ simpleName .}}Validator();
 		{{ range .AllMessages }}
+		{{ if not (ignored .) -}}
 		if (clazz.equals({{ qualifiedName . }}.class)) return new {{ simpleName .}}Validator();
+		{{- end }}
 		{{- end }}
 		return null;
 	}

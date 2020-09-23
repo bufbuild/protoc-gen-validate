@@ -940,6 +940,13 @@ def rule_type(field):
 
 def file_template(proto_message):
     file_tmp = """
+{%- set ns = namespace(ignored=false) -%}
+{%- for option_descriptor, option_value in p.DESCRIPTOR.GetOptions().ListFields() -%}
+    {%- if option_descriptor.full_name == "validate.ignored" and option_value -%}
+        {%- set ns.found = true -%}
+    {%- endif -%}
+{%- endfor -%}
+{%- if not ns.ignored -%}
 # Validates {{ p.DESCRIPTOR.name }}
 def generate_validate(p):
     {%- for option_descriptor, option_value in p.DESCRIPTOR.GetOptions().ListFields() %}
@@ -966,7 +973,9 @@ def generate_validate(p):
     {{ rule_type(field) -}}
         {%- endif %}
     {%- endfor %}
-    return None"""
+    return None
+{%- endif -%}
+"""
     return Template(file_tmp).render(rule_type = rule_type, p = proto_message)
 
 class UnimplementedException(Exception):

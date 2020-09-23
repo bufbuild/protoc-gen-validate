@@ -1011,6 +1011,9 @@ var messageCases = []TestCase{
 	{"message - disabled - valid", &cases.MessageDisabled{Val: 456}, true},
 	{"message - disabled - valid (invalid field)", &cases.MessageDisabled{Val: 0}, true},
 
+	{"message - ignored - valid", &cases.MessageIgnored{Val: 456}, true},
+	{"message - ignored - valid (invalid field)", &cases.MessageIgnored{Val: 0}, true},
+
 	{"message - field - valid", &cases.Message{Val: &cases.TestMsg{Const: "foo"}}, true},
 	{"message - field - valid (unset)", &cases.Message{}, true},
 	{"message - field - invalid", &cases.Message{Val: &cases.TestMsg{}}, false},
