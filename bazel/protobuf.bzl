@@ -28,10 +28,8 @@ def _protoc_cc_output_files(proto_file_sources):
     for p in proto_file_sources:
         basename = p.basename[:-len(".proto")]
 
-        cc_hdrs.append(basename + ".pb.h")
         cc_hdrs.append(basename + ".pb.validate.h")
 
-        cc_srcs.append(basename + ".pb.cc")
         cc_srcs.append(basename + ".pb.validate.cc")
 
     return cc_hdrs + cc_srcs
@@ -59,7 +57,6 @@ def _protoc_gen_validate_cc_impl(ctx):
     dir_out = _output_dir(ctx)
 
     args = [
-        "--cpp_out=" + dir_out,
         "--validate_out=lang=cc:" + dir_out,
     ]
 
