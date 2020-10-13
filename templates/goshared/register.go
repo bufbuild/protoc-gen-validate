@@ -3,6 +3,8 @@ package goshared
 import (
 	"fmt"
 	"github.com/iancoleman/strcase"
+	"github.com/qor/i18n/backends/yaml"
+	"os"
 	"reflect"
 	"strings"
 	"text/template"
@@ -13,6 +15,13 @@ import (
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/lyft/protoc-gen-star"
 	"github.com/lyft/protoc-gen-star/lang/go"
+	"github.com/qor/i18n"
+)
+
+const (
+	envVarLocalesDir = "PROTOC_GEN_VALIDATE_LOCALES_DIR"
+	envVarLocaleChoice = "LANG" // standard environment variable
+	// for details see https://www.gnu.org/software/libc/manual/html_node/Standard-Environment.html
 )
 
 func Register(tpl *template.Template, params pgs.Parameters) {
@@ -47,6 +56,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"unwrap":        fns.unwrap,
 		"externalEnums": fns.externalEnums,
 		"enumPackages":  fns.enumPackages,
+		"t":             fns.buildTranslator(),
 	})
 
 	template.Must(tpl.New("msg").Parse(msgTpl))
@@ -322,4 +332,13 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.FilePath]pgs.Nam
 
 func (fns goSharedFuncs) snakeCase(name string) string {
 	return strcase.ToSnake(name)
+}
+
+func (fns goSharedFuncs) buildTranslator() func(string, string, ...interface{}) string {
+	I18n := i18n.New(yaml.New(os.Getenv(envVarLocalesDir)))
+	locale := os.Getenv(envVarLocaleChoice)
+
+	return func(key string, value string, args ...interface {}) string {
+		return string(I18n.Default(value).T(locale, key, args...))
+	}
 }
