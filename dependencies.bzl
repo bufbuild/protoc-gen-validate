@@ -20,10 +20,10 @@ def go_third_party():
         version = "v0.0.0-20180726023541-3605ed457bf7",
     )
     go_repository(
-        name = "com_github_qor_i18n"
-        importpath = "github.com/qor/i18n"
-        sum = "h1:vMNFvjn0dHz7Y+RedFPwvDore+i+DvjsEN33rsfUC+M="
-        version = "v0.0.0-20181014061908-f7206d223bcd"
+        name = "com_github_qor_i18n",
+        importpath = "github.com/qor/i18n",
+        sum = "h1:vMNFvjn0dHz7Y+RedFPwvDore+i+DvjsEN33rsfUC+M=",
+        version = "v0.0.0-20181014061908-f7206d223bcd",
     )
     go_repository(
         name = "com_github_lyft_protoc_gen_star",
