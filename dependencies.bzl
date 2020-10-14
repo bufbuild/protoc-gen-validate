@@ -44,6 +44,12 @@ def go_third_party():
         version = "v0.0.0-20200908023436-0c0a0b041c88",
     )
     go_repository(
+        name = "com_github_qor_validations",
+        importpath = "github.com/qor/validations",
+        sum = "h1:dRlsVUhwD1pwrasuVbNooGQITYjKzmXK5eYoEEvBGQI=",
+        version = "v0.0.0-20171228122639-f364bca61b46",
+    )
+    go_repository(
         name = "com_github_theplant_cldr",
         importpath = "github.com/theplant/cldr",
         sum = "h1:di0cR5qqo2DllBMwmP75kZpUX6dAXhsn1O2dshQfMaA=",
