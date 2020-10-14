@@ -26,6 +26,12 @@ def go_third_party():
         version = "v0.0.0-20181014061908-f7206d223bcd",
     )
     go_repository(
+        name = "com_github_qor_qor",
+        importpath = "github.com/qor/qor",
+        sum = "h1:kxseRCbX7NxSvKYSO1rXQCALzl3YLZvooxhhQdA23fU=",
+        version = "v0.0.0-20200729071734-d587cffbbb93",
+    )
+    go_repository(
         name = "com_github_lyft_protoc_gen_star",
         importpath = "github.com/lyft/protoc-gen-star",
         sum = "h1:sImehRT+p7lW9n6R7MQc5hVgzWGEkDVZU4AsBQ4Isu8=",
