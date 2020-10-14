@@ -731,6 +731,7 @@ message X { google.protobuf.Int32Value age = 1 [(validate.rules).int32.gt = -1, 
   ```
 
   *Translation notes*:
+  * `duration.valid` - Value must be parse-able as a valid duration object
   * `duration.between_open` - Value must be inside the open interval `(x, y)` which excludes both endpoints
   * `duration.between_closed` - Value must be inside the closed interval `[x, y]` which includes both endpoints
   * `duration.between_include_left` - Value must be inside the half-open interval `[x, y)` which includes the left endpoint
@@ -802,6 +803,7 @@ message X { google.protobuf.Int32Value age = 1 [(validate.rules).int32.gt = -1, 
   ```
 
   *Translation notes*:
+  * `timestamp.valid` - Value must be parse-able as a valid timestamp object
   * `timestamp.between_open` - Value must be inside the open interval `(x, y)` which excludes both endpoints
   * `timestamp.between_closed` - Value must be inside the closed interval `[x, y]` which includes both endpoints
   * `timestamp.between_include_left` - Value must be inside the half-open interval `[x, y)` which includes the left endpoint
