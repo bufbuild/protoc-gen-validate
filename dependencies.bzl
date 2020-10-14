@@ -46,7 +46,7 @@ def go_third_party():
     go_repository(
         name = "com_github_theplant_cldr",
         importpath = "github.com/theplant/cldr",
-        sum = "h1:MIL7SmF8wRAYDn+JexczVRUiJXTCi4VbQavsCKWKwXI=",
+        sum = "h1:di0cR5qqo2DllBMwmP75kZpUX6dAXhsn1O2dshQfMaA=",
         version = "v0.0.0-20190423050709-9f76f7ce4ee8",
     )
     go_repository(
