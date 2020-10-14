@@ -44,6 +44,12 @@ def go_third_party():
         version = "v0.0.0-20200908023436-0c0a0b041c88",
     )
     go_repository(
+        name = "com_github_theplant_cldr",
+        importpath = "github.com/theplant/cldr",
+        sum = "h1:MIL7SmF8wRAYDn+JexczVRUiJXTCi4VbQavsCKWKwXI=",
+        version = "v0.0.0-20190423050709-9f76f7ce4ee8",
+    )
+    go_repository(
         name = "com_github_lyft_protoc_gen_star",
         importpath = "github.com/lyft/protoc-gen-star",
         sum = "h1:sImehRT+p7lW9n6R7MQc5hVgzWGEkDVZU4AsBQ4Isu8=",
