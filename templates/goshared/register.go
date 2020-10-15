@@ -340,8 +340,12 @@ func (fns goSharedFuncs) buildFuncFactory() func(translationKeyPrefix string) te
 	locale := os.Getenv(envVarLocaleChoice)
 	return func(translationKeyPrefix string) template.FuncMap {
 		return template.FuncMap{"t": func(key string, value string, args ...interface {}) string {
-			key = strings.ReplaceAll(key, "<prefix>", translationKeyPrefix)
-			return string(I18n.Default(fmt.Sprint(value)).T(locale, key, args...))
+			//key = strings.ReplaceAll(key, "<prefix>", translationKeyPrefix)
+			for i, arg := range args {
+				value = strings.ReplaceAll(value, fmt.Sprintf("{{$%d}}", i+1), fmt.Sprint(arg))
+			}
+			return value
+			//return string(I18n.Default(fmt.Sprint(value)).T(locale, key, args...))
 		}}
 	}
 }
