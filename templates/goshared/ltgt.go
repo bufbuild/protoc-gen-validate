@@ -24,7 +24,7 @@ const ltgtTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 			{{ end }}
 		{{ else }}
 			if {{ accessor . }} >= {{ $r.Lt }} {
-				return {{ err . (t "<prefix>.lt" "value must be less than " $r.GetLt) }}
+				return {{ err . (t "<prefix>.lt" "value must be less than {{$1}}" $r.GetLt) }}
 			}
 		{{ end }}
 	{{ else if $r.Lte }}
@@ -50,16 +50,16 @@ const ltgtTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 			{{ end }}
 		{{ else }}
 			if {{ accessor . }} > {{ $r.Lte }} {
-				return {{ err . (t "<prefix>.lte" "value must be less than or equal to " $r.GetLte) }}
+				return {{ err . (t "<prefix>.lte" "value must be less than or equal to {{$1}}" $r.GetLte) }}
 			}
 		{{ end }}
 	{{ else if $r.Gt }}
 		if {{ accessor . }} <= {{ $r.Gt }} {
-			return {{ err . (t "<prefix>.gt" "value must be greater than " $r.GetGt) }}
+			return {{ err . (t "<prefix>.gt" "value must be greater than {{$1}}" $r.GetGt) }}
 		}
 	{{ else if $r.Gte }}
 		if {{ accessor . }} < {{ $r.Gte }} {
-			return {{ err . (t "<prefix>.gte" "value must be greater than or equal to " $r.GetGte) }}
+			return {{ err . (t "<prefix>.gte" "value must be greater than or equal to {{$1}}" $r.GetGte) }}
 		}
 	{{ end }}
 `
