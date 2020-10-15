@@ -341,7 +341,7 @@ func (fns goSharedFuncs) buildFuncFactory() func(translationKeyPrefix string) te
 	return func(translationKeyPrefix string) template.FuncMap {
 		return template.FuncMap{"t": func(key string, value string, args ...interface {}) string {
 			key = strings.ReplaceAll(key, "<prefix>", translationKeyPrefix)
-			return string(I18n.Default(value).T(locale, key, args...))
+			return string(I18n.Default(fmt.Sprint(value)).T(locale, key, args...))
 		}}
 	}
 }
