@@ -3,8 +3,6 @@ package goshared
 import (
 	"fmt"
 	"github.com/iancoleman/strcase"
-	"github.com/qor/i18n/backends/yaml"
-	"os"
 	"reflect"
 	"strings"
 	"text/template"
@@ -15,14 +13,13 @@ import (
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/lyft/protoc-gen-star"
 	"github.com/lyft/protoc-gen-star/lang/go"
-	"github.com/qor/i18n"
 )
 
-const (
-	envVarLocalesDir = "PROTOC_GEN_VALIDATE_LOCALES_DIR"
-	envVarLocaleChoice = "LANG" // standard environment variable
-	// for details see https://www.gnu.org/software/libc/manual/html_node/Standard-Environment.html
-)
+//const (
+//	envVarLocalesDir = "PROTOC_GEN_VALIDATE_LOCALES_DIR"
+//	envVarLocaleChoice = "LANG" // standard environment variable
+//	// for details see https://www.gnu.org/software/libc/manual/html_node/Standard-Environment.html
+//)
 
 func Register(tpl *template.Template, params pgs.Parameters) {
 	fns := goSharedFuncs{pgsgo.InitContext(params)}
@@ -336,8 +333,8 @@ func (fns goSharedFuncs) snakeCase(name string) string {
 }
 
 func (fns goSharedFuncs) buildFuncFactory() func(translationKeyPrefix string) template.FuncMap {
-	I18n := i18n.New(yaml.New(os.Getenv(envVarLocalesDir)))
-	locale := os.Getenv(envVarLocaleChoice)
+	//I18n := i18n.New(yaml.New(os.Getenv(envVarLocalesDir)))
+	//locale := os.Getenv(envVarLocaleChoice)
 	return func(translationKeyPrefix string) template.FuncMap {
 		return template.FuncMap{"t": func(key string, value string, args ...interface {}) string {
 			//key = strings.ReplaceAll(key, "<prefix>", translationKeyPrefix)
