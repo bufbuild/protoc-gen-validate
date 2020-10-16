@@ -7,11 +7,10 @@ import (
 	"unicode/utf8"
 
 	"github.com/envoyproxy/protoc-gen-validate/validate"
-	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/ptypes"
-	"github.com/golang/protobuf/ptypes/duration"
-	"github.com/golang/protobuf/ptypes/timestamp"
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
+	proto "google.golang.org/protobuf/proto"
+	duration "google.golang.org/protobuf/types/known/durationpb"
+	timestamp "google.golang.org/protobuf/types/known/timestamppb"
 )
 
 var unknown = ""
@@ -492,8 +491,7 @@ func (m *Module) checkDur(d *duration.Duration) *time.Duration {
 		return nil
 	}
 
-	dur, err := ptypes.Duration(d)
-	m.CheckErr(err, "could not resolve duration")
+	dur := d.AsDuration()
 	return &dur
 }
 
@@ -502,7 +500,6 @@ func (m *Module) checkTS(ts *timestamp.Timestamp) *int64 {
 		return nil
 	}
 
-	t, err := ptypes.Timestamp(ts)
-	m.CheckErr(err, "could not resolve timestamp")
+	t := ts.AsTime()
 	return proto.Int64(t.UnixNano())
 }

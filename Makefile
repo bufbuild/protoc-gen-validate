@@ -51,7 +51,7 @@ bin/golint:
 	GOBIN=$(shell pwd)/bin go install golang.org/x/lint/golint
 
 bin/protoc-gen-go:
-	GOBIN=$(shell pwd)/bin go install github.com/golang/protobuf/protoc-gen-go
+	GOBIN=$(shell pwd)/bin go install google.golang.org/protobuf/cmd/protoc-gen-go
 
 bin/harness:
 	cd tests && go build -o ../bin/harness ./harness/executor
