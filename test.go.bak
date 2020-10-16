@@ -1,0 +1,52 @@
+package main
+
+import (
+	"fmt"
+	"github.com/qor/i18n"
+	"github.com/qor/i18n/backends/yaml"
+	"github.com/theplant/cldr"
+	"html"
+	"os"
+	"reflect"
+	"strings"
+)
+
+func main() {
+	I18n := i18n.New(yaml.New(os.Getenv("PROTOC_GEN_VALIDATE_LOCALES_DIR")))
+	locale := os.Getenv("LANG")
+	key := "string.pattern"
+	value := "value does not match regex pattern {{$1}}"
+	pattern := "^[\\x00-\\u007f]+$"
+	fmt.Println(pattern)
+	args := []interface{}{lit(pattern)}
+	key = strings.ReplaceAll(key, "<prefix>", "string")
+	fmt.Println(html.UnescapeString(string(I18n.Default(value).T(locale, key, args...))))
+	fmt.Println(cldr.Parse(locale, value, args...))
+}
+
+func lit(x interface{}) string {
+	val := reflect.ValueOf(x)
+
+	if val.Kind() == reflect.Interface {
+		val = val.Elem()
+	}
+
+	if val.Kind() == reflect.Ptr {
+		val = val.Elem()
+	}
+
+	switch val.Kind() {
+	case reflect.String:
+		return fmt.Sprintf("%q", x)
+	case reflect.Uint8:
+		return fmt.Sprintf("0x%X", x)
+	case reflect.Slice:
+		els := make([]string, val.Len())
+		for i, l := 0, val.Len(); i < l; i++ {
+			els[i] = lit(val.Index(i).Interface())
+		}
+		return fmt.Sprintf("%T{%s}", val.Interface(), strings.Join(els, ", "))
+	default:
+		return fmt.Sprint(x)
+	}
+}

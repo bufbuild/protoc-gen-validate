@@ -2,7 +2,8 @@ package goshared
 
 import (
 	"fmt"
-	"github.com/iancoleman/strcase"
+	"html"
+	"os"
 	"reflect"
 	"strings"
 	"text/template"
@@ -11,15 +12,18 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/duration"
 	"github.com/golang/protobuf/ptypes/timestamp"
+	"github.com/iancoleman/strcase"
 	"github.com/lyft/protoc-gen-star"
 	"github.com/lyft/protoc-gen-star/lang/go"
+	"github.com/qor/i18n"
+	"github.com/qor/i18n/backends/yaml"
 )
 
-//const (
-//	envVarLocalesDir = "PROTOC_GEN_VALIDATE_LOCALES_DIR"
-//	envVarLocaleChoice = "LANG" // standard environment variable
-//	// for details see https://www.gnu.org/software/libc/manual/html_node/Standard-Environment.html
-//)
+const (
+	envVarLocalesDir   = "PROTOC_GEN_VALIDATE_LOCALES_DIR"
+	envVarLocaleChoice = "LANG" // standard environment variable
+	// for details see https://www.gnu.org/software/libc/manual/html_node/Standard-Environment.html
+)
 
 func Register(tpl *template.Template, params pgs.Parameters) {
 	fns := goSharedFuncs{pgsgo.InitContext(params)}
@@ -27,7 +31,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	tpl.Funcs(map[string]interface{}{
 		"accessor":      fns.accessor,
 		"byteStr":       fns.byteStr,
-		"snakeCase":	 fns.snakeCase,
+		"snakeCase":     fns.snakeCase,
 		"cmt":           pgs.C80,
 		"durGt":         fns.durGt,
 		"durLit":        fns.durLit,
@@ -333,16 +337,13 @@ func (fns goSharedFuncs) snakeCase(name string) string {
 }
 
 func (fns goSharedFuncs) buildFuncFactory() func(translationKeyPrefix string) template.FuncMap {
-	//I18n := i18n.New(yaml.New(os.Getenv(envVarLocalesDir)))
-	//locale := os.Getenv(envVarLocaleChoice)
+	I18n := i18n.New(yaml.New(os.Getenv(envVarLocalesDir)))
+	locale := os.Getenv(envVarLocaleChoice)
 	return func(translationKeyPrefix string) template.FuncMap {
-		return template.FuncMap{"t": func(key string, value string, args ...interface {}) string {
-			//key = strings.ReplaceAll(key, "<prefix>", translationKeyPrefix)
-			for i, arg := range args {
-				value = strings.ReplaceAll(value, fmt.Sprintf("{{$%d}}", i+1), fmt.Sprint(arg))
-			}
-			return value
-			//return string(I18n.Default(fmt.Sprint(value)).T(locale, key, args...))
+		return template.FuncMap{"t": func(key string, value string, args ...interface{}) string {
+			key = strings.ReplaceAll(key, "<prefix>", translationKeyPrefix)
+			trln := I18n.Default(value).T(locale, key, args...)
+			return html.UnescapeString(string(trln)) // i18n assumes an HTML context but we're context-agnostic
 		}}
 	}
 }
