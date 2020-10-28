@@ -135,18 +135,18 @@ following to your pom.xml or build.gradle.
             <configuration>
                 <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
             </configuration>
-                <executions>
-                    <execution>
-                        <id>protoc-java-pgv</id>
-                        <goals>
-                            <goal>compile-custom</goal>
-                        </goals>
-                        <configuration>
-                            <pluginParameter>lang=java</pluginParameter>
-                            <pluginId>java-pgv</pluginId>
-                            <pluginArtifact>io.envoyproxy.protoc-gen-validate:protoc-gen-validate:${pgv.version}:exe:${os.detected.classifier}</pluginArtifact>
-                        </configuration>
-                    </execution>
+            <executions>
+                <execution>
+                    <id>protoc-java-pgv</id>
+                    <goals>
+                        <goal>compile-custom</goal>
+                    </goals>
+                    <configuration>
+                        <pluginParameter>lang=java</pluginParameter>
+                        <pluginId>java-pgv</pluginId>
+                        <pluginArtifact>io.envoyproxy.protoc-gen-validate:protoc-gen-validate:${pgv.version}:exe:${os.detected.classifier}</pluginArtifact>
+                    </configuration>
+                </execution>
             </executions>
         </plugin>
     </plugins>
