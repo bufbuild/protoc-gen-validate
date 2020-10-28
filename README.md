@@ -135,6 +135,7 @@ following to your pom.xml or build.gradle.
             <configuration>
                 <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
             </configuration>
+            <executions>
                 <execution>
                     <id>protoc-java-pgv</id>
                     <goals>
