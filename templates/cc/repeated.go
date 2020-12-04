@@ -2,7 +2,9 @@ package cc
 
 const repTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}{{ $typ := inType $f nil }}
-
+	{{if .Rules.GetIgnoreEmpty}}
+		if ({{ accessor . }}.size() > 0) {
+	{{end}}
 	{{ if $r.GetMinItems }}
 		{{ if eq $r.GetMinItems $r.GetMaxItems }}
 			if ({{ accessor . }}.size() != {{ $r.GetMinItems }}) {
@@ -58,4 +60,7 @@ const repTpl = `
 			{{ render (.Elem "item" "i") }}
 		}
 	{{ end }}
+	{{if .Rules.GetIgnoreEmpty}}
+		}
+	{{end}}
 `
