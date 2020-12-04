@@ -32,6 +32,9 @@ const bytesConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- end -}}`
 
 const bytesTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
+{{- if $r.GetIgnoreEmpty }}
+			if ( !{{ accessor . }}.isEmpty() ) {
+{{- end -}}
 {{- if $r.Const }}
 			io.envoyproxy.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Const" }});
 {{- end -}}
@@ -70,5 +73,8 @@ const bytesTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- end -}}
 {{- if $r.NotIn }}
 			io.envoyproxy.pgv.CollectiveValidation.notIn("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "NotIn" }});
+{{- end -}}
+{{- if $r.GetIgnoreEmpty }}
+			}
 {{- end -}}
 `
