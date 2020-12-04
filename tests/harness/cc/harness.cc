@@ -83,7 +83,7 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
   // validation function can't be specified as a virtual method on the
   // google::protobuf::Message class.
 #define TRY_RETURN_VALIDATE_CALLABLE(CLS) \
-  if (msg.Is<CLS>()) { \
+  if (msg.Is<CLS>() && !msg.Is<::tests::harness::cases::MessageIgnored>()) { \
     return [msg] () {                                      \
       pgv::ValidationMsg err_msg;                          \
       TestResult result;                                   \

@@ -36,6 +36,10 @@ def pgv_cc_proto_library(
       **kargs: other keyword arguments that are passed to cc_library.
     """
 
+    native.cc_proto_library(
+        name = name + "_cc_proto",
+        deps = deps,
+    )
     cc_proto_gen_validate(
         name = name + "_validate",
         deps = deps,
@@ -45,6 +49,7 @@ def pgv_cc_proto_library(
         hdrs = [":" + name + "_validate"],
         srcs = [":" + name + "_validate"],
         deps = cc_deps + [
+            ":" + name + "_cc_proto",
             "@com_envoyproxy_protoc_gen_validate//validate:cc_validate",
             "@com_envoyproxy_protoc_gen_validate//validate:validate_cc",
             "@com_google_protobuf//:protobuf",

@@ -14,7 +14,7 @@ jobs:
     environment:
       MAVEN_OPTS: -Xms512m -Xmx1024m # Customize the JVM maximum heap limit
       GO111MODULE: "on"
-      CI_GO_VERSION: 1.14.3
+      CI_GO_VERSION: 1.14.7
     steps:
       - checkout:
           path: ~/.go_workspace/src/github.com/envoyproxy/protoc-gen-validate
@@ -32,7 +32,7 @@ jobs:
               if [[ -n "${RELEASE}" && -n "${NEXT}" ]]; then
                 git config --global user.email "envoy-bot@users.noreply.github.com"
                 git config --global user.name "envoy-bot"
-                mvn -B -s ../.circleci/settings.xml release:prepare -Darguments="-s ../.circleci/settings.xml" -DreleaseVersion=$RELEASE -DdevelopmentVersion=$NEXT -DtagNameFormat="@{version}-java" -DscmCommentPrefix="java release: "
+                mvn -B -s ../.circleci/settings.xml release:prepare release:perform -Darguments="-s ../.circleci/settings.xml" -DreleaseVersion=$RELEASE -DdevelopmentVersion=$NEXT -DscmCommentPrefix="java release: "
               else
                 mvn -B -s ../.circleci/settings.xml deploy
               fi

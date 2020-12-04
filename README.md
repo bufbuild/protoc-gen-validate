@@ -135,6 +135,7 @@ following to your pom.xml or build.gradle.
             <configuration>
                 <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
             </configuration>
+            <executions>
                 <execution>
                     <id>protoc-java-pgv</id>
                     <goals>
@@ -709,7 +710,7 @@ message X { google.protobuf.Int32Value age = 1 [(validate.rules).int32.gt = -1, 
 
   ```protobuf
   // x must equal 2009/11/10T23:00:00.500Z exactly
-  google.protobuf.Timestamp x = 1 [(validate.rules).timestamp = {
+  google.protobuf.Timestamp x = 1 [(validate.rules).timestamp.const = {
       seconds: 63393490800,
       nanos:   500000000
     }];
@@ -767,6 +768,20 @@ message X { google.protobuf.Int32Value age = 1 [(validate.rules).int32.gt = -1, 
   ```protobuf
   message Person {
     option (validate.disabled) = true;
+
+    // x will not be required to be greater than 123
+    uint64 x = 1 [(validate.rules).uint64.gt = 123];
+
+    // y's fields will not be validated
+    Person y = 2;
+  }
+  ```
+
+- **ignored**: Don't generate a validate method or any related validation code for this message.
+
+  ```protobuf
+  message Person {
+    option (validate.ignored) = true;
 
     // x will not be required to be greater than 123
     uint64 x = 1 [(validate.rules).uint64.gt = 123];

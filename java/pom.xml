@@ -4,7 +4,7 @@
 
     <groupId>io.envoyproxy.protoc-gen-validate</groupId>
     <artifactId>pgv-java</artifactId>
-    <version>0.4.0-SNAPSHOT</version>
+    <version>0.4.2-SNAPSHOT</version>
     <modules>
         <module>pgv-java-stub</module>
         <module>pgv-java-validation</module>
@@ -139,7 +139,8 @@
                         <version>2.5.3</version>
                         <configuration>
                             <autoVersionSubmodules>true</autoVersionSubmodules>
-                            <tagNameFormat>v@{project.version}</tagNameFormat>
+                            <tagNameFormat>v@{project.version}-java</tagNameFormat>
+                            <scmCommentPrefix>java release: </scmCommentPrefix>
                         </configuration>
                         <!-- No executions -->
                     </plugin>
