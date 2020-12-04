@@ -3,9 +3,9 @@ package goshared
 const bytesTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 
-	{{if .Rules.GetIgnoreEmpty}}
-		if len({{accessor .}}) > 0 {
-	{{end}}
+	{{ if $r.GetIgnoreEmpty }}
+		if len({{ accessor . }}) > 0 {
+	{{ end }}
 
 	{{ if or $r.Len (and $r.MinLen $r.MaxLen (eq $r.GetMinLen $r.GetMaxLen)) }}
 		{{ if $r.Len }}
@@ -87,7 +87,7 @@ const bytesTpl = `
 	}
 	{{ end }}
 
-	{{if .Rules.GetIgnoreEmpty}}
+	{{ if $r.GetIgnoreEmpty }}
 		}
-	{{end}}
+	{{ end }}
 `

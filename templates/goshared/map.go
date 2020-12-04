@@ -3,9 +3,9 @@ package goshared
 const mapTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 
-	{{if .Rules.GetIgnoreEmpty}}
-		if len({{accessor .}}) > 0 {
-	{{end}}
+	{{ if $r.GetIgnoreEmpty }}
+		if len({{ accessor . }}) > 0 {
+	{{ end }}
 
 	{{ if $r.GetMinPairs }}
 		{{ if eq $r.GetMinPairs $r.GetMaxPairs }}
@@ -43,8 +43,8 @@ const mapTpl = `
 		}
 	{{ end }}
 
-	{{if .Rules.GetIgnoreEmpty}}
+	{{ if $r.GetIgnoreEmpty }}
 		}
-	{{end}}
+	{{ end }}
 
 `

@@ -3,9 +3,9 @@ package goshared
 const repTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 
-	{{if .Rules.GetIgnoreEmpty}}
-		if len({{accessor .}}) > 0 {
-	{{end}}
+	{{ if $r.GetIgnoreEmpty }}
+		if len({{ accessor . }}) > 0 {
+	{{ end }}
 
 	{{ if $r.GetMinItems }}
 		{{ if eq $r.GetMinItems $r.GetMaxItems }}
@@ -50,7 +50,7 @@ const repTpl = `
 		}
 	{{ end }}
 
-	{{if .Rules.GetIgnoreEmpty}}
+	{{ if $r.GetIgnoreEmpty }}
 		}
-	{{end}}
+	{{ end }}
 `

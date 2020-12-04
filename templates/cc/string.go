@@ -2,9 +2,9 @@ package cc
 
 const strTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
-	{{if .Rules.GetIgnoreEmpty}}
-		if ({{accessor .}} != "") {
-	{{end}}
+	{{ if $r.GetIgnoreEmpty }}
+		if ({{ accessor . }} != "") {
+	{{ end }}
 	{{ template "const" . }}
 	{{ template "in" . }}
 	{{ if or $r.Len (and $r.MinLen $r.MaxLen (eq $r.GetMinLen $r.GetMaxLen)) }}
@@ -183,7 +183,7 @@ const strTpl = `
                         {{ err . "value must be a valid UUID" }}
                 }
 	{{ end }}
-	{{if .Rules.GetIgnoreEmpty}}
+	{{ if $r.GetIgnoreEmpty }}
 		}
-	{{end}}
+	{{ end }}
 `

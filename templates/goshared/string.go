@@ -3,9 +3,9 @@ package goshared
 const strTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 
-	{{if .Rules.GetIgnoreEmpty}}
-		if {{accessor .}} != "" {
-	{{end}}
+	{{ if $r.GetIgnoreEmpty }}
+		if {{ accessor . }} != "" {
+	{{ end }}
 
 	{{ template "const" . }}
 	{{ template "in" . }}
@@ -133,8 +133,8 @@ const strTpl = `
 		}
 	{{ end }}
 
-	{{if .Rules.GetIgnoreEmpty}}
+	{{ if $r.GetIgnoreEmpty }}
 		}
-	{{end}}
+	{{ end }}
 
 `

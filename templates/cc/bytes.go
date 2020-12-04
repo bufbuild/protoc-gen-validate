@@ -2,9 +2,9 @@ package cc
 
 const bytesTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
-	{{if .Rules.GetIgnoreEmpty}}
+	{{ if $r.GetIgnoreEmpty }}
 		if ({{ accessor . }}.size() > 0) {
-	{{end}}
+	{{ end }}
 	{{ template "const" . }}
 	{{ template "in" . }}
 
@@ -97,7 +97,7 @@ const bytesTpl = `
 		}
 		*/}}
 	{{ end }}
-	{{if .Rules.GetIgnoreEmpty}}
+	{{ if $r.GetIgnoreEmpty }}
 		}
-	{{end}}
+	{{ end }}
 `
