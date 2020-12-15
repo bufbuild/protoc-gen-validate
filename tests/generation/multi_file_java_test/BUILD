@@ -5,6 +5,8 @@ load(
     "pgv_cc_proto_library",
 )
 
+# gazelle:go_generate_proto false
+
 proto_library(
     name = "test_proto",
     srcs = ["test.proto"],

@@ -8,6 +8,8 @@ load(
     "pgv_python_proto_library",
 )
 
+# gazelle:go_generate_proto false
+
 proto_library(
     name = "cases_proto",
     srcs = [
@@ -44,11 +46,7 @@ pgv_go_proto_library(
     proto = ":cases_proto",
     deps = [
         "//tests/harness/cases/other_package:go",
-        "@com_github_golang_protobuf//ptypes:go_default_library",
-        "@com_github_golang_protobuf//ptypes/any:go_default_library",
-        "@com_github_golang_protobuf//ptypes/duration:go_default_library",
-        "@com_github_golang_protobuf//ptypes/timestamp:go_default_library",
-        "@com_github_golang_protobuf//ptypes/wrappers:go_default_library",
+        "@com_github_golang_protobuf//ptypes:go_default_library_gen",
     ],
 )
 
