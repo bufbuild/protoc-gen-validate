@@ -51,7 +51,7 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 			// implementation-specific FilePathFor implementations.
 			// Ex: Don't generate Java validators for files that don't reference PGV.
 			if out != nil {
-				outPath := pgs.JoinPaths(strings.ReplaceAll(out.String(), module, ""))
+				outPath := strings.TrimLeft(strings.ReplaceAll(out.String(), module, ""), "/")
 
 				if opts := f.Descriptor().GetOptions(); opts != nil && opts.GetJavaMultipleFiles() && lang == "java" {
 					// TODO: Only Java supports multiple file generation. If more languages add multiple file generation
@@ -60,7 +60,7 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 						m.AddGeneratorTemplateFile(java.JavaMultiFilePath(f, msg).String(), tpl, msg)
 					}
 				} else {
-					m.AddGeneratorTemplateFile(outPath.String(), tpl, f)
+					m.AddGeneratorTemplateFile(outPath, tpl, f)
 				}
 			}
 		}
