@@ -5,8 +5,14 @@ option go_package = "harness";
 
 import "google/protobuf/any.proto";
 
+enum TestType {
+    TestTypeValidate = 0;
+    TestTypeAllErrors = 1;
+}
+
 message TestCase {
     google.protobuf.Any message = 1;
+    TestType test_type = 2;
 }
 
 message TestResult {
@@ -14,4 +20,5 @@ message TestResult {
     bool   Error  = 2;
     string Reason = 3;
     bool   AllowFailure = 4;
+    int32 ErrorCount = 5;
 }

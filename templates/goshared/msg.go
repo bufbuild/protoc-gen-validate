@@ -8,11 +8,23 @@ const msgTpl = `
 	{{ cmt "Validate checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, an error is returned." }}
 {{- end -}}
 func (m {{ (msgTyp .).Pointer }}) Validate() error {
+	return m.getErrors(true)
+}
+{{ if disabled . -}}
+	{{ cmt "AllErrors is disabled for " (msgTyp .) ". This method will always return nil." }}
+{{- else -}}
+	{{ cmt "AllErrors checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, they are all returned." }}
+{{- end -}}
+func (m {{ (msgTyp .).Pointer }}) AllErrors() error {
+	return m.getErrors(false)
+}
+
+func (m {{ (msgTyp .).Pointer }}) getErrors(stopOnError bool) error {
 	{{ if disabled . -}}
 		return nil
 	{{ else -}}
 		if m == nil { return nil }
-
+		var multiErr *multierror.Error
 		{{ range .NonOneOfFields }}
 			{{ render (context .) }}
 		{{ end }}
@@ -25,15 +37,17 @@ func (m {{ (msgTyp .).Pointer }}) Validate() error {
 				{{ end }}
 				{{ if required . }}
 					default:
-						return {{ errname .Message }}{
+						err := {{ errname .Message }}{
 							field: "{{ name . }}",
 							reason: "value is required",
 						}
+						if stopOnError { return err }
+						multiErr = multierror.Append(multiErr, err)
+						
 				{{ end }}
 			}
 		{{ end }}
-
-		return nil
+		return multiErr.ErrorOrNil()
 	{{ end -}}
 }
 

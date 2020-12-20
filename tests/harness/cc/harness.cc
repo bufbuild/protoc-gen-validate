@@ -90,13 +90,16 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
       CLS unpacked;                                        \
       msg.UnpackTo(&unpacked);                             \
       try {                                                \
-        result.set_valid(Validate(unpacked, &err_msg));    \
+        bool valid = Validate(unpacked, &err_msg);         \
+        result.set_valid(valid);                           \
         result.set_reason(std::move(err_msg));             \
+        result.set_errorcount(valid ? 0 : 1);              \
       } catch (pgv::UnimplementedException& e) {           \
         /* don't fail for unimplemented validations */     \
         result.set_valid(false);                           \
         result.set_allowfailure(true);                     \
         result.set_reason(e.what());                       \
+        result.set_errorcount(1);                          \
       }                                                    \
       return result;                                       \
     };                                                     \
@@ -145,8 +148,17 @@ int main() {
 
   ExitIfFailed(test_case.ParseFromIstream(&std::cin), "failed to parse TestCase");
 
-  auto validate_fn = GetValidationCheck(test_case.message());
-  WriteTestResultAndExit(validate_fn());
+  // Run tests only for Validate as AllErrors is not implemented for c++ (yet)
+  if (test_case.test_type() == 0) {
+      auto validate_fn = GetValidationCheck(test_case.message());
+      WriteTestResultAndExit(validate_fn());
+  } else {
+    TestResult result;
+    result.set_valid(true);
+    result.set_allowfailure(true);
+    result.set_reason("not implemented");
+    WriteTestResultAndExit(result);
+  }
 
   return 0;
 }

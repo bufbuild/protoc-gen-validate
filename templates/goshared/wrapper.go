@@ -6,6 +6,8 @@ const wrapperTpl = `
 	if wrapper := {{ accessor . }}; wrapper != nil {
 		{{ render (unwrap . "wrapper") }}
 	} {{ if .MessageRules.GetRequired }} else {
-		return {{ err . "value is required and must not be nil." }}
+		err := {{ err . "value is required and must not be nil." }}
+		if stopOnError { return err }
+		multiErr = multierror.Append(multiErr, err)
 	} {{ end }}
 `

@@ -3,9 +3,11 @@ package main
 import (
 	"fmt"
 	"github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
+	"github.com/hashicorp/go-multierror"
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 
 	_ "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
 	_ "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
@@ -26,28 +28,49 @@ func main() {
 
 	_, isIgnored := da.Message.(*cases.MessageIgnored)
 
-	msg, hasValidate := da.Message.(interface {
+	msgValidate, hasValidate := da.Message.(interface {
 		Validate() error
+	})
+
+	msgAllErrors, hasAllErrors := da.Message.(interface {
+		AllErrors() error
 	})
 
 	if isIgnored {
 		// confirm that ignored messages don't have a validate method
-		if hasValidate {
-			err = fmt.Errorf("ignored message has Validate() method")
+		if hasValidate || hasAllErrors {
+			err = fmt.Errorf("ignored message has Validate() or AllErrors method")
 		}
-	} else if !hasValidate {
+	} else if !hasValidate || !hasAllErrors {
 		err = fmt.Errorf("non-ignored message is missing Validate()")
 	} else {
-		err = msg.Validate()
+		if tc.TestType == harness.TestType_TestTypeValidate {
+			err = msgValidate.Validate()
+		} else {
+			err = msgAllErrors.AllErrors()
+		}
 	}
 	checkValid(err)
 }
 
 func checkValid(err error) {
 	if err == nil {
-		resp(&harness.TestResult{Valid: true})
+		resp(&harness.TestResult{Valid: true, ErrorCount: 0})
 	} else {
-		resp(&harness.TestResult{Reason: err.Error()})
+		var reason string
+		var errorCount int
+		if multiErr, ok := err.(*multierror.Error); ok {
+			errorCount = len(multiErr.Errors)
+			reasons := make([]string, errorCount)
+			for i, e := range multiErr.Errors {
+				reasons[i] = e.Error()
+			}
+			reason = strings.Join(reasons, ",")
+		} else {
+			errorCount = 1
+			reason = err.Error()
+		}
+		resp(&harness.TestResult{Reason: reason, ErrorCount: int32(errorCount)})
 	}
 }
 

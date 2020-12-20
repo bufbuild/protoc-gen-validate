@@ -18,6 +18,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/golang/protobuf/ptypes"
+	"github.com/hashicorp/go-multierror"
 
 	{{ range $path, $pkg := enumPackages (externalEnums .) }}
 		{{ $pkg }} "{{ $path }}"
@@ -37,6 +38,7 @@ var (
 	_ = (*url.URL)(nil)
 	_ = (*mail.Address)(nil)
 	_ = ptypes.DynamicAny{}
+	_ = multierror.Error{}
 
 	{{ range (externalEnums .) }}
 		_ = {{ pkg . }}.{{ name . }}(0)

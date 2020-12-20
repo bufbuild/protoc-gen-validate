@@ -28,7 +28,14 @@ func execTestCase(tc TestCase, harnesses []Harness) (ok, skip bool) {
 		return false, false
 	}
 
-	b, err := proto.Marshal(&harness.TestCase{Message: any})
+	var testType harness.TestType
+	if tc.TestType == TestTypeValidate {
+		testType = harness.TestType_TestTypeValidate
+	} else {
+		testType = harness.TestType_TestTypeAllErrors
+	}
+
+	b, err := proto.Marshal(&harness.TestCase{Message: any, TestType: testType})
 	if err != nil {
 		log.Printf("unable to marshal test case %q - %v", tc.Name, err)
 		return false, false
@@ -55,15 +62,17 @@ func execTestCase(tc TestCase, harnesses []Harness) (ok, skip bool) {
 			}
 
 			if res.Error {
-				errs <- fmt.Errorf("%s: internal harness error: %s", h.Name, res.Reason)
+				errs <- fmt.Errorf("%s: internal harness error: %s", h.Name, res.GetReason())
 			} else if res.Valid != tc.Valid {
 				if res.AllowFailure {
-					skips <- fmt.Sprintf("%s: ignoring test failure: %s", h.Name, res.Reason)
+					skips <- fmt.Sprintf("%s: ignoring test failure: %s", h.Name, res.GetReason())
 				} else if tc.Valid {
-					errs <- fmt.Errorf("%s: expected valid, got: %s", h.Name, res.Reason)
+					errs <- fmt.Errorf("%s: expected valid, got: %s", h.Name, res.GetReason())
 				} else {
 					errs <- fmt.Errorf("%s: expected invalid, but got valid", h.Name)
 				}
+			} else if tc.ErrorCount != int(res.GetErrorCount()) {
+				errs <- fmt.Errorf("%s: expected %d errors, got: %d, reason: %s", h.Name, tc.ErrorCount, res.GetErrorCount(), res.GetReason())
 			}
 		}()
 	}
