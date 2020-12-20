@@ -241,3 +241,9 @@ def go_third_party():
         sum = "h1:E7g+9GITq07hpfrRu66IVDexMakfv52eLZ2CXBWiKr4=",
         version = "v0.0.0-20191204190536-9bdfabe68543",
     )
+    go_repository(
+        name = "om_github_hashicorp_go-multierror",
+        importpath = "github.com/hashicorp/go-multierror",
+        sum = "h1:B9UzwGQJehnUY1yNrnwREHc3fGbC2xefo8g4TbElacI=",
+        version = "v1.1.0",
+    )
