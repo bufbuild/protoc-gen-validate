@@ -13,3 +13,7 @@
 [[constraint]]
   branch = "master"
   name = "github.com/iancoleman/strcase"
+
+[[constraint]]
+  name = "github.com/hashicorp/go-multierror"
+  version = "1.1.0"
