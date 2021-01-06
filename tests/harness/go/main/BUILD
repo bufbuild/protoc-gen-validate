@@ -10,7 +10,7 @@ go_library(
         "//tests/harness/cases:go",
         "//tests/harness/cases/other_package:go",
         "@com_github_golang_protobuf//proto:go_default_library",
-        "@com_github_golang_protobuf//ptypes:go_default_library",
+        "@com_github_golang_protobuf//ptypes:go_default_library_gen",
     ],
 )
 
