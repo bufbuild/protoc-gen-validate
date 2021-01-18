@@ -206,7 +206,7 @@ func (fns CCFuncs) errIdxCause(ctx shared.RuleContext, idx, cause string, reason
 		output = append(output, fmt.Sprintf(`msg << "[" << %s << "]";`, fns.lit(ctx.Index)))
 	}
 
-	output = append(output, fmt.Sprintf(`msg << ": " << %s;`, fns.lit(fmt.Sprintf("%q", reason))))
+	output = append(output, fmt.Sprintf(`msg << ": " << %s;`, fmt.Sprintf("%q", fmt.Sprint(reason...))))
 
 	if cause != "nil" && cause != "" {
 		output = append(output, fmt.Sprintf(`msg << " | caused by " << %s;`, cause))
