@@ -51,7 +51,7 @@ const repTpl = `
 			{{ if $r.GetUnique }}
 				auto p = {{ lookup $f "Unique" }}.emplace(const_cast<{{ $typ }}&>(item));
 				if (p.second == false) {
-					{{ errIdx . "idx" "repeated value must contain unique items" }}
+					{{ errIdx . "i" "repeated value must contain unique items" }}
 				}
 			{{ end }}
 
