@@ -8,6 +8,7 @@ import (
 	"github.com/envoyproxy/protoc-gen-validate/templates/cc"
 	"github.com/envoyproxy/protoc-gen-validate/templates/go"
 	"github.com/envoyproxy/protoc-gen-validate/templates/java"
+	"github.com/envoyproxy/protoc-gen-validate/templates/php"
 	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 )
 
@@ -26,6 +27,7 @@ func Template(params pgs.Parameters) map[string][]*template.Template {
 		"cc":   {makeTemplate("h", cc.RegisterHeader, params), makeTemplate("cc", cc.RegisterModule, params)},
 		"go":   {makeTemplate("go", golang.Register, params)},
 		"java": {makeTemplate("java", java.Register, params)},
+		"php": {makeTemplate("php", php.Register, params)},
 	}
 }
 
@@ -37,6 +39,8 @@ func FilePathFor(tpl *template.Template) FilePathFn {
 		return cc.CcFilePath
 	case "java":
 		return java.JavaFilePath
+	case "php":
+		return php.PhpFilePath
 	default:
 		return func(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.FilePath {
 			out := ctx.OutputPath(f)
