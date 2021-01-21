@@ -32,6 +32,9 @@ const numConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- end -}}`
 
 const numTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
+{{- if $r.GetIgnoreEmpty }}
+			if ( {{ accessor . }} != 0 ) {
+{{- end -}}
 {{- if $r.Const }}
 			io.envoyproxy.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Const" }});
 {{- end -}}
@@ -56,5 +59,8 @@ const numTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- end -}}
 {{- if $r.NotIn }}
 			io.envoyproxy.pgv.CollectiveValidation.notIn("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "NotIn" }});
+{{- end -}}
+{{- if $r.GetIgnoreEmpty }}
+			}
 {{- end -}}
 `

@@ -2,6 +2,9 @@ package cc
 
 const bytesTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
+	{{ if $r.GetIgnoreEmpty }}
+		if ({{ accessor . }}.size() > 0) {
+	{{ end }}
 	{{ template "const" . }}
 	{{ template "in" . }}
 
@@ -93,5 +96,8 @@ const bytesTpl = `
 			return {{ err . "value must be a valid IPv6 address" }}
 		}
 		*/}}
+	{{ end }}
+	{{ if $r.GetIgnoreEmpty }}
+		}
 	{{ end }}
 `

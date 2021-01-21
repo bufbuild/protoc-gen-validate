@@ -164,9 +164,15 @@ def string_template(option_value, name):
       else:
         option_value.string.pattern = regex_map[regex_name]
     str_templ = """
+    {%- set s = o.string -%}
+    {% set i = 0 %}
+    {%- if s['ignore_empty'] -%}
+    if {{ name }}:
+    {% set i = 4 %}
+    {%- endif -%}
+    {% filter indent(i,True) %}
     {{ const_template(o, name) -}}
     {{ in_template(o.string, name) -}}
-    {%- set s = o.string -%}
     {%- if s['len'] %}
     if len({{ name }}) != {{ s['len'] }}:
         raise ValidationFailed(\"{{ name }} length does not equal {{ s['len'] }}\")
@@ -260,6 +266,7 @@ def string_template(option_value, name):
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid UUID\")
     {%- endif -%}
+    {% endfilter %}
     """
     return Template(str_templ).render(o = option_value, name = name, const_template = const_template, in_template = in_template)
 
@@ -297,7 +304,14 @@ def bool_template(option_value, name):
     return Template(bool_tmpl).render(o = option_value, name = name, const_template = const_template)
 
 def num_template(option_value, name, num):
-    num_tmpl = """{%- if num.HasField('const') and str(o.float) == "" -%}
+    num_tmpl = """
+    {% set i = 0 %}
+    {%- if num.HasField('ignore_empty') -%}
+    if {{ name }}:
+    {% set i = 4 %}
+    {%- endif -%}
+    {% filter indent(i,True) %}
+    {%- if num.HasField('const') and str(o.float) == "" -%}
     if {{ name }} != {{ num['const'] }}:
         raise ValidationFailed(\"{{ name }} not equal to {{ num['const'] }}\")
     {%- endif -%}
@@ -355,6 +369,7 @@ def num_template(option_value, name, num):
     if {{ name }} < {{ num['gte'] }}:
         raise ValidationFailed(\"{{ name }} is not greater than or equal to {{ num['gte'] }}\")
     {%- endif -%}
+    {% endfilter %}
     """
     return Template(num_tmpl).render(o = option_value, name = name, num = num, in_template = in_template, str = str)
 
@@ -650,6 +665,12 @@ def any_template(option_value, name, repeated = False):
 
 def bytes_template(option_value, name):
     bytes_tmpl = """
+    {% set i = 0 %}
+    {%- if b['ignore_empty'] -%}
+    if {{ name }}:
+    {% set i = 4 %}
+    {%- endif -%}
+    {% filter indent(i,True) %}
     {{ const_template(o, name) -}}
     {{ in_template(o.bytes, name) -}}
     {%- if b['len'] %}
@@ -718,6 +739,7 @@ def bytes_template(option_value, name):
         raise ValidationFailed(\"{{ name }} does not end with suffix {{ b['suffix'] }}\")
         {% endif %}
     {% endif %}
+    {% endfilter %}
     """
     return Template(bytes_tmpl).render(sys=sys,o = option_value, name = name, const_template = const_template, in_template = in_template, b = option_value.bytes)
 
@@ -771,6 +793,12 @@ def switcher_template(accessor, name, field, map = False):
 
 def repeated_template(option_value, name, field):
     rep_tmpl = """
+    {% set i = 0 %}
+    {%- if o and o.repeated['ignore_empty'] %}
+    if {{ name }}:
+    {% set i = 4 %}
+    {%- endif -%}
+    {% filter indent(i,True) %}
     {%- if o and o.repeated['min_items'] %}
     if len({{ name }}) < {{ o.repeated['min_items'] }}:
         raise ValidationFailed(\"{{ name }} needs to contain at least {{ o.repeated['min_items'] }} items\")
@@ -801,6 +829,7 @@ def repeated_template(option_value, name, field):
         {{ switcher_template(accessor, 'item', field) }}
         pass
     {%- endif %}
+    {% endfilter %}
     """
     return Template(rep_tmpl).render(o = option_value, name = name, message_type = field.message_type, str = str, field = field, switcher_template = switcher_template)
 
@@ -810,6 +839,12 @@ def is_map(field):
 
 def map_template(option_value, name, field):
     map_tmpl = """
+    {% set i = 0 %}
+    {%- if o and o.map['ignore_empty'] %}
+    if {{ name }}:
+    {% set i = 4 %}
+    {%- endif -%}
+    {% filter indent(i,True) %}
     {%- if o and o.map['min_pairs'] %}
     if len({{ name }}) < {{ o.map['min_pairs'] }}:
         raise ValidationFailed(\"{{ name }} needs to contain at least {{ o.map['min_pairs'] }} items\")
@@ -859,6 +894,7 @@ def map_template(option_value, name, field):
     for key in {{ name }}:
         validate({{ name }}[key])({{ name }}[key])
     {%- endif %}
+    {% endfilter %}
     """
     return Template(map_tmpl).render(o = option_value, name = name, message_type = field.message_type, str = str, field = field, switcher_template = switcher_template, num_template = num_template, string_template = string_template, bool_template = bool_template)
 

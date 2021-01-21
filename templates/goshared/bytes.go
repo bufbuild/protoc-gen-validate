@@ -3,6 +3,10 @@ package goshared
 const bytesTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
 
+	{{ if $r.GetIgnoreEmpty }}
+		if len({{ accessor . }}) > 0 {
+	{{ end }}
+
 	{{ if or $r.Len (and $r.MinLen $r.MaxLen (eq $r.GetMinLen $r.GetMaxLen)) }}
 		{{ if $r.Len }}
 			if len({{ accessor . }}) != {{ $r.GetLen }} {
@@ -81,5 +85,9 @@ const bytesTpl = `
 	if !{{ lookup $f "Pattern" }}.Match({{ accessor . }}) {
 		return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
 	}
+	{{ end }}
+
+	{{ if $r.GetIgnoreEmpty }}
+		}
 	{{ end }}
 `

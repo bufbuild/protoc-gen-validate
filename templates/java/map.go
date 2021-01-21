@@ -8,6 +8,9 @@ const mapConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 `
 
 const mapTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
+{{- if $r.GetIgnoreEmpty }}
+			if ( !{{ accessor . }}.isEmpty() ) {
+{{- end -}}
 {{- if $r.GetMinPairs }}
 			io.envoyproxy.pgv.MapValidation.min("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMinPairs }});
 {{- end -}}
@@ -24,5 +27,8 @@ const mapTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			io.envoyproxy.pgv.MapValidation.validateParts({{ accessor . }}.values(), value -> {
 				{{ render (.Elem "value" "Value") }}
 			});
+{{- end -}}
+{{- if $r.GetIgnoreEmpty }}
+			}
 {{- end -}}
 `

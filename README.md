@@ -264,6 +264,12 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
   float x = 1 [(validate.rules).float = {not_in: [0, 0.99]}];
   ```
 
+- **ignore_empty**: this rule specifies that if field is empty or set to the default value, to ignore any validation rules. These are typically useful where being able to unset a field in an update request, or to skip validation for optional fields where switching to WKTs is not feasible.
+
+  ```protobuf
+  unint32 x = 1 [(validate.rules).uint32 = {ignore_empty: true, gte: 200}];
+  ```
+
 ### Bools
 
 - **const**: the field must be _exactly_ the specified value.
@@ -345,6 +351,12 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
 
   // x cannot be "fizz" nor "buzz"
   string x = 1 [(validate.rules).string = {not_in: ["fizz", "buzz"]}];
+  ```
+
+- **ignore_empty**: this rule specifies that if field is empty or set to the default value, to ignore any validation rules. These are typically useful where being able to unset a field in an update request, or to skip validation for optional fields where switching to WKTs is not feasible.
+
+  ```protobuf
+  string CountryCode = 1 [(validate.rules).string = {ignore_empty: true, len: 2}];
   ```
 
 - **well-known formats**: these rules provide advanced constraints for common string patterns. These constraints will typically be more permissive and performant than equivalent regular expression patterns, while providing more explanatory failure descriptions.
@@ -444,6 +456,12 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
 
   // x cannot be "fizz" nor "buzz"
   bytes x = 1 [(validate.rules).bytes = {not_in: ["fizz", "buzz"]}];
+  ```
+
+- **ignore_empty**: this rule specifies that if field is empty or set to the default value, to ignore any validation rules. These are typically useful where being able to unset a field in an update request, or to skip validation for optional fields where switching to WKTs is not feasible.
+
+  ```protobuf
+  bytes x = 1 [(validate.rules).bytes = {ignore_empty: true, in: ["foo", "bar", "baz"]}];
   ```
 
 - **well-known formats**: these rules provide advanced constraints for common patterns. These constraints will typically be more permissive and performant than equivalent regular expression patterns, while providing more explanatory failure descriptions.
@@ -558,6 +576,12 @@ Person x = 1;
   repeated Person x = 1 [(validate.rules).repeated.items.message.skip = true];
   ```
 
+- **ignore_empty**: this rule specifies that if field is empty or set to the default value, to ignore any validation rules. These are typically useful where being able to unset a field in an update request, or to skip validation for optional fields where switching to WKTs is not feasible.
+
+  ```protobuf
+  repeated int64 x = 1 [(validate.rules).repeated = {ignore_empty: true, items: {int64: {gt = 200}}}];
+  ```
+
 ### Maps
 
 - **min_pairs/max_pairs**: these rules control how many KV pairs are contained in this field
@@ -595,6 +619,12 @@ Person x = 1;
 
   // x must contain Persons but doesn't validate them
   map<string, Person> x = 1 [(validate.rules).map.values.message.skip = true];
+  ```
+
+- **ignore_empty**: this rule specifies that if field is empty or set to the default value, to ignore any validation rules. These are typically useful where being able to unset a field in an update request, or to skip validation for optional fields where switching to WKTs is not feasible.
+
+  ```protobuf
+  map<string, string> x = 1 [(validate.rules).map = {ignore_empty: true, values: {string: {min_len: 3}}}];
   ```
 
 ### Well-Known Types (WKTs)

@@ -29,3 +29,5 @@ message MapRecursive {
         string val = 1 [(validate.rules).string.min_len = 3];
     }
 }
+
+message MapExactIgnore  { map<uint64,string> val = 1 [(validate.rules).map = {min_pairs: 3, max_pairs: 3, ignore_empty: true}]; }

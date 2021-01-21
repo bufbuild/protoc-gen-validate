@@ -2,6 +2,9 @@ package cc
 
 const strTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
+	{{ if $r.GetIgnoreEmpty }}
+		if ({{ accessor . }} != "") {
+	{{ end }}
 	{{ template "const" . }}
 	{{ template "in" . }}
 	{{ if or $r.Len (and $r.MinLen $r.MaxLen (eq $r.GetMinLen $r.GetMaxLen)) }}
@@ -179,5 +182,8 @@ const strTpl = `
                 if (!RE2::FullMatch(re2::StringPiece({{ accessor . }}), pgv::validate::_uuidPattern)) {
                         {{ err . "value must be a valid UUID" }}
                 }
+	{{ end }}
+	{{ if $r.GetIgnoreEmpty }}
+		}
 	{{ end }}
 `
