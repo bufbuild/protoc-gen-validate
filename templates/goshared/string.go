@@ -2,6 +2,11 @@ package goshared
 
 const strTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
+
+	{{ if $r.GetIgnoreEmpty }}
+		if {{ accessor . }} != "" {
+	{{ end }}
+
 	{{ template "const" . }}
 	{{ template "in" . }}
 
@@ -123,8 +128,13 @@ const strTpl = `
 	{{ end }}
 
 	{{ if $r.Pattern }}
-	if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
-		return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
-	}
-{{ end }}
+		if !{{ lookup $f "Pattern" }}.MatchString({{ accessor . }}) {
+			return {{ err . "value does not match regex pattern " (lit $r.GetPattern) }}
+		}
+	{{ end }}
+
+	{{ if $r.GetIgnoreEmpty }}
+		}
+	{{ end }}
+
 `

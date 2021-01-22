@@ -37,3 +37,4 @@ message StringUUID           { string val = 1 [(validate.rules).string.uuid = tr
 message StringHttpHeaderName { string val = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_NAME]; }
 message StringHttpHeaderValue     { string val = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_VALUE]; }
 message StringValidHeader    { string val = 1 [(validate.rules).string = {well_known_regex: HTTP_HEADER_VALUE, strict: false}]; }
+message StringUUIDIgnore     { string val = 1 [(validate.rules).string = {uuid: true, ignore_empty: true}]; }
