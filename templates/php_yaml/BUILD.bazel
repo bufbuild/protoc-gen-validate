@@ -5,7 +5,7 @@ go_library(
     srcs = [
         "any.go",
         "bool.go",
-        "bytes.go",
+        "choice.go",
         "duration.go",
         "enum.go",
         "file.go",
@@ -21,9 +21,8 @@ go_library(
         "string.go",
         "timestamp.go",
         "unimplemented.go",
-        "wrapper.go",
     ],
-    importpath = "github.com/envoyproxy/protoc-gen-validate/templates/php",
+    importpath = "github.com/envoyproxy/protoc-gen-validate/templates/php_yaml",
     visibility = ["//visibility:public"],
     deps = [
         "//templates/shared:go_default_library",

@@ -1,0 +1,19 @@
+package php_yaml
+
+const choiceTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
+{{- if $r.In }}
+      - Choice:
+          choices:
+            {{- range $f.In }}
+            - {{ sprintf "%v" . }}{{ phpTypeLiteralSuffixFor $ }}
+            {{- end }}
+		  # message:  .
+{{- end -}}
+{{- if $r.NotIn }}
+      - NotIn:
+          choices:
+            {{- range $f.NotIn }}
+            - {{ sprintf "%v" . }}{{ phpTypeLiteralSuffixFor $ }}
+            {{- end }}
+{{- end -}}
+`

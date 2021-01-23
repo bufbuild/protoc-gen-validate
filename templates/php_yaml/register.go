@@ -1,9 +1,9 @@
-package php
+package php_yaml
 
 import (
 	"bytes"
 	"fmt"
-	"os"
+	"strconv"
 	"strings"
 	"text/template"
 	"unicode"
@@ -16,45 +16,32 @@ import (
 	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
 )
 
-func RegisterIndex(tpl *template.Template, params pgs.Parameters) {
-	fns := phpFuncs{pgsgo.InitContext(params)}
-
-	tpl.Funcs(map[string]interface{}{
-		"classNameFile": classNameFile,
-		"importsPvg":    importsPvg,
-		"phpPackage":   phpPackage,
-		"simpleName":    fns.Name,
-		"qualifiedName": fns.qualifiedName,
-	})
-}
-
 func Register(tpl *template.Template, params pgs.Parameters) {
 	fns := phpFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
-		"accessor":                 fns.accessor,
-		"byteArrayLit":             fns.byteArrayLit,
-		"camelCase":                fns.camelCase,
-		"classNameFile":            classNameFile,
-		"classNameMessage":         classNameMessage,
-		"durLit":                   fns.durLit,
-		"fieldName":                fns.fieldName,
-		"phpPackage":              phpPackage,
+		"phpNamespace":            phpNamespace,
+		"classNameFile":           classNameFile,
+		"classNameMessage":        classNameMessage,
+		"simpleName":              fns.Name,
+		"qualifiedName":           fns.qualifiedName,
+		"accessor":                fns.accessor,
+		"camelCase":               fns.camelCase,
+		"fieldName":               fns.fieldName,
 		"phpStringEscape":         fns.phpStringEscape,
 		"phpTypeFor":              fns.phpTypeFor,
 		"phpTypeLiteralSuffixFor": fns.phpTypeLiteralSuffixFor,
-		"hasAccessor":              fns.hasAccessor,
-		"oneof":                    fns.oneofTypeName,
-		"sprintf":                  fmt.Sprintf,
-		"simpleName":               fns.Name,
-		"tsLit":                    fns.tsLit,
-		"qualifiedName":            fns.qualifiedName,
-		"isOfFileType":             fns.isOfFileType,
-		"isOfMessageType":          fns.isOfMessageType,
-		"isOfStringType":           fns.isOfStringType,
-		"unwrap":                   fns.unwrap,
-		"renderConstants":          fns.renderConstants(tpl),
-		"constantName":             fns.constantName,
+		"hasAccessor":             fns.hasAccessor,
+		"oneof":                   fns.oneofTypeName,
+		"sprintf":                 fmt.Sprintf,
+		"tsLit":                   fns.tsLit,
+		"durLit":                  fns.durLit,
+		"importsPvg":              importsPvg,
+		"isOfFileType":            fns.isOfFileType,
+		"isOfMessageType":         fns.isOfMessageType,
+		"isOfStringType":          fns.isOfStringType,
+		"renderConstants":         fns.renderConstants(tpl),
+		"constantName":            fns.constantName,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
@@ -63,41 +50,27 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 
 	template.Must(tpl.New("none").Parse(noneTpl))
 
+	// FIXME In case of declarative validation rules, what do we need constTpl for?
+
 	template.Must(tpl.New("float").Parse(numTpl))
-	template.Must(tpl.New("floatConst").Parse(numConstTpl))
 	template.Must(tpl.New("double").Parse(numTpl))
-	template.Must(tpl.New("doubleConst").Parse(numConstTpl))
 	template.Must(tpl.New("int32").Parse(numTpl))
-	template.Must(tpl.New("int32Const").Parse(numConstTpl))
 	template.Must(tpl.New("int64").Parse(numTpl))
-	template.Must(tpl.New("int64Const").Parse(numConstTpl))
 	template.Must(tpl.New("uint32").Parse(numTpl))
-	template.Must(tpl.New("uint32Const").Parse(numConstTpl))
 	template.Must(tpl.New("uint64").Parse(numTpl))
-	template.Must(tpl.New("uint64Const").Parse(numConstTpl))
 	template.Must(tpl.New("sint32").Parse(numTpl))
-	template.Must(tpl.New("sint32Const").Parse(numConstTpl))
 	template.Must(tpl.New("sint64").Parse(numTpl))
-	template.Must(tpl.New("sint64Const").Parse(numConstTpl))
 	template.Must(tpl.New("fixed32").Parse(numTpl))
-	template.Must(tpl.New("fixed32Const").Parse(numConstTpl))
 	template.Must(tpl.New("fixed64").Parse(numTpl))
-	template.Must(tpl.New("fixed64Const").Parse(numConstTpl))
 	template.Must(tpl.New("sfixed32").Parse(numTpl))
-	template.Must(tpl.New("sfixed32Const").Parse(numConstTpl))
 	template.Must(tpl.New("sfixed64").Parse(numTpl))
-	template.Must(tpl.New("sfixed64Const").Parse(numConstTpl))
 
 	template.Must(tpl.New("bool").Parse(boolTpl))
 	template.Must(tpl.New("string").Parse(stringTpl))
-	template.Must(tpl.New("stringConst").Parse(stringConstTpl))
-	template.Must(tpl.New("bytes").Parse(bytesTpl))
-	template.Must(tpl.New("bytesConst").Parse(bytesConstTpl))
 
 	template.Must(tpl.New("any").Parse(anyTpl))
-	template.Must(tpl.New("anyConst").Parse(anyConstTpl))
+	template.Must(tpl.New("choice").Parse(choiceTpl))
 	template.Must(tpl.New("enum").Parse(enumTpl))
-	template.Must(tpl.New("enumConst").Parse(enumConstTpl))
 	template.Must(tpl.New("message").Parse(messageTpl))
 	template.Must(tpl.New("repeated").Parse(repeatedTpl))
 	template.Must(tpl.New("repeatedConst").Parse(repeatedConstTpl))
@@ -108,32 +81,21 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 
 	template.Must(tpl.New("required").Parse(requiredTpl))
 	template.Must(tpl.New("timestamp").Parse(timestampTpl))
-	template.Must(tpl.New("timestampConst").Parse(timestampConstTpl))
 	template.Must(tpl.New("duration").Parse(durationTpl))
-	template.Must(tpl.New("durationConst").Parse(durationConstTpl))
-	template.Must(tpl.New("wrapper").Parse(wrapperTpl))
-	template.Must(tpl.New("wrapperConst").Parse(wrapperConstTpl))
 }
 
 type phpFuncs struct{ pgsgo.Context }
 
-func PhpFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.FilePath {
+func PhpYamlFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.FilePath {
 	// Don't generate validators for files that don't import PGV
 	if !importsPvg(f) {
 		return nil
 	}
 
-	fullPath := strings.Replace(phpPackage(f), ".", string(os.PathSeparator), -1)
-	fileName := classNameFile(f) + "Validator.php"
-	filePath := pgs.JoinPaths(fullPath, fileName)
+	packagePath := f.Package().ProtoName().String()
+	rulesPath := pgs.FilePath(f.Name().String()).BaseName() + ".yaml"
+	filePath := pgs.JoinPaths(packagePath + "." + rulesPath)
 	return &filePath
-}
-
-func JavaMultiFilePath(f pgs.File, m pgs.Message) pgs.FilePath {
-	fullPath := strings.Replace(phpPackage(f), ".", string(os.PathSeparator), -1)
-	fileName := classNameMessage(m) + "Validator.php"
-	filePath := pgs.JoinPaths(fullPath, fileName)
-	return filePath
 }
 
 func importsPvg(f pgs.File) bool {
@@ -146,16 +108,14 @@ func importsPvg(f pgs.File) bool {
 }
 
 func classNameFile(f pgs.File) string {
-	// Explicit outer class name overrides implicit name
-	options := f.Descriptor().GetOptions()
-	if options != nil && !options.GetJavaMultipleFiles() && options.JavaOuterClassname != nil {
-		return options.GetJavaOuterClassname()
-	}
+	// TODO Add class prefix
+	//options := f.Descriptor().GetOptions()
+	//if options != nil && options.GetPhpClassPrefix() != "" {
+	//}
 
 	protoName := pgs.FilePath(f.Name().String()).BaseName()
 
 	className := sanitizeClassName(protoName)
-	className = appendOuterClassName(className, f)
 
 	return className
 }
@@ -164,7 +124,7 @@ func classNameMessage(m pgs.Message) string {
 	className := m.Name().String()
 	// This is really silly, but when the multiple files option is true, protoc puts underscores in file names.
 	// When multiple files is false, underscores are stripped. Short of rewriting all the name sanitization
-	// logic for php, using "UnderscoreUnderscoreUnderscore" is an escape sequence seems to work with an extremely
+	// logic for php_yaml, using "UnderscoreUnderscoreUnderscore" is an escape sequence seems to work with an extremely
 	// small likelihood of name conflict.
 	className = strings.Replace(className, "_", "UnderscoreUnderscoreUnderscore", -1)
 	className = sanitizeClassName(className)
@@ -180,33 +140,43 @@ func sanitizeClassName(className string) string {
 	return className
 }
 
-func phpPackage(file pgs.File) string {
-	// Explicit php package overrides implicit package
+func phpNamespace(file pgs.File) string {
+	// Explicit php_yaml package overrides implicit package
 	options := file.Descriptor().GetOptions()
-	if options != nil && options.JavaPackage != nil {
-		return options.GetJavaPackage()
+	if options != nil && options.PhpNamespace != nil {
+		return options.GetPhpNamespace()
 	}
-	return strcase.ToCamel(file.Package().ProtoName().String())
+
+	nsEntries := strings.Split(file.Package().ProtoName().String(), ".")
+	nsParts := make([]string, len(nsEntries))
+
+	for i, nsPart := range nsEntries {
+		nsParts[i] = strcase.ToCamel(nsPart)
+	}
+
+	phpPackageName := strings.Join(nsParts, "\\")
+
+	return phpPackageName
 }
 
 func (fns phpFuncs) qualifiedName(entity pgs.Entity) string {
 	file, isFile := entity.(pgs.File)
 	if isFile {
-		name := phpPackage(file)
-		if file.Descriptor().GetOptions() != nil {
-			if !file.Descriptor().GetOptions().GetJavaMultipleFiles() {
-				name += ("." + classNameFile(file))
-			}
-		} else {
-			name += ("." + classNameFile(file))
-		}
+		name := phpNamespace(file) + "." + classNameFile(file)
 		return name
 	}
 
 	message, isMessage := entity.(pgs.Message)
 	if isMessage && message.Parent() != nil {
+		parent, isFileParent := message.Parent().(pgs.File)
+
+		// Qualified name doesn't include proto file name
+		if isFileParent {
+			return phpNamespace(parent) + "\\" + entity.Name().String()
+		}
+
 		// recurse
-		return fns.qualifiedName(message.Parent()) + "." + entity.Name().String()
+		return fns.qualifiedName(message.Parent()) + "\\" + entity.Name().String()
 	}
 
 	enum, isEnum := entity.(pgs.Enum)
@@ -266,34 +236,6 @@ func underscoreBetweenConsecutiveUppercase(name string) string {
 	return sb
 }
 
-func appendOuterClassName(outerClassName string, file pgs.File) string {
-	conflict := false
-
-	for _, enum := range file.Enums() {
-		if enum.Name().String() == outerClassName {
-			conflict = true
-		}
-	}
-
-	for _, message := range file.Messages() {
-		if message.Name().String() == outerClassName {
-			conflict = true
-		}
-	}
-
-	for _, service := range file.Services() {
-		if service.Name().String() == outerClassName {
-			conflict = true
-		}
-	}
-
-	if conflict {
-		return outerClassName + "OuterClass"
-	} else {
-		return outerClassName
-	}
-}
-
 func (fns phpFuncs) accessor(ctx shared.RuleContext) string {
 	if ctx.AccessorOverride != "" {
 		return ctx.AccessorOverride
@@ -318,9 +260,9 @@ func (fns phpFuncs) hasAccessor(ctx shared.RuleContext) string {
 	if ctx.AccessorOverride != "" {
 		return "true"
 	}
-	fiedlName := strcase.ToCamel(ctx.Field.Name().String())
-	fiedlName = upperCaseAfterNumber(fiedlName)
-	return "proto.has" + fiedlName + "()"
+	fieldName := strcase.ToCamel(ctx.Field.Name().String())
+	fieldName = upperCaseAfterNumber(fieldName)
+	return "proto.has" + fieldName + "()"
 }
 
 func (fns phpFuncs) fieldName(ctx shared.RuleContext) string {
@@ -380,21 +322,21 @@ func (fns phpFuncs) phpTypeForProtoType(t pgs.ProtoType) string {
 
 	switch t {
 	case pgs.Int32T, pgs.UInt32T, pgs.SInt32, pgs.Fixed32T, pgs.SFixed32:
-		return "Integer"
+		return "int"
 	case pgs.Int64T, pgs.UInt64T, pgs.SInt64, pgs.Fixed64T, pgs.SFixed64:
-		return "Long"
+		return "int"
 	case pgs.DoubleT:
-		return "Double"
+		return "float"
 	case pgs.FloatT:
-		return "Float"
+		return "float"
 	case pgs.BoolT:
-		return "Boolean"
+		return "bool"
 	case pgs.StringT:
-		return "String"
+		return "string"
 	case pgs.BytesT:
 		return "com.google.protobuf.ByteString"
 	default:
-		return "Object"
+		return "object"
 	}
 }
 
@@ -453,27 +395,14 @@ func (fns phpFuncs) camelCase(name pgs.Name) string {
 	return strcase.ToCamel(name.String())
 }
 
-func (fns phpFuncs) byteArrayLit(bytes []uint8) string {
-	var sb string
-	sb += "new byte[]{"
-	for _, b := range bytes {
-		sb += fmt.Sprintf("(byte)%#x,", b)
-	}
-	sb += "}"
-
-	return sb
-}
-
 func (fns phpFuncs) durLit(dur *duration.Duration) string {
-	return fmt.Sprintf(
-		"io.envoyproxy.pgv.TimestampValidation.toDuration(%d,%d)",
-		dur.GetSeconds(), dur.GetNanos())
+	// TODO Figure out how to make use of nanos
+	return strconv.FormatInt(dur.GetSeconds(), 10)
 }
 
 func (fns phpFuncs) tsLit(ts *timestamp.Timestamp) string {
-	return fmt.Sprintf(
-		"io.envoyproxy.pgv.TimestampValidation.toTimestamp(%d,%d)",
-		ts.GetSeconds(), ts.GetNanos())
+	// TODO Figure out how to make use of nanos
+	return strconv.FormatInt(ts.GetSeconds(), 10)
 }
 
 func (fns phpFuncs) oneofTypeName(f pgs.Field) pgsgo.TypeName {
@@ -495,16 +424,6 @@ func (fns phpFuncs) isOfMessageType(f pgs.Field) bool {
 
 func (fns phpFuncs) isOfStringType(f pgs.Field) bool {
 	return f.Type().ProtoType() == pgs.StringT
-}
-
-func (fns phpFuncs) unwrap(ctx shared.RuleContext) (shared.RuleContext, error) {
-	ctx, err := ctx.Unwrap("wrapped")
-	if err != nil {
-		return ctx, err
-	}
-	ctx.AccessorOverride = fmt.Sprintf("%s.get%s()", fns.fieldAccessor(ctx.Field),
-		fns.camelCase(ctx.Field.Type().Embed().Fields()[0].Name()))
-	return ctx, nil
 }
 
 func (fns phpFuncs) renderConstants(tpl *template.Template) func(ctx shared.RuleContext) (string, error) {

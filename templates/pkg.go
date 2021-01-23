@@ -3,13 +3,13 @@ package templates
 import (
 	"text/template"
 
-	"github.com/lyft/protoc-gen-star"
-	"github.com/lyft/protoc-gen-star/lang/go"
 	"github.com/envoyproxy/protoc-gen-validate/templates/cc"
 	"github.com/envoyproxy/protoc-gen-validate/templates/go"
 	"github.com/envoyproxy/protoc-gen-validate/templates/java"
-	"github.com/envoyproxy/protoc-gen-validate/templates/php"
+	"github.com/envoyproxy/protoc-gen-validate/templates/php_yaml"
 	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
+	"github.com/lyft/protoc-gen-star"
+	"github.com/lyft/protoc-gen-star/lang/go"
 )
 
 type RegisterFn func(tpl *template.Template, params pgs.Parameters)
@@ -27,7 +27,7 @@ func Template(params pgs.Parameters) map[string][]*template.Template {
 		"cc":   {makeTemplate("h", cc.RegisterHeader, params), makeTemplate("cc", cc.RegisterModule, params)},
 		"go":   {makeTemplate("go", golang.Register, params)},
 		"java": {makeTemplate("java", java.Register, params)},
-		"php": {makeTemplate("php", php.Register, params)},
+		"php":  {makeTemplate("php", php.Register, params)},
 	}
 }
 
