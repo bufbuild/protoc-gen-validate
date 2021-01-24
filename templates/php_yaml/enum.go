@@ -14,9 +14,19 @@ const enumTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
           # message:  .
 {{- end -}}
 {{- if $r.In }}
-      - TODOEnumIn: {{ constantName . "In" }}
+      - Choice: # Enum.In
+          choices:
+            {{- range $r.In }}
+            - {{ sprintf "%v" . }}
+            {{- end }}
+          # message:  .
 {{- end -}}
 {{- if $r.NotIn }}
-      - TODOEnumIn: {{ constantName . "NotIn" }}
+      - NotInChoice: # Enum.NotIn
+          choices:
+            {{- range $r.NotIn }}
+            - {{ sprintf "%v" . }}
+            {{- end }}
+          # message:  .
 {{- end -}}
 `
