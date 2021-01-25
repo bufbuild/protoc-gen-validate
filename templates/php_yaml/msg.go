@@ -20,8 +20,8 @@ const msgInnerTpl = `
     # Validation is disabled for {{ simpleName . }}
 {{- else -}}
 {{ range .NonOneOfFields }}
-	{{ .Name }}:
-	{{- render (context .) }}
+    {{ .Name }}:
+    {{- render (context .) }}
 {{- end -}}
 {{- end }}
 `

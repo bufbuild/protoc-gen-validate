@@ -6,6 +6,5 @@ const anyTpl = `{{ $f := .Field }}{{ $r := .Rules }}
       - Choice:
           choices:
             {{- range $r.In -}}- {{- sprintf "%v" . -}}{{- end -}}
-		  # message:  .
 {{- end -}}
 `

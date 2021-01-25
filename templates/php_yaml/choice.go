@@ -7,7 +7,6 @@ const choiceTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
             {{- range $f.In }}
             - {{ sprintf "%v" . }}{{ phpTypeLiteralSuffixFor $ }}
             {{- end }}
-		  # message:  .
 {{- end -}}
 {{- if $r.NotIn }}
       - NotInChoice:
