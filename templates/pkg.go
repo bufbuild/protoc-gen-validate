@@ -24,10 +24,10 @@ func makeTemplate(ext string, fn RegisterFn, params pgs.Parameters) *template.Te
 
 func Template(params pgs.Parameters) map[string][]*template.Template {
 	return map[string][]*template.Template{
-		"cc":   {makeTemplate("h", cc.RegisterHeader, params), makeTemplate("cc", cc.RegisterModule, params)},
-		"go":   {makeTemplate("go", golang.Register, params)},
-		"java": {makeTemplate("java", java.Register, params)},
-		"php":  {makeTemplate("php", php.Register, params)},
+		"cc":       {makeTemplate("h", cc.RegisterHeader, params), makeTemplate("cc", cc.RegisterModule, params)},
+		"go":       {makeTemplate("go", golang.Register, params)},
+		"java":     {makeTemplate("java", java.Register, params)},
+		"php_yaml": {makeTemplate("php_yaml", php_yaml.Register, params)},
 	}
 }
 
@@ -39,8 +39,8 @@ func FilePathFor(tpl *template.Template) FilePathFn {
 		return cc.CcFilePath
 	case "java":
 		return java.JavaFilePath
-	case "php":
-		return php.PhpFilePath
+	case "php_yaml":
+		return php_yaml.PhpYamlFilePath
 	default:
 		return func(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.FilePath {
 			out := ctx.OutputPath(f)

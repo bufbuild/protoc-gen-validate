@@ -25,13 +25,11 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"classNameMessage":        classNameMessage,
 		"simpleName":              fns.Name,
 		"qualifiedName":           fns.qualifiedName,
-		"accessor":                fns.accessor,
 		"camelCase":               fns.camelCase,
 		"fieldName":               fns.fieldName,
 		"phpStringEscape":         fns.phpStringEscape,
 		"phpTypeFor":              fns.phpTypeFor,
 		"phpTypeLiteralSuffixFor": fns.phpTypeLiteralSuffixFor,
-		"hasAccessor":             fns.hasAccessor,
 		"oneof":                   fns.oneofTypeName,
 		"sprintf":                 fmt.Sprintf,
 		"tsLit":                   fns.tsLit,
@@ -234,35 +232,6 @@ func underscoreBetweenConsecutiveUppercase(name string) string {
 		p = c
 	}
 	return sb
-}
-
-func (fns phpFuncs) accessor(ctx shared.RuleContext) string {
-	if ctx.AccessorOverride != "" {
-		return ctx.AccessorOverride
-	}
-	return fns.fieldAccessor(ctx.Field)
-}
-
-func (fns phpFuncs) fieldAccessor(f pgs.Field) string {
-	fieldName := strcase.ToCamel(f.Name().String())
-	if f.Type().IsMap() {
-		fieldName += "Map"
-	}
-	if f.Type().IsRepeated() {
-		fieldName += "List"
-	}
-
-	fieldName = upperCaseAfterNumber(fieldName)
-	return fmt.Sprintf("proto.get%s()", fieldName)
-}
-
-func (fns phpFuncs) hasAccessor(ctx shared.RuleContext) string {
-	if ctx.AccessorOverride != "" {
-		return "true"
-	}
-	fieldName := strcase.ToCamel(ctx.Field.Name().String())
-	fieldName = upperCaseAfterNumber(fieldName)
-	return "proto.has" + fieldName + "()"
 }
 
 func (fns phpFuncs) fieldName(ctx shared.RuleContext) string {
