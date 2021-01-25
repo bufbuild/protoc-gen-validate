@@ -7,35 +7,35 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- template "choice" . -}}
 {{- if $r.Len }}
       - Length: {{ $r.GetLen }}
-        min: {{ $r.GetLen }}
-        max: {{ $r.GetLen }}
+          min: {{ $r.GetLen }}
+          max: {{ $r.GetLen }}
 {{- end -}}
 {{- if or $r.MinLen $r.MaxLen }}
       - Length:
-        {{- if $r.MinLen }}
-        min: {{ $r.GetMinLen }}
-        {{- end -}}
-        {{- if $r.MaxLen }}
-        max: {{ $r.GetMaxLen }}
-        {{- end -}}
+          {{- if $r.MinLen }}
+          min: {{ $r.GetMinLen }}
+          {{- end -}}
+          {{- if $r.MaxLen }}
+          max: {{ $r.GetMaxLen }}
+          {{- end -}}
 {{- end -}}
 {{- if $r.LenBytes }}
       - Length: {{ $r.GetLenBytes }}
-        min: {{ $r.GetLenBytes }}
-        max: {{ $r.GetLenBytes }}
+          min: {{ $r.GetLenBytes }}
+          max: {{ $r.GetLenBytes }}
 {{- end -}}
 {{- if or $r.MinBytes $r.MaxBytes }}
       - Length:
-        {{- if $r.MinBytes }}
-        min: {{ $r.GetMinBytes }}
-        {{- end -}}
-        {{- if $r.MaxBytes }}
-        max: {{ $r.GetMaxBytes }}
-        {{- end -}}
+          {{- if $r.MinBytes }}
+          min: {{ $r.GetMinBytes }}
+          {{- end -}}
+          {{- if $r.MaxBytes }}
+          max: {{ $r.GetMaxBytes }}
+          {{- end -}}
 {{- end -}}
 {{- if $r.Pattern }}
       - Regex:
-        pattern: "/{{ phpStringEscape $r.GetPattern }}/"
+          pattern: "/{{ phpStringEscape $r.GetPattern }}/"
 {{- end -}}
 {{- if $r.Prefix }}
       - TODOStringPrefix: {{ phpStringEscape $r.GetPrefix }}
@@ -60,22 +60,22 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- end -}}
 {{- if $r.GetIp }}
       - Ip:
-        version: all
+          version: all
 {{- end -}}
 {{- if $r.GetIpv4 }}
       - Ip:
-        version: 4
+          version: 4
 {{- end -}}
 {{- if $r.GetIpv6 }}
       - Ip:
-        version: 6
+          version: 6
 {{- end -}}
 {{- if $r.GetUri }}
       - Url: ~
 {{- end -}}
 {{- if $r.GetUriRef }}
       - Url: ~
-        relativeProtocol: true
+          relativeProtocol: true
 {{- end -}}
 {{- if $r.GetUuid }}
       - Uuid: ~

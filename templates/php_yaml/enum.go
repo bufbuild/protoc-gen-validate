@@ -11,7 +11,6 @@ const enumTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
             {{- range $f.Type.Enum.Values }}
             - {{ sprintf "%v" .Value }} # {{ .Name }}
             {{- end }}
-          # message:  .
 {{- end -}}
 {{- if $r.In }}
       - Choice: # Enum.In
@@ -19,7 +18,6 @@ const enumTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
             {{- range $r.In }}
             - {{ sprintf "%v" . }}
             {{- end }}
-          # message:  .
 {{- end -}}
 {{- if $r.NotIn }}
       - NotInChoice: # Enum.NotIn
@@ -27,6 +25,5 @@ const enumTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
             {{- range $r.NotIn }}
             - {{ sprintf "%v" . }}
             {{- end }}
-          # message:  .
 {{- end -}}
 `
