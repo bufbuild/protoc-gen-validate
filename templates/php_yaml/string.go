@@ -6,7 +6,9 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- end -}}
 {{- template "choice" . -}}
 {{- if $r.Len }}
-      - TODOStringLen: {{ $r.GetLen }}
+      - Length: {{ $r.GetLen }}
+        min: {{ $r.GetLen }}
+        max: {{ $r.GetLen }}
 {{- end -}}
 {{- if or $r.MinLen $r.MaxLen }}
       - Length:
@@ -18,7 +20,9 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
         {{- end -}}
 {{- end -}}
 {{- if $r.LenBytes }}
-      - TODOStringMaxLenBytes: {{ $r.GetLenBytes }}
+      - Length: {{ $r.GetLenBytes }}
+        min: {{ $r.GetLenBytes }}
+        max: {{ $r.GetLenBytes }}
 {{- end -}}
 {{- if or $r.MinBytes $r.MaxBytes }}
       - Length:
@@ -30,7 +34,8 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
         {{- end -}}
 {{- end -}}
 {{- if $r.Pattern }}
-      - TODOStringPattern: {{ phpStringEscape $r.GetPattern }}
+      - Regex:
+        pattern: "/{{ phpStringEscape $r.GetPattern }}/"
 {{- end -}}
 {{- if $r.Prefix }}
       - TODOStringPrefix: {{ phpStringEscape $r.GetPrefix }}
@@ -48,7 +53,7 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
       - Email: ~
 {{- end -}}
 {{- if $r.GetAddress }}
-      - TODOStringAddress: ~
+      - Hostname: ~
 {{- end -}}
 {{- if $r.GetHostname }}
       - Hostname: ~
@@ -66,10 +71,11 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
         version: 6
 {{- end -}}
 {{- if $r.GetUri }}
-      - TODOStringUri: ~
+      - Url: ~
 {{- end -}}
 {{- if $r.GetUriRef }}
-      - TODOStringUriRef: ~
+      - Url: ~
+        relativeProtocol: true
 {{- end -}}
 {{- if $r.GetUuid }}
       - Uuid: ~
