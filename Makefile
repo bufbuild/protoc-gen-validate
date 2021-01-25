@@ -92,6 +92,7 @@ validate/validate.pb.go: bin/protoc-gen-go validate/validate.proto
 	cd validate && protoc -I . \
 		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
 		--go_opt=paths=source_relative \
+		--experimental_allow_proto3_optional \
 		--go_out="${GO_IMPORT}:." validate.proto
 
 tests/harness/go/harness.pb.go: bin/protoc-gen-go tests/harness/harness.proto
