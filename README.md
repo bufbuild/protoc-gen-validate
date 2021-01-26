@@ -392,13 +392,13 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
   string x = 1 [(validate.rules).string.uuid = true];
   
   // x must conform to a well known regex for HTTP header names (via RFC 7230)
-  string x = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_NAME]
+  string x = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_NAME];
   
   // x must conform to a well known regex for HTTP header values (via RFC 7230) 
   string x = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_VALUE];
   
   // x must conform to a well known regex for headers, disallowing \r\n\0 characters.
-  string x = 1 [(validate.rules).string {well_known_regex: HTTP_HEADER_VALUE, strict: false}];
+  string x = 1 [(validate.rules).string = {well_known_regex: HTTP_HEADER_VALUE, strict: false}];
   ```
 
 ### Bytes
