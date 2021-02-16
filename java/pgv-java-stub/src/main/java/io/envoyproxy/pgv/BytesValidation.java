@@ -27,7 +27,7 @@ public final class BytesValidation {
 
     public static void maxLength(String field, ByteString value, int expected) throws ValidationException {
         if (value.size() > expected) {
-            throw new ValidationException(field, Arrays.toString(value.toByteArray()), "length must be at maximum " + expected);
+            throw new ValidationException(field, Arrays.toString(value.toByteArray()), "length must be at most " + expected);
         }
     }
 
