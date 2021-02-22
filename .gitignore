@@ -33,3 +33,4 @@ bazel-*
 .classpath
 .settings
 .idea/
+.ijwb/

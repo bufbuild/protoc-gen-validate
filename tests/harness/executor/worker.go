@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -15,23 +14,24 @@ import (
 
 func Work(wg *sync.WaitGroup, in <-chan TestCase, out chan<- TestResult, harnesses []Harness) {
 	for tc := range in {
-		ok, skip := execTestCase(tc, harnesses)
-		out <- TestResult{ok, skip}
+		execTestCase(tc, harnesses, out)
 	}
 	wg.Done()
 }
 
-func execTestCase(tc TestCase, harnesses []Harness) (ok, skip bool) {
+func execTestCase(tc TestCase, harnesses []Harness, out chan<- TestResult) {
 	any, err := ptypes.MarshalAny(tc.Message)
 	if err != nil {
 		log.Printf("unable to convert test case %q to Any - %v", tc.Name, err)
-		return false, false
+		out <- TestResult{false, false}
+		return
 	}
 
 	b, err := proto.Marshal(&harness.TestCase{Message: any})
 	if err != nil {
 		log.Printf("unable to marshal test case %q - %v", tc.Name, err)
-		return false, false
+		out <- TestResult{false, false}
+		return
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
@@ -40,8 +40,6 @@ func execTestCase(tc TestCase, harnesses []Harness) (ok, skip bool) {
 	wg := new(sync.WaitGroup)
 	wg.Add(len(harnesses))
 
-	errs := make(chan error, len(harnesses))
-	skips := make(chan string, len(harnesses))
 
 	for _, h := range harnesses {
 		h := h
@@ -50,38 +48,31 @@ func execTestCase(tc TestCase, harnesses []Harness) (ok, skip bool) {
 
 			res, err := h.Exec(ctx, bytes.NewReader(b))
 			if err != nil {
-				errs <- err
+				log.Printf("[%s] (%s harness) executor error: %s", tc.Name, h.Name, err.Error())
+				out <- TestResult{false, false}
 				return
 			}
 
 			if res.Error {
-				errs <- fmt.Errorf("%s: internal harness error: %s", h.Name, res.Reason)
+				log.Printf("[%s] (%s harness) internal harness error: %s", tc.Name, h.Name, res.Reason)
+				out <- TestResult{false, false}
 			} else if res.Valid != tc.Valid {
 				if res.AllowFailure {
-					skips <- fmt.Sprintf("%s: ignoring test failure: %s", h.Name, res.Reason)
+					log.Printf("[%s] (%s harness) ignoring test failure: %s", tc.Name, h.Name, res.Reason)
+					out <- TestResult{false, true}
 				} else if tc.Valid {
-					errs <- fmt.Errorf("%s: expected valid, got: %s", h.Name, res.Reason)
+					log.Printf("[%s] (%s harness) expected valid, got invalid: %s", tc.Name, h.Name, res.Reason)
+					out <- TestResult{false, false}
 				} else {
-					errs <- fmt.Errorf("%s: expected invalid, but got valid", h.Name)
+					log.Printf("[%s] (%s harness) expected invalid, got valid: %s", tc.Name, h.Name, res.Reason)
+					out <- TestResult{false, false}
 				}
+			} else {
+				out <- TestResult{true, false}
 			}
 		}()
 	}
 
 	wg.Wait()
-	close(errs)
-	close(skips)
-
-	ok = true
-
-	for err := range errs {
-		log.Printf("[%s] %v", tc.Name, err)
-		ok = false
-	}
-	for out := range skips {
-		log.Printf("[%s] %v", tc.Name, out)
-		skip = true
-	}
-
 	return
 }
