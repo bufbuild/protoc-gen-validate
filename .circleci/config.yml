@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run: docker build -t protoc-gen-validate .
       - run: docker run --rm protoc-gen-validate ci
-      - run:s
+      - run:
           command: | # Upload if on master branch
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker run --rm protoc-gen-validate python-release
