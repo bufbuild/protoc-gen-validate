@@ -24,8 +24,6 @@ cc_proto_library(
 py_proto_library(
     name = "validate_py",
     srcs = ["validate.proto"],
-    default_runtime = "@com_google_protobuf//:protobuf_python",
-    protoc = "@com_google_protobuf//:protoc",
     visibility = ["//visibility:public"],
     deps = ["@com_google_protobuf//:protobuf_python"],
 )

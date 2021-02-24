@@ -1,19 +1,15 @@
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
-load("@io_bazel_rules_python//python:pip.bzl", "pip_import", "pip_repositories")
 load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
-
-# Only needed for PIP support:
+load("@rules_python//python:pip.bzl", "pip_install")
 
 def _pgv_pip_dependencies():
-    pip_repositories()
-
-    # This rule translates the specified requirements.txt into
-    # @pgv_pip_deps//:requirements.bzl, which itself exposes a pip_install method.
-    pip_import(
+    # This rule translates the specified requirements.in into
+    # @pgv_pip_deps//:requirements.bzl
+    pip_install(
         name = "pgv_pip_deps",
-        requirements = "//:requirements.txt",
+        requirements = "//:python/requirements.in",
     )
 
 def _pgv_go_dependencies():

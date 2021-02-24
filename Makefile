@@ -40,6 +40,9 @@ lint: bin/golint bin/shadow
 	# golint -set_exit_status
 	# check for variable shadowing
 	go vet -vettool=$(shell pwd)/bin/shadow ./...
+	# lints the python code for style enforcement
+	flake8 --config=python/setup.cfg python/protoc_gen_validate/validator.py
+	isort --check-only python/protoc_gen_validate/validator.py
 
 bin/shadow:
 	GOBIN=$(shell pwd)/bin go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
@@ -115,6 +118,22 @@ tests/harness/java/java-harness:
 	# generates the Java-specific test harness
 	mvn -q -f java/pom.xml clean package -DskipTests
 
+.PHONY: prepare-python-release
+prepare-python-release:
+	cp validate/validate.proto python/
+	cp LICENSE python/
+
+.PHONE: python-release
+python-release: prepare-python-release
+	python3.8 -m build --no-isolation --sdist python
+    # the below command should be identical to `python3.8 -m build --wheel`
+    # however that returns mysterious `error: could not create 'build': File exists`.
+    # setuptools copies source and data files to a temporary build directory,
+    # but why there's a collision or why setuptools stopped respecting the `build_lib` flag is unclear.
+    # As a workaround, we build a source distribution and then separately build a wheel from it.
+	python3.8 -m pip wheel --wheel-dir python/dist --no-deps python/dist/*
+	python3.8 -m twine upload python/dist/*
+
 .PHONY: ci
 ci: lint bazel testcases bazel-harness build_generation_tests
 
@@ -130,5 +149,6 @@ clean:
 	rm -rf \
 		tests/harness/cases/go \
 		tests/harness/cases/other_package/go
-
-
+	rm -rf \
+		python/dist
+		python/*.egg-info

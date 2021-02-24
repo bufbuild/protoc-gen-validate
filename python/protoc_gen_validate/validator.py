@@ -1,16 +1,15 @@
-import re
+import re  # noqa
+import struct  # noqa
+import sys  # noqa
+import time  # noqa
+import uuid  # noqa
 from functools import lru_cache
-from validate_email import validate_email
-import ipaddress
-try:
-    import urlparse
-except ImportError:
-    import urllib.parse as urlparse
-import uuid
-import struct
+from ipaddress import IPv4Address, IPv6Address, ip_address  # noqa
+from urllib import parse as urlparse  # noqa
+
+from googsle.protobuf.message import Message
 from jinja2 import Template
-import time
-import sys
+from validate_email import validate_email
 
 printer = ""
 
@@ -21,6 +20,15 @@ regex_map = {
     "HTTP_HEADER_VALUE": r'^[^\u0000-\u0008\u000A-\u001F\u007F]*$',
     "HEADER_STRING": r'^[^\u0000\u000A\u000D]*$'
 }
+
+
+class UnimplementedException(Exception):
+    pass
+
+
+class ValidationFailed(Exception):
+    pass
+
 
 class ValidatingMessage(object):
     """Wrap a proto message to cache validate functions with the message class name.
@@ -41,13 +49,14 @@ class ValidatingMessage(object):
         else:
             return False
 
-def validate(proto_message):
-    return _validate_inner(ValidatingMessage(proto_message))
 
-# Cache generated functions to avoid the performance issue caused by repeated proto messages,
-#   which generate the same functions repeatedly.
+def validate(proto_message: Message):
+    return _validate_inner(ValidatingMessage(proto_message))(proto_message)
+
+
+# Cache generated functions with the message descriptor's full_name as the cache key
 @lru_cache()
-def _validate_inner(proto_message):
+def _validate_inner(proto_message: Message):
     func = file_template(proto_message)
     global printer
     printer += func + "\n"
@@ -57,8 +66,10 @@ def _validate_inner(proto_message):
     except NameError:
         return locals()['generate_validate']
 
-def print_validate(proto_message):
+
+def print_validate():
     return "".join([s for s in printer.splitlines(True) if s.strip()])
+
 
 def has_validate(field):
     if field.GetOptions() is None:
@@ -68,11 +79,13 @@ def has_validate(field):
             return True
     return False
 
+
 def byte_len(s):
     try:
         return len(s.encode('utf-8'))
-    except:
+    except:  # noqa
         return len(s)
+
 
 def _validateHostName(host):
     if not host:
@@ -95,8 +108,10 @@ def _validateHostName(host):
                 return False
     return True
 
+
 def _validateEmail(addr):
-    if '<' in addr and '>' in addr: addr = addr.split("<")[1].split(">")[0]
+    if '<' in addr and '>' in addr:
+        addr = addr.split("<")[1].split(">")[0]
 
     if not validate_email(addr):
         return False
@@ -109,15 +124,17 @@ def _validateEmail(addr):
         return False
     return _validateHostName(parts[1])
 
+
 def _has_field(message_pb, property_name):
     # NOTE: As of proto3, HasField() only works for message fields, not for
     #       singular (non-message) fields. First try to use HasField and
     #       if it fails (with a ValueError) we manually consult the fields.
     try:
         return message_pb.HasField(property_name)
-    except:
+    except:  # noqa
         all_fields = set([field.name for field in message_pb.DESCRIPTOR.fields])
         return property_name in all_fields
+
 
 def const_template(option_value, name):
     const_tmpl = """{%- if str(o.string) and o.string.HasField('const') -%}
@@ -139,7 +156,8 @@ def const_template(option_value, name):
         {% endif %}
     {%- endif -%}
     """
-    return Template(const_tmpl).render(sys = sys, o = option_value, name = name, str = str)
+    return Template(const_tmpl).render(sys=sys, o=option_value, name=name, str=str)
+
 
 def in_template(value, name):
     in_tmpl = """
@@ -152,17 +170,18 @@ def in_template(value, name):
         raise ValidationFailed(\"{{ name }} in {{ value['not_in'] }}\")
     {%- endif -%}
     """
-    return Template(in_tmpl).render(value = value, name = name)
+    return Template(in_tmpl).render(value=value, name=name)
+
 
 def string_template(option_value, name):
     if option_value.string.well_known_regex:
-      known_regex_type = option_value.string.DESCRIPTOR.fields_by_name['well_known_regex'].enum_type
-      regex_value = option_value.string.well_known_regex
-      regex_name = known_regex_type.values_by_number[regex_value].name
-      if regex_name in ["HTTP_HEADER_NAME", "HTTP_HEADER_VALUE"] and not option_value.string.strict:
-        option_value.string.pattern = regex_map["HEADER_STRING"]
-      else:
-        option_value.string.pattern = regex_map[regex_name]
+        known_regex_type = option_value.string.DESCRIPTOR.fields_by_name['well_known_regex'].enum_type
+        regex_value = option_value.string.well_known_regex
+        regex_name = known_regex_type.values_by_number[regex_value].name
+        if regex_name in ["HTTP_HEADER_NAME", "HTTP_HEADER_VALUE"] and not option_value.string.strict:
+            option_value.string.pattern = regex_map["HEADER_STRING"]
+        else:
+            option_value.string.pattern = regex_map[regex_name]
     str_templ = """
     {%- set s = o.string -%}
     {% set i = 0 %}
@@ -227,26 +246,26 @@ def string_template(option_value, name):
     {%- endif -%}
     {%- if s['address'] %}
     try:
-        ipaddress.ip_address({{ name }})
+        ip_address({{ name }})
     except ValueError:
         if not _validateHostName({{ name }}):
             raise ValidationFailed(\"{{ name }} is not a valid address\")
     {%- endif -%}
     {%- if s['ip'] %}
     try:
-        ipaddress.ip_address({{ name }})
+        ip_address({{ name }})
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ip\")
     {%- endif -%}
     {%- if s['ipv4'] %}
     try:
-        ipaddress.IPv4Address({{ name }})
+        IPv4Address({{ name }})
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ipv4\")
     {%- endif -%}
     {%- if s['ipv6'] %}
     try:
-        ipaddress.IPv6Address({{ name }})
+        IPv6Address({{ name }})
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ipv6\")
     {%- endif %}
@@ -268,7 +287,8 @@ def string_template(option_value, name):
     {%- endif -%}
     {% endfilter %}
     """
-    return Template(str_templ).render(o = option_value, name = name, const_template = const_template, in_template = in_template)
+    return Template(str_templ).render(o=option_value, name=name, const_template=const_template, in_template=in_template)
+
 
 def required_template(value, name):
     req_tmpl = """{%- if value['required'] -%}
@@ -276,9 +296,10 @@ def required_template(value, name):
         raise ValidationFailed(\"{{ name }} is required.\")
     {%- endif -%}
     """
-    return Template(req_tmpl).render(value = value, name = name)
+    return Template(req_tmpl).render(value=value, name=name)
 
-def message_template(option_value, name, repeated = False):
+
+def message_template(option_value, name, repeated=False):
     message_tmpl = """{%- if m.message %}
     {{- required_template(m.message, name) }}
     {%- endif -%}
@@ -290,18 +311,21 @@ def message_template(option_value, name, repeated = False):
     {% else %}
     if _has_field(p, \"{{ name.split('.')[-1] }}\"):
     {% endif %}
-        embedded = validate(p.{{ name }})(p.{{ name }})
+        embedded = validate(p.{{ name }})
         if embedded is not None:
             return embedded
     {%- endif -%}
     """
-    return Template(message_tmpl).render(m = option_value, name = name, required_template = required_template, repeated = repeated)
+    return Template(message_tmpl).render(
+        m=option_value, name=name, required_template=required_template, repeated=repeated)
+
 
 def bool_template(option_value, name):
     bool_tmpl = """
     {{ const_template(o, name) -}}
     """
-    return Template(bool_tmpl).render(o = option_value, name = name, const_template = const_template)
+    return Template(bool_tmpl).render(o=option_value, name=name, const_template=const_template)
+
 
 def num_template(option_value, name, num):
     num_tmpl = """
@@ -371,7 +395,8 @@ def num_template(option_value, name, num):
     {%- endif -%}
     {% endfilter %}
     """
-    return Template(num_tmpl).render(o = option_value, name = name, num = num, in_template = in_template, str = str)
+    return Template(num_tmpl).render(o=option_value, name=name, num=num, in_template=in_template, str=str)
+
 
 def dur_arr(dur):
     value = 0
@@ -383,11 +408,13 @@ def dur_arr(dur):
         value = 0
     return arr
 
+
 def dur_lit(dur):
     value = dur.seconds + (10**-9 * dur.nanos)
     return value
 
-def duration_template(option_value, name, repeated = False):
+
+def duration_template(option_value, name, repeated=False):
     dur_tmpl = """
     {{- required_template(o.duration, name) }}
     {% if repeated %}
@@ -471,9 +498,11 @@ def duration_template(option_value, name, repeated = False):
             raise ValidationFailed(\"{{ name }} is not greater than or equal to {{ dur_lit(dur['gte']) }}\")
         {%- endif -%}
     """
-    return Template(dur_tmpl).render(o = option_value, name = name, required_template = required_template, dur_lit = dur_lit, dur_arr = dur_arr, repeated = repeated)
+    return Template(dur_tmpl).render(o=option_value, name=name, required_template=required_template,
+                                     dur_lit=dur_lit, dur_arr=dur_arr, repeated=repeated)
 
-def timestamp_template(option_value, name, repeated = False):
+
+def timestamp_template(option_value, name, repeated=False):
     timestamp_tmpl = """
     {{- required_template(o.timestamp, name) }}
     {% if repeated %}
@@ -582,9 +611,11 @@ def timestamp_template(option_value, name, repeated = False):
              raise ValidationFailed(\"{{ name }} is not within range {{ dur_lit(ts['within']) }}\")
         {%- endif -%}
     """
-    return Template(timestamp_tmpl).render(o = option_value, name = name, required_template = required_template, dur_lit = dur_lit, dur_arr = dur_arr, repeated = repeated)
+    return Template(timestamp_tmpl).render(o=option_value, name=name, required_template=required_template,
+                                           dur_lit=dur_lit, dur_arr=dur_arr, repeated=repeated)
 
-def wrapper_template(option_value, name, repeated = False):
+
+def wrapper_template(option_value, name, repeated=False):
     wrapper_tmpl = """
     {% if repeated %}
     if {{ name }}:
@@ -623,10 +654,14 @@ def wrapper_template(option_value, name, repeated = False):
         raise ValidationFailed(\"{{ name }} is required.\")
     {%- endif %}
     """
-    return Template(wrapper_tmpl).render(option_value = option_value, name = name, str = str, num_template = num_template, bool_template = bool_template, string_template = string_template, bytes_template = bytes_template, repeated = repeated)
+    return Template(wrapper_tmpl).render(option_value=option_value, name=name, str=str, num_template=num_template,
+                                         bool_template=bool_template, string_template=string_template,
+                                         bytes_template=bytes_template, repeated=repeated)
+
 
 def enum_values(field):
     return [x.number for x in field.enum_type.values]
+
 
 def enum_template(option_value, name, field):
     enum_tmpl = """
@@ -637,9 +672,11 @@ def enum_template(option_value, name, field):
         raise ValidationFailed(\"{{ name }} is not defined\")
     {% endif %}
     """
-    return Template(enum_tmpl).render(option_value = option_value, name = name, const_template = const_template, in_template = in_template, field = field, enum_values = enum_values)
+    return Template(enum_tmpl).render(option_value=option_value, name=name, const_template=const_template,
+                                      in_template=in_template, field=field, enum_values=enum_values)
 
-def any_template(option_value, name, repeated = False):
+
+def any_template(option_value, name, repeated=False):
     any_tmpl = """
     {{- required_template(o, name) }}
     {%- if o['in'] %}
@@ -661,7 +698,9 @@ def any_template(option_value, name, repeated = False):
             raise ValidationFailed(\"{{ name }} in {{ o['not_in'] }}\")
     {%- endif %}
     """
-    return Template(any_tmpl).render(o = option_value.any, name = name, required_template = required_template, repeated = repeated)
+    return Template(any_tmpl).render(
+        o=option_value.any, name=name, required_template=required_template, repeated=repeated)
+
 
 def bytes_template(option_value, name):
     bytes_tmpl = """
@@ -687,19 +726,19 @@ def bytes_template(option_value, name):
     {%- endif -%}
     {%- if b['ip'] %}
     try:
-        ipaddress.ip_address({{ name }})
+        ip_address({{ name }})
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ip\")
     {%- endif -%}
     {%- if b['ipv4'] %}
     try:
-        ipaddress.IPv4Address({{ name }})
+        IPv4Address({{ name }})
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ipv4\")
     {%- endif -%}
     {%- if b['ipv6'] %}
     try:
-        ipaddress.IPv6Address({{ name }})
+        IPv6Address({{ name }})
     except ValueError:
         raise ValidationFailed(\"{{ name }} is not a valid ipv6\")
     {%- endif -%}
@@ -741,9 +780,11 @@ def bytes_template(option_value, name):
     {% endif %}
     {% endfilter %}
     """
-    return Template(bytes_tmpl).render(sys=sys,o = option_value, name = name, const_template = const_template, in_template = in_template, b = option_value.bytes)
+    return Template(bytes_tmpl).render(sys=sys, o=option_value, name=name,
+                                       const_template=const_template, in_template=in_template, b=option_value.bytes)
 
-def switcher_template(accessor, name, field, map = False):
+
+def switcher_template(accessor, name, field, map=False):
     switcher_tmpl = """
     {%- if str(accessor.float) %}
     {{- num_template(accessor, name, accessor.float)|indent(4,True) -}}
@@ -789,7 +830,12 @@ def switcher_template(accessor, name, field, map = False):
     {{- message_template(accessor, name, True)|indent(4,True) -}}
     {%- endif %}
     """
-    return Template(switcher_tmpl).render(accessor = accessor, name = name, str = str, num_template = num_template, bool_template = bool_template, string_template = string_template, enum_template = enum_template, duration_template = duration_template, timestamp_template = timestamp_template, any_template = any_template, message_template = message_template, field = field, map = map)
+    return Template(switcher_tmpl).render(accessor=accessor, name=name, str=str, num_template=num_template,
+                                          bool_template=bool_template, string_template=string_template,
+                                          enum_template=enum_template, duration_template=duration_template,
+                                          timestamp_template=timestamp_template, any_template=any_template,
+                                          message_template=message_template, field=field, map=map)
+
 
 def repeated_template(option_value, name, field):
     rep_tmpl = """
@@ -820,7 +866,7 @@ def repeated_template(option_value, name, field):
         {%- if o and o.repeated and o.repeated.items.message.skip %}
         pass
         {% else %}
-        validate(item)(item)
+        validate(item)
         {% endif %}
     {%- endif %}
     {%- if o and str(o.repeated['items']) %}
@@ -831,11 +877,14 @@ def repeated_template(option_value, name, field):
     {%- endif %}
     {% endfilter %}
     """
-    return Template(rep_tmpl).render(o = option_value, name = name, message_type = field.message_type, str = str, field = field, switcher_template = switcher_template)
+    return Template(rep_tmpl).render(o=option_value, name=name, message_type=field.message_type,
+                                     str=str, field=field, switcher_template=switcher_template)
+
 
 def is_map(field):
     return field.label == 3 and field.message_type and len(field.message_type.fields) == 2 and \
            field.message_type.fields[0].name == "key" and field.message_type.fields[1].name == "value"
+
 
 def map_template(option_value, name, field):
     map_tmpl = """
@@ -854,7 +903,7 @@ def map_template(option_value, name, field):
         raise ValidationFailed(\"{{ name }} can contain at most {{ o.map['max_pairs'] }} items\")
     {%- endif %}
     {%- if o and o.map['no_sparse'] -%}
-    raise UnimplementedException(\"no_sparse validation is not implemented because protobuf maps cannot be sparse in Python\")
+    raise UnimplementedException(\"no_sparse validation not implemented because proto maps cannot be sparse in Python\")
     {%- endif %}
     {%- if o and (str(o.map['keys']) or str(o.map['values']))%}
     for key in {{ name }}:
@@ -892,19 +941,22 @@ def map_template(option_value, name, field):
         pass
     {%- elif field.message_type.fields[1].message_type %}
     for key in {{ name }}:
-        validate({{ name }}[key])({{ name }}[key])
+        validate({{ name }}[key])
     {%- endif %}
     {% endfilter %}
     """
-    return Template(map_tmpl).render(o = option_value, name = name, message_type = field.message_type, str = str, field = field, switcher_template = switcher_template, num_template = num_template, string_template = string_template, bool_template = bool_template)
+    return Template(map_tmpl).render(o=option_value, name=name, message_type=field.message_type, str=str,
+                                     field=field, switcher_template=switcher_template, num_template=num_template,
+                                     string_template=string_template, bool_template=bool_template)
+
 
 def rule_type(field):
-    name = "p."+ field.name
+    name = "p." + field.name
     if has_validate(field) and field.message_type is None:
         for option_descriptor, option_value in field.GetOptions().ListFields():
             if option_descriptor.full_name == "validate.rules":
                 if str(option_value.string):
-                    return string_template(option_value, name )
+                    return string_template(option_value, name)
                 elif str(option_value.message):
                     return message_template(option_value, field.name)
                 elif str(option_value.bool):
@@ -974,6 +1026,7 @@ def rule_type(field):
             return message_template(None, field.name)
     return ""
 
+
 def file_template(proto_message):
     file_tmp = """
 # Validates {{ p.DESCRIPTOR.name }}
@@ -1005,10 +1058,4 @@ def generate_validate(p):
         {%- endif %}
     {%- endfor %}
     return None"""
-    return Template(file_tmp).render(rule_type = rule_type, p = proto_message)
-
-class UnimplementedException(Exception):
-    pass
-
-class ValidationFailed(Exception):
-    pass
+    return Template(file_tmp).render(rule_type=rule_type, p=proto_message)

@@ -7,14 +7,15 @@ jobs:
       - checkout
       - run: docker build -t protoc-gen-validate .
       - run: docker run --rm protoc-gen-validate ci
-  
+      - run:s
+          command: | # Upload if on master branch
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker run --rm protoc-gen-validate python-release
+            fi
+
   javabuild:
     machine: true
-    working_directory: ~/.go_workspace/src/github.com/envoyproxy/protoc-gen-validate/java
-    environment:
-      MAVEN_OPTS: -Xms512m -Xmx1024m # Customize the JVM maximum heap limit
-      GO111MODULE: "on"
-      CI_GO_VERSION: 1.14.7
+    working_directory: ~/pgv
     steps:
       - checkout:
           path: ~/.go_workspace/src/github.com/envoyproxy/protoc-gen-validate
@@ -44,7 +45,3 @@ workflows:
     jobs:
       - build
       - javabuild
-
-
-    
-    

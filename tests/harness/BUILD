@@ -43,10 +43,8 @@ go_library(
 )
 
 py_proto_library(
-    name = "python-harness-proto",
+    name = "harness_py_proto",
     srcs = ["harness.proto"],
-    default_runtime = "@com_google_protobuf//:protobuf_python",
-    protoc = "@com_google_protobuf//:protoc",
     visibility = ["//visibility:public"],
     deps = ["@com_google_protobuf//:protobuf_python"],
 )
