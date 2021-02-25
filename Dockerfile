@@ -65,6 +65,9 @@ RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 # buildozer
 RUN go get github.com/bazelbuild/buildtools/buildozer
 
+WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
+COPY . .
+
 # python must be on PATH for the execution of py_binary bazel targets, but
 # the distribution we installed doesn't provide this alias
 RUN ln -s /usr/bin/python3.8 /usr/bin/python
@@ -72,9 +75,6 @@ RUN ln -s /usr/bin/python3.8 /usr/bin/python
 # python tooling for linting and uploading to PyPI
 RUN python3.8 -m easy_install pip \
   && python3.8 -m pip install -r requirements.txt
-
-WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
-COPY . .
 
 RUN make build
 

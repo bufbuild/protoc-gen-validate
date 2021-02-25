@@ -7,4 +7,4 @@ isort==5.7.0
 build==0.3.0
 twine==3.3.0
 wheel==0.36.2
-setuptools==0
+setuptools==53.0.0
