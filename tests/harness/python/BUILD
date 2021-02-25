@@ -1,4 +1,4 @@
-load("@rules_python//python:defs.bzl", "py_binary", "py_runtime")
+load("@rules_python//python:defs.bzl", "py_binary")
 load("@pgv_pip_deps//:requirements.bzl", "requirement")
 
 # Adding `requirement("protobuf")` first ensures
