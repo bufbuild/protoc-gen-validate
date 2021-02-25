@@ -64,7 +64,7 @@ harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harne
 .PHONY: bazel-harness
 bazel-harness:
 	# runs the test harness via bazel
-	bazel run //tests/harness/executor:executor --incompatible_new_actions_api=false -- -go -cc -java -python
+	bazel run //tests/harness/executor:executor --incompatible_new_actions_api=false -- -python
 
 .PHONY: testcases
 testcases: bin/protoc-gen-go

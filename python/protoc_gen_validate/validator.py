@@ -7,7 +7,7 @@ from functools import lru_cache
 from ipaddress import IPv4Address, IPv6Address, ip_address  # noqa
 from urllib import parse as urlparse  # noqa
 
-from googsle.protobuf.message import Message
+from google.protobuf.message import Message
 from jinja2 import Template
 from validate_email import validate_email
 
