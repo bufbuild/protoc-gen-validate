@@ -28,9 +28,9 @@ def pgv_dependencies():
     if not native.existing_rule("com_google_protobuf"):
         http_archive(
             name = "com_google_protobuf",
-            url = "https://github.com/protocolbuffers/protobuf/archive/v3.11.4.tar.gz",
-            sha256 = "a79d19dcdf9139fa4b81206e318e33d245c4c9da1ffed21c87288ed4380426f9",
-            strip_prefix = "protobuf-3.11.4",
+            url = "https://github.com/protocolbuffers/protobuf/archive/v3.14.0.tar.gz",
+            sha256 = "d0f5f605d0d656007ce6c8b5a82df3037e1d8fe8b121ed42e536f569dec16113",
+            strip_prefix = "protobuf-3.14.0",
         )
 
     # TODO(akonradi): This shouldn't be necesary since the same http_archive block is imported by

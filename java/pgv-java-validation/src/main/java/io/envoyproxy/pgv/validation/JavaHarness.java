@@ -18,6 +18,7 @@ import java.util.Arrays;
 @SuppressWarnings("unchecked")
 public class JavaHarness {
     public static void main(String[] args) {
+        Message message = null;
         try {
             ProtoTypeMap typeMap = ProtoTypeMap.of(Arrays.asList(
                     Bool.getDescriptor().toProto(),
@@ -41,7 +42,7 @@ public class JavaHarness {
             Validate.registerAllExtensions(registry);
 
             Harness.TestCase testCase = Harness.TestCase.parseFrom(System.in, registry);
-            Message message = typeMap.unpackAny(testCase.getMessage());
+            message = typeMap.unpackAny(testCase.getMessage());
             ValidatorIndex validatorIndex = new ReflectiveValidatorIndex();
             validatorIndex.validatorFor(message).assertValid(message);
 
@@ -50,6 +51,12 @@ public class JavaHarness {
             writeResult(Harness.TestResult.newBuilder().setValid(false).setAllowFailure(true).setReason(ex.getMessage()).build());
         } catch (ValidationException ex) {
             writeResult(Harness.TestResult.newBuilder().setValid(false).setReason(ex.getMessage()).build());
+        } catch (NullPointerException ex) {
+            if (message.getDescriptorForType().getOptions().getExtension(Validate.ignored)) {
+                writeResult(Harness.TestResult.newBuilder().setValid(false).setAllowFailure(true).setReason("validation not generated due to ignore option").build());
+            } else {
+                writeResult(Harness.TestResult.newBuilder().setValid(false).setError(true).setReason(Throwables.getStackTraceAsString(ex)).build());
+            }
         } catch (Throwable ex) {
             writeResult(Harness.TestResult.newBuilder().setValid(false).setError(true).setReason(Throwables.getStackTraceAsString(ex)).build());
         }
