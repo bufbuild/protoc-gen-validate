@@ -6,14 +6,26 @@ jobs:
     steps:
       - checkout
       - run: docker build -t protoc-gen-validate .
-      - run: docker run --rm protoc-gen-validate ci
-      - run:
-          command: | # Upload if on master branch
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker run --rm protoc-gen-validate python-release
-            fi
 
-  javabuild:
+  test:
+    machine: true
+    working_directory: ~/pgv
+    steps:
+      - run: docker run --rm protoc-gen-validate ci
+
+  python_release_test:
+    machine: true
+    working_directory: ~/pgv
+    steps:
+      - run: docker run --rm --env PYPI_REPO=testpypi --env PGV_PYPI_TOKEN=$PGV_PYPI_TEST_TOKEN protoc-gen-validate python-release
+
+  python_release_main:
+    machine: true
+    working_directory: ~/pgv
+    steps:
+      - run: docker run --rm --env PYPI_REPO=pypi --env PGV_PYPI_TOKEN=$PGV_PYPI_TOKEN protoc-gen-validate python-release
+
+  java_release:
     machine: true
     working_directory: ~/.go_workspace/src/github.com/envoyproxy/protoc-gen-validate/java
     environment:
@@ -29,23 +41,38 @@ jobs:
           fingerprints:
             - "cd:a8:80:f3:5e:9a:37:30:ef:55:20:b5:1f:b9:e5:18"
       - deploy:
-          command: | # Deploy if on master branch. If the $RELEASE and $NEXT variables are set then prepare a full maven release.
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              echo $GPG_KEY | base64 --decode > signing-key
-              gpg --passphrase $GPG_PASSPHRASE --import signing-key
-              shred signing-key
-              if [[ -n "${RELEASE}" && -n "${NEXT}" ]]; then
-                git config --global user.email "envoy-bot@users.noreply.github.com"
-                git config --global user.name "envoy-bot"
-                mvn -B -s ../.circleci/settings.xml release:prepare release:perform -Darguments="-s ../.circleci/settings.xml" -DreleaseVersion=$RELEASE -DdevelopmentVersion=$NEXT -DscmCommentPrefix="java release: "
-              else
-                mvn -B -s ../.circleci/settings.xml deploy
-              fi
+          command: | # If the $RELEASE and $NEXT variables are set then prepare a full maven release.
+            echo $GPG_KEY | base64 --decode > signing-key
+            gpg --passphrase $GPG_PASSPHRASE --import signing-key
+            shred signing-key
+            if [[ -n "${RELEASE}" && -n "${NEXT}" ]]; then
+              git config --global user.email "envoy-bot@users.noreply.github.com"
+              git config --global user.name "envoy-bot"
+              mvn -B -s ../.circleci/settings.xml release:prepare release:perform -Darguments="-s ../.circleci/settings.xml" -DreleaseVersion=$RELEASE -DdevelopmentVersion=$NEXT -DscmCommentPrefix="java release: "
+            else
+              mvn -B -s ../.circleci/settings.xml deploy
             fi
 
 workflows:
   version: 2
-  build_and_javabuild:
+  build_test_release:
     jobs:
       - build
-      - javabuild
+      - test:
+          requires:
+            - build
+      - python_release_test:
+          requires:
+            - test
+      - python_release_main:
+          requires:
+            - pythonrelease_test
+          filters:
+            branches:
+              only:
+                - main
+      - java_release:
+          filters:
+            branches:
+              only:
+                - main

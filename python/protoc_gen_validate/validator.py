@@ -1,11 +1,11 @@
-import re  # noqa
-import struct  # noqa
-import sys  # noqa
-import time  # noqa
-import uuid  # noqa
+import re
+import struct
+import sys
+import time
+import uuid
 from functools import lru_cache
-from ipaddress import IPv4Address, IPv6Address, ip_address  # noqa
-from urllib import parse as urlparse  # noqa
+from ipaddress import IPv4Address, IPv6Address, ip_address
+from urllib import parse as urlparse
 
 from google.protobuf.message import Message
 from jinja2 import Template
@@ -20,10 +20,6 @@ regex_map = {
     "HTTP_HEADER_VALUE": r'^[^\u0000-\u0008\u000A-\u001F\u007F]*$',
     "HEADER_STRING": r'^[^\u0000\u000A\u000D]*$'
 }
-
-
-class UnimplementedException(Exception):
-    pass
 
 
 class ValidationFailed(Exception):
@@ -883,7 +879,7 @@ def repeated_template(option_value, name, field):
 
 def is_map(field):
     return field.label == 3 and field.message_type and len(field.message_type.fields) == 2 and \
-           field.message_type.fields[0].name == "key" and field.message_type.fields[1].name == "value"
+        field.message_type.fields[0].name == "key" and field.message_type.fields[1].name == "value"
 
 
 def map_template(option_value, name, field):
@@ -901,9 +897,6 @@ def map_template(option_value, name, field):
     {%- if o and o.map['max_pairs'] %}
     if len({{ name }}) > {{ o.map['max_pairs'] }}:
         raise ValidationFailed(\"{{ name }} can contain at most {{ o.map['max_pairs'] }} items\")
-    {%- endif %}
-    {%- if o and o.map['no_sparse'] -%}
-    raise UnimplementedException(\"no_sparse validation not implemented because proto maps cannot be sparse in Python\")
     {%- endif %}
     {%- if o and (str(o.map['keys']) or str(o.map['values']))%}
     for key in {{ name }}:

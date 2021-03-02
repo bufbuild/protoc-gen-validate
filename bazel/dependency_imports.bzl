@@ -6,10 +6,11 @@ load("@rules_python//python:pip.bzl", "pip_install")
 
 def _pgv_pip_dependencies():
     # This rule translates the specified requirements.in into
-    # @pgv_pip_deps//:requirements.bzl
+    # @pgv_pip_deps//:requirements.bzl.
+    # `make python/requirements.generated` must be executed before bazel
     pip_install(
         name = "pgv_pip_deps",
-        requirements = "//:python/requirements.in",
+        requirements = "//python:requirements.generated",
     )
 
 def _pgv_go_dependencies():

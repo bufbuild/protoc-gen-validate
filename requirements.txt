@@ -1,7 +1,6 @@
 # Requirements for linting, building, and uploading the PGV python package to PyPI.
-#
-# The package's own requirements are in python/setup.cfg (and duplicated in
-# python/requirements.in to make Bazel's pip wrapper work).
+# The package's own requirements are in python/setup.cfg. See requirements_parser.py
+# for more context.
 flake8==3.8.4
 isort==5.7.0
 build==0.3.0

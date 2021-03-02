@@ -7,21 +7,15 @@ in `validate.proto`. Implemented Python annotations are listed in the [rules com
 
 ### Example
 ```python3
-from protoc_gen_validate.validator import validate, ValidationFailed, UnimplementedException
-from my.schemas.foobar_pb2 import FooBar
+from entities_pb2 import Person
+from protoc_gen_validate.validator import validate, ValidationFailed
 
-foobar = FooBar()
-foobar.field_a = 42
-foobar.field_b = "value"
-
+p = Person(first_name="Foo", last_name="Bar", age=42)
 try:
-    validate(foobar)
-except ValidationFailed:
-    pass
-except UnimplementedException:
-    pass
+    validate(p)
+except ValidationFailed as err:
+    print(err)
 ```
-
 
 [pgv-home]: https://github.com/envoyproxy/protoc-gen-validate
 [rules-comparison]: https://github.com/envoyproxy/protoc-gen-validate/blob/main/rule_comparison.md

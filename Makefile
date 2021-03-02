@@ -19,7 +19,7 @@ build: validate/validate.pb.go
 	go install .
 
 .PHONY: bazel
-bazel:
+bazel: python/requirements.generated
 	# generate the PGV plugin with Bazel
 	bazel build //tests/...
 
@@ -56,13 +56,16 @@ bin/protoc-gen-go:
 bin/harness:
 	cd tests && go build -o ../bin/harness ./harness/executor
 
+python/requirements.generated: python/setup.cfg
+	./requirements_parser.py
+
 .PHONY: harness
 harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harness tests/harness/cc/cc-harness bin/harness
  	# runs the test harness, validating a series of test cases in all supported languages
 	./bin/harness -go -cc
 
 .PHONY: bazel-harness
-bazel-harness:
+bazel-harness: python/requirements.generated
 	# runs the test harness via bazel
 	bazel run //tests/harness/executor:executor --incompatible_new_actions_api=false -- -go -cc -java -python
 
@@ -125,6 +128,7 @@ prepare-python-release:
 
 .PHONE: python-release
 python-release: prepare-python-release
+    rm -rf python/dist
 	python3.8 -m build --no-isolation --sdist python
     # the below command should be identical to `python3.8 -m build --wheel`
     # however that returns mysterious `error: could not create 'build': File exists`.
@@ -132,7 +136,7 @@ python-release: prepare-python-release
     # but why there's a collision or why setuptools stopped respecting the `build_lib` flag is unclear.
     # As a workaround, we build a source distribution and then separately build a wheel from it.
 	python3.8 -m pip wheel --wheel-dir python/dist --no-deps python/dist/*
-	python3.8 -m twine upload python/dist/*
+	python3.8 -m twine upload --verbose --skip-existing --repository ${PYPI_REPO} --username "__token__" --password ${PGV_PYPI_TOKEN} python/dist/*
 
 .PHONY: ci
 ci: lint bazel testcases bazel-harness build_generation_tests
