@@ -14,12 +14,12 @@ GO_IMPORT_SPACES := ${VALIDATE_IMPORT},\
 GO_IMPORT:=$(subst $(space),,$(GO_IMPORT_SPACES))
 
 .PHONY: build
-build: validate/validate.pb.go
+build: validate/validate.pb.go python/requirements.generated
 	# generates the PGV binary and installs it into $$GOPATH/bin
 	go install .
 
 .PHONY: bazel
-bazel: python/requirements.generated
+bazel:
 	# generate the PGV plugin with Bazel
 	bazel build //tests/...
 
@@ -65,7 +65,7 @@ harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harne
 	./bin/harness -go -cc
 
 .PHONY: bazel-harness
-bazel-harness: python/requirements.generated
+bazel-harness:
 	# runs the test harness via bazel
 	bazel run //tests/harness/executor:executor --incompatible_new_actions_api=false -- -go -cc -java -python
 
@@ -128,13 +128,13 @@ prepare-python-release:
 
 .PHONE: python-release
 python-release: prepare-python-release
-    rm -rf python/dist
+	rm -rf python/dist
 	python3.8 -m build --no-isolation --sdist python
-    # the below command should be identical to `python3.8 -m build --wheel`
-    # however that returns mysterious `error: could not create 'build': File exists`.
-    # setuptools copies source and data files to a temporary build directory,
-    # but why there's a collision or why setuptools stopped respecting the `build_lib` flag is unclear.
-    # As a workaround, we build a source distribution and then separately build a wheel from it.
+	# the below command should be identical to `python3.8 -m build --wheel`
+	# however that returns mysterious `error: could not create 'build': File exists`.
+	# setuptools copies source and data files to a temporary build directory,
+	# but why there's a collision or why setuptools stopped respecting the `build_lib` flag is unclear.
+	# As a workaround, we build a source distribution and then separately build a wheel from it.
 	python3.8 -m pip wheel --wheel-dir python/dist --no-deps python/dist/*
 	python3.8 -m twine upload --verbose --skip-existing --repository ${PYPI_REPO} --username "__token__" --password ${PGV_PYPI_TOKEN} python/dist/*
 

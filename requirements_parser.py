@@ -4,16 +4,15 @@
 There's two sets of python requirements to discuss. The ones specified in requirements.txt are installed
 during the Docker build and are used for linting, building, and uploading the PGV python package to PyPI.
 
-The other set is in the install_requires section of setup.cfg. These are needed to actually use the package, and
-of course for our testing as well.
+The other set is in the install_requires section of setup.cfg. These are needed to use the package.
 
 We use the pip_install rule of @rules_python to install these packages. Unfortunately:
 - the rule can't handle setup.cfg directly, it wants a file in simple requirements.txt format
-- as a repository_rule, it won't handle generated files so we can't write a genrule to create
-  a requirements.txt out of setup.cfg.
+- as a repository_rule, pip_install won't handle generated files. This means we can't write a bazel genrule to create
+  the input to pip_install.
 
-So, in an effort to keep the setup.cfg the source-of-truth for what packages are installed to execute the test
-harness, this script converts the install_requires section of setup.cfg into a file pip_install will handle.
+So, in an effort to keep the setup.cfg the source-of-truth for what packages are installed to execute the python
+harness, this script converts install_requires of setup.cfg into a file that pip_install will handle.
 """
 
 import configparser
