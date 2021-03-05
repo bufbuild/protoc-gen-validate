@@ -20,8 +20,7 @@ from tests.harness.cases.wkt_wrappers_pb2 import *
 from tests.harness.cases.wkt_timestamp_pb2 import *
 from tests.harness.cases.kitchen_sink_pb2 import *
 
-sys.path.append(os.environ['GOPATH']+'/src/github.com/envoyproxy/protoc-gen-validate/validate')
-from validator import validate, ValidationFailed, UnimplementedException, print_validate
+from validate.validator import validate, ValidationFailed, UnimplementedException, print_validate
 
 class_list = []
 for k, v in inspect.getmembers(sys.modules[__name__], inspect.isclass):
