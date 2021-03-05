@@ -1,7 +1,7 @@
 import sys
 import inspect
 
-from python.protoc_gen_validate.validator import validate, ValidationFailed, UnimplementedException
+from python.protoc_gen_validate.validator import validate, ValidationFailed
 from tests.harness.harness_pb2 import TestCase, TestResult
 from tests.harness.cases.bool_pb2 import *
 from tests.harness.cases.bytes_pb2 import *
