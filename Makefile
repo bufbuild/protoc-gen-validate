@@ -19,7 +19,7 @@ build: validate/validate.pb.go python/requirements.generated
 	go install .
 
 .PHONY: bazel
-bazel:
+bazel: python/requirements.generated
 	# generate the PGV plugin with Bazel
 	bazel build //tests/...
 
@@ -65,7 +65,7 @@ harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harne
 	./bin/harness -go -cc
 
 .PHONY: bazel-harness
-bazel-harness:
+bazel-harness: python/requirements.generated
 	# runs the test harness via bazel
 	bazel run //tests/harness/executor:executor --incompatible_new_actions_api=false -- -go -cc -java -python
 
