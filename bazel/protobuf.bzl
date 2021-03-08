@@ -21,10 +21,21 @@ def _path_ignoring_repository(f):
         # before "external/workspace", so we need to add the starting index of "external/workspace"
         return f.path[f.path.find(f.owner.workspace_root) + len(f.owner.workspace_root) + 1:]
 
+def _common_suffix(a, b):
+    matching_parts = []
+    for (x, y) in zip(reversed(a), reversed(b)):
+        if x != y:
+            break
+        matching_parts.append(x)
+    return reversed(matching_parts)
+
 def _package_relative_path(ctx, file):
     # Remove the path prefix common to both the BUILD file that defines the
     # package and the input file.
-    path_parts = file.short_path.split("/")
+
+    # file.short_path includes the root and file.path is relative to the root. We remove the root
+    # and keep only the path relative to the workspace root.
+    path_parts = _common_suffix(file.short_path.split("/"), file.path.split("/"))
     for piece in ctx.build_file_path.split("/"):
         if path_parts[0] != piece:
             break
