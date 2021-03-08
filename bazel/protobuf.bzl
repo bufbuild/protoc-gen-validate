@@ -21,16 +21,30 @@ def _path_ignoring_repository(f):
         # before "external/workspace", so we need to add the starting index of "external/workspace"
         return f.path[f.path.find(f.owner.workspace_root) + len(f.owner.workspace_root) + 1:]
 
-def _protoc_cc_output_files(proto_file_sources):
+def _package_relative_path(ctx, file):
+    # Remove the path prefix common to both the BUILD file that defines the
+    # package and the input file.
+    path_parts = file.short_path.split("/")
+    for piece in ctx.build_file_path.split("/"):
+        if path_parts[0] != piece:
+            break
+        path_parts.pop(0)
+
+    return "/".join(path_parts)
+
+def _protoc_cc_output_files(ctx, proto_file_sources):
     cc_hdrs = []
     cc_srcs = []
 
     for p in proto_file_sources:
-        basename = p.basename[:-len(".proto")]
+        # The returned path needs to be relative to the package directory.
+        file_path = _package_relative_path(ctx, p)
 
-        cc_hdrs.append(basename + ".pb.validate.h")
+        if p.basename.endswith(".proto"):
+            file_path = file_path[:-len(".proto")]
 
-        cc_srcs.append(basename + ".pb.validate.cc")
+        cc_hdrs.append(file_path + ".pb.validate.h")
+        cc_srcs.append(file_path + ".pb.validate.cc")
 
     return cc_hdrs + cc_srcs
 
@@ -51,7 +65,7 @@ def _protoc_gen_validate_cc_impl(ctx):
     """Generate C++ protos using protoc-gen-validate plugin"""
     protos = _proto_sources(ctx)
 
-    cc_files = _protoc_cc_output_files(protos)
+    cc_files = _protoc_cc_output_files(ctx, protos)
     out_files = [ctx.actions.declare_file(out) for out in cc_files]
 
     dir_out = _output_dir(ctx)
@@ -69,20 +83,23 @@ def _protoc_gen_validate_cc_impl(ctx):
         package_command = "true",
     )
 
-def _protoc_python_output_files(proto_file_sources):
+def _protoc_python_output_files(ctx, proto_file_sources):
     python_srcs = []
 
     for p in proto_file_sources:
-        basename = p.basename[:-len(".proto")]
+        # The returned path needs to be relative to the package directory.
+        file_path = _package_relative_path(ctx, p)
+        if file_path.endswith(".proto"):
+            file_path = file_path[:-len(".proto")]
 
-        python_srcs.append(basename.replace("-", "_") + "_pb2.py")
+        python_srcs.append(file_path.replace("-", "_") + "_pb2.py")
     return python_srcs
 
 def _protoc_gen_validate_python_impl(ctx):
     """Generate Python protos using protoc-gen-validate plugin"""
     protos = _proto_sources(ctx)
 
-    python_files = _protoc_python_output_files(protos)
+    python_files = _protoc_python_output_files(ctx, protos)
     out_files = [ctx.actions.declare_file(out) for out in python_files]
 
     dir_out = _output_dir(ctx)
