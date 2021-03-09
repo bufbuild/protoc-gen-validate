@@ -21,27 +21,41 @@ def _path_ignoring_repository(f):
         # before "external/workspace", so we need to add the starting index of "external/workspace"
         return f.path[f.path.find(f.owner.workspace_root) + len(f.owner.workspace_root) + 1:]
 
-def _common_suffix(a, b):
+def _common_prefix(a, b):
     matching_parts = []
-    for (x, y) in zip(reversed(a), reversed(b)):
+    for (x, y) in zip(a, b):
         if x != y:
             break
         matching_parts.append(x)
-    return reversed(matching_parts)
+    return matching_parts
+
+def _common_suffix(a, b):
+    return reversed(_common_prefix(reversed(a), reversed(b)))
 
 def _package_relative_path(ctx, file):
     # Remove the path prefix common to both the BUILD file that defines the
     # package and the input file.
-
+    #
     # file.short_path includes the root and file.path is relative to the root. We remove the root
     # and keep only the path relative to the workspace root.
-    path_parts = _common_suffix(file.short_path.split("/"), file.path.split("/"))
-    for piece in ctx.build_file_path.split("/"):
-        if path_parts[0] != piece:
-            break
-        path_parts.pop(0)
+    #
+    # Examples from envoyproxy/envoy:
+    #   For package @envoy_api_canonical//envoy/annotations:
+    #     ctx.build_file_path = envoy_api_canonical/envoy/annotations/BUILD
+    #     file.short_path = ../envoy_api_canonical/envoy/annotations/resource.proto
+    #     file.path = external/envoy_api_canonical/envoy/annotations/resource.proto
+    #
+    #   For package @opentelemetry_proto//, where the files are in a subdirectory of the package directory:
+    #     ctx.build_file_path = opentelemetry_proto/BUILD.bazel
+    #     file.short_path = ../opentelemetry_proto/opentelemetry/proto/collector/logs/v1/logs_service.proto
+    #     file.path = external/opentelemetry_proto/opentelemetry/proto/collector/logs/v1/logs_service.proto
 
-    return "/".join(path_parts)
+    path_parts = _common_suffix(file.short_path.split("/"), file.path.split("/"))
+    common_prefix = _common_prefix(path_parts, ctx.build_file_path.split("/"))
+
+    # Return the path relative to the package directory by stripping off the common prefix of
+    # path_parts and the BUILD file path.
+    return "/".join(path_parts[len(common_prefix):])
 
 def _protoc_cc_output_files(ctx, proto_file_sources):
     cc_hdrs = []
