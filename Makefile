@@ -63,6 +63,11 @@ bazel-harness:
 	# runs the test harness via bazel
 	bazel run //tests/harness/executor:executor --incompatible_new_actions_api=false -- -go -cc -java -python
 
+.PHONY: example-workspace
+example-workspace:
+	# Run all tests in the example workspace
+	cd example-workspace && bazel test //...
+
 .PHONY: testcases
 testcases: bin/protoc-gen-go
 	# generate the test harness case protos
@@ -116,7 +121,7 @@ tests/harness/java/java-harness:
 	mvn -q -f java/pom.xml clean package -DskipTests
 
 .PHONY: ci
-ci: lint bazel testcases bazel-harness build_generation_tests
+ci: lint bazel testcases bazel-harness build_generation_tests example-workspace
 
 .PHONY: clean
 clean:
