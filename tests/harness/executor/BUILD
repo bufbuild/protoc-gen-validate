@@ -55,6 +55,9 @@ go_binary(
             "-" + lang,
         ],
         data = [":executor"],
+        # This could be sharded more, but each shard incurs overhead and test
+        # execution is already sharded by having separate test rules for each language.
+        shard_count = 5,
         deps = ["@bazel_tools//tools/bash/runfiles"],
     )
     for lang in ("cc", "java", "python")
