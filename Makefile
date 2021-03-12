@@ -58,10 +58,10 @@ harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harne
  	# runs the test harness, validating a series of test cases in all supported languages
 	./bin/harness -go -cc
 
-.PHONY: bazel-harness
-bazel-harness:
-	# runs the test harness via bazel
-	bazel run //tests/harness/executor:executor --incompatible_new_actions_api=false -- -go -cc -java -python
+.PHONY: bazel-tests
+bazel-tests:
+	# Runs all tests with Bazel
+	bazel test //tests/...
 
 .PHONY: example-workspace
 example-workspace:
@@ -121,7 +121,7 @@ tests/harness/java/java-harness:
 	mvn -q -f java/pom.xml clean package -DskipTests
 
 .PHONY: ci
-ci: lint bazel testcases bazel-harness build_generation_tests example-workspace
+ci: lint bazel testcases bazel-tests build_generation_tests example-workspace
 
 .PHONY: clean
 clean:
