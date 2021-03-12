@@ -5,6 +5,7 @@ py_binary(
     name = "python-harness",
     srcs = ["harness.py"],
     main = "harness.py",
+    srcs_version = "PY3",
     visibility = ["//visibility:public"],
     deps = [
         # ensures we test with the package's own protobuf runtime specified in setup.cfg

@@ -856,7 +856,7 @@ All PGV dependencies are currently checked into the project. To test PGV, `proto
 Ensure that your `PATH` is setup to include `protoc-gen-go` and `protoc`, then:
 
 ```
-bazel run //tests/harness/executor:executor
+bazel test //tests/...
 ```
 
 ### Docker

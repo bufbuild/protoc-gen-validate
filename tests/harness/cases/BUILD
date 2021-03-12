@@ -24,6 +24,7 @@ proto_library(
         "oneofs.proto",
         "repeated.proto",
         "strings.proto",
+        "subdirectory/in_subdirectory.proto",
         "wkt_any.proto",
         "wkt_duration.proto",
         "wkt_timestamp.proto",

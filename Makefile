@@ -64,10 +64,10 @@ harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harne
  	# runs the test harness, validating a series of test cases in all supported languages
 	./bin/harness -go -cc
 
-.PHONY: bazel-harness
-bazel-harness: python/requirements.generated
-	# runs the test harness via bazel
-	bazel run //tests/harness/executor:executor --incompatible_new_actions_api=false -- -go -cc -java -python
+.PHONY: bazel-tests
+bazel-tests: python/requirements.generated
+	# Runs all tests with Bazel
+	bazel test //tests/...
 
 .PHONY: testcases
 testcases: bin/protoc-gen-go
@@ -139,7 +139,7 @@ python-release: prepare-python-release
 	python3.8 -m twine upload --verbose --skip-existing --repository ${PYPI_REPO} --username "__token__" --password ${PGV_PYPI_TOKEN} python/dist/*
 
 .PHONY: ci
-ci: lint bazel testcases bazel-harness build_generation_tests
+ci: lint bazel testcases bazel-tests build_generation_tests
 
 .PHONY: clean
 clean:

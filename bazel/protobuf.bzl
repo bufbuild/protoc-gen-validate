@@ -21,16 +21,55 @@ def _path_ignoring_repository(f):
         # before "external/workspace", so we need to add the starting index of "external/workspace"
         return f.path[f.path.find(f.owner.workspace_root) + len(f.owner.workspace_root) + 1:]
 
-def _protoc_cc_output_files(proto_file_sources):
+def _common_prefix(a, b):
+    matching_parts = []
+    for (x, y) in zip(a, b):
+        if x != y:
+            break
+        matching_parts.append(x)
+    return matching_parts
+
+def _common_suffix(a, b):
+    return reversed(_common_prefix(reversed(a), reversed(b)))
+
+def _package_relative_path(ctx, file):
+    # Remove the path prefix common to both the BUILD file that defines the
+    # package and the input file.
+    #
+    # file.short_path includes the root and file.path is relative to the root. We remove the root
+    # and keep only the path relative to the workspace root.
+    #
+    # Examples from envoyproxy/envoy:
+    #   For package @envoy_api_canonical//envoy/annotations:
+    #     ctx.build_file_path = envoy_api_canonical/envoy/annotations/BUILD
+    #     file.short_path = ../envoy_api_canonical/envoy/annotations/resource.proto
+    #     file.path = external/envoy_api_canonical/envoy/annotations/resource.proto
+    #
+    #   For package @opentelemetry_proto//, where the files are in a subdirectory of the package directory:
+    #     ctx.build_file_path = opentelemetry_proto/BUILD.bazel
+    #     file.short_path = ../opentelemetry_proto/opentelemetry/proto/collector/logs/v1/logs_service.proto
+    #     file.path = external/opentelemetry_proto/opentelemetry/proto/collector/logs/v1/logs_service.proto
+
+    path_parts = _common_suffix(file.short_path.split("/"), file.path.split("/"))
+    common_prefix = _common_prefix(path_parts, ctx.build_file_path.split("/"))
+
+    # Return the path relative to the package directory by stripping off the common prefix of
+    # path_parts and the BUILD file path.
+    return "/".join(path_parts[len(common_prefix):])
+
+def _protoc_cc_output_files(ctx, proto_file_sources):
     cc_hdrs = []
     cc_srcs = []
 
     for p in proto_file_sources:
-        basename = p.basename[:-len(".proto")]
+        # The returned path needs to be relative to the package directory.
+        file_path = _package_relative_path(ctx, p)
 
-        cc_hdrs.append(basename + ".pb.validate.h")
+        if p.basename.endswith(".proto"):
+            file_path = file_path[:-len(".proto")]
 
-        cc_srcs.append(basename + ".pb.validate.cc")
+        cc_hdrs.append(file_path + ".pb.validate.h")
+        cc_srcs.append(file_path + ".pb.validate.cc")
 
     return cc_hdrs + cc_srcs
 
@@ -51,7 +90,7 @@ def _protoc_gen_validate_cc_impl(ctx):
     """Generate C++ protos using protoc-gen-validate plugin"""
     protos = _proto_sources(ctx)
 
-    cc_files = _protoc_cc_output_files(protos)
+    cc_files = _protoc_cc_output_files(ctx, protos)
     out_files = [ctx.actions.declare_file(out) for out in cc_files]
 
     dir_out = _output_dir(ctx)
