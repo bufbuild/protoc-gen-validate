@@ -1,6 +1,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include <cstdlib>
 #include <ostream>
 
 #include "google/protobuf/io/zero_copy_stream_impl.h"
@@ -11,7 +12,7 @@
 int main(int nargs, char** args) {
   if (nargs <= 1) {
     std::cout << "No inputs provided; exiting" << std::endl;
-    return 0;
+    return EXIT_SUCCESS;
   }
 
   int success_count = 0;
@@ -29,7 +30,7 @@ int main(int nargs, char** args) {
     if (!google::protobuf::TextFormat::Parse(&input, &bars)) {
       std::cerr << "Failed to parse file '" << filename << "' as a "
                 << bars.GetDescriptor()->full_name() << " textproto" << std::endl;
-      return 3;
+      return EXIT_FAILURE;
     }
 
     pgv::ValidationMsg error_message;
@@ -49,7 +50,7 @@ int main(int nargs, char** args) {
   if (failure_count != 0) {
     std::cerr << "Failed to validate " << failure_count << " file"
               << (failure_count == 1 ? "" : "s") << std::endl;
-    return 1;
+    return EXIT_FAILURE;
   }
-  return 0;
+  return EXIT_SUCCESS;
 }
