@@ -45,3 +45,20 @@ go_binary(
     importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/executor",
     visibility = ["//visibility:private"],
 )
+
+[
+    sh_test(
+        name = "executor_" + lang + "_test",
+        srcs = ["executor_test.sh"],
+        args = [
+            "$(location :executor)",
+            "-" + lang,
+        ],
+        data = [":executor"],
+        # This could be sharded more, but each shard incurs overhead and test
+        # execution is already sharded by having separate test rules for each language.
+        shard_count = 5,
+        deps = ["@bazel_tools//tools/bash/runfiles"],
+    )
+    for lang in ("cc", "java", "python")
+]
