@@ -6,11 +6,12 @@ jobs:
     steps:
       - checkout
       - run: docker build -t protoc-gen-validate .
+      - run: docker run --rm protoc-gen-validate ci
       - run: |
           if [ "${CIRCLE_BRANCH}" == "main" ]; then
             docker run --rm --env PYPI_REPO=pypi --env PGV_PYPI_TOKEN="${PGV_PYPI_TOKEN}" protoc-gen-validate python-release
           else
-            docker run --rm --env PYPI_REPO=testpypi --env PGV_PYPI_TOKEN="${SONATYPE_USER}" protoc-gen-validate python-release
+            docker run --rm --env PYPI_REPO=testpypi --env PGV_PYPI_TOKEN="${PGV_PYPI_TEST_TOKEN}" protoc-gen-validate python-release
           fi
 
   javabuild:
