@@ -1,4 +1,4 @@
-load("@rules_python//python:defs.bzl", "py_binary")
+load("@rules_python//python:defs.bzl", "py_binary", "py_test")
 load("@pgv_pip_deps//:requirements.bzl", "requirement")
 
 py_binary(
@@ -15,4 +15,12 @@ py_binary(
         "//tests/harness/cases:cases_py_proto",
         "//python:validator_py"
     ]
+)
+
+py_test(
+    name = "python-requirements-match",
+    srcs = ["requirements_test.py"],
+    main = "requirements_test.py",
+    srcs_version = "PY3",
+    data = ["//python:setup.cfg", "//python:requirements.in"],
 )

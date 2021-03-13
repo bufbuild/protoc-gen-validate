@@ -7,7 +7,6 @@ bazel-*
 
 /python/LICENSE
 /python/validate.proto
-/python/requirements.generated
 /python/dist/
 *.egg-info/
 __pycache__/

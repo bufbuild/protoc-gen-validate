@@ -14,12 +14,12 @@ GO_IMPORT_SPACES := ${VALIDATE_IMPORT},\
 GO_IMPORT:=$(subst $(space),,$(GO_IMPORT_SPACES))
 
 .PHONY: build
-build: validate/validate.pb.go python/requirements.generated
+build: validate/validate.pb.go
 	# generates the PGV binary and installs it into $$GOPATH/bin
 	go install .
 
 .PHONY: bazel
-bazel: python/requirements.generated
+bazel:
 	# generate the PGV plugin with Bazel
 	bazel build //tests/...
 
@@ -56,16 +56,13 @@ bin/protoc-gen-go:
 bin/harness:
 	cd tests && go build -o ../bin/harness ./harness/executor
 
-python/requirements.generated: python/setup.cfg
-	./requirements_parser.py
-
 .PHONY: harness
 harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harness tests/harness/cc/cc-harness bin/harness
  	# runs the test harness, validating a series of test cases in all supported languages
 	./bin/harness -go -cc
 
 .PHONY: bazel-tests
-bazel-tests: python/requirements.generated
+bazel-tests:
 	# Runs all tests with Bazel
 	bazel test //tests/...
 

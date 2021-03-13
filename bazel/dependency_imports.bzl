@@ -5,12 +5,11 @@ load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_
 load("@rules_python//python:pip.bzl", "pip_install")
 
 def _pgv_pip_dependencies():
-    # This rule translates the specified requirements.in into
-    # @pgv_pip_deps//:requirements.bzl.
-    # `make python/requirements.generated` must be executed before bazel
+    # This rule translates the specified requirements.in (which must be same as install_requires from setup.cfg)
+    # into @pgv_pip_deps//:requirements.bzl.
     pip_install(
         name = "pgv_pip_deps",
-        requirements = "//python:requirements.generated",
+        requirements = "//python:requirements.in",
     )
 
 def _pgv_go_dependencies():
