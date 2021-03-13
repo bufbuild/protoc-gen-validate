@@ -23,7 +23,7 @@ def pgv_dependency_imports():
     # Import @com_google_protobuf's dependencies.
     protobuf_deps()
 
-    # Import @pgv_pip_deps defined by pip's requirements.txt.
+    # Import @pgv_pip_deps defined by python/requirements.in.
     _pgv_pip_dependencies()
 
     # Import rules for the Go compiler.
