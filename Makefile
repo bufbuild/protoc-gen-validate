@@ -123,7 +123,7 @@ prepare-python-release:
 	cp validate/validate.proto python/
 	cp LICENSE python/
 
-.PHONE: python-release
+.PHONY: python-release
 python-release: prepare-python-release
 	rm -rf python/dist
 	python3.8 -m build --no-isolation --sdist python
