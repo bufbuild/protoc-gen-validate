@@ -66,39 +66,6 @@ def _protoc_gen_validate_cc_impl(ctx):
         package_command = "true",
     )
 
-def _protoc_python_output_file(ctx, proto_file):
-    file_path = proto_file.basename
-    if file_path.endswith(".proto"):
-        file_path = file_path[:-len(".proto")]
-
-    return file_path.replace("-", "_") + "_pb2.py"
-
-def _protoc_gen_validate_python_impl(ctx):
-    """Generate Python protos using protoc-gen-validate plugin"""
-    protos = _proto_sources(ctx)
-
-    out_files = []
-    for p in protos:
-        out_files.append(ctx.actions.declare_file(
-            _protoc_python_output_file(ctx, p),
-            sibling = p,
-        ))
-
-    dir_out = _output_dir(ctx)
-
-    args = [
-        "--python_out=" + dir_out,
-    ]
-
-    return _protoc_gen_validate_impl(
-        ctx = ctx,
-        lang = "python",
-        protos = protos,
-        out_files = out_files,
-        protoc_args = args,
-        package_command = "true",
-    )
-
 def _protoc_gen_validate_impl(ctx, lang, protos, out_files, protoc_args, package_command):
     protoc_args.append("--plugin=protoc-gen-validate=" + ctx.executable._plugin.path)
 
@@ -273,27 +240,4 @@ java_proto_gen_validate = rule(
         "srcjar": "lib%{name}-src.jar",
     },
     implementation = _java_proto_gen_validate_impl,
-)
-
-python_proto_gen_validate = rule(
-    attrs = {
-        "deps": attr.label_list(
-            mandatory = True,
-            providers = [ProtoInfo],
-        ),
-        "_protoc": attr.label(
-            cfg = "host",
-            default = Label("@com_google_protobuf//:protoc"),
-            executable = True,
-            allow_single_file = True,
-        ),
-        "_plugin": attr.label(
-            cfg = "host",
-            default = Label("@com_envoyproxy_protoc_gen_validate//:protoc-gen-validate"),
-            allow_files = True,
-            executable = True,
-        ),
-    },
-    output_to_genfiles = True,
-    implementation = _protoc_gen_validate_python_impl,
 )

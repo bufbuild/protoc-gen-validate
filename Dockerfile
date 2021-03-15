@@ -12,11 +12,17 @@ ENV INSTALL_DEPS \
   wget \
   maven \
   patch \
-  python
+  python3.8 \
+  python3.8-distutils \
+  python3-setuptools
 RUN apt-get update \
   && apt-get install -y -q --no-install-recommends curl openjdk-8-jdk \
   && echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list \
   && curl https://bazel.build/bazel-release.pub.gpg | apt-key add - \
+  # software-properties-common allows adding PPA (Personal Package Archive) repositories
+  && apt install -y -q --no-install-recommends software-properties-common \
+  # deadsnakes is a PPA with newer releases of python than default Ubuntu repositories
+  && add-apt-repository ppa:deadsnakes/ppa \
   && apt-get update \
   && apt-get install -y -q --no-install-recommends ${INSTALL_DEPS} \
   && apt-get clean \
@@ -61,6 +67,14 @@ RUN go get github.com/bazelbuild/buildtools/buildozer
 
 WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
 COPY . .
+
+# python must be on PATH for the execution of py_binary bazel targets, but
+# the distribution we installed doesn't provide this alias
+RUN ln -s /usr/bin/python3.8 /usr/bin/python
+
+# python tooling for linting and uploading to PyPI
+RUN python3.8 -m easy_install pip \
+  && python3.8 -m pip install -r requirements.txt
 
 RUN make build
 

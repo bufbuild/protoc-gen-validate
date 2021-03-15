@@ -126,12 +126,11 @@ def pgv_dependencies():
             server_urls = MAVEN_SERVER_URLS,
         )
 
-    if not native.existing_rule("io_bazel_rules_python"):
-        git_repository(
-            name = "io_bazel_rules_python",
-            remote = "https://github.com/bazelbuild/rules_python.git",
-            commit = "fdbb17a4118a1728d19e638a5291b4c4266ea5b8",
-            shallow_since = "1557865590 -0400",
+    if not native.existing_rule("rules_python"):
+        http_archive(
+            name = "rules_python",
+            url = "https://github.com/bazelbuild/rules_python/releases/download/0.1.0/rules_python-0.1.0.tar.gz",
+            sha256 = "b6d46438523a3ec0f3cead544190ee13223a52f6a6765a29eae7b7cc24cc83a0",
         )
 
     if not native.existing_rule("rules_proto"):
