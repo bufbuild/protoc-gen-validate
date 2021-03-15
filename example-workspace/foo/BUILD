@@ -14,3 +14,20 @@ pgv_cc_proto_library(
     name = "bar_cc_proto",
     deps = [":bar_proto"],
 )
+
+proto_library(
+    name = "baz_proto",
+    srcs = ["subdir_without_package/baz.proto"],
+    deps = ["@com_envoyproxy_protoc_gen_validate//validate:validate_proto"],
+)
+
+pgv_cc_proto_library(
+    name = "baz_cc_proto",
+    deps = [":baz_proto"],
+)
+
+cc_test(
+    name = "baz_cc_test",
+    srcs = ["baz_cc_test.cc"],
+    deps = [":baz_cc_proto"],
+)
