@@ -9,7 +9,7 @@
 #include "foo/bar.pb.h"
 #include "foo/bar.pb.validate.h"
 
-int main(int nargs, char** args) {
+int main(const int nargs, const char** const args) {
   if (nargs <= 1) {
     std::cout << "No inputs provided; exiting" << std::endl;
     return EXIT_SUCCESS;
@@ -18,8 +18,8 @@ int main(int nargs, char** args) {
   int success_count = 0;
   for (int i = 1; i < nargs; ++i) {
     pgv::example::foo::Bars bars;
-    auto filename = args[i];
-    auto fd = ::open(filename, O_RDONLY);
+    const auto filename = args[i];
+    const auto fd = ::open(filename, O_RDONLY);
     if (fd < 0) {
       std::cerr << "Failed to open file '" << filename << "'" << std::endl;
       continue;
@@ -46,7 +46,7 @@ int main(int nargs, char** args) {
     }
   }
 
-  int failure_count = nargs - 1 - success_count;
+  const int failure_count = nargs - 1 - success_count;
   if (failure_count != 0) {
     std::cerr << "Failed to validate " << failure_count << " file"
               << (failure_count == 1 ? "" : "s") << std::endl;
