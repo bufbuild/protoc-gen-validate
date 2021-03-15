@@ -1,13 +1,13 @@
 import sys
 import inspect
-import os
+
+from python.protoc_gen_validate.validator import validate, ValidationFailed
 
 from tests.harness.harness_pb2 import TestCase, TestResult
 from tests.harness.cases.bool_pb2 import *
 from tests.harness.cases.bytes_pb2 import *
 from tests.harness.cases.enums_pb2 import *
 from tests.harness.cases.enums_pb2 import *
-from tests.harness.cases.filename_with_dash_pb2 import *
 from tests.harness.cases.messages_pb2 import *
 from tests.harness.cases.numbers_pb2 import *
 from tests.harness.cases.oneofs_pb2 import *
@@ -20,45 +20,30 @@ from tests.harness.cases.wkt_wrappers_pb2 import *
 from tests.harness.cases.wkt_timestamp_pb2 import *
 from tests.harness.cases.kitchen_sink_pb2 import *
 
-from validate.validator import validate, ValidationFailed, UnimplementedException, print_validate
 
-class_list = []
+message_classes = {}
 for k, v in inspect.getmembers(sys.modules[__name__], inspect.isclass):
     if 'DESCRIPTOR' in dir(v):
-        class_list.append(v)
+        message_classes[v.DESCRIPTOR.full_name] = v
 
-def unpack(message):
-    for cls in class_list:
-        if message.Is(cls.DESCRIPTOR):
-            test_class = cls()
-            message.Unpack(test_class)
-            return test_class
 
 if __name__ == "__main__":
-    if sys.version_info[0] >= 3:
-        message = sys.stdin.buffer.read()
-    else:
-        message = sys.stdin.read()
+    read = sys.stdin.buffer.read()
+
     testcase = TestCase()
-    try:
-        testcase.ParseFromString(message)
-    except TypeError:
-        testcase.ParseFromString(message.encode(errors='surrogateescape'))
-    test_class = unpack(testcase.message)
+    testcase.ParseFromString(read)
+
+    test_class = message_classes[testcase.message.TypeName()]
+    test_msg = test_class()
+    testcase.message.Unpack(test_msg)
+
     try:
         result = TestResult()
-        valid = validate(test_class)
-        valid(test_class)
+        valid = validate(test_msg)
         result.Valid = True
     except ValidationFailed as e:
         result.Valid = False
         result.Reason = repr(e)
-    except UnimplementedException as e:
-        result.Error = False
-        result.AllowFailure = True
-        result.Reason = repr(e)
+
     sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8')
-    try:
-        sys.stdout.write(result.SerializeToString().decode("utf-8"))
-    except TypeError:
-        sys.stdout.write(result.SerializeToString().decode("utf-8", errors='surrogateescape'))
+    sys.stdout.write(result.SerializeToString().decode("utf-8"))

@@ -7,7 +7,11 @@ jobs:
       - checkout
       - run: docker build -t protoc-gen-validate .
       - run: docker run --rm protoc-gen-validate ci
-  
+      - run: |
+          if [ "${CIRCLE_BRANCH}" == "main" ]; then
+            docker run --rm --env PYPI_REPO=pypi --env PGV_PYPI_TOKEN="${PGV_PYPI_TOKEN}" protoc-gen-validate python-release
+          fi
+
   javabuild:
     machine: true
     working_directory: ~/.go_workspace/src/github.com/envoyproxy/protoc-gen-validate/java
@@ -19,13 +23,13 @@ jobs:
       - checkout:
           path: ~/.go_workspace/src/github.com/envoyproxy/protoc-gen-validate
       - run: sudo rm -rf /usr/local/go && curl -O https://dl.google.com/go/go${CI_GO_VERSION}.linux-amd64.tar.gz && sudo tar -C /usr/local -xzf go${CI_GO_VERSION}.linux-amd64.tar.gz && rm go${CI_GO_VERSION}.linux-amd64.tar.gz && go version
-      - run: mvn -B verify  
+      - run: mvn -B verify
       - add_ssh_keys:
           fingerprints:
             - "cd:a8:80:f3:5e:9a:37:30:ef:55:20:b5:1f:b9:e5:18"
       - deploy:
-          command: | # Deploy if on master branch. If the $RELEASE and $NEXT variables are set then prepare a full maven release.
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+          command: | # Deploy if on main branch. If the $RELEASE and $NEXT variables are set then prepare a full maven release.
+            if [ "${CIRCLE_BRANCH}" == "main" ]; then
               echo $GPG_KEY | base64 --decode > signing-key
               gpg --passphrase $GPG_PASSPHRASE --import signing-key
               shred signing-key
@@ -44,7 +48,3 @@ workflows:
     jobs:
       - build
       - javabuild
-
-
-    
-    
