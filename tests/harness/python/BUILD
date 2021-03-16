@@ -1,4 +1,4 @@
-load("@io_bazel_rules_python//python:python.bzl", "py_binary")
+load("@rules_python//python:defs.bzl", "py_binary", "py_test")
 load("@pgv_pip_deps//:requirements.bzl", "requirement")
 
 py_binary(
@@ -6,15 +6,21 @@ py_binary(
     srcs = ["harness.py"],
     main = "harness.py",
     srcs_version = "PY3",
-    visibility = ["//tests/harness:__subpackages__"],
+    visibility = ["//visibility:public"],
     deps = [
-        "//tests/harness:python-harness-proto",
-        "//tests/harness/cases:python",
-        "//validate:validator_py",
-        requirement("validate-email"),
-        requirement("ipaddress"),
-        requirement("Jinja2"),
-        requirement("MarkupSafe"),
-    ],
-    #   Python Version is set by default to PY2AND3.
+        # ensures we test with the package's own protobuf runtime specified in setup.cfg
+        # and not the one riding on the py_proto_library dependencies
+        requirement("protobuf"),
+        "//tests/harness:harness_py_proto",
+        "//tests/harness/cases:cases_py_proto",
+        "//python:validator_py"
+    ]
+)
+
+py_test(
+    name = "python-requirements-match",
+    srcs = ["requirements_test.py"],
+    main = "requirements_test.py",
+    srcs_version = "PY3",
+    data = ["//python:setup.cfg", "//python:requirements.in"],
 )
