@@ -66,6 +66,11 @@ bazel-tests:
 	# Runs all tests with Bazel
 	bazel test //tests/...
 
+.PHONY: example-workspace
+example-workspace:
+	# Run all tests in the example workspace
+	cd example-workspace && bazel test //...
+
 .PHONY: testcases
 testcases: bin/protoc-gen-go
 	# generate the test harness case protos
@@ -136,7 +141,7 @@ python-release: prepare-python-release
 	python3.8 -m twine upload --verbose --skip-existing --repository ${PYPI_REPO} --username "__token__" --password ${PGV_PYPI_TOKEN} python/dist/*
 
 .PHONY: ci
-ci: lint bazel testcases bazel-tests build_generation_tests
+ci: lint bazel testcases bazel-tests build_generation_tests example-workspace
 
 .PHONY: clean
 clean:
