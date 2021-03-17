@@ -97,10 +97,10 @@ testcases: bin/protoc-gen-go
 		./*.proto
 
 validate/validate.pb.go: bin/protoc-gen-go validate/validate.proto
-	cd validate && protoc -I . \
+	protoc -I . \
 		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
 		--go_opt=paths=source_relative \
-		--go_out="${GO_IMPORT}:." validate.proto
+		--go_out="${GO_IMPORT}:." validate/validate.proto
 
 tests/harness/go/harness.pb.go: bin/protoc-gen-go tests/harness/harness.proto
 	# generates the test harness protos
