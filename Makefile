@@ -140,8 +140,19 @@ python-release: prepare-python-release
 	python3.8 -m pip wheel --wheel-dir python/dist --no-deps python/dist/*
 	python3.8 -m twine upload --verbose --skip-existing --repository ${PYPI_REPO} --username "__token__" --password ${PGV_PYPI_TOKEN} python/dist/*
 
+# Run during CI; this checks that the checked-in generated code matches the generated version.
+.PHONY: check-generated
+check-generated:
+	for f in validate/validate.pb.go ; do \
+	  mv $$f $$f.original ; \
+	  make $$f ; \
+	  mv $$f $$f.generated ; \
+	  cp $$f.original $$f ; \
+	  diff $$f.original $$f.generated ; \
+	done
+
 .PHONY: ci
-ci: lint bazel testcases bazel-tests build_generation_tests example-workspace
+ci: lint bazel testcases bazel-tests build_generation_tests example-workspace check-generated
 
 .PHONY: clean
 clean:
