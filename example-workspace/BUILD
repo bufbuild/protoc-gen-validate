@@ -26,20 +26,45 @@ cc_binary(
     deps = ["//foo:bar_cc_proto"],
 )
 
+# Example python binary that uses the dynamic python validation code.
+#
+# Exactly as example_cc above except different label. Example:
+#
+# bazel run //:example_py -- $(pwd)/valid.textproto
+
+py_binary(
+    name = "example_py",
+    srcs = ["example.py"],
+    main = "example.py",
+    srcs_version = "PY3",
+    deps = [
+        "@com_google_protobuf//:protobuf_python",
+        "@com_envoyproxy_protoc_gen_validate//python:validator_py",
+        "//foo:bar_py_proto",
+    ],
+    imports = [
+        "../com_envoyproxy_protoc_gen_validate/python",
+    ],
+)
+
 # Test that the example textproto inputs evoke the right responses.
 [
     sh_test(
-        name = "example_cc_test_" + which,
+        name = "example_{lang}_test_{which}".format(lang=lang, which=which),
         srcs = ["example_test.sh"],
         args = [
-            "$(location :example_cc)",
+            "$(location :example_{lang})".format(lang=lang),
             str(code),
-            "$(location :" + which + ")",
+            "$(location :{which})".format(which=which),
         ],
         data = [
             which,
-            ":example_cc",
+            ":example_{lang}".format(lang=lang),
         ],
+    )
+    for lang in (
+        "cc",
+        "py",
     )
     for (which, code) in (
         ("valid.textproto", 0),
