@@ -29,7 +29,6 @@ def main(filenames):
             )
             return EX_FAILURE
         except text_format.ParseError as error:
-            print(dir(bars))
             print(
                 "Failed to parse file '{filename}'as a {fullname} textproto: {error}".format(
                     filename=filename,
