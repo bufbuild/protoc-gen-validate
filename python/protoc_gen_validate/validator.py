@@ -287,7 +287,7 @@ def string_template(option_value, name):
 
 
 def required_template(value, name):
-    req_tmpl = """{%- if value['required'] -%}
+    req_tmpl = """{%- if value['required'] %}
     if not _has_field(p, \"{{ name.split('.')[-1] }}\"):
         raise ValidationFailed(\"{{ name }} is required.\")
     {%- endif -%}
