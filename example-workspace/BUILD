@@ -42,9 +42,6 @@ py_binary(
         "@com_envoyproxy_protoc_gen_validate//python:validator_py",
         "//foo:bar_py_proto",
     ],
-    imports = [
-        "../com_envoyproxy_protoc_gen_validate/python",
-    ],
 )
 
 # Test that the example textproto inputs evoke the right responses.

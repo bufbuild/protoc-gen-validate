@@ -2,7 +2,7 @@ import sys
 
 from google.protobuf import text_format
 from foo import bar_pb2
-from protoc_gen_validate import validator
+from com_envoyproxy_protoc_gen_validate.python.protoc_gen_validate import validator
 from typing import List
 
 
