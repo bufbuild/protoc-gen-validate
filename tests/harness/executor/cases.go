@@ -1049,7 +1049,9 @@ var messageCases = []TestCase{
 	{"message - skip - valid", &cases.MessageSkip{Val: &cases.TestMsg{}}, true},
 
 	{"message - required - valid", &cases.MessageRequired{Val: &cases.TestMsg{Const: "foo"}}, true},
+	{"message - required - valid (oneof)", &cases.MessageRequiredOneof{One: &cases.MessageRequiredOneof_Val{&cases.TestMsg{Const: "foo"}}}, true},
 	{"message - required - invalid", &cases.MessageRequired{}, false},
+	{"message - required - invalid (oneof)", &cases.MessageRequiredOneof{}, false},
 
 	{"message - cross-package embed none - valid", &cases.MessageCrossPackage{Val: &other_package.Embed{Val: 1}}, true},
 	{"message - cross-package embed none - valid (nil)", &cases.MessageCrossPackage{}, true},
