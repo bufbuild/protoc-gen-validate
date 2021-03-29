@@ -1,77 +1,50 @@
-import os
 import sys
 
 from google.protobuf import text_format
-from protoc_gen_validate import validator
 from foo import bar_pb2
+from protoc_gen_validate import validator
+from typing import List
 
-EX_FAILURE = 1
 
-
-def main(filenames):
+def main(filenames: List[str]) -> None:
     if not filenames:
         print("No inputs provided; exiting")
-        return os.EX_OK
 
     success_count = 0
     for filename in filenames:
         bars = bar_pb2.Bars()
+        fullname = bars.DESCRIPTOR.name
         try:
             with open(filename, 'r') as fh:
                 text_format.Parse(fh.read(), bars)
         except IOError as error:
-            print(
-                "Failed to open file '{filename}': {error}".format(
-                    filename=filename,
-                    error=error,
-                ),
-                file=sys.stderr,
-            )
-            return EX_FAILURE
+            msg = f"Failed to open file '{filename}': {error}"
+            raise RuntimeError(msg) from error
         except text_format.ParseError as error:
-            print(
-                "Failed to parse file '{filename}'as a {fullname} textproto: {error}".format(
-                    filename=filename,
-                    fullname=bars.DESCRIPTOR.name,
-                    error=error,
-                ),
-                file=sys.stderr,
-            )
-            return EX_FAILURE
+            msg = f"Failed to parse file '{filename}' as a {fullname} textproto: {error}"
+            raise RuntimeError(msg) from error
 
         try:
             validator.validate(bars)
         except validator.ValidationFailed as error:
             print(
-                "Failed to validate file '{filename}'as a {fullname} textproto: {error}".format(
-                    filename=filename,
-                    fullname=bars.DESCRIPTOR.name,
-                    error=error,
-                ),
+                f"Failed to validate file '{filename}' as a {fullname} textproto: {error}",
                 file=sys.stderr,
             )
         else:
-            print(
-                "Successfully validated file '{filename}'as a {fullname} textproto".format(
-                    filename=filename,
-                    fullname=bars.DESCRIPTOR.name,
-                )
-            )
+            print(f"Successfully validated file '{filename}' as a {fullname} textproto")
             success_count += 1
 
     failure_count = len(filenames) - success_count
     if failure_count:
-        print(
-            "Failed to validate {count} file{s}".format(
-                count=failure_count,
-                s=("s" if failure_count > 1 else ""),
-            ),
-            file=sys.stderr,
-        )
-        return EX_FAILURE
-
-    return os.EX_OK
+        s = "s" if failure_count > 1 else ""
+        msg = f"Failed to validate {failure_count} file{s}"
+        raise RuntimeError(msg)
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    try:
+        main(sys.argv[1:])
+    except RuntimeError as error:
+        print(error, file=sys.stderr)
+        sys.exit(1)
