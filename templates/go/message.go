@@ -9,7 +9,9 @@ const messageTpl = `
 	{{ else }}
 		if v, ok := interface{}({{ accessor . }}).(interface{ Validate(bool) error }); ok {
 			if err := v.Validate(all); err != nil {
-				return {{ errCause . "err" "embedded message failed validation" }}
+				err = {{ errCause . "err" "embedded message failed validation" }}
+				if !all { return err }
+				errors = append(errors, err)
 			}
 		}
 	{{ end }}

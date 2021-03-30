@@ -27,10 +27,12 @@ func (m {{ (msgTyp .).Pointer }}) Validate(all bool) error {
 				{{ end }}
 				{{ if required . }}
 					default:
-						return {{ errname .Message }}{
+						err := {{ errname .Message }}{
 							field: "{{ name . }}",
 							reason: "value is required",
 						}
+						if !all { return err }
+						errors = append(errors, err)
 				{{ end }}
 			}
 		{{ end }}
