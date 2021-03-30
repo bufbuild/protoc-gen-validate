@@ -27,18 +27,18 @@ func main() {
 	_, isIgnored := da.Message.(*cases.MessageIgnored)
 
 	msg, hasValidate := da.Message.(interface {
-		Validate() error
+		Validate(bool) error
 	})
 
 	if isIgnored {
 		// confirm that ignored messages don't have a validate method
 		if hasValidate {
-			err = fmt.Errorf("ignored message has Validate() method")
+			err = fmt.Errorf("ignored message has Validate(bool) method")
 		}
 	} else if !hasValidate {
-		err = fmt.Errorf("non-ignored message is missing Validate()")
+		err = fmt.Errorf("non-ignored message is missing Validate(bool)")
 	} else {
-		err = msg.Validate()
+		err = msg.Validate(false)
 	}
 	checkValid(err)
 }
