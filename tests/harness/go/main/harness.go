@@ -30,6 +30,7 @@ func main() {
 		Validate(bool) error
 	})
 
+	var multierr error
 	if isIgnored {
 		// confirm that ignored messages don't have a validate method
 		if hasValidate {
@@ -39,16 +40,32 @@ func main() {
 		err = fmt.Errorf("non-ignored message is missing Validate(bool)")
 	} else {
 		err = msg.Validate(false)
+		multierr = msg.Validate(true)
 	}
-	checkValid(err)
+	checkValid(err, multierr)
 }
 
-func checkValid(err error) {
-	if err == nil {
+func checkValid(err, multierr error) {
+	if err == nil && multierr == nil {
 		resp(&harness.TestResult{Valid: true})
 	} else {
-		resp(&harness.TestResult{Reason: err.Error()})
+		resp(&harness.TestResult{Reason: err.Error(), AllReasons: mergeReasons(nil, multierr)})
 	}
+}
+
+func mergeReasons(reasons []string, err error) []string {
+	multi, ok := err.(interface{ AllErrors() []error })
+	if !ok {
+		caused, ok := err.(interface{ Cause() error })
+		if !ok || caused.Cause() == nil {
+			return append(reasons, err.Error())
+		}
+		return mergeReasons(reasons, caused.Cause())
+	}
+	for _, err := range multi.AllErrors() {
+		reasons = mergeReasons(reasons, err)
+	}
+	return reasons
 }
 
 func checkErr(err error) {

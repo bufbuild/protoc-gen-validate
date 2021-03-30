@@ -18,7 +18,7 @@ import (
 type TestCase struct {
 	Name     string
 	Message  proto.Message
-	Failures int // expected number of failed validations
+	Failures int // expected number of failed validation errors
 }
 
 type TestResult struct {
@@ -1167,7 +1167,7 @@ var mapCases = []TestCase{
 	{"map - values - valid", &cases.MapValues{Val: map[string]string{"a": "Alpha", "b": "Beta"}}, 0},
 	{"map - values - valid (empty)", &cases.MapValues{Val: map[string]string{}}, 0},
 	{"map - values - valid (pattern)", &cases.MapValuesPattern{Val: map[string]string{"a": "A"}}, 0},
-	{"map - values - invalid", &cases.MapValues{Val: map[string]string{"a": "A", "b": "B"}}, 1},
+	{"map - values - invalid", &cases.MapValues{Val: map[string]string{"a": "A", "b": "B"}}, 2},
 	{"map - values - invalid (pattern)", &cases.MapValuesPattern{Val: map[string]string{"a": "A", "b": "!@#$%^&*()"}}, 1},
 
 	{"map - recursive - valid", &cases.MapRecursive{Val: map[uint32]*cases.MapRecursive_Msg{1: {Val: "abc"}}}, 0},
@@ -1416,7 +1416,8 @@ var anyCases = []TestCase{
 var kitchenSink = []TestCase{
 	{"kitchensink - field - valid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", IntConst: 5, BoolConst: false, FloatVal: &wrappers.FloatValue{Value: 1}, DurVal: &duration.Duration{Seconds: 3}, TsVal: &timestamp.Timestamp{Seconds: 17}, FloatConst: 7, DoubleIn: 123, EnumConst: cases.ComplexTestEnum_ComplexTWO, AnyVal: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}, RepTsVal: []*timestamp.Timestamp{{Seconds: 3}}, MapVal: map[int32]string{-1: "a", -2: "b"}, BytesVal: []byte("\x00\x99"), O: &cases.ComplexTestMsg_X{X: "foobar"}}}, 0},
 	{"kitchensink - valid (unset)", &cases.KitchenSinkMessage{}, 0},
-	{"kitchensink - field - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{}}, 1},
-	{"kitchensink - field - embedded - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Another: &cases.ComplexTestMsg{}}}, 1},
-	{"kitchensink - field - invalid (transitive)", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", BoolConst: true, Nested: &cases.ComplexTestMsg{}}}, 1},
+	{"kitchensink - field - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{}}, 7},
+	{"kitchensink - field - embedded - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Another: &cases.ComplexTestMsg{}}}, 14},
+	{"kitchensink - field - invalid (transitive)", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", BoolConst: true, Nested: &cases.ComplexTestMsg{}}}, 14},
+	{"kitchensink - many - all non-message fields invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{BoolConst: true, FloatVal: &wrappers.FloatValue{}, TsVal: &timestamp.Timestamp{}, FloatConst: 8, AnyVal: &any.Any{TypeUrl: "asdf"}, RepTsVal: []*timestamp.Timestamp{{Nanos: 1}}}}, 13},
 }
