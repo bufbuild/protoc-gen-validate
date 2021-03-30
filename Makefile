@@ -64,12 +64,12 @@ harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harne
 .PHONY: bazel-tests
 bazel-tests:
 	# Runs all tests with Bazel
-	bazel test //tests/...
+	bazel test //tests/... --test_output=errors
 
 .PHONY: example-workspace
 example-workspace:
 	# Run all tests in the example workspace
-	cd example-workspace && bazel test //...
+	cd example-workspace && bazel test //... --test_output=errors
 
 .PHONY: testcases
 testcases: bin/protoc-gen-go
