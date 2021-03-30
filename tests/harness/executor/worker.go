@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"log"
+	"strings"
 	"sync"
 	"time"
 
@@ -40,7 +41,6 @@ func execTestCase(tc TestCase, harnesses []Harness, out chan<- TestResult) {
 	wg := new(sync.WaitGroup)
 	wg.Add(len(harnesses))
 
-
 	for _, h := range harnesses {
 		h := h
 		go func() {
@@ -56,20 +56,38 @@ func execTestCase(tc TestCase, harnesses []Harness, out chan<- TestResult) {
 			if res.Error {
 				log.Printf("[%s] (%s harness) internal harness error: %s", tc.Name, h.Name, res.Reason)
 				out <- TestResult{false, false}
-			} else if res.Valid != tc.Valid {
+				return
+			}
+
+			// Check results of validation in "fail fast" mode
+			tcValid := tc.Failures == 0
+			if res.Valid != tcValid {
 				if res.AllowFailure {
 					log.Printf("[%s] (%s harness) ignoring test failure: %s", tc.Name, h.Name, res.Reason)
 					out <- TestResult{false, true}
-				} else if tc.Valid {
+				} else if tcValid {
 					log.Printf("[%s] (%s harness) expected valid, got invalid: %s", tc.Name, h.Name, res.Reason)
 					out <- TestResult{false, false}
 				} else {
 					log.Printf("[%s] (%s harness) expected invalid, got valid: %s", tc.Name, h.Name, res.Reason)
 					out <- TestResult{false, false}
 				}
-			} else {
-				out <- TestResult{true, false}
+				return
 			}
+
+			// Where available, check results of validation in "extensive" mode
+			if len(res.AllReasons) > 0 && len(res.AllReasons) != tc.Failures {
+				if res.AllowFailure {
+					log.Printf("[%s] (%s harness) ignoring bad number of failures: %s", tc.Name, h.Name, res.Reason)
+					out <- TestResult{false, true}
+				} else {
+					log.Printf("[%s] (%s harness) expected %d failures, got %d:\n %v", tc.Name, h.Name, tc.Failures, len(res.AllReasons), strings.Join(res.AllReasons, "\n "))
+					out <- TestResult{false, false}
+				}
+				return
+			}
+
+			out <- TestResult{true, false}
 		}()
 	}
 
