@@ -46,6 +46,7 @@ func main() {
 }
 
 type hasAllErrors interface{ AllErrors() []error }
+type hasCause interface{ Cause() error }
 
 func checkValid(err, multierr error) {
 	if err == nil && multierr == nil {
@@ -56,17 +57,35 @@ func checkValid(err, multierr error) {
 		checkErr(fmt.Errorf("different verdict of Validate(false) [%v] vs. Validate(true) [%v]", err, multierr))
 		return
 	}
+
+	// Extract the message from "lazy" Validate(false), for comparison with Validate(true)
+	rootCause := err
+	for {
+		caused, ok := rootCause.(hasCause)
+		if !ok || caused.Cause() == nil {
+			break
+		}
+		rootCause = caused.Cause()
+	}
+
+	// Retrieve the messages from "extensive" Validate(true) and compare first one with the "lazy" message
 	m, ok := multierr.(hasAllErrors)
 	if !ok {
 		checkErr(fmt.Errorf("Validate(true) returned error without AllErrors() method: %#v", multierr))
 		return
 	}
-	resp(&harness.TestResult{Reason: err.Error(), AllReasons: mergeReasons(nil, m)})
+	reasons := mergeReasons(nil, m)
+	if rootCause.Error() != reasons[0] {
+		checkErr(fmt.Errorf("different first message, Validate(false)==%q, Validate(true)==%q", rootCause.Error(), reasons[0]))
+		return
+	}
+
+	resp(&harness.TestResult{Reason: err.Error(), AllReasons: reasons})
 }
 
 func mergeReasons(reasons []string, multi hasAllErrors) []string {
 	for _, err := range multi.AllErrors() {
-		caused, ok := err.(interface{ Cause() error })
+		caused, ok := err.(hasCause)
 		if ok && caused.Cause() != nil {
 			err = caused.Cause()
 		}
