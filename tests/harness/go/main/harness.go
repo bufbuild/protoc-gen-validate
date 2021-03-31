@@ -34,10 +34,10 @@ func main() {
 	if isIgnored {
 		// confirm that ignored messages don't have a validate method
 		if hasValidate {
-			err = fmt.Errorf("ignored message has Validate(bool) method")
+			checkErr(fmt.Errorf("ignored message %T has Validate(bool) method", da.Message))
 		}
 	} else if !hasValidate {
-		err = fmt.Errorf("non-ignored message is missing Validate(bool)")
+		checkErr(fmt.Errorf("non-ignored message %T is missing Validate(bool)", da.Message))
 	} else {
 		err = msg.Validate(false)
 		multierr = msg.Validate(true)
@@ -45,25 +45,37 @@ func main() {
 	checkValid(err, multierr)
 }
 
+type hasAllErrors interface{ AllErrors() []error }
+
 func checkValid(err, multierr error) {
 	if err == nil && multierr == nil {
 		resp(&harness.TestResult{Valid: true})
-	} else {
-		resp(&harness.TestResult{Reason: err.Error(), AllReasons: mergeReasons(nil, multierr)})
+		return
 	}
+	if (err != nil) != (multierr != nil) {
+		checkErr(fmt.Errorf("different verdict of Validate(false) [%v] vs. Validate(true) [%v]", err, multierr))
+		return
+	}
+	m, ok := multierr.(hasAllErrors)
+	if !ok {
+		checkErr(fmt.Errorf("Validate(true) returned error without AllErrors() method: %#v", multierr))
+		return
+	}
+	resp(&harness.TestResult{Reason: err.Error(), AllReasons: mergeReasons(nil, m)})
 }
 
-func mergeReasons(reasons []string, err error) []string {
-	multi, ok := err.(interface{ AllErrors() []error })
-	if !ok {
-		caused, ok := err.(interface{ Cause() error })
-		if !ok || caused.Cause() == nil {
-			return append(reasons, err.Error())
-		}
-		return mergeReasons(reasons, caused.Cause())
-	}
+func mergeReasons(reasons []string, multi hasAllErrors) []string {
 	for _, err := range multi.AllErrors() {
-		reasons = mergeReasons(reasons, err)
+		caused, ok := err.(interface{ Cause() error })
+		if ok && caused.Cause() != nil {
+			err = caused.Cause()
+		}
+		multi, ok := err.(hasAllErrors)
+		if ok {
+			reasons = mergeReasons(reasons, multi)
+		} else {
+			reasons = append(reasons, err.Error())
+		}
 	}
 	return reasons
 }
