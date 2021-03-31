@@ -5,9 +5,9 @@ These steps are for releasing the Java components of PGV:
 - pgv-java-grpc
 - pgv-artifacts
 
-## Releasing from master using CI
+## Releasing using CI
 
-Releasing from master is fully automated by CI, but can't release historic tags.
+Releasing from main is fully automated by CI:
 ```
 curl -X POST -H "Content-Type: application/json" -d '{
 "build_parameters": {
@@ -16,8 +16,23 @@ curl -X POST -H "Content-Type: application/json" -d '{
     "NEXT": "<next-version>-SNAPSHOT",
     "GIT_USER_EMAIL": "envoy-bot@users.noreply.github.com",
     "GIT_USER_NAME": "Via CircleCI"
-}}' "https://circleci.com/api/v1.1/project/github/envoyproxy/protoc-gen-validate/tree/master?circle-token=<my-token>"
+}}' "https://circleci.com/api/v1.1/project/github/envoyproxy/protoc-gen-validate/tree/main?circle-token=<my-token>"
 ```
+
+Releasing from versioned tags is similar. To release version `vX.Y.Z`, first
+create a Git tag called `vX.Y.Z` (preferably through the GitHub release flow),
+then run the following to kick off a release build:
+```
+curl -X POST -H "Content-Type: application/json" -d '{
+"build_parameters": {
+    "CIRCLE_JOB": "javabuild",
+    "GIT_USER_EMAIL": "envoy-bot@users.noreply.github.com",
+    "GIT_USER_NAME": "Via CircleCI"
+}}' "https://circleci.com/api/v1.1/project/github/envoyproxy/protoc-gen-validate/tree/v.X.Y.Z?circle-token=<my-token>"
+```
+
+The `javabuild` CI flow will use the version number from the tag to deploy to
+the Maven repository.
 
 ## Manually releasing from git history
 
