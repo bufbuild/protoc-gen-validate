@@ -80,7 +80,7 @@ func checkValid(err, multierr error) {
 		return
 	}
 
-	resp(&harness.TestResult{Reason: err.Error(), AllReasons: reasons})
+	resp(&harness.TestResult{Reasons: reasons})
 }
 
 func mergeReasons(reasons []string, multi hasAllErrors) []string {
@@ -105,8 +105,8 @@ func checkErr(err error) {
 	}
 
 	resp(&harness.TestResult{
-		Error:  true,
-		Reason: err.Error(),
+		Error:   true,
+		Reasons: []string{err.Error()},
 	})
 }
 
