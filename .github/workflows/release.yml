@@ -13,8 +13,8 @@ jobs:
       - uses: actions/setup-go@v2
       - run: wget https://github.com/github-release/github-release/releases/download/v0.10.0/linux-amd64-github-release.bz2
       - run: bzip2 -d  linux-amd64-github-release.bz2
-      - run: chmod +x linux-amd64-github-release.bz2
-      - run: mv linux-amd64-github-release.bz2 grel
+      - run: chmod +x linux-amd64-github-release
+      - run: mv linux-amd64-github-release grel
       - run: go build .
 
       - name: Get the version
