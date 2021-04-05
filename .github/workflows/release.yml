@@ -24,11 +24,9 @@ jobs:
       - name: upload binary into release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          ./grel upload \
-            -u buhta \
-            -r protoc-gen-validate \
-            -t  ${{ steps.get_version.VERSION }} \
-            -n protoc-gen-validate_${{ steps.get_version.VERSION }} \
-            -f protoc-gen-validate
+        run: "./grel upload -u buhta \
+                -r protoc-gen-validate \
+                -t  ${{ steps.get_version.VERSION }} \
+                -n protoc-gen-validate_${{ steps.get_version.VERSION }} \
+                -f protoc-gen-validate"
 
