@@ -3,7 +3,7 @@ name: 'build and upload binary into release'
 on:
   push:
     tags:
-      - 'buhta-v*'
+      - '*'
 
 jobs:
   checkout-and-build:
@@ -28,7 +28,7 @@ jobs:
           ./grel upload \
             -u buhta \
             -r protoc-gen-validate \
-            -t ${{ steps.get_version.VERSION }} \
+            -t  ${{ steps.get_version.VERSION }} \
             -n protoc-gen-validate_${{ steps.get_version.VERSION }} \
             -f protoc-gen-validate
 
