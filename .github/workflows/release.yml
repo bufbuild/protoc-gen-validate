@@ -21,6 +21,14 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
+      - name: create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: "./grel release -u buhta \
+                -r protoc-gen-validate \
+                -t  \"${{ steps.get_version.outputs.VERSION }}\" \
+                -n protoc-gen-validate_\"${{ steps.get_version.outputs.VERSION }}\""
+
       - name: upload binary into release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
