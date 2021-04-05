@@ -1,0 +1,34 @@
+name: 'build and upload binary into release'
+
+on:
+  push:
+    tags:
+      - 'buhta-v*'
+
+jobs:
+  checkout-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+      - run: wget https://github.com/github-release/github-release/releases/download/v0.10.0/linux-amd64-github-release.bz2
+      - run: bzip2 -d  linux-amd64-github-release.bz2
+      - run: chmod +x linux-amd64-github-release.bz2
+      - run: mv linux-amd64-github-release.bz2 grel
+      - run: go build .
+
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+      - name: upload binary into release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ./grel upload \
+            -u buhta \
+            -r protoc-gen-validate \
+            -t ${{ steps.get_version.VERSION }} \
+            -n protoc-gen-validate_${{ steps.get_version.VERSION }} \
+            -f protoc-gen-validate
+
