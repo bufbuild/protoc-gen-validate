@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.6.1</version>
+            <version>${google.protobuf.version}</version>
         </dependency>
 
         <!-- Depend on artifacts to ensure they are built before this module -->
