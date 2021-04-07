@@ -5,13 +5,15 @@ const msgTpl = `
 {{ if disabled . -}}
 	{{ cmt "Validate is disabled for " (msgTyp .) ". This method will always return nil." }}
 {{- else -}}
-	{{ cmt "Validate checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, an error is returned." }}
+	{{ cmt "Validate checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, an error is returned. When asked to return all errors, validation continues after first violation, and the result is a list of violation errors wrapped in " (multierrname .) ", or nil if none found. Otherwise, only the first error is returned, if any." }}
 {{- end -}}
-func (m {{ (msgTyp .).Pointer }}) Validate() error {
+func (m {{ (msgTyp .).Pointer }}) Validate(all bool) error {
 	{{ if disabled . -}}
 		return nil
 	{{ else -}}
 		if m == nil { return nil }
+
+		var errors []error
 
 		{{ range .NonOneOfFields }}
 			{{ render (context .) }}
@@ -25,14 +27,19 @@ func (m {{ (msgTyp .).Pointer }}) Validate() error {
 				{{ end }}
 				{{ if required . }}
 					default:
-						return {{ errname .Message }}{
+						err := {{ errname .Message }}{
 							field: "{{ name . }}",
 							reason: "value is required",
 						}
+						if !all { return err }
+						errors = append(errors, err)
 				{{ end }}
 			}
 		{{ end }}
 
+		if len(errors) > 0 {
+			return {{ multierrname . }}(errors)
+		}
 		return nil
 	{{ end -}}
 }
@@ -42,6 +49,21 @@ func (m {{ (msgTyp .).Pointer }}) Validate() error {
 {{ if needs . "email" }}{{ template "email" . }}{{ end }}
 
 {{ if needs . "uuid" }}{{ template "uuid" . }}{{ end }}
+
+{{ cmt (multierrname .) " is an error wrapping multiple validation errors returned by " (msgTyp .) ".Validate(true) if the designated constraints aren't met." -}}
+type {{ multierrname . }} []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m {{ multierrname . }}) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m {{ multierrname . }}) AllErrors() []error { return m }
 
 {{ cmt (errname .) " is the validation error returned by " (msgTyp .) ".Validate if the designated constraints aren't met." -}}
 type {{ errname . }} struct {
