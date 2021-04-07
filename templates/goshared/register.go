@@ -31,6 +31,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"errIdx":        fns.errIdx,
 		"errIdxCause":   fns.errIdxCause,
 		"errname":       fns.errName,
+		"multierrname":  fns.multiErrName,
 		"inKey":         fns.inKey,
 		"inType":        fns.inType,
 		"isBytes":       fns.isBytes,
@@ -100,6 +101,10 @@ func (fns goSharedFuncs) accessor(ctx shared.RuleContext) string {
 
 func (fns goSharedFuncs) errName(m pgs.Message) pgs.Name {
 	return fns.Name(m) + "ValidationError"
+}
+
+func (fns goSharedFuncs) multiErrName(m pgs.Message) pgs.Name {
+	return fns.Name(m) + "MultiError"
 }
 
 func (fns goSharedFuncs) errIdxCause(ctx shared.RuleContext, idx, cause string, reason ...interface{}) string {
