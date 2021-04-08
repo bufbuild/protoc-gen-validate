@@ -1,4 +1,4 @@
-FROM ubuntu:xenial
+FROM ubuntu:focal
 
 
 # apt packages
@@ -7,25 +7,21 @@ ENV INSTALL_DEPS \
   ca-certificates \
   git \
   make \
-  software-properties-common \
   unzip \
   wget \
   maven \
   patch \
-  python3.8 \
-  python3.8-distutils \
+  python3 \
+  python3-distutils \
   python3-setuptools
-RUN apt-get update \
-  && apt-get install -y -q --no-install-recommends curl openjdk-8-jdk \
-  && echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list \
+
+RUN apt update && apt install -y -q --no-install-recommends curl openjdk-8-jdk gnupg
+
+RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list \
   && curl https://bazel.build/bazel-release.pub.gpg | apt-key add - \
-  # software-properties-common allows adding PPA (Personal Package Archive) repositories
-  && apt install -y -q --no-install-recommends software-properties-common \
-  # deadsnakes is a PPA with newer releases of python than default Ubuntu repositories
-  && add-apt-repository ppa:deadsnakes/ppa \
-  && apt-get update \
-  && apt-get install -y -q --no-install-recommends ${INSTALL_DEPS} \
-  && apt-get clean \
+  && apt update \
+  && apt install -y -q --no-install-recommends ${INSTALL_DEPS} \
+  && apt clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 

@@ -35,7 +35,7 @@ func execTestCase(tc TestCase, harnesses []Harness, out chan<- TestResult) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
 	wg := new(sync.WaitGroup)
