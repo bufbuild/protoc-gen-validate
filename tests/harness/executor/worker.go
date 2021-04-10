@@ -9,8 +9,8 @@ import (
 	"time"
 
 	harness "github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
-	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/ptypes"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/anypb"
 )
 
 func Work(wg *sync.WaitGroup, in <-chan TestCase, out chan<- TestResult, harnesses []Harness) {
@@ -21,7 +21,7 @@ func Work(wg *sync.WaitGroup, in <-chan TestCase, out chan<- TestResult, harness
 }
 
 func execTestCase(tc TestCase, harnesses []Harness, out chan<- TestResult) {
-	any, err := ptypes.MarshalAny(tc.Message)
+	any, err := anypb.New(tc.Message)
 	if err != nil {
 		log.Printf("unable to convert test case %q to Any - %v", tc.Name, err)
 		out <- TestResult{false, false}

@@ -17,7 +17,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/golang/protobuf/ptypes"
+	"google.golang.org/protobuf/types/known/anypb"
 
 	{{ range $path, $pkg := enumPackages (externalEnums .) }}
 		{{ $pkg }} "{{ $path }}"
@@ -36,7 +36,7 @@ var (
 	_ = time.Duration(0)
 	_ = (*url.URL)(nil)
 	_ = (*mail.Address)(nil)
-	_ = ptypes.DynamicAny{}
+	_ = anypb.Any{}
 
 	{{ range (externalEnums .) }}
 		_ = {{ pkg . }}.{{ name . }}(0)

@@ -5,12 +5,12 @@ PACKAGE := github.com/envoyproxy/protoc-gen-validate
 # protoc-gen-go parameters for properly generating the import path for PGV
 VALIDATE_IMPORT := Mvalidate/validate.proto=${PACKAGE}/validate
 GO_IMPORT_SPACES := ${VALIDATE_IMPORT},\
-	Mgoogle/protobuf/any.proto=github.com/golang/protobuf/ptypes/any,\
-	Mgoogle/protobuf/duration.proto=github.com/golang/protobuf/ptypes/duration,\
-	Mgoogle/protobuf/struct.proto=github.com/golang/protobuf/ptypes/struct,\
-	Mgoogle/protobuf/timestamp.proto=github.com/golang/protobuf/ptypes/timestamp,\
-	Mgoogle/protobuf/wrappers.proto=github.com/golang/protobuf/ptypes/wrappers,\
-	Mgoogle/protobuf/descriptor.proto=github.com/golang/protobuf/protoc-gen-go/descriptor
+	Mgoogle/protobuf/any.proto=google.golang.org/protobuf/types/known/anypb,\
+	Mgoogle/protobuf/duration.proto=google.golang.org/protobuf/types/known/durationpb,\
+	Mgoogle/protobuf/struct.proto=google.golang.org/protobuf/types/known/structpb,\
+	Mgoogle/protobuf/timestamp.proto=google.golang.org/protobuf/types/known/timestamppb,\
+	Mgoogle/protobuf/wrappers.proto=google.golang.org/protobuf/types/known/wrapperspb,\
+	Mgoogle/protobuf/descriptor.proto=google.golang.org/protobuf/types/descriptorpb
 GO_IMPORT:=$(subst $(space),,$(GO_IMPORT_SPACES))
 
 .PHONY: build
@@ -51,7 +51,7 @@ bin/golint:
 	GOBIN=$(shell pwd)/bin go install golang.org/x/lint/golint
 
 bin/protoc-gen-go:
-	GOBIN=$(shell pwd)/bin go install github.com/golang/protobuf/protoc-gen-go
+	GOBIN=$(shell pwd)/bin go install google.golang.org/protobuf/cmd/protoc-gen-go
 
 bin/harness:
 	cd tests && go build -o ../bin/harness ./harness/executor
@@ -91,9 +91,9 @@ testcases: bin/protoc-gen-go
 	protoc \
 		-I . \
 		-I ../../.. \
-		--go_out="Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go,${GO_IMPORT}:./go" \
+		--go_out="module=${PACKAGE}/tests/harness/cases/go,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go,${GO_IMPORT}:./go" \
 		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
-		--validate_out="lang=go,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go:./go" \
+		--validate_out="module=${PACKAGE}/tests/harness/cases/go,lang=go,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go:./go" \
 		./*.proto
 
 validate/validate.pb.go: bin/protoc-gen-go validate/validate.proto
@@ -106,7 +106,7 @@ tests/harness/go/harness.pb.go: bin/protoc-gen-go tests/harness/harness.proto
 	# generates the test harness protos
 	cd tests/harness && protoc -I . \
 		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
-		--go_out="${GO_IMPORT}:./go" harness.proto
+		--go_out="module=${PACKAGE}/tests/harness/go,${GO_IMPORT}:./go" harness.proto
 
 tests/harness/go/main/go-harness:
 	# generates the go-specific test harness
