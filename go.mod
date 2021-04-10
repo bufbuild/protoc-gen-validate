@@ -3,7 +3,7 @@ module github.com/envoyproxy/protoc-gen-validate
 go 1.12
 
 require (
-	github.com/golang/protobuf v1.5.2
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/iancoleman/strcase v0.0.0-20180726023541-3605ed457bf7
 	github.com/lyft/protoc-gen-star v0.5.1
 	github.com/spf13/afero v1.3.4 // indirect
