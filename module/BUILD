@@ -12,10 +12,10 @@ go_library(
         "//templates:go_default_library",
         "//templates/java:go_default_library",
         "//validate:go_default_library",  # keep
+        "@com_github_lyft_protoc_gen_star//:go_default_library",
+        "@com_github_lyft_protoc_gen_star//lang/go:go_default_library",
         "@org_golang_google_protobuf//proto:go_default_library",
         "@org_golang_google_protobuf//types/known/durationpb:go_default_library",
         "@org_golang_google_protobuf//types/known/timestamppb:go_default_library",
-        "@com_github_lyft_protoc_gen_star//:go_default_library",
-        "@com_github_lyft_protoc_gen_star//lang/go:go_default_library",
     ],
 )
