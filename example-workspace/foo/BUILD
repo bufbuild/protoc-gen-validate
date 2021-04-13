@@ -1,4 +1,5 @@
 load("@com_envoyproxy_protoc_gen_validate//bazel:pgv_proto_library.bzl", "pgv_cc_proto_library")
+load("@com_google_protobuf//:protobuf.bzl", "py_proto_library")
 
 package(
     default_visibility = ["//visibility:public"],
@@ -30,4 +31,13 @@ cc_test(
     name = "baz_cc_test",
     srcs = ["baz_cc_test.cc"],
     deps = [":baz_cc_proto"],
+)
+
+py_proto_library(
+    name = "bar_py_proto",
+    srcs = ["bar.proto"],
+    deps = [
+        "@com_envoyproxy_protoc_gen_validate//validate:validate_py",
+        "@com_google_protobuf//:protobuf_python",
+    ],
 )
