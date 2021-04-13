@@ -28,15 +28,23 @@ jobs:
           fingerprints:
             - "cd:a8:80:f3:5e:9a:37:30:ef:55:20:b5:1f:b9:e5:18"
       - deploy:
-          command: | # Deploy if on main branch. If the $RELEASE and $NEXT variables are set then prepare a full maven release.
-            if [ "${CIRCLE_BRANCH}" == "main" ]; then
+          command: | # Deploy from the main branch or from a version branch/tag. If the $RELEASE and $NEXT variables are set then prepare a full maven release.
+            if [[ "${CIRCLE_BRANCH}" =~ v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+              RELEASE="${CIRCLE_BRANCH}"
+              NEXT="${CIRCLE_BRANCH}-SNAPSHOT"
+              DO_RELEASE=1
+            fi
+            if [[ "${CIRCLE_BRANCH}" == "main" || -n "${DO_RELEASE}" ]]; then
               echo $GPG_KEY | base64 --decode > signing-key
               gpg --passphrase $GPG_PASSPHRASE --import signing-key
               shred signing-key
               if [[ -n "${RELEASE}" && -n "${NEXT}" ]]; then
                 git config --global user.email "envoy-bot@users.noreply.github.com"
                 git config --global user.name "envoy-bot"
-                mvn -B -s ../.circleci/settings.xml release:prepare release:perform -Darguments="-s ../.circleci/settings.xml" -DreleaseVersion=$RELEASE -DdevelopmentVersion=$NEXT -DscmCommentPrefix="java release: "
+                mvn -B -s ../.circleci/settings.xml release:prepare release:perform \
+                    -Darguments="-s ../.circleci/settings.xml" \
+                    -DreleaseVersion=$RELEASE -DdevelopmentVersion=$NEXT \
+                    -DscmCommentPrefix="java release: "
               else
                 mvn -B -s ../.circleci/settings.xml deploy
               fi

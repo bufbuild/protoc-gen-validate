@@ -64,12 +64,12 @@ harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harne
 .PHONY: bazel-tests
 bazel-tests:
 	# Runs all tests with Bazel
-	bazel test //tests/...
+	bazel test //tests/... --test_output=errors
 
 .PHONY: example-workspace
 example-workspace:
 	# Run all tests in the example workspace
-	cd example-workspace && bazel test //...
+	cd example-workspace && bazel test //... --test_output=errors
 
 .PHONY: testcases
 testcases: bin/protoc-gen-go
@@ -97,10 +97,10 @@ testcases: bin/protoc-gen-go
 		./*.proto
 
 validate/validate.pb.go: bin/protoc-gen-go validate/validate.proto
-	cd validate && protoc -I . \
+	protoc -I . \
 		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
 		--go_opt=paths=source_relative \
-		--go_out="${GO_IMPORT}:." validate.proto
+		--go_out="${GO_IMPORT}:." validate/validate.proto
 
 tests/harness/go/harness.pb.go: bin/protoc-gen-go tests/harness/harness.proto
 	# generates the test harness protos
@@ -140,8 +140,19 @@ python-release: prepare-python-release
 	python3.8 -m pip wheel --wheel-dir python/dist --no-deps python/dist/*
 	python3.8 -m twine upload --verbose --skip-existing --repository ${PYPI_REPO} --username "__token__" --password ${PGV_PYPI_TOKEN} python/dist/*
 
+# Run during CI; this checks that the checked-in generated code matches the generated version.
+.PHONY: check-generated
+check-generated:
+	for f in validate/validate.pb.go ; do \
+	  mv $$f $$f.original ; \
+	  make $$f ; \
+	  mv $$f $$f.generated ; \
+	  cp $$f.original $$f ; \
+	  diff $$f.original $$f.generated ; \
+	done
+
 .PHONY: ci
-ci: lint bazel testcases bazel-tests build_generation_tests example-workspace
+ci: lint bazel testcases bazel-tests build_generation_tests example-workspace check-generated
 
 .PHONY: clean
 clean:
