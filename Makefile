@@ -167,5 +167,5 @@ clean:
 		tests/harness/cases/go \
 		tests/harness/cases/other_package/go
 	rm -rf \
-		python/dist
+		python/dist \
 		python/*.egg-info
