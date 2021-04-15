@@ -24,7 +24,7 @@ pgv_go_proto_library(
     importpath = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go",
     proto = ":embed_proto",
     deps = [
-        "@com_github_golang_protobuf//ptypes:go_default_library_gen",
+        "@org_golang_google_protobuf//types/known/anypb:go_default_library",
     ],
 )
 

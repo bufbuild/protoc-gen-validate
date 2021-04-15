@@ -47,7 +47,10 @@ pgv_go_proto_library(
     proto = ":cases_proto",
     deps = [
         "//tests/harness/cases/other_package:go",
-        "@com_github_golang_protobuf//ptypes:go_default_library_gen",
+        "@org_golang_google_protobuf//types/known/anypb:go_default_library",
+        "@org_golang_google_protobuf//types/known/durationpb:go_default_library",
+        "@org_golang_google_protobuf//types/known/timestamppb:go_default_library",
+        "@org_golang_google_protobuf//types/known/wrapperspb:go_default_library",
     ],
 )
 

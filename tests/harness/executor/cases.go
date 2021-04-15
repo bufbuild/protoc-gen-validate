@@ -2,17 +2,15 @@ package main
 
 import (
 	"math"
-
 	"time"
 
 	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
 	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
-	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/ptypes"
-	"github.com/golang/protobuf/ptypes/any"
-	"github.com/golang/protobuf/ptypes/duration"
-	"github.com/golang/protobuf/ptypes/timestamp"
-	"github.com/golang/protobuf/ptypes/wrappers"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/anypb"
+	"google.golang.org/protobuf/types/known/durationpb"
+	"google.golang.org/protobuf/types/known/timestamppb"
+	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 type TestCase struct {
@@ -1124,10 +1122,10 @@ var repeatedCases = []TestCase{
 	{"repeated - min and max items len - invalid (min_len)", &cases.RepeatedMinAndMaxItemLen{}, 1},
 	{"repeated - min and max items len - invalid (max_len)", &cases.RepeatedMinAndMaxItemLen{Val: []string{"aaa", "bbb", "ccc", "ddd"}}, 1},
 
-	{"repeated - duration - gte - valid", &cases.RepeatedDuration{Val: []*duration.Duration{{Seconds: 3}}}, 0},
+	{"repeated - duration - gte - valid", &cases.RepeatedDuration{Val: []*durationpb.Duration{{Seconds: 3}}}, 0},
 	{"repeated - duration - gte - valid (empty)", &cases.RepeatedDuration{}, 0},
-	{"repeated - duration - gte - valid (equal)", &cases.RepeatedDuration{Val: []*duration.Duration{{Nanos: 1000000}}}, 0},
-	{"repeated - duration - gte - invalid", &cases.RepeatedDuration{Val: []*duration.Duration{{Seconds: -1}}}, 1},
+	{"repeated - duration - gte - valid (equal)", &cases.RepeatedDuration{Val: []*durationpb.Duration{{Nanos: 1000000}}}, 0},
+	{"repeated - duration - gte - invalid", &cases.RepeatedDuration{Val: []*durationpb.Duration{{Seconds: -1}}}, 1},
 
 	{"repeated - exact - valid (ignore_empty)", &cases.RepeatedExactIgnore{Val: nil}, 0},
 }
@@ -1192,232 +1190,232 @@ var oneofCases = []TestCase{
 }
 
 var wrapperCases = []TestCase{
-	{"wrapper - none - valid", &cases.WrapperNone{Val: &wrappers.Int32Value{Value: 123}}, 0},
+	{"wrapper - none - valid", &cases.WrapperNone{Val: &wrapperspb.Int32Value{Value: 123}}, 0},
 	{"wrapper - none - valid (empty)", &cases.WrapperNone{Val: nil}, 0},
 
-	{"wrapper - float - valid", &cases.WrapperFloat{Val: &wrappers.FloatValue{Value: 1}}, 0},
+	{"wrapper - float - valid", &cases.WrapperFloat{Val: &wrapperspb.FloatValue{Value: 1}}, 0},
 	{"wrapper - float - valid (empty)", &cases.WrapperFloat{Val: nil}, 0},
-	{"wrapper - float - invalid", &cases.WrapperFloat{Val: &wrappers.FloatValue{Value: 0}}, 1},
+	{"wrapper - float - invalid", &cases.WrapperFloat{Val: &wrapperspb.FloatValue{Value: 0}}, 1},
 
-	{"wrapper - double - valid", &cases.WrapperDouble{Val: &wrappers.DoubleValue{Value: 1}}, 0},
+	{"wrapper - double - valid", &cases.WrapperDouble{Val: &wrapperspb.DoubleValue{Value: 1}}, 0},
 	{"wrapper - double - valid (empty)", &cases.WrapperDouble{Val: nil}, 0},
-	{"wrapper - double - invalid", &cases.WrapperDouble{Val: &wrappers.DoubleValue{Value: 0}}, 1},
+	{"wrapper - double - invalid", &cases.WrapperDouble{Val: &wrapperspb.DoubleValue{Value: 0}}, 1},
 
-	{"wrapper - int64 - valid", &cases.WrapperInt64{Val: &wrappers.Int64Value{Value: 1}}, 0},
+	{"wrapper - int64 - valid", &cases.WrapperInt64{Val: &wrapperspb.Int64Value{Value: 1}}, 0},
 	{"wrapper - int64 - valid (empty)", &cases.WrapperInt64{Val: nil}, 0},
-	{"wrapper - int64 - invalid", &cases.WrapperInt64{Val: &wrappers.Int64Value{Value: 0}}, 1},
+	{"wrapper - int64 - invalid", &cases.WrapperInt64{Val: &wrapperspb.Int64Value{Value: 0}}, 1},
 
-	{"wrapper - int32 - valid", &cases.WrapperInt32{Val: &wrappers.Int32Value{Value: 1}}, 0},
+	{"wrapper - int32 - valid", &cases.WrapperInt32{Val: &wrapperspb.Int32Value{Value: 1}}, 0},
 	{"wrapper - int32 - valid (empty)", &cases.WrapperInt32{Val: nil}, 0},
-	{"wrapper - int32 - invalid", &cases.WrapperInt32{Val: &wrappers.Int32Value{Value: 0}}, 1},
+	{"wrapper - int32 - invalid", &cases.WrapperInt32{Val: &wrapperspb.Int32Value{Value: 0}}, 1},
 
-	{"wrapper - uint64 - valid", &cases.WrapperUInt64{Val: &wrappers.UInt64Value{Value: 1}}, 0},
+	{"wrapper - uint64 - valid", &cases.WrapperUInt64{Val: &wrapperspb.UInt64Value{Value: 1}}, 0},
 	{"wrapper - uint64 - valid (empty)", &cases.WrapperUInt64{Val: nil}, 0},
-	{"wrapper - uint64 - invalid", &cases.WrapperUInt64{Val: &wrappers.UInt64Value{Value: 0}}, 1},
+	{"wrapper - uint64 - invalid", &cases.WrapperUInt64{Val: &wrapperspb.UInt64Value{Value: 0}}, 1},
 
-	{"wrapper - uint32 - valid", &cases.WrapperUInt32{Val: &wrappers.UInt32Value{Value: 1}}, 0},
+	{"wrapper - uint32 - valid", &cases.WrapperUInt32{Val: &wrapperspb.UInt32Value{Value: 1}}, 0},
 	{"wrapper - uint32 - valid (empty)", &cases.WrapperUInt32{Val: nil}, 0},
-	{"wrapper - uint32 - invalid", &cases.WrapperUInt32{Val: &wrappers.UInt32Value{Value: 0}}, 1},
+	{"wrapper - uint32 - invalid", &cases.WrapperUInt32{Val: &wrapperspb.UInt32Value{Value: 0}}, 1},
 
-	{"wrapper - bool - valid", &cases.WrapperBool{Val: &wrappers.BoolValue{Value: true}}, 0},
+	{"wrapper - bool - valid", &cases.WrapperBool{Val: &wrapperspb.BoolValue{Value: true}}, 0},
 	{"wrapper - bool - valid (empty)", &cases.WrapperBool{Val: nil}, 0},
-	{"wrapper - bool - invalid", &cases.WrapperBool{Val: &wrappers.BoolValue{Value: false}}, 1},
+	{"wrapper - bool - invalid", &cases.WrapperBool{Val: &wrapperspb.BoolValue{Value: false}}, 1},
 
-	{"wrapper - string - valid", &cases.WrapperString{Val: &wrappers.StringValue{Value: "foobar"}}, 0},
+	{"wrapper - string - valid", &cases.WrapperString{Val: &wrapperspb.StringValue{Value: "foobar"}}, 0},
 	{"wrapper - string - valid (empty)", &cases.WrapperString{Val: nil}, 0},
-	{"wrapper - string - invalid", &cases.WrapperString{Val: &wrappers.StringValue{Value: "fizzbuzz"}}, 1},
+	{"wrapper - string - invalid", &cases.WrapperString{Val: &wrapperspb.StringValue{Value: "fizzbuzz"}}, 1},
 
-	{"wrapper - bytes - valid", &cases.WrapperBytes{Val: &wrappers.BytesValue{Value: []byte("foo")}}, 0},
+	{"wrapper - bytes - valid", &cases.WrapperBytes{Val: &wrapperspb.BytesValue{Value: []byte("foo")}}, 0},
 	{"wrapper - bytes - valid (empty)", &cases.WrapperBytes{Val: nil}, 0},
-	{"wrapper - bytes - invalid", &cases.WrapperBytes{Val: &wrappers.BytesValue{Value: []byte("x")}}, 1},
+	{"wrapper - bytes - invalid", &cases.WrapperBytes{Val: &wrapperspb.BytesValue{Value: []byte("x")}}, 1},
 
-	{"wrapper - required - string - valid", &cases.WrapperRequiredString{Val: &wrappers.StringValue{Value: "bar"}}, 0},
-	{"wrapper - required - string - invalid", &cases.WrapperRequiredString{Val: &wrappers.StringValue{Value: "foo"}}, 1},
+	{"wrapper - required - string - valid", &cases.WrapperRequiredString{Val: &wrapperspb.StringValue{Value: "bar"}}, 0},
+	{"wrapper - required - string - invalid", &cases.WrapperRequiredString{Val: &wrapperspb.StringValue{Value: "foo"}}, 1},
 	{"wrapper - required - string - invalid (empty)", &cases.WrapperRequiredString{}, 1},
 
-	{"wrapper - required - string (empty) - valid", &cases.WrapperRequiredEmptyString{Val: &wrappers.StringValue{Value: ""}}, 0},
-	{"wrapper - required - string (empty) - invalid", &cases.WrapperRequiredEmptyString{Val: &wrappers.StringValue{Value: "foo"}}, 1},
+	{"wrapper - required - string (empty) - valid", &cases.WrapperRequiredEmptyString{Val: &wrapperspb.StringValue{Value: ""}}, 0},
+	{"wrapper - required - string (empty) - invalid", &cases.WrapperRequiredEmptyString{Val: &wrapperspb.StringValue{Value: "foo"}}, 1},
 	{"wrapper - required - string (empty) - invalid (empty)", &cases.WrapperRequiredEmptyString{}, 1},
 
-	{"wrapper - optional - string (uuid) - valid", &cases.WrapperOptionalUuidString{Val: &wrappers.StringValue{Value: "8b72987b-024a-43b3-b4cf-647a1f925c5d"}}, 0},
+	{"wrapper - optional - string (uuid) - valid", &cases.WrapperOptionalUuidString{Val: &wrapperspb.StringValue{Value: "8b72987b-024a-43b3-b4cf-647a1f925c5d"}}, 0},
 	{"wrapper - optional - string (uuid) - valid (empty)", &cases.WrapperOptionalUuidString{}, 0},
-	{"wrapper - optional - string (uuid) - invalid", &cases.WrapperOptionalUuidString{Val: &wrappers.StringValue{Value: "foo"}}, 1},
+	{"wrapper - optional - string (uuid) - invalid", &cases.WrapperOptionalUuidString{Val: &wrapperspb.StringValue{Value: "foo"}}, 1},
 
-	{"wrapper - required - float - valid", &cases.WrapperRequiredFloat{Val: &wrappers.FloatValue{Value: 1}}, 0},
-	{"wrapper - required - float - invalid", &cases.WrapperRequiredFloat{Val: &wrappers.FloatValue{Value: -5}}, 1},
+	{"wrapper - required - float - valid", &cases.WrapperRequiredFloat{Val: &wrapperspb.FloatValue{Value: 1}}, 0},
+	{"wrapper - required - float - invalid", &cases.WrapperRequiredFloat{Val: &wrapperspb.FloatValue{Value: -5}}, 1},
 	{"wrapper - required - float - invalid (empty)", &cases.WrapperRequiredFloat{}, 1},
 }
 
 var durationCases = []TestCase{
-	{"duration - none - valid", &cases.DurationNone{Val: &duration.Duration{Seconds: 123}}, 0},
+	{"duration - none - valid", &cases.DurationNone{Val: &durationpb.Duration{Seconds: 123}}, 0},
 
-	{"duration - required - valid", &cases.DurationRequired{Val: &duration.Duration{}}, 0},
+	{"duration - required - valid", &cases.DurationRequired{Val: &durationpb.Duration{}}, 0},
 	{"duration - required - invalid", &cases.DurationRequired{Val: nil}, 1},
 
-	{"duration - const - valid", &cases.DurationConst{Val: &duration.Duration{Seconds: 3}}, 0},
+	{"duration - const - valid", &cases.DurationConst{Val: &durationpb.Duration{Seconds: 3}}, 0},
 	{"duration - const - valid (empty)", &cases.DurationConst{}, 0},
-	{"duration - const - invalid", &cases.DurationConst{Val: &duration.Duration{Nanos: 3}}, 1},
+	{"duration - const - invalid", &cases.DurationConst{Val: &durationpb.Duration{Nanos: 3}}, 1},
 
-	{"duration - in - valid", &cases.DurationIn{Val: &duration.Duration{Seconds: 1}}, 0},
+	{"duration - in - valid", &cases.DurationIn{Val: &durationpb.Duration{Seconds: 1}}, 0},
 	{"duration - in - valid (empty)", &cases.DurationIn{}, 0},
-	{"duration - in - invalid", &cases.DurationIn{Val: &duration.Duration{}}, 1},
+	{"duration - in - invalid", &cases.DurationIn{Val: &durationpb.Duration{}}, 1},
 
-	{"duration - not in - valid", &cases.DurationNotIn{Val: &duration.Duration{Nanos: 1}}, 0},
+	{"duration - not in - valid", &cases.DurationNotIn{Val: &durationpb.Duration{Nanos: 1}}, 0},
 	{"duration - not in - valid (empty)", &cases.DurationNotIn{}, 0},
-	{"duration - not in - invalid", &cases.DurationNotIn{Val: &duration.Duration{}}, 1},
+	{"duration - not in - invalid", &cases.DurationNotIn{Val: &durationpb.Duration{}}, 1},
 
-	{"duration - lt - valid", &cases.DurationLT{Val: &duration.Duration{Nanos: -1}}, 0},
+	{"duration - lt - valid", &cases.DurationLT{Val: &durationpb.Duration{Nanos: -1}}, 0},
 	{"duration - lt - valid (empty)", &cases.DurationLT{}, 0},
-	{"duration - lt - invalid (equal)", &cases.DurationLT{Val: &duration.Duration{}}, 1},
-	{"duration - lt - invalid", &cases.DurationLT{Val: &duration.Duration{Seconds: 1}}, 1},
+	{"duration - lt - invalid (equal)", &cases.DurationLT{Val: &durationpb.Duration{}}, 1},
+	{"duration - lt - invalid", &cases.DurationLT{Val: &durationpb.Duration{Seconds: 1}}, 1},
 
-	{"duration - lte - valid", &cases.DurationLTE{Val: &duration.Duration{}}, 0},
+	{"duration - lte - valid", &cases.DurationLTE{Val: &durationpb.Duration{}}, 0},
 	{"duration - lte - valid (empty)", &cases.DurationLTE{}, 0},
-	{"duration - lte - valid (equal)", &cases.DurationLTE{Val: &duration.Duration{Seconds: 1}}, 0},
-	{"duration - lte - invalid", &cases.DurationLTE{Val: &duration.Duration{Seconds: 1, Nanos: 1}}, 1},
+	{"duration - lte - valid (equal)", &cases.DurationLTE{Val: &durationpb.Duration{Seconds: 1}}, 0},
+	{"duration - lte - invalid", &cases.DurationLTE{Val: &durationpb.Duration{Seconds: 1, Nanos: 1}}, 1},
 
-	{"duration - gt - valid", &cases.DurationGT{Val: &duration.Duration{Seconds: 1}}, 0},
+	{"duration - gt - valid", &cases.DurationGT{Val: &durationpb.Duration{Seconds: 1}}, 0},
 	{"duration - gt - valid (empty)", &cases.DurationGT{}, 0},
-	{"duration - gt - invalid (equal)", &cases.DurationGT{Val: &duration.Duration{Nanos: 1000}}, 1},
-	{"duration - gt - invalid", &cases.DurationGT{Val: &duration.Duration{}}, 1},
+	{"duration - gt - invalid (equal)", &cases.DurationGT{Val: &durationpb.Duration{Nanos: 1000}}, 1},
+	{"duration - gt - invalid", &cases.DurationGT{Val: &durationpb.Duration{}}, 1},
 
-	{"duration - gte - valid", &cases.DurationGTE{Val: &duration.Duration{Seconds: 3}}, 0},
+	{"duration - gte - valid", &cases.DurationGTE{Val: &durationpb.Duration{Seconds: 3}}, 0},
 	{"duration - gte - valid (empty)", &cases.DurationGTE{}, 0},
-	{"duration - gte - valid (equal)", &cases.DurationGTE{Val: &duration.Duration{Nanos: 1000000}}, 0},
-	{"duration - gte - invalid", &cases.DurationGTE{Val: &duration.Duration{Seconds: -1}}, 1},
+	{"duration - gte - valid (equal)", &cases.DurationGTE{Val: &durationpb.Duration{Nanos: 1000000}}, 0},
+	{"duration - gte - invalid", &cases.DurationGTE{Val: &durationpb.Duration{Seconds: -1}}, 1},
 
-	{"duration - gt & lt - valid", &cases.DurationGTLT{Val: &duration.Duration{Nanos: 1000}}, 0},
+	{"duration - gt & lt - valid", &cases.DurationGTLT{Val: &durationpb.Duration{Nanos: 1000}}, 0},
 	{"duration - gt & lt - valid (empty)", &cases.DurationGTLT{}, 0},
-	{"duration - gt & lt - invalid (above)", &cases.DurationGTLT{Val: &duration.Duration{Seconds: 1000}}, 1},
-	{"duration - gt & lt - invalid (below)", &cases.DurationGTLT{Val: &duration.Duration{Nanos: -1000}}, 1},
-	{"duration - gt & lt - invalid (max)", &cases.DurationGTLT{Val: &duration.Duration{Seconds: 1}}, 1},
-	{"duration - gt & lt - invalid (min)", &cases.DurationGTLT{Val: &duration.Duration{}}, 1},
+	{"duration - gt & lt - invalid (above)", &cases.DurationGTLT{Val: &durationpb.Duration{Seconds: 1000}}, 1},
+	{"duration - gt & lt - invalid (below)", &cases.DurationGTLT{Val: &durationpb.Duration{Nanos: -1000}}, 1},
+	{"duration - gt & lt - invalid (max)", &cases.DurationGTLT{Val: &durationpb.Duration{Seconds: 1}}, 1},
+	{"duration - gt & lt - invalid (min)", &cases.DurationGTLT{Val: &durationpb.Duration{}}, 1},
 
 	{"duration - exclusive gt & lt - valid (empty)", &cases.DurationExLTGT{}, 0},
-	{"duration - exclusive gt & lt - valid (above)", &cases.DurationExLTGT{Val: &duration.Duration{Seconds: 2}}, 0},
-	{"duration - exclusive gt & lt - valid (below)", &cases.DurationExLTGT{Val: &duration.Duration{Nanos: -1}}, 0},
-	{"duration - exclusive gt & lt - invalid", &cases.DurationExLTGT{Val: &duration.Duration{Nanos: 1000}}, 1},
-	{"duration - exclusive gt & lt - invalid (max)", &cases.DurationExLTGT{Val: &duration.Duration{Seconds: 1}}, 1},
-	{"duration - exclusive gt & lt - invalid (min)", &cases.DurationExLTGT{Val: &duration.Duration{}}, 1},
+	{"duration - exclusive gt & lt - valid (above)", &cases.DurationExLTGT{Val: &durationpb.Duration{Seconds: 2}}, 0},
+	{"duration - exclusive gt & lt - valid (below)", &cases.DurationExLTGT{Val: &durationpb.Duration{Nanos: -1}}, 0},
+	{"duration - exclusive gt & lt - invalid", &cases.DurationExLTGT{Val: &durationpb.Duration{Nanos: 1000}}, 1},
+	{"duration - exclusive gt & lt - invalid (max)", &cases.DurationExLTGT{Val: &durationpb.Duration{Seconds: 1}}, 1},
+	{"duration - exclusive gt & lt - invalid (min)", &cases.DurationExLTGT{Val: &durationpb.Duration{}}, 1},
 
-	{"duration - gte & lte - valid", &cases.DurationGTELTE{Val: &duration.Duration{Seconds: 60, Nanos: 1}}, 0},
+	{"duration - gte & lte - valid", &cases.DurationGTELTE{Val: &durationpb.Duration{Seconds: 60, Nanos: 1}}, 0},
 	{"duration - gte & lte - valid (empty)", &cases.DurationGTELTE{}, 0},
-	{"duration - gte & lte - valid (max)", &cases.DurationGTELTE{Val: &duration.Duration{Seconds: 3600}}, 0},
-	{"duration - gte & lte - valid (min)", &cases.DurationGTELTE{Val: &duration.Duration{Seconds: 60}}, 0},
-	{"duration - gte & lte - invalid (above)", &cases.DurationGTELTE{Val: &duration.Duration{Seconds: 3600, Nanos: 1}}, 1},
-	{"duration - gte & lte - invalid (below)", &cases.DurationGTELTE{Val: &duration.Duration{Seconds: 59}}, 1},
+	{"duration - gte & lte - valid (max)", &cases.DurationGTELTE{Val: &durationpb.Duration{Seconds: 3600}}, 0},
+	{"duration - gte & lte - valid (min)", &cases.DurationGTELTE{Val: &durationpb.Duration{Seconds: 60}}, 0},
+	{"duration - gte & lte - invalid (above)", &cases.DurationGTELTE{Val: &durationpb.Duration{Seconds: 3600, Nanos: 1}}, 1},
+	{"duration - gte & lte - invalid (below)", &cases.DurationGTELTE{Val: &durationpb.Duration{Seconds: 59}}, 1},
 
 	{"duration - gte & lte - valid (empty)", &cases.DurationExGTELTE{}, 0},
-	{"duration - exclusive gte & lte - valid (above)", &cases.DurationExGTELTE{Val: &duration.Duration{Seconds: 3601}}, 0},
-	{"duration - exclusive gte & lte - valid (below)", &cases.DurationExGTELTE{Val: &duration.Duration{}}, 0},
-	{"duration - exclusive gte & lte - valid (max)", &cases.DurationExGTELTE{Val: &duration.Duration{Seconds: 3600}}, 0},
-	{"duration - exclusive gte & lte - valid (min)", &cases.DurationExGTELTE{Val: &duration.Duration{Seconds: 60}}, 0},
-	{"duration - exclusive gte & lte - invalid", &cases.DurationExGTELTE{Val: &duration.Duration{Seconds: 61}}, 1},
+	{"duration - exclusive gte & lte - valid (above)", &cases.DurationExGTELTE{Val: &durationpb.Duration{Seconds: 3601}}, 0},
+	{"duration - exclusive gte & lte - valid (below)", &cases.DurationExGTELTE{Val: &durationpb.Duration{}}, 0},
+	{"duration - exclusive gte & lte - valid (max)", &cases.DurationExGTELTE{Val: &durationpb.Duration{Seconds: 3600}}, 0},
+	{"duration - exclusive gte & lte - valid (min)", &cases.DurationExGTELTE{Val: &durationpb.Duration{Seconds: 60}}, 0},
+	{"duration - exclusive gte & lte - invalid", &cases.DurationExGTELTE{Val: &durationpb.Duration{Seconds: 61}}, 1},
 	{"duration - fields with other fields - invalid other field", &cases.DurationFieldWithOtherFields{DurationVal: nil, IntVal: 12}, 1},
 }
 
 var timestampCases = []TestCase{
-	{"timestamp - none - valid", &cases.TimestampNone{Val: &timestamp.Timestamp{Seconds: 123}}, 0},
+	{"timestamp - none - valid", &cases.TimestampNone{Val: &timestamppb.Timestamp{Seconds: 123}}, 0},
 
-	{"timestamp - required - valid", &cases.TimestampRequired{Val: &timestamp.Timestamp{}}, 0},
+	{"timestamp - required - valid", &cases.TimestampRequired{Val: &timestamppb.Timestamp{}}, 0},
 	{"timestamp - required - invalid", &cases.TimestampRequired{Val: nil}, 1},
 
-	{"timestamp - const - valid", &cases.TimestampConst{Val: &timestamp.Timestamp{Seconds: 3}}, 0},
+	{"timestamp - const - valid", &cases.TimestampConst{Val: &timestamppb.Timestamp{Seconds: 3}}, 0},
 	{"timestamp - const - valid (empty)", &cases.TimestampConst{}, 0},
-	{"timestamp - const - invalid", &cases.TimestampConst{Val: &timestamp.Timestamp{Nanos: 3}}, 1},
+	{"timestamp - const - invalid", &cases.TimestampConst{Val: &timestamppb.Timestamp{Nanos: 3}}, 1},
 
-	{"timestamp - lt - valid", &cases.TimestampLT{Val: &timestamp.Timestamp{Seconds: -1}}, 0},
+	{"timestamp - lt - valid", &cases.TimestampLT{Val: &timestamppb.Timestamp{Seconds: -1}}, 0},
 	{"timestamp - lt - valid (empty)", &cases.TimestampLT{}, 0},
-	{"timestamp - lt - invalid (equal)", &cases.TimestampLT{Val: &timestamp.Timestamp{}}, 1},
-	{"timestamp - lt - invalid", &cases.TimestampLT{Val: &timestamp.Timestamp{Seconds: 1}}, 1},
+	{"timestamp - lt - invalid (equal)", &cases.TimestampLT{Val: &timestamppb.Timestamp{}}, 1},
+	{"timestamp - lt - invalid", &cases.TimestampLT{Val: &timestamppb.Timestamp{Seconds: 1}}, 1},
 
-	{"timestamp - lte - valid", &cases.TimestampLTE{Val: &timestamp.Timestamp{}}, 0},
+	{"timestamp - lte - valid", &cases.TimestampLTE{Val: &timestamppb.Timestamp{}}, 0},
 	{"timestamp - lte - valid (empty)", &cases.TimestampLTE{}, 0},
-	{"timestamp - lte - valid (equal)", &cases.TimestampLTE{Val: &timestamp.Timestamp{Seconds: 1}}, 0},
-	{"timestamp - lte - invalid", &cases.TimestampLTE{Val: &timestamp.Timestamp{Seconds: 1, Nanos: 1}}, 1},
+	{"timestamp - lte - valid (equal)", &cases.TimestampLTE{Val: &timestamppb.Timestamp{Seconds: 1}}, 0},
+	{"timestamp - lte - invalid", &cases.TimestampLTE{Val: &timestamppb.Timestamp{Seconds: 1, Nanos: 1}}, 1},
 
-	{"timestamp - gt - valid", &cases.TimestampGT{Val: &timestamp.Timestamp{Seconds: 1}}, 0},
+	{"timestamp - gt - valid", &cases.TimestampGT{Val: &timestamppb.Timestamp{Seconds: 1}}, 0},
 	{"timestamp - gt - valid (empty)", &cases.TimestampGT{}, 0},
-	{"timestamp - gt - invalid (equal)", &cases.TimestampGT{Val: &timestamp.Timestamp{Nanos: 1000}}, 1},
-	{"timestamp - gt - invalid", &cases.TimestampGT{Val: &timestamp.Timestamp{}}, 1},
+	{"timestamp - gt - invalid (equal)", &cases.TimestampGT{Val: &timestamppb.Timestamp{Nanos: 1000}}, 1},
+	{"timestamp - gt - invalid", &cases.TimestampGT{Val: &timestamppb.Timestamp{}}, 1},
 
-	{"timestamp - gte - valid", &cases.TimestampGTE{Val: &timestamp.Timestamp{Seconds: 3}}, 0},
+	{"timestamp - gte - valid", &cases.TimestampGTE{Val: &timestamppb.Timestamp{Seconds: 3}}, 0},
 	{"timestamp - gte - valid (empty)", &cases.TimestampGTE{}, 0},
-	{"timestamp - gte - valid (equal)", &cases.TimestampGTE{Val: &timestamp.Timestamp{Nanos: 1000000}}, 0},
-	{"timestamp - gte - invalid", &cases.TimestampGTE{Val: &timestamp.Timestamp{Seconds: -1}}, 1},
+	{"timestamp - gte - valid (equal)", &cases.TimestampGTE{Val: &timestamppb.Timestamp{Nanos: 1000000}}, 0},
+	{"timestamp - gte - invalid", &cases.TimestampGTE{Val: &timestamppb.Timestamp{Seconds: -1}}, 1},
 
-	{"timestamp - gt & lt - valid", &cases.TimestampGTLT{Val: &timestamp.Timestamp{Nanos: 1000}}, 0},
+	{"timestamp - gt & lt - valid", &cases.TimestampGTLT{Val: &timestamppb.Timestamp{Nanos: 1000}}, 0},
 	{"timestamp - gt & lt - valid (empty)", &cases.TimestampGTLT{}, 0},
-	{"timestamp - gt & lt - invalid (above)", &cases.TimestampGTLT{Val: &timestamp.Timestamp{Seconds: 1000}}, 1},
-	{"timestamp - gt & lt - invalid (below)", &cases.TimestampGTLT{Val: &timestamp.Timestamp{Seconds: -1000}}, 1},
-	{"timestamp - gt & lt - invalid (max)", &cases.TimestampGTLT{Val: &timestamp.Timestamp{Seconds: 1}}, 1},
-	{"timestamp - gt & lt - invalid (min)", &cases.TimestampGTLT{Val: &timestamp.Timestamp{}}, 1},
+	{"timestamp - gt & lt - invalid (above)", &cases.TimestampGTLT{Val: &timestamppb.Timestamp{Seconds: 1000}}, 1},
+	{"timestamp - gt & lt - invalid (below)", &cases.TimestampGTLT{Val: &timestamppb.Timestamp{Seconds: -1000}}, 1},
+	{"timestamp - gt & lt - invalid (max)", &cases.TimestampGTLT{Val: &timestamppb.Timestamp{Seconds: 1}}, 1},
+	{"timestamp - gt & lt - invalid (min)", &cases.TimestampGTLT{Val: &timestamppb.Timestamp{}}, 1},
 
 	{"timestamp - exclusive gt & lt - valid (empty)", &cases.TimestampExLTGT{}, 0},
-	{"timestamp - exclusive gt & lt - valid (above)", &cases.TimestampExLTGT{Val: &timestamp.Timestamp{Seconds: 2}}, 0},
-	{"timestamp - exclusive gt & lt - valid (below)", &cases.TimestampExLTGT{Val: &timestamp.Timestamp{Seconds: -1}}, 0},
-	{"timestamp - exclusive gt & lt - invalid", &cases.TimestampExLTGT{Val: &timestamp.Timestamp{Nanos: 1000}}, 1},
-	{"timestamp - exclusive gt & lt - invalid (max)", &cases.TimestampExLTGT{Val: &timestamp.Timestamp{Seconds: 1}}, 1},
-	{"timestamp - exclusive gt & lt - invalid (min)", &cases.TimestampExLTGT{Val: &timestamp.Timestamp{}}, 1},
+	{"timestamp - exclusive gt & lt - valid (above)", &cases.TimestampExLTGT{Val: &timestamppb.Timestamp{Seconds: 2}}, 0},
+	{"timestamp - exclusive gt & lt - valid (below)", &cases.TimestampExLTGT{Val: &timestamppb.Timestamp{Seconds: -1}}, 0},
+	{"timestamp - exclusive gt & lt - invalid", &cases.TimestampExLTGT{Val: &timestamppb.Timestamp{Nanos: 1000}}, 1},
+	{"timestamp - exclusive gt & lt - invalid (max)", &cases.TimestampExLTGT{Val: &timestamppb.Timestamp{Seconds: 1}}, 1},
+	{"timestamp - exclusive gt & lt - invalid (min)", &cases.TimestampExLTGT{Val: &timestamppb.Timestamp{}}, 1},
 
-	{"timestamp - gte & lte - valid", &cases.TimestampGTELTE{Val: &timestamp.Timestamp{Seconds: 60, Nanos: 1}}, 0},
+	{"timestamp - gte & lte - valid", &cases.TimestampGTELTE{Val: &timestamppb.Timestamp{Seconds: 60, Nanos: 1}}, 0},
 	{"timestamp - gte & lte - valid (empty)", &cases.TimestampGTELTE{}, 0},
-	{"timestamp - gte & lte - valid (max)", &cases.TimestampGTELTE{Val: &timestamp.Timestamp{Seconds: 3600}}, 0},
-	{"timestamp - gte & lte - valid (min)", &cases.TimestampGTELTE{Val: &timestamp.Timestamp{Seconds: 60}}, 0},
-	{"timestamp - gte & lte - invalid (above)", &cases.TimestampGTELTE{Val: &timestamp.Timestamp{Seconds: 3600, Nanos: 1}}, 1},
-	{"timestamp - gte & lte - invalid (below)", &cases.TimestampGTELTE{Val: &timestamp.Timestamp{Seconds: 59}}, 1},
+	{"timestamp - gte & lte - valid (max)", &cases.TimestampGTELTE{Val: &timestamppb.Timestamp{Seconds: 3600}}, 0},
+	{"timestamp - gte & lte - valid (min)", &cases.TimestampGTELTE{Val: &timestamppb.Timestamp{Seconds: 60}}, 0},
+	{"timestamp - gte & lte - invalid (above)", &cases.TimestampGTELTE{Val: &timestamppb.Timestamp{Seconds: 3600, Nanos: 1}}, 1},
+	{"timestamp - gte & lte - invalid (below)", &cases.TimestampGTELTE{Val: &timestamppb.Timestamp{Seconds: 59}}, 1},
 
 	{"timestamp - gte & lte - valid (empty)", &cases.TimestampExGTELTE{}, 0},
-	{"timestamp - exclusive gte & lte - valid (above)", &cases.TimestampExGTELTE{Val: &timestamp.Timestamp{Seconds: 3601}}, 0},
-	{"timestamp - exclusive gte & lte - valid (below)", &cases.TimestampExGTELTE{Val: &timestamp.Timestamp{}}, 0},
-	{"timestamp - exclusive gte & lte - valid (max)", &cases.TimestampExGTELTE{Val: &timestamp.Timestamp{Seconds: 3600}}, 0},
-	{"timestamp - exclusive gte & lte - valid (min)", &cases.TimestampExGTELTE{Val: &timestamp.Timestamp{Seconds: 60}}, 0},
-	{"timestamp - exclusive gte & lte - invalid", &cases.TimestampExGTELTE{Val: &timestamp.Timestamp{Seconds: 61}}, 1},
+	{"timestamp - exclusive gte & lte - valid (above)", &cases.TimestampExGTELTE{Val: &timestamppb.Timestamp{Seconds: 3601}}, 0},
+	{"timestamp - exclusive gte & lte - valid (below)", &cases.TimestampExGTELTE{Val: &timestamppb.Timestamp{}}, 0},
+	{"timestamp - exclusive gte & lte - valid (max)", &cases.TimestampExGTELTE{Val: &timestamppb.Timestamp{Seconds: 3600}}, 0},
+	{"timestamp - exclusive gte & lte - valid (min)", &cases.TimestampExGTELTE{Val: &timestamppb.Timestamp{Seconds: 60}}, 0},
+	{"timestamp - exclusive gte & lte - invalid", &cases.TimestampExGTELTE{Val: &timestamppb.Timestamp{Seconds: 61}}, 1},
 
-	{"timestamp - lt now - valid", &cases.TimestampLTNow{Val: &timestamp.Timestamp{}}, 0},
+	{"timestamp - lt now - valid", &cases.TimestampLTNow{Val: &timestamppb.Timestamp{}}, 0},
 	{"timestamp - lt now - valid (empty)", &cases.TimestampLTNow{}, 0},
-	{"timestamp - lt now - invalid", &cases.TimestampLTNow{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, 1},
+	{"timestamp - lt now - invalid", &cases.TimestampLTNow{Val: &timestamppb.Timestamp{Seconds: time.Now().Unix() + 7200}}, 1},
 
-	{"timestamp - gt now - valid", &cases.TimestampGTNow{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, 0},
+	{"timestamp - gt now - valid", &cases.TimestampGTNow{Val: &timestamppb.Timestamp{Seconds: time.Now().Unix() + 7200}}, 0},
 	{"timestamp - gt now - valid (empty)", &cases.TimestampGTNow{}, 0},
-	{"timestamp - gt now - invalid", &cases.TimestampGTNow{Val: &timestamp.Timestamp{}}, 1},
+	{"timestamp - gt now - invalid", &cases.TimestampGTNow{Val: &timestamppb.Timestamp{}}, 1},
 
-	{"timestamp - within - valid", &cases.TimestampWithin{Val: ptypes.TimestampNow()}, 0},
+	{"timestamp - within - valid", &cases.TimestampWithin{Val: timestamppb.Now()}, 0},
 	{"timestamp - within - valid (empty)", &cases.TimestampWithin{}, 0},
-	{"timestamp - within - invalid (below)", &cases.TimestampWithin{Val: &timestamp.Timestamp{}}, 1},
-	{"timestamp - within - invalid (above)", &cases.TimestampWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, 1},
+	{"timestamp - within - invalid (below)", &cases.TimestampWithin{Val: &timestamppb.Timestamp{}}, 1},
+	{"timestamp - within - invalid (above)", &cases.TimestampWithin{Val: &timestamppb.Timestamp{Seconds: time.Now().Unix() + 7200}}, 1},
 
-	{"timestamp - lt now within - valid", &cases.TimestampLTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() - 1800}}, 0},
+	{"timestamp - lt now within - valid", &cases.TimestampLTNowWithin{Val: &timestamppb.Timestamp{Seconds: time.Now().Unix() - 1800}}, 0},
 	{"timestamp - lt now within - valid (empty)", &cases.TimestampLTNowWithin{}, 0},
-	{"timestamp - lt now within - invalid (lt)", &cases.TimestampLTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 1800}}, 1},
-	{"timestamp - lt now within - invalid (within)", &cases.TimestampLTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() - 7200}}, 1},
+	{"timestamp - lt now within - invalid (lt)", &cases.TimestampLTNowWithin{Val: &timestamppb.Timestamp{Seconds: time.Now().Unix() + 1800}}, 1},
+	{"timestamp - lt now within - invalid (within)", &cases.TimestampLTNowWithin{Val: &timestamppb.Timestamp{Seconds: time.Now().Unix() - 7200}}, 1},
 
-	{"timestamp - gt now within - valid", &cases.TimestampGTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 1800}}, 0},
+	{"timestamp - gt now within - valid", &cases.TimestampGTNowWithin{Val: &timestamppb.Timestamp{Seconds: time.Now().Unix() + 1800}}, 0},
 	{"timestamp - gt now within - valid (empty)", &cases.TimestampGTNowWithin{}, 0},
-	{"timestamp - gt now within - invalid (gt)", &cases.TimestampGTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() - 1800}}, 1},
-	{"timestamp - gt now within - invalid (within)", &cases.TimestampGTNowWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, 1},
+	{"timestamp - gt now within - invalid (gt)", &cases.TimestampGTNowWithin{Val: &timestamppb.Timestamp{Seconds: time.Now().Unix() - 1800}}, 1},
+	{"timestamp - gt now within - invalid (within)", &cases.TimestampGTNowWithin{Val: &timestamppb.Timestamp{Seconds: time.Now().Unix() + 7200}}, 1},
 }
 
 var anyCases = []TestCase{
-	{"any - none - valid", &cases.AnyNone{Val: &any.Any{}}, 0},
+	{"any - none - valid", &cases.AnyNone{Val: &anypb.Any{}}, 0},
 
-	{"any - required - valid", &cases.AnyRequired{Val: &any.Any{}}, 0},
+	{"any - required - valid", &cases.AnyRequired{Val: &anypb.Any{}}, 0},
 	{"any - required - invalid", &cases.AnyRequired{Val: nil}, 1},
 
-	{"any - in - valid", &cases.AnyIn{Val: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}}, 0},
+	{"any - in - valid", &cases.AnyIn{Val: &anypb.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}}, 0},
 	{"any - in - valid (empty)", &cases.AnyIn{}, 0},
-	{"any - in - invalid", &cases.AnyIn{Val: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Timestamp"}}, 1},
+	{"any - in - invalid", &cases.AnyIn{Val: &anypb.Any{TypeUrl: "type.googleapis.com/google.protobuf.Timestamp"}}, 1},
 
-	{"any - not in - valid", &cases.AnyNotIn{Val: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}}, 0},
+	{"any - not in - valid", &cases.AnyNotIn{Val: &anypb.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}}, 0},
 	{"any - not in - valid (empty)", &cases.AnyNotIn{}, 0},
-	{"any - not in - invalid", &cases.AnyNotIn{Val: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Timestamp"}}, 1},
+	{"any - not in - invalid", &cases.AnyNotIn{Val: &anypb.Any{TypeUrl: "type.googleapis.com/google.protobuf.Timestamp"}}, 1},
 }
 
 var kitchenSink = []TestCase{
-	{"kitchensink - field - valid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", IntConst: 5, BoolConst: false, FloatVal: &wrappers.FloatValue{Value: 1}, DurVal: &duration.Duration{Seconds: 3}, TsVal: &timestamp.Timestamp{Seconds: 17}, FloatConst: 7, DoubleIn: 123, EnumConst: cases.ComplexTestEnum_ComplexTWO, AnyVal: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}, RepTsVal: []*timestamp.Timestamp{{Seconds: 3}}, MapVal: map[int32]string{-1: "a", -2: "b"}, BytesVal: []byte("\x00\x99"), O: &cases.ComplexTestMsg_X{X: "foobar"}}}, 0},
+	{"kitchensink - field - valid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", IntConst: 5, BoolConst: false, FloatVal: &wrapperspb.FloatValue{Value: 1}, DurVal: &durationpb.Duration{Seconds: 3}, TsVal: &timestamppb.Timestamp{Seconds: 17}, FloatConst: 7, DoubleIn: 123, EnumConst: cases.ComplexTestEnum_ComplexTWO, AnyVal: &anypb.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}, RepTsVal: []*timestamppb.Timestamp{{Seconds: 3}}, MapVal: map[int32]string{-1: "a", -2: "b"}, BytesVal: []byte("\x00\x99"), O: &cases.ComplexTestMsg_X{X: "foobar"}}}, 0},
 	{"kitchensink - valid (unset)", &cases.KitchenSinkMessage{}, 0},
 	{"kitchensink - field - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{}}, 7},
 	{"kitchensink - field - embedded - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Another: &cases.ComplexTestMsg{}}}, 14},
 	{"kitchensink - field - invalid (transitive)", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", BoolConst: true, Nested: &cases.ComplexTestMsg{}}}, 14},
-	{"kitchensink - many - all non-message fields invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{BoolConst: true, FloatVal: &wrappers.FloatValue{}, TsVal: &timestamp.Timestamp{}, FloatConst: 8, AnyVal: &any.Any{TypeUrl: "asdf"}, RepTsVal: []*timestamp.Timestamp{{Nanos: 1}}}}, 13},
+	{"kitchensink - many - all non-message fields invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{BoolConst: true, FloatVal: &wrapperspb.FloatValue{}, TsVal: &timestamppb.Timestamp{}, FloatConst: 8, AnyVal: &anypb.Any{TypeUrl: "asdf"}, RepTsVal: []*timestamppb.Timestamp{{Nanos: 1}}}}, 13},
 }
