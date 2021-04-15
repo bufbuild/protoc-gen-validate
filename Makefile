@@ -83,9 +83,9 @@ testcases: bin/protoc-gen-go
 	protoc \
 		-I . \
 		-I ../../../.. \
-		--go_out="${GO_IMPORT}:./go" \
+		--go_out="module=${PACKAGE}/tests/harness/cases/other_package/go,${GO_IMPORT}:./go" \
 		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
-		--validate_out="lang=go:./go" \
+		--validate_out="module=${PACKAGE}/tests/harness/cases/other_package/go,lang=go:./go" \
 		./*.proto
 	cd tests/harness/cases && \
 	protoc \
@@ -167,5 +167,5 @@ clean:
 		tests/harness/cases/go \
 		tests/harness/cases/other_package/go
 	rm -rf \
-		python/dist
+		python/dist \
 		python/*.egg-info
