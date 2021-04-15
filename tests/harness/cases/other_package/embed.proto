@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package tests.harness.cases.other_package;
-option go_package = "other_package";
+option go_package = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go;other_package";
 
 import "validate/validate.proto";
 
