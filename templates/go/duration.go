@@ -5,7 +5,7 @@ const durationTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 
 	{{ if or $r.In $r.NotIn $r.Lt $r.Lte $r.Gt $r.Gte $r.Const }}
 		if d := {{ accessor . }}; d != nil {
-			dur, err := ptypes.Duration(d)
+			dur, err := d.AsDuration(), d.CheckValid()
 			if err != nil {
 				err = {{ errCause . "err" "value is not a valid duration" }}
 				if !all { return err }

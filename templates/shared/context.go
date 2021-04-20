@@ -6,8 +6,8 @@ import (
 	"text/template"
 
 	"github.com/envoyproxy/protoc-gen-validate/validate"
-	"github.com/golang/protobuf/proto"
 	pgs "github.com/lyft/protoc-gen-star"
+	"google.golang.org/protobuf/proto"
 )
 
 type RuleContext struct {

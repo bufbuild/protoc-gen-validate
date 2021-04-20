@@ -26,7 +26,7 @@ RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8
 
 
 # protoc
-ENV PROTOC_VER=3.12.4
+ENV PROTOC_VER=3.15.5
 ENV PROTOC_REL=protoc-"${PROTOC_VER}"-linux-x86_64.zip
 RUN wget https://github.com/google/protobuf/releases/download/v"${PROTOC_VER}/${PROTOC_REL}" \
   && unzip ${PROTOC_REL} -d protoc \
@@ -45,9 +45,9 @@ RUN wget -q https://dl.google.com/go/$GORELEASE \
     && mkdir -p $GOPATH/{src,bin,pkg}
 
 # protoc-gen-go
-ENV PGG_PKG "github.com/golang/protobuf/protoc-gen-go"
+ENV PGG_PKG "google.golang.org/protobuf/cmd/protoc-gen-go"
 ENV PGG_PATH "${GOPATH}/src/${PGG_PKG}"
-ENV PGG_VER=v1.4.2
+ENV PGG_VER=v1.26.0
 RUN go get -d ${PGG_PKG} \
   && cd ${PGG_PATH} \
   && git checkout ${PGG_VER} \
