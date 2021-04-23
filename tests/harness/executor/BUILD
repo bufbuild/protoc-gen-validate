@@ -59,5 +59,5 @@ go_binary(
         shard_count = 5,
         deps = ["@bazel_tools//tools/bash/runfiles"],
     )
-    for lang in ("cc", "java", "python")
+    for lang in ("cc", "go", "java", "python")
 ]
