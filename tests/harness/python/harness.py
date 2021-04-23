@@ -43,7 +43,7 @@ if __name__ == "__main__":
         result.Valid = True
     except ValidationFailed as e:
         result.Valid = False
-        result.Reasons[:] = [repr(e)]
+        result.Reason = repr(e)
 
     sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8')
     sys.stdout.write(result.SerializeToString().decode("utf-8"))

@@ -7,9 +7,7 @@ const enumTpl = `
 
 		{{ if $r.GetDefinedOnly }}
 			if _, ok := {{ (typ $f).Element }}_name[int32({{ accessor . }})]; !ok {
-				err := {{ err . "value must be one of the defined enum values" }}
-				if !all { return err }
-				errors = append(errors, err)
+				return {{ err . "value must be one of the defined enum values" }}
 			}
 		{{ end }}
 `
