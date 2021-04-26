@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"log"
-	"strings"
 	"sync"
 	"time"
 
@@ -41,6 +40,7 @@ func execTestCase(tc TestCase, harnesses []Harness, out chan<- TestResult) {
 	wg := new(sync.WaitGroup)
 	wg.Add(len(harnesses))
 
+
 	for _, h := range harnesses {
 		h := h
 		go func() {
@@ -54,45 +54,22 @@ func execTestCase(tc TestCase, harnesses []Harness, out chan<- TestResult) {
 			}
 
 			if res.Error {
-				log.Printf("[%s] (%s harness) internal harness error: %s", tc.Name, h.Name, res.Reasons)
+				log.Printf("[%s] (%s harness) internal harness error: %s", tc.Name, h.Name, res.Reason)
 				out <- TestResult{false, false}
-				return
-			}
-
-			// Backwards compatibility for languages with no multi-error
-			// feature: check results of validation in "fail fast" mode only
-			if !res.CheckMultipleErrors {
-				tcValid := tc.Failures == 0
-				if res.Valid != tcValid {
-					if res.AllowFailure {
-						log.Printf("[%s] (%s harness) ignoring test failure: %v", tc.Name, h.Name, res.Reasons)
-						out <- TestResult{false, true}
-					} else if tcValid {
-						log.Printf("[%s] (%s harness) expected valid, got invalid: %v", tc.Name, h.Name, res.Reasons)
-						out <- TestResult{false, false}
-					} else {
-						log.Printf("[%s] (%s harness) expected invalid, got valid: %v", tc.Name, h.Name, res.Reasons)
-						out <- TestResult{false, false}
-					}
-				} else {
-					out <- TestResult{true, false}
-				}
-				return
-			}
-
-			// Check results of validation in "extensive" mode
-			if len(res.Reasons) != tc.Failures {
+			} else if res.Valid != tc.Valid {
 				if res.AllowFailure {
-					log.Printf("[%s] (%s harness) ignoring bad number of failures: %v", tc.Name, h.Name, res.Reasons)
+					log.Printf("[%s] (%s harness) ignoring test failure: %s", tc.Name, h.Name, res.Reason)
 					out <- TestResult{false, true}
+				} else if tc.Valid {
+					log.Printf("[%s] (%s harness) expected valid, got invalid: %s", tc.Name, h.Name, res.Reason)
+					out <- TestResult{false, false}
 				} else {
-					log.Printf("[%s] (%s harness) expected %d failures, got %d:\n %v", tc.Name, h.Name, tc.Failures, len(res.Reasons), strings.Join(res.Reasons, "\n "))
+					log.Printf("[%s] (%s harness) expected invalid, got valid: %s", tc.Name, h.Name, res.Reason)
 					out <- TestResult{false, false}
 				}
-				return
+			} else {
+				out <- TestResult{true, false}
 			}
-
-			out <- TestResult{true, false}
 		}()
 	}
 

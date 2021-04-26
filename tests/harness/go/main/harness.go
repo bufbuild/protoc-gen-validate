@@ -26,76 +26,28 @@ func main() {
 	_, isIgnored := msg.(*cases.MessageIgnored)
 
 	vmsg, hasValidate := msg.(interface {
-		Validate(bool) error
+		Validate() error
 	})
 
-	var multierr error
 	if isIgnored {
 		// confirm that ignored messages don't have a validate method
 		if hasValidate {
-			checkErr(fmt.Errorf("ignored message %T has Validate(bool) method", msg))
+			checkErr(fmt.Errorf("ignored message %T has Validate() method", msg))
 		}
 	} else if !hasValidate {
-		checkErr(fmt.Errorf("non-ignored message %T is missing Validate(bool)", msg))
+		checkErr(fmt.Errorf("non-ignored message %T is missing Validate()", msg))
 	} else {
-		err = vmsg.Validate(false)
-		multierr = vmsg.Validate(true)
+		err = vmsg.Validate()
 	}
-	checkValid(err, multierr)
+	checkValid(err)
 }
 
-type hasAllErrors interface{ AllErrors() []error }
-type hasCause interface{ Cause() error }
-
-func checkValid(err, multierr error) {
-	if err == nil && multierr == nil {
+func checkValid(err error) {
+	if err == nil {
 		resp(&harness.TestResult{Valid: true})
-		return
+	} else {
+		resp(&harness.TestResult{Reason: err.Error()})
 	}
-	if (err != nil) != (multierr != nil) {
-		checkErr(fmt.Errorf("different verdict of Validate(false) [%v] vs. Validate(true) [%v]", err, multierr))
-		return
-	}
-
-	// Extract the message from "lazy" Validate(false), for comparison with Validate(true)
-	rootCause := err
-	for {
-		caused, ok := rootCause.(hasCause)
-		if !ok || caused.Cause() == nil {
-			break
-		}
-		rootCause = caused.Cause()
-	}
-
-	// Retrieve the messages from "extensive" Validate(true) and compare first one with the "lazy" message
-	m, ok := multierr.(hasAllErrors)
-	if !ok {
-		checkErr(fmt.Errorf("Validate(true) returned error without AllErrors() method: %#v", multierr))
-		return
-	}
-	reasons := mergeReasons(nil, m)
-	if rootCause.Error() != reasons[0] {
-		checkErr(fmt.Errorf("different first message, Validate(false)==%q, Validate(true)==%q", rootCause.Error(), reasons[0]))
-		return
-	}
-
-	resp(&harness.TestResult{Reasons: reasons})
-}
-
-func mergeReasons(reasons []string, multi hasAllErrors) []string {
-	for _, err := range multi.AllErrors() {
-		caused, ok := err.(hasCause)
-		if ok && caused.Cause() != nil {
-			err = caused.Cause()
-		}
-		multi, ok := err.(hasAllErrors)
-		if ok {
-			reasons = mergeReasons(reasons, multi)
-		} else {
-			reasons = append(reasons, err.Error())
-		}
-	}
-	return reasons
 }
 
 func checkErr(err error) {
@@ -104,8 +56,8 @@ func checkErr(err error) {
 	}
 
 	resp(&harness.TestResult{
-		Error:   true,
-		Reasons: []string{err.Error()},
+		Error:  true,
+		Reason: err.Error(),
 	})
 }
 
