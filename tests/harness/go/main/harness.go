@@ -25,21 +25,30 @@ func main() {
 
 	_, isIgnored := msg.(*cases.MessageIgnored)
 
-	vmsg, hasValidate := msg.(interface {
-		Validate(bool) error
+	vMsg, hasValidate := msg.(interface {
+		Validate() error
+	})
+
+	vAllMsg, hasValidateAll := msg.(interface {
+		ValidateAll() error
 	})
 
 	var multierr error
 	if isIgnored {
 		// confirm that ignored messages don't have a validate method
 		if hasValidate {
-			checkErr(fmt.Errorf("ignored message %T has Validate(bool) method", msg))
+			checkErr(fmt.Errorf("ignored message %T has Validate() method", msg))
+		}
+		if hasValidateAll {
+			checkErr(fmt.Errorf("ignored message %T has ValidateAll() method", msg))
 		}
 	} else if !hasValidate {
-		checkErr(fmt.Errorf("non-ignored message %T is missing Validate(bool)", msg))
+		checkErr(fmt.Errorf("non-ignored message %T is missing Validate()", msg))
+	} else if !hasValidateAll {
+		checkErr(fmt.Errorf("non-ignored message %T is missing ValidateAll()", msg))
 	} else {
-		err = vmsg.Validate(false)
-		multierr = vmsg.Validate(true)
+		err = vMsg.Validate()
+		multierr = vAllMsg.ValidateAll()
 	}
 	checkValid(err, multierr)
 }
@@ -70,12 +79,12 @@ func checkValid(err, multierr error) {
 	// Retrieve the messages from "extensive" Validate(true) and compare first one with the "lazy" message
 	m, ok := multierr.(hasAllErrors)
 	if !ok {
-		checkErr(fmt.Errorf("Validate(true) returned error without AllErrors() method: %#v", multierr))
+		checkErr(fmt.Errorf("ValidateAll() returned error without AllErrors() method: %#v", multierr))
 		return
 	}
 	reasons := mergeReasons(nil, m)
 	if rootCause.Error() != reasons[0] {
-		checkErr(fmt.Errorf("different first message, Validate(false)==%q, Validate(true)==%q", rootCause.Error(), reasons[0]))
+		checkErr(fmt.Errorf("different first message, Validate()==%q, ValidateAll()==%q", rootCause.Error(), reasons[0]))
 		return
 	}
 
