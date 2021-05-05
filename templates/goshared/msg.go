@@ -8,10 +8,14 @@ const msgTpl = `
 	{{ cmt "Validate checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, an error is returned. When asked to return all errors, validation continues after first violation, and the result is a list of violation errors wrapped in " (multierrname .) ", or nil if none found. Otherwise, only the first error is returned, if any." }}
 {{- end -}}
 func (m {{ (msgTyp .).Pointer }}) Validate() error {
-	return m.ValidateWith(false)
+	return m.validate(false)
 }
 
-func (m {{ (msgTyp .).Pointer }}) ValidateWith(all bool) error {
+func (m {{ (msgTyp .).Pointer }}) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m {{ (msgTyp .).Pointer }}) validate(all bool) error {
 	{{ if disabled . -}}
 		return nil
 	{{ else -}}

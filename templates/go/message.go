@@ -8,18 +8,21 @@ const messageTpl = `
 	{{ if .MessageRules.GetSkip }}
 		// skipping validation for {{ $f.Name }}
 	{{ else }}
-		if v, ok := interface{}({{ accessor . }}).(interface{ ValidateWith(bool) error }); ok {
-			if err := v.ValidateWith(all); err != nil {
-				err = {{ errCause . "err" "embedded message failed validation" }}
-				if !all { return err }
-				errors = append(errors, err)
+		if all {
+			switch v := interface{}({{ accessor . }}).(type) {
+				case interface{ ValidateAll() error }:
+					if err := v.ValidateAll(); err != nil {
+						errors = append(errors, {{ errCause . "err" "embedded message failed validation" }})
+					}
+				case interface{ Validate() error }:
+					{{- /* Support legacy validation for messages that were generated with a plugin version prior to existence of ValidateAll() */ -}}
+					if err := v.Validate(); err != nil {
+						errors = append(errors, {{ errCause . "err" "embedded message failed validation" }})
+					}
 			}
 		} else if v, ok := interface{}({{ accessor . }}).(interface{ Validate() error }); ok {
-			{{- /* Support legacy validation for repos that were generated prior to extended validation using ValidateWith() */ -}}
 			if err := v.Validate(); err != nil {
-				err = {{ errCause . "err" "embedded message failed validation" }}
-				if !all { return err }
-				errors = append(errors, err)
+				return {{ errCause . "err" "embedded message failed validation" }} 
 			}
 		}
 	{{ end }}
