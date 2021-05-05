@@ -62,11 +62,11 @@ func checkValid(err, multierr error) {
 		return
 	}
 	if (err != nil) != (multierr != nil) {
-		checkErr(fmt.Errorf("different verdict of Validate(false) [%v] vs. Validate(true) [%v]", err, multierr))
+		checkErr(fmt.Errorf("different verdict of Validate() [%v] vs. ValidateAll() [%v]", err, multierr))
 		return
 	}
 
-	// Extract the message from "lazy" Validate(false), for comparison with Validate(true)
+	// Extract the message from "lazy" Validate(), for comparison with ValidateAll()
 	rootCause := err
 	for {
 		caused, ok := rootCause.(hasCause)
