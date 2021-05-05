@@ -5,16 +5,22 @@ const msgTpl = `
 {{ if disabled . -}}
 	{{ cmt "Validate is disabled for " (msgTyp .) ". This method will always return nil." }}
 {{- else -}}
-	{{ cmt "Validate checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, an error is returned. When asked to return all errors, validation continues after first violation, and the result is a list of violation errors wrapped in " (multierrname .) ", or nil if none found. Otherwise, only the first error is returned, if any." }}
+	{{ cmt "Validate checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, the first error encountered is returned, or nil if there are no violations." }}
 {{- end -}}
 func (m {{ (msgTyp .).Pointer }}) Validate() error {
 	return m.validate(false)
 }
 
+{{ if disabled . -}}
+	{{ cmt "ValidateAll is disabled for " (msgTyp .) ". This method will always return nil." }}
+{{- else -}}
+	{{ cmt "ValidateAll checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, the result is a list of violation errors wrapped in " (multierrname .) ", or nil if none found." }}
+{{- end -}}
 func (m {{ (msgTyp .).Pointer }}) ValidateAll() error {
 	return m.validate(true)
 }
 
+{{/* Unexported function to handle validation. If the need arises to add more exported functions, please consider the functional option approach outlined in protoc-gen-validate#47. */}}
 func (m {{ (msgTyp .).Pointer }}) validate(all bool) error {
 	{{ if disabled . -}}
 		return nil
