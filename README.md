@@ -37,22 +37,22 @@ Executing `protoc` with PGV and the target language's default plugin will create
 ```go
 p := new(Person)
 
-err := p.Validate(false) // err: Id must be greater than 999
+err := p.Validate() // err: Id must be greater than 999
 p.Id = 1000
 
-err = p.Validate(false) // err: Email must be a valid email address
+err = p.Validate() // err: Email must be a valid email address
 p.Email = "example@lyft.com"
 
-err = p.Validate(false) // err: Name must match pattern '^[^\d\s]+( [^\d\s]+)*$'
+err = p.Validate() // err: Name must match pattern '^[^\d\s]+( [^\d\s]+)*$'
 p.Name = "Protocol Buffer"
 
-err = p.Validate(false) // err: Home is required
+err = p.Validate() // err: Home is required
 p.Home = &Location{37.7, 999}
 
-err = p.Validate(false) // err: Home.Lng must be within [-180, 180]
+err = p.Validate() // err: Home.Lng must be within [-180, 180]
 p.Home.Lng = -122.4
 
-err = p.Validate(false) // err: nil
+err = p.Validate() // err: nil
 ```
 
 ## Usage
@@ -101,7 +101,11 @@ protoc \
   example.proto
 ```
 
-All messages generated include the new `Validate(all bool) error` method (the `all` argument specifies whether to check as many fields as possible, or just fail early on the first invalid one). PGV requires no additional runtime dependencies from the existing generated code.
+All messages generated include the following methods:
+- `Validate() error` which returns the first error encountered during validation
+- `ValidateAll() error` which returns all errors encountered during validation.
+  
+PGV requires no additional runtime dependencies from the existing generated code.
 
 **Note**: by default **example.pb.validate.go** is nested in a directory structure that matches your `option go_package` name. You can change this using the protoc parameter `paths=source_relative:.`. Then `--validate_out` will output the file where it is expected. See Google's protobuf documenation or [packages and input paths](https://github.com/golang/protobuf#packages-and-input-paths) or [parameters](https://github.com/golang/protobuf#parameters) for more information.
 
