@@ -8,9 +8,8 @@ import (
 
 	"github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
 	_ "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
-	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
 	_ "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
-	harness "github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
+	"github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
 	"google.golang.org/protobuf/proto"
 )
 
