@@ -8,8 +8,9 @@ import (
 
 	"github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
 	_ "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
+	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
 	_ "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
-	"github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
+	harness "github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -76,7 +77,7 @@ func checkValid(err, multierr error) {
 		rootCause = caused.Cause()
 	}
 
-	// Retrieve the messages from "extensive" Validate(true) and compare first one with the "lazy" message
+	// Retrieve the messages from "extensive" ValidateAll() and compare first one with the "lazy" message
 	m, ok := multierr.(hasAllErrors)
 	if !ok {
 		checkErr(fmt.Errorf("ValidateAll() returned error without AllErrors() method: %#v", multierr))
