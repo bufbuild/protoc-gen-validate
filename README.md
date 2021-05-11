@@ -102,7 +102,7 @@ protoc \
 ```
 
 All messages generated include the following methods:
-- `Validate() error` which returns the first error encountered during validation
+- `Validate() error` which returns the first error encountered during validation.
 - `ValidateAll() error` which returns all errors encountered during validation.
   
 PGV requires no additional runtime dependencies from the existing generated code.
