@@ -1,7 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "go_default_library",
+    name = "java",
     srcs = [
         "any.go",
         "bool.go",
@@ -26,11 +26,17 @@ go_library(
     importpath = "github.com/envoyproxy/protoc-gen-validate/templates/java",
     visibility = ["//visibility:public"],
     deps = [
-        "//templates/shared:go_default_library",
-        "@com_github_iancoleman_strcase//:go_default_library",
-        "@com_github_lyft_protoc_gen_star//:go_default_library",
-        "@com_github_lyft_protoc_gen_star//lang/go:go_default_library",
-        "@org_golang_google_protobuf//types/known/durationpb:go_default_library",
-        "@org_golang_google_protobuf//types/known/timestamppb:go_default_library",
+        "//templates/shared",
+        "@com_github_iancoleman_strcase//:strcase",
+        "@com_github_lyft_protoc_gen_star//:protoc-gen-star",
+        "@com_github_lyft_protoc_gen_star//lang/go",
+        "@org_golang_google_protobuf//types/known/durationpb",
+        "@org_golang_google_protobuf//types/known/timestamppb",
     ],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":java",
+    visibility = ["//visibility:public"],
 )

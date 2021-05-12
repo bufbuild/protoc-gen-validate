@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 load("@rules_cc//cc:defs.bzl", "cc_library", "cc_proto_library")
 load("@rules_java//java:defs.bzl", "java_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 package(
     default_visibility =
@@ -31,7 +32,7 @@ py_proto_library(
 )
 
 go_proto_library(
-    name = "go_default_library",
+    name = "validate_go_proto",
     importpath = "github.com/envoyproxy/protoc-gen-validate/validate",
     proto = ":validate_proto",
 )
@@ -41,7 +42,19 @@ cc_library(
     hdrs = ["validate.h"],
 )
 
+go_library(
+    name = "validate",
+    embed = [":validate_go_proto"],
+    importpath = "github.com/envoyproxy/protoc-gen-validate/validate",
+)
+
 java_proto_library(
     name = "validate_java",
     deps = [":validate_proto"],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":validate",
+    visibility = ["//visibility:public"],
 )
