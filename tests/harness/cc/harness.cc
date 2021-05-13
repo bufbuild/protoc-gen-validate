@@ -49,8 +49,13 @@ using tests::harness::TestResult;
 using google::protobuf::Any;
 
 std::ostream& operator<<(std::ostream& out, const TestResult& result) {
-  out << "valid: " << result.valid() << " reason: '" << result.reason() << "'"
-      << std::endl;
+  if (result.reasons_size() > 0) {
+    out << "valid: " << result.valid() << " reason: '" << result.reasons(0) << "'"
+        << std::endl;
+  } else {
+    out << "valid: " << result.valid() << " reason: unknown"
+        << std::endl;
+  }
   return out;
 }
 
@@ -70,7 +75,7 @@ void ExitIfFailed(bool succeeded, const pgv::ValidationMsg& err_msg) {
 
   TestResult result;
   result.set_error(true);
-  result.set_reason(pgv::String(err_msg));
+  result.add_reasons(pgv::String(err_msg));
   WriteTestResultAndExit(result);
 }
 
@@ -91,12 +96,12 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
       msg.UnpackTo(&unpacked);                             \
       try {                                                \
         result.set_valid(Validate(unpacked, &err_msg));    \
-        result.set_reason(std::move(err_msg));             \
+        result.add_reasons(std::move(err_msg));            \
       } catch (pgv::UnimplementedException& e) {           \
         /* don't fail for unimplemented validations */     \
         result.set_valid(false);                           \
         result.set_allowfailure(true);                     \
-        result.set_reason(e.what());                       \
+        result.add_reasons(e.what());                      \
       }                                                    \
       return result;                                       \
     };                                                     \
@@ -128,7 +133,7 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
     TestResult result;
     result.set_valid(false);
     result.set_allowfailure(true);
-    result.set_reason("not implemented");
+    result.add_reasons("not implemented");
     return result;
   };
 }
