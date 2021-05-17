@@ -12,6 +12,7 @@ message TestCase {
 message TestResult {
     bool   Valid  = 1;
     bool   Error  = 2;
-    string Reason = 3;
+    repeated string Reasons = 3;
     bool   AllowFailure = 4;
+    bool   CheckMultipleErrors = 5;
 }

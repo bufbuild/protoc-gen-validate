@@ -10,20 +10,28 @@ const repTpl = `
 	{{ if $r.GetMinItems }}
 		{{ if eq $r.GetMinItems $r.GetMaxItems }}
 			if len({{ accessor . }}) != {{ $r.GetMinItems }} {
-				return {{ err . "value must contain exactly " $r.GetMinItems " item(s)" }}
+				err := {{ err . "value must contain exactly " $r.GetMinItems " item(s)" }}
+				if !all { return err }
+				errors = append(errors, err)
 			}
 		{{ else if $r.MaxItems }}
 			if l := len({{ accessor . }}); l < {{ $r.GetMinItems }} || l > {{ $r.GetMaxItems }} {
-			 	return {{ err . "value must contain between " $r.GetMinItems " and " $r.GetMaxItems " items, inclusive" }}
+				err := {{ err . "value must contain between " $r.GetMinItems " and " $r.GetMaxItems " items, inclusive" }}
+				if !all { return err }
+				errors = append(errors, err)
 			}
 		{{ else }}
 			if len({{ accessor . }}) < {{ $r.GetMinItems }} {
-				return {{ err . "value must contain at least " $r.GetMinItems " item(s)" }}
+				err := {{ err . "value must contain at least " $r.GetMinItems " item(s)" }}
+				if !all { return err }
+				errors = append(errors, err)
 			}
 		{{ end }}
 	{{ else if $r.MaxItems }}
 		if len({{ accessor . }}) > {{ $r.GetMaxItems }} {
-			return {{ err . "value must contain no more than " $r.GetMaxItems " item(s)" }}
+			err := {{ err . "value must contain no more than " $r.GetMaxItems " item(s)" }}
+			if !all { return err }
+			errors = append(errors, err)
 		}
 	{{ end }}
 
@@ -40,7 +48,9 @@ const repTpl = `
 			_, _ = idx, item
 			{{ if $r.GetUnique }}
 				if _, exists := {{ lookup $f "Unique" }}[{{ if isBytes $f.Type.Element }}string(item){{ else }}item{{ end }}]; exists {
-					return {{ errIdx . "idx" "repeated value must contain unique items" }}
+					err := {{ errIdx . "idx" "repeated value must contain unique items" }}
+					if !all { return err }
+					errors = append(errors, err)
 				} else {
 					{{ lookup $f "Unique" }}[{{ if isBytes $f.Type.Element }}string(item){{ else }}item{{ end }}] = struct{}{}
 				}
