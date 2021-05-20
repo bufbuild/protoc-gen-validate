@@ -43,7 +43,7 @@ cc_library(
 )
 
 go_library(
-    name = "validate",
+    name = "validate_go",
     embed = [":validate_go_proto"],
     importpath = "github.com/envoyproxy/protoc-gen-validate/validate",
 )
@@ -55,6 +55,14 @@ java_proto_library(
 
 alias(
     name = "go_default_library",
-    actual = ":validate",
+    actual = ":validate_go",
+    visibility = ["//visibility:public"],
+)
+
+# this alias allows build files generated with Gazelle in other repositories
+# to find validate as an external dependency
+alias(
+    name = "validate",
+    actual = ":validate_go",
     visibility = ["//visibility:public"],
 )
