@@ -14,3 +14,5 @@ require (
 	golang.org/x/tools v0.1.5
 	google.golang.org/protobuf v1.27.1
 )
+
+replace github.com/lyft/protoc-gen-star => github.com/sarthak40/protoc-gen-star v0.5.3-0.20210511152005-e0bab4844e07
