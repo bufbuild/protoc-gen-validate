@@ -101,7 +101,11 @@ protoc \
   example.proto
 ```
 
-All messages generated include the new `Validate() error` method. PGV requires no additional runtime dependencies from the existing generated code.
+All messages generated include the following methods:
+- `Validate() error` which returns the first error encountered during validation.
+- `ValidateAll() error` which returns all errors encountered during validation.
+  
+PGV requires no additional runtime dependencies from the existing generated code.
 
 **Note**: by default **example.pb.validate.go** is nested in a directory structure that matches your `option go_package` name. You can change this using the protoc parameter `paths=source_relative:.`. Then `--validate_out` will output the file where it is expected. See Google's protobuf documenation or [packages and input paths](https://github.com/golang/protobuf#packages-and-input-paths) or [parameters](https://github.com/golang/protobuf#parameters) for more information.
 
