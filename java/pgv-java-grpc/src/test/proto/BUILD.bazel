@@ -18,12 +18,19 @@ go_proto_library(
     importpath = "github.com/envoyproxy/protoc-gen-validate/java/pgv-java-grpc/src/test/proto",
     proto = ":io_envoyproxy_pgv_grpc_proto",
     visibility = ["//visibility:public"],
-    deps = ["//validate:go_default_library"],
+    deps = ["//validate"],
 )
 
 go_library(
-    name = "go_default_library",
+    name = "proto",
     embed = [":io_envoyproxy_pgv_grpc_go_proto"],
     importpath = "github.com/envoyproxy/protoc-gen-validate/java/pgv-java-grpc/src/test/proto",
+    visibility = ["//visibility:public"],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":proto",
+    deprecation = "Use :proto instead of :go_default_library.  Details about the new naming convention: https://github.com/bazelbuild/bazel-gazelle/pull/863",
     visibility = ["//visibility:public"],
 )
