@@ -174,6 +174,90 @@ var _ interface{
 			{{- end }}
 		}
 	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetFloat "In" }} {{ if .Rules.Items.GetFloat.In }}
+		var {{ lookup .Field "InLookup" }} = map[float]struct{}{
+			{{- range .Rules.Items.GetFloat.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetDouble "In" }} {{ if .Rules.Items.GetDouble.In }}
+		var {{ lookup .Field "InLookup" }} = map[double]struct{}{
+			{{- range .Rules.Items.GetDouble.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetInt32 "In" }} {{ if .Rules.Items.GetInt32.In }}
+		var {{ lookup .Field "InLookup" }} = map[int32]struct{}{
+			{{- range .Rules.Items.GetInt32.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetUint32 "In" }} {{ if .Rules.Items.GetUint32.In }}
+		var {{ lookup .Field "InLookup" }} = map[uint32]struct{}{
+			{{- range .Rules.Items.GetUint32.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetInt64 "In" }} {{ if .Rules.Items.GetInt64.In }}
+		var {{ lookup .Field "InLookup" }} = map[int64]struct{}{
+			{{- range .Rules.Items.GetInt64.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetUint64 "In" }} {{ if .Rules.Items.GetUint64.In }}
+		var {{ lookup .Field "InLookup" }} = map[uint64]struct{}{
+			{{- range .Rules.Items.GetUint64.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetSint32 "In" }} {{ if .Rules.Items.GetSint32.In }}
+		var {{ lookup .Field "InLookup" }} = map[sint32]struct{}{
+			{{- range .Rules.Items.GetSint32.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetSint64 "In" }} {{ if .Rules.Items.GetSint64.In }}
+		var {{ lookup .Field "InLookup" }} = map[sint64]struct{}{
+			{{- range .Rules.Items.GetSint64.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetFixed32 "In" }} {{ if .Rules.Items.GetFixed32.In }}
+		var {{ lookup .Field "InLookup" }} = map[fixed32]struct{}{
+			{{- range .Rules.Items.GetFixed32.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetFixed64 "In" }} {{ if .Rules.Items.GetFixed64.In }}
+		var {{ lookup .Field "InLookup" }} = map[fixed64]struct{}{
+			{{- range .Rules.Items.GetFixed64.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetSfixed32 "In" }} {{ if .Rules.Items.GetSfixed32.In }}
+		var {{ lookup .Field "InLookup" }} = map[sfixed32]struct{}{
+			{{- range .Rules.Items.GetSfixed32.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetSfixed64 "In" }} {{ if .Rules.Items.GetSfixed64.In }}
+		var {{ lookup .Field "InLookup" }} = map[sfixed64]struct{}{
+			{{- range .Rules.Items.GetSfixed64.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
 	{{ end }}{{ end }}
 
 	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
@@ -187,6 +271,90 @@ var _ interface{
 	{{ if has .Rules.Items.GetEnum "NotIn" }} {{ if .Rules.Items.GetEnum.NotIn }}
 		var {{ lookup .Field "NotInLookup" }} = map[{{ inType .Field .Rules.Items.GetEnum.NotIn }}]struct{}{
 			{{- range .Rules.Items.GetEnum.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetFloat "NotIn" }} {{ if .Rules.Items.GetFloat.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[float]struct{}{
+			{{- range .Rules.Items.GetFloat.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetDouble "NotIn" }} {{ if .Rules.Items.GetDouble.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[double]struct{}{
+			{{- range .Rules.Items.GetDouble.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetInt32 "NotIn" }} {{ if .Rules.Items.GetInt32.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[int32]struct{}{
+			{{- range .Rules.Items.GetInt32.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetUint32 "NotIn" }} {{ if .Rules.Items.GetUint32.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[uint32]struct{}{
+			{{- range .Rules.Items.GetUint32.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetInt64 "NotIn" }} {{ if .Rules.Items.GetInt64.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[int64]struct{}{
+			{{- range .Rules.Items.GetInt64.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetUint64 "NotIn" }} {{ if .Rules.Items.GetUint64.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[uint64]struct{}{
+			{{- range .Rules.Items.GetUint64.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetSint32 "NotIn" }} {{ if .Rules.Items.GetSint32.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[sint32]struct{}{
+			{{- range .Rules.Items.GetSint32.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetSint64 "NotIn" }} {{ if .Rules.Items.GetSint64.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[sint64]struct{}{
+			{{- range .Rules.Items.GetSint64.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetFixed32 "NotIn" }} {{ if .Rules.Items.GetFixed32.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[fixed32]struct{}{
+			{{- range .Rules.Items.GetFixed32.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetFixed64 "NotIn" }} {{ if .Rules.Items.GetFixed64.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[fixed64]struct{}{
+			{{- range .Rules.Items.GetFixed64.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetSfixed32 "NotIn" }} {{ if .Rules.Items.GetSfixed32.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[sfixed32]struct{}{
+			{{- range .Rules.Items.GetSfixed32.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetSfixed64 "NotIn" }} {{ if .Rules.Items.GetSfixed64.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[sfixed64]struct{}{
+			{{- range .Rules.Items.GetSfixed64.NotIn }}
 				{{ inKey $f . }}: {},
 			{{- end }}
 		}
