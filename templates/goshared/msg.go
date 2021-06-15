@@ -34,7 +34,7 @@ func (m {{ (msgTyp .).Pointer }}) validate(all bool) error {
 		{{ end }}
 
 		{{ range .OneOfs }}
-			if m.{{ name }}.(type) == nil { return nil }
+			if m.Type == nil { return nil }
 			
 			switch m.{{ name . }}.(type) {
 				{{ range .Fields }}
