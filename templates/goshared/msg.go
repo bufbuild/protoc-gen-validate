@@ -34,14 +34,16 @@ func (m {{ (msgTyp .).Pointer }}) validate(all bool) error {
 		{{ end }}
 
 		{{ range .OneOfs }}
-			if m.{{ name . }} == nil { 
-				err := {{ errname .Message }}{
-					field: "m.{{ name . }}",
-					reason: "field must not be nil",
+			{{ if required . }}
+				if m.{{ name . }} == nil { 
+					err := {{ errname .Message }}{
+						field: "m.{{ name . }}",
+						reason: "field must not be nil",
+					}
+					if !all { return err }
+					errors = append(errors, err)
 				}
-				if !all { return err }
-				errors = append(errors, err)
-			}
+			{{ end }}
 
 			switch m.{{ name . }}.(type) {
 				{{ range .Fields }}
