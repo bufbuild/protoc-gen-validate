@@ -40,6 +40,16 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 	for _, f := range targets {
 		m.Push(f.Name().String())
 
+		hasValidate := false
+		for _, file := range f.Imports() {
+			if file.Package().ProtoName().String() == "validate" {
+				hasValidate = true
+			}
+		}
+		if !hasValidate {
+			break
+		}
+
 		for _, msg := range f.AllMessages() {
 			m.CheckRules(msg)
 		}
