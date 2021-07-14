@@ -26,7 +26,7 @@ jobs:
       - run: mvn -B verify
       - add_ssh_keys:
           fingerprints:
-            - "cd:a8:80:f3:5e:9a:37:30:ef:55:20:b5:1f:b9:e5:18"
+            - "71:d5:2d:12:fa:d5:65:e0:bf:4e:2c:59:95:db:a9:cc"
       - deploy:
           command: | # Deploy from the main branch or from a version branch/tag. If the $RELEASE and $NEXT variables are set then prepare a full maven release.
             if [[ "${CIRCLE_BRANCH}" =~ v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
