@@ -582,7 +582,7 @@ Person x = 1;
 - **ignore_empty**: this rule specifies that if field is empty or set to the default value, to ignore any validation rules. These are typically useful where being able to unset a field in an update request, or to skip validation for optional fields where switching to WKTs is not feasible.
 
   ```protobuf
-  repeated int64 x = 1 [(validate.rules).repeated = {ignore_empty: true, items: {int64: {gt = 200}}}];
+  repeated int64 x = 1 [(validate.rules).repeated = {ignore_empty: true, items: {int64: {gt: 200}}}];
   ```
 
 ### Maps

@@ -1,7 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "go_default_library",
+    name = "module",
     srcs = [
         "checker.go",
         "validate.go",
@@ -9,13 +9,20 @@ go_library(
     importpath = "github.com/envoyproxy/protoc-gen-validate/module",
     visibility = ["//visibility:public"],
     deps = [
-        "//templates:go_default_library",
-        "//templates/java:go_default_library",
-        "//validate:go_default_library",  # keep
-        "@com_github_lyft_protoc_gen_star//:go_default_library",
-        "@com_github_lyft_protoc_gen_star//lang/go:go_default_library",
-        "@org_golang_google_protobuf//proto:go_default_library",
-        "@org_golang_google_protobuf//types/known/durationpb:go_default_library",
-        "@org_golang_google_protobuf//types/known/timestamppb:go_default_library",
+        "//templates",
+        "//templates/java",
+        "//validate",
+        "@com_github_lyft_protoc_gen_star//:protoc-gen-star",
+        "@com_github_lyft_protoc_gen_star//lang/go",
+        "@org_golang_google_protobuf//proto",
+        "@org_golang_google_protobuf//types/known/durationpb",
+        "@org_golang_google_protobuf//types/known/timestamppb",
     ],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":module",
+    deprecation = "Use :module instead of :go_default_library.  Details about the new naming convention: https://github.com/bazelbuild/bazel-gazelle/pull/863",
+    visibility = ["//visibility:public"],
 )
