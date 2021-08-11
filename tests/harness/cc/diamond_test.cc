@@ -19,6 +19,8 @@
 #include "tests/harness/cases/wkt_any.pb.validate.h"
 #include "tests/harness/cases/wkt_duration.pb.h"
 #include "tests/harness/cases/wkt_duration.pb.validate.h"
+#include "tests/harness/cases/wkt_nested.pb.h"
+#include "tests/harness/cases/wkt_nested.pb.validate.h"
 #include "tests/harness/cases/wkt_timestamp.pb.h"
 #include "tests/harness/cases/wkt_wrappers.pb.h"
 #include "tests/harness/cases/wkt_wrappers.pb.validate.h"

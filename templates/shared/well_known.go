@@ -14,12 +14,13 @@ const (
 )
 
 func FileNeeds(f pgs.File, wk WellKnown) bool {
-	for _, msg := range f.Messages() {
+	for _, msg := range f.AllMessages() {
 		needed := Needs(msg, wk)
 		if needed {
 			return true
 		}
 	}
+
 	return false
 }
 

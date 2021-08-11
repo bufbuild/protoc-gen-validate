@@ -33,6 +33,17 @@ gazelle:
 	bazel run //:gazelle -- update-repos -from_file=go.mod -prune -to_macro=dependencies.bzl%go_third_party
 	bazel run //:gazelle
 
+.PHONY: update
+update: ## Update Go deps, remove unused deps
+	go get -u ./...
+	go mod tidy
+
+.PHONY: tools
+tools: ## Install additional project tools
+	go install google.golang.org/protobuf/cmd/protoc-gen-go
+	protoc --version
+	protoc-gen-go --version
+
 .PHONY: lint
 lint: bin/golint bin/shadow
 	# lints the package for common code smells
