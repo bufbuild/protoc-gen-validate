@@ -26,7 +26,7 @@ RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8
 
 
 # protoc
-ENV PROTOC_VER=3.17.3
+ENV PROTOC_VER=3.15.5
 ENV PROTOC_REL=protoc-"${PROTOC_VER}"-linux-x86_64.zip
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v"${PROTOC_VER}/${PROTOC_REL}" \
   && unzip ${PROTOC_REL} -d protoc \
