@@ -13,14 +13,18 @@ GO_IMPORT_SPACES := ${VALIDATE_IMPORT},\
 	Mgoogle/protobuf/descriptor.proto=google.golang.org/protobuf/types/descriptorpb
 GO_IMPORT:=$(subst $(space),,$(GO_IMPORT_SPACES))
 
+.DEFAULT_GOAL := help
+
+.PHONY: help
+help: Makefile
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
 .PHONY: build
-build: validate/validate.pb.go
-	# generates the PGV binary and installs it into $$GOPATH/bin
+build: validate/validate.pb.go ## generates the PGV binary and installs it into $$GOPATH/bin
 	go install .
 
 .PHONY: bazel
-bazel:
-	# generate the PGV plugin with Bazel
+bazel: ## generate the PGV plugin with Bazel
 	bazel build //tests/...
 
 .PHONY: build_generation_tests
@@ -28,14 +32,12 @@ build_generation_tests:
 	bazel build //tests/generation/...
 
 .PHONY: gazelle
-gazelle:
-	# runs gazelle against the codebase to generate Bazel BUILD files
+gazelle: ## runs gazelle against the codebase to generate Bazel BUILD files
 	bazel run //:gazelle -- update-repos -from_file=go.mod -prune -to_macro=dependencies.bzl%go_third_party
 	bazel run //:gazelle
 
 .PHONY: lint
-lint: bin/golint bin/shadow
-	# lints the package for common code smells
+lint: bin/golint bin/shadow ## lints the package for common code smells
 	test -z "$(gofmt -d -s ./*.go)" || (gofmt -d -s ./*.go && exit 1)
 	# golint -set_exit_status
 	# check for variable shadowing
@@ -51,29 +53,25 @@ bin/golint:
 	GOBIN=$(shell pwd)/bin go install golang.org/x/lint/golint
 
 bin/protoc-gen-go:
-	GOBIN=$(shell pwd)/bin go install google.golang.org/protobuf/cmd/protoc-gen-go
+	GOBIN=$(shell pwd)/bin go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.27.1
 
 bin/harness:
 	cd tests && go build -o ../bin/harness ./harness/executor
 
 .PHONY: harness
-harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harness tests/harness/cc/cc-harness bin/harness
- 	# runs the test harness, validating a series of test cases in all supported languages
+harness: testcases tests/harness/go/harness.pb.go tests/harness/go/main/go-harness tests/harness/cc/cc-harness bin/harness ## runs the test harness, validating a series of test cases in all supported languages
 	./bin/harness -go -cc
 
 .PHONY: bazel-tests
-bazel-tests:
-	# Runs all tests with Bazel
+bazel-tests: ## runs all tests with Bazel
 	bazel test //tests/... --test_output=errors
 
 .PHONY: example-workspace
-example-workspace:
-	# Run all tests in the example workspace
+example-workspace: ## run all tests in the example workspace
 	cd example-workspace && bazel test //... --test_output=errors
 
 .PHONY: testcases
-testcases: bin/protoc-gen-go
-	# generate the test harness case protos
+testcases: bin/protoc-gen-go ## generate the test harness case protos
 	rm -r tests/harness/cases/go || true
 	mkdir tests/harness/cases/go
 	rm -r tests/harness/cases/other_package/go || true
@@ -84,7 +82,7 @@ testcases: bin/protoc-gen-go
 		-I . \
 		-I ../../../.. \
 		--go_out="module=${PACKAGE}/tests/harness/cases/other_package/go,${GO_IMPORT}:./go" \
-		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
+		--plugin=protoc-gen-go=${GOPATH}/bin/protoc-gen-go \
 		--validate_out="module=${PACKAGE}/tests/harness/cases/other_package/go,lang=go:./go" \
 		./*.proto
 	cd tests/harness/cases && \
@@ -92,20 +90,20 @@ testcases: bin/protoc-gen-go
 		-I . \
 		-I ../../.. \
 		--go_out="module=${PACKAGE}/tests/harness/cases/go,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go,${GO_IMPORT}:./go" \
-		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
+		--plugin=protoc-gen-go=${GOPATH}/bin/protoc-gen-go \
 		--validate_out="module=${PACKAGE}/tests/harness/cases/go,lang=go,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go:./go" \
 		./*.proto
 
 validate/validate.pb.go: bin/protoc-gen-go validate/validate.proto
 	protoc -I . \
-		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
+		--plugin=protoc-gen-go=${GOPATH}/bin/protoc-gen-go \
 		--go_opt=paths=source_relative \
 		--go_out="${GO_IMPORT}:." validate/validate.proto
 
 tests/harness/go/harness.pb.go: bin/protoc-gen-go tests/harness/harness.proto
 	# generates the test harness protos
 	cd tests/harness && protoc -I . \
-		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
+		--plugin=protoc-gen-go=$protoc-gen-go \
 		--go_out="module=${PACKAGE}/tests/harness/go,${GO_IMPORT}:./go" harness.proto
 
 tests/harness/go/main/go-harness:
@@ -140,9 +138,8 @@ python-release: prepare-python-release
 	python3.8 -m pip wheel --wheel-dir python/dist --no-deps python/dist/*
 	python3.8 -m twine upload --verbose --skip-existing --repository ${PYPI_REPO} --username "__token__" --password ${PGV_PYPI_TOKEN} python/dist/*
 
-# Run during CI; this checks that the checked-in generated code matches the generated version.
 .PHONY: check-generated
-check-generated:
+check-generated: ## run during CI; this checks that the checked-in generated code matches the generated version.
 	for f in validate/validate.pb.go ; do \
 	  mv $$f $$f.original ; \
 	  make $$f ; \
@@ -155,7 +152,7 @@ check-generated:
 ci: lint bazel testcases bazel-tests build_generation_tests example-workspace check-generated
 
 .PHONY: clean
-clean:
+clean: ## clean up generated files
 	(which bazel && bazel clean) || true
 	rm -f \
 		bin/protoc-gen-go \
