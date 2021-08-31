@@ -257,7 +257,7 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
   double x = 1 [(validate.rules).double = {lt:30, gte:40}];
   ```
 
-- **in/not_in**: these two rules permit specifying white/blacklists for the values of a field.
+- **in/not_in**: these two rules permit specifying allow/denylists for the values of a field.
 
   ```protobuf
   // x must be either 1, 2, or 3
@@ -346,7 +346,7 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
   string x = 1 [(validate.rules).string = {suffix: ".proto", max_len:64}];
   ```
 
-- **in/not_in**: these two rules permit specifying white/blacklists for the values of a field.
+- **in/not_in**: these two rules permit specifying allow/denylists for the values of a field.
 
   ```protobuf
   // x must be either "foo", "bar", or "baz"
@@ -451,7 +451,7 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
   bytes x = 1 [(validate.rules).bytes.contains = "baz"];
   ```
 
-- **in/not_in**: these two rules permit specifying white/blacklists for the values of a field.
+- **in/not_in**: these two rules permit specifying allow/denylists for the values of a field.
 
   ```protobuf
   // x must be either "foo", "bar", or "baz"
@@ -510,7 +510,7 @@ enum State {
   State x = 1 [(validate.rules).enum.defined_only = true];
   ```
 
-- **in/not_in**: these two rules permit specifying white/blacklists for the values of a field.
+- **in/not_in**: these two rules permit specifying allow/denylists for the values of a field.
 
   ```protobuf
   // x must be either INACTIVE (0) or ACTIVE (2)
@@ -659,7 +659,7 @@ message X { google.protobuf.Int32Value age = 1 [(validate.rules).int32.gt = -1, 
   google.protobuf.Any x = 1 [(validate.rules).any.required = true];
   ```
 
-- **in/not_in**: these two rules permit specifying white/blacklists for the `type_url` value in this field. Consider using a `oneof` union instead of `in` if possible.
+- **in/not_in**: these two rules permit specifying allow/denylists for the `type_url` value in this field. Consider using a `oneof` union instead of `in` if possible.
 
   ```protobuf
   // x must not be the Duration or Timestamp WKT
@@ -714,7 +714,7 @@ message X { google.protobuf.Int32Value age = 1 [(validate.rules).int32.gt = -1, 
     }];
   ```
 
-- **in/not_in**: these two rules permit specifying white/blacklists for the values of a field.
+- **in/not_in**: these two rules permit specifying allow/denylists for the values of a field.
 
   ```protobuf
   // x must be either 0s or 1s
