@@ -1,11 +1,13 @@
 package module
 
 import (
+	"runtime/debug"
+	"strings"
+
 	"github.com/envoyproxy/protoc-gen-validate/templates"
 	"github.com/envoyproxy/protoc-gen-validate/templates/java"
 	pgs "github.com/lyft/protoc-gen-star"
 	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
-	"strings"
 )
 
 const (
@@ -32,6 +34,9 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 	lang := m.Parameters().Str(langParam)
 	m.Assert(lang != "", "`lang` parameter must be set")
 	module := m.Parameters().Str(moduleParam)
+
+	info, _ := debug.ReadBuildInfo()
+	m.Parameters().SetStr("PGVVersion", info.Main.Version)
 
 	// Process file-level templates
 	tpls := templates.Template(m.Parameters())[lang]
