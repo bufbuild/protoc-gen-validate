@@ -60,6 +60,7 @@
   X_TESTS_HARNESS_CASES_STRINGS(X) \
   X_TESTS_HARNESS_CASES_WKT_ANY(X) \
   X_TESTS_HARNESS_CASES_WKT_DURATION(X) \
+  X_TESTS_HARNESS_CASES_WKT_NESTED(X) \
   X_TESTS_HARNESS_CASES_WKT_TIMESTAMP(X) \
   X_TESTS_HARNESS_CASES_WKT_WRAPPERS(X) \
   X_TESTS_HARNESS_CASES_KITCHEN_SINK(X) \
@@ -110,7 +111,7 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
   // validation function can't be specified as a virtual method on the
   // google::protobuf::Message class.
 #define TRY_RETURN_VALIDATE_CALLABLE(CLS) \
-  if (msg.Is<CLS>() && !msg.Is<::tests::harness::cases::MessageIgnored>()) { \
+  if (msg.Is<CLS>()) { \
     return [msg] () {                                      \
       pgv::ValidationMsg err_msg;                          \
       TestResult result;                                   \
@@ -132,14 +133,21 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
 X_TESTS_HARNESS_CASES(TRY_RETURN_VALIDATE_CALLABLE)
 #undef TRY_RETURN_VALIDATE_CALLABLE
 
-  // TODO(akonradi) remove this once all C++ validation code is done
-  return []() {
-    TestResult result;
-    result.set_valid(false);
-    result.set_allowfailure(true);
-    result.add_reasons("not implemented");
-    return result;
-  };
+  // Special handling for ignored messages, which don't have any code generated
+  // for them.
+  if (msg.Is<::tests::harness::cases::MessageIgnored>()) {
+    return []() {
+      TestResult result;
+      result.set_valid(true);
+      result.set_allowfailure(true);
+      result.add_reasons("no validation possible for ignored messages");
+      return result;
+    };
+  }
+
+  // By default, return a null callable to signal that the message cannot be
+  // handled.
+  return nullptr;
 }
 
 }  // namespace
@@ -155,6 +163,13 @@ int main() {
   ExitIfFailed(test_case.ParseFromIstream(&std::cin), "failed to parse TestCase");
 
   auto validate_fn = GetValidationCheck(test_case.message());
+  if (validate_fn == nullptr) {
+    std::cerr << "No known validator for message type "
+              << test_case.message().type_url()
+              << "; did you add it to the harness?";
+    return 1;
+  }
+
   WriteTestResultAndExit(validate_fn());
 
   return 0;
