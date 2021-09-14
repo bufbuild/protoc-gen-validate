@@ -36,7 +36,16 @@ const mapTpl = `
 	{{ end }}
 
 	{{ if or $r.GetNoSparse (ne (.Elem "" "").Typ "none") (ne (.Key "" "").Typ "none") }}
-		for key, val := range {{ accessor . }} {
+		{{- /* Sort the keys to make the iteration order (and therefore failure output) deterministic. */ -}}
+		sorted_keys := make([]{{ (typ .Field).Key }}, len({{ accessor . }}))
+		i := 0
+		for key := range {{ accessor . }} {
+			sorted_keys[i] = key
+			i++
+		}
+		sort.Slice(sorted_keys, func (i, j int) bool { return sorted_keys[i] < sorted_keys[j] })
+		for _, key := range sorted_keys {
+			val := {{ accessor .}}[key]
 			_ = val
 
 			{{ if $r.GetNoSparse }}
