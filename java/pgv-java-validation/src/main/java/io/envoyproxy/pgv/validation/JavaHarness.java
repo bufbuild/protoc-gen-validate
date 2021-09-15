@@ -33,6 +33,7 @@ public class JavaHarness {
                     Strings.getDescriptor().toProto(),
                     WktAny.getDescriptor().toProto(),
                     WktDuration.getDescriptor().toProto(),
+                    WktNested.getDescriptor().toProto(),
                     WktTimestamp.getDescriptor().toProto(),
                     WktWrappers.getDescriptor().toProto(),
                     EmbedOuterClass.getDescriptor().toProto()

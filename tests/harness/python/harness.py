@@ -16,6 +16,7 @@ from tests.harness.cases.strings_pb2 import *
 from tests.harness.cases.maps_pb2 import *
 from tests.harness.cases.wkt_any_pb2 import *
 from tests.harness.cases.wkt_duration_pb2 import *
+from tests.harness.cases.wkt_nested_pb2 import *
 from tests.harness.cases.wkt_wrappers_pb2 import *
 from tests.harness.cases.wkt_timestamp_pb2 import *
 from tests.harness.cases.kitchen_sink_pb2 import *
