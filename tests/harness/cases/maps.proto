@@ -30,3 +30,9 @@ message MapRecursive {
 }
 
 message MapExactIgnore  { map<uint64,string> val = 1 [(validate.rules).map = {min_pairs: 3, max_pairs: 3, ignore_empty: true}]; }
+
+message MultipleMaps {
+  map <uint32, string> first = 1 [(validate.rules).map.keys.uint32.gt = 0];
+  map <int32, bool> second = 2 [(validate.rules).map.keys.int32.lt = 0];
+  map <int32, bool> third = 3 [(validate.rules).map.keys.int32.gt = 0];
+}
