@@ -37,28 +37,30 @@ const mapTpl = `
 
 	{{ if or $r.GetNoSparse (ne (.Elem "" "").Typ "none") (ne (.Key "" "").Typ "none") }}
 		{{- /* Sort the keys to make the iteration order (and therefore failure output) deterministic. */ -}}
-		sorted_keys := make([]{{ (typ .Field).Key }}, len({{ accessor . }}))
-		i := 0
-		for key := range {{ accessor . }} {
-			sorted_keys[i] = key
-			i++
-		}
-		sort.Slice(sorted_keys, func (i, j int) bool { return sorted_keys[i] < sorted_keys[j] })
-		for _, key := range sorted_keys {
-			val := {{ accessor .}}[key]
-			_ = val
+		{
+			sorted_keys := make([]{{ (typ .Field).Key }}, len({{ accessor . }}))
+			i := 0
+			for key := range {{ accessor . }} {
+				sorted_keys[i] = key
+				i++
+			}
+			sort.Slice(sorted_keys, func (i, j int) bool { return sorted_keys[i] < sorted_keys[j] })
+			for _, key := range sorted_keys {
+				val := {{ accessor .}}[key]
+				_ = val
 
-			{{ if $r.GetNoSparse }}
-				if val == nil {
-					err := {{ errIdx . "key" "value cannot be sparse, all pairs must be non-nil" }}
-					if !all { return err }
-					errors = append(errors, err)
-				}
-			{{ end }}
+				{{ if $r.GetNoSparse }}
+					if val == nil {
+						err := {{ errIdx . "key" "value cannot be sparse, all pairs must be non-nil" }}
+						if !all { return err }
+						errors = append(errors, err)
+					}
+				{{ end }}
 
-			{{ render (.Key "key" "key") }}
+				{{ render (.Key "key" "key") }}
 
-			{{ render (.Elem "val" "key") }}
+				{{ render (.Elem "val" "key") }}
+			}
 		}
 	{{ end }}
 
