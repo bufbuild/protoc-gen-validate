@@ -11,9 +11,10 @@ import (
 )
 
 const (
-	validatorName = "validator"
-	langParam     = "lang"
-	moduleParam   = "module"
+	validatorName   = "validator"
+	langParam       = "lang"
+	skipUnusedParam = "skip_unused"
+	moduleParam     = "module"
 )
 
 type Module struct {
@@ -34,6 +35,7 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 	lang := m.Parameters().Str(langParam)
 	m.Assert(lang != "", "`lang` parameter must be set")
 	module := m.Parameters().Str(moduleParam)
+	skipUnused, _ := m.Parameters().Bool(skipUnusedParam)
 
 	// Process file-level templates
 	tpls := templates.Template(m.Parameters())[lang]
@@ -43,7 +45,8 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 		m.Push(f.Name().String())
 
 		// skip generate when all disabled or does not contain rules
-		if !m.CheckUsed(f) {
+
+		if skipUnused && !m.CheckUsed(f) {
 			continue
 		}
 
