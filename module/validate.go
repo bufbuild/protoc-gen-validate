@@ -44,8 +44,7 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 	for _, f := range targets {
 		m.Push(f.Name().String())
 
-		// skip generate when all disabled or does not contain rules
-
+		// Skip generate when all disabled or does not contain rules
 		if skipUnused && !m.CheckUsed(f) {
 			continue
 		}
