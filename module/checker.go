@@ -6,11 +6,12 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/envoyproxy/protoc-gen-validate/validate"
 	"github.com/lyft/protoc-gen-star"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
+
+	"github.com/envoyproxy/protoc-gen-validate/validate"
 )
 
 var unknown = ""
@@ -33,6 +34,25 @@ type FieldType interface {
 
 type Repeatable interface {
 	IsRepeated() bool
+}
+
+// CheckUsed check if validate extension is used
+func (m *Module) CheckUsed(file pgs.File) bool {
+	for _, msg := range file.AllMessages() {
+		var disabled bool
+		_, _ = msg.Extension(validate.E_Disabled, &disabled)
+		if disabled {
+			continue
+		}
+		var rules validate.FieldRules
+		for _, field := range msg.Fields() {
+			ok, _ := field.Extension(validate.E_Rules, &rules)
+			if ok {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func (m *Module) CheckRules(msg pgs.Message) {

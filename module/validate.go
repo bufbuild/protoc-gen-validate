@@ -1,11 +1,13 @@
 package module
 
 import (
-	"github.com/envoyproxy/protoc-gen-validate/templates"
-	"github.com/envoyproxy/protoc-gen-validate/templates/java"
+	"strings"
+
 	pgs "github.com/lyft/protoc-gen-star"
 	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
-	"strings"
+
+	"github.com/envoyproxy/protoc-gen-validate/templates"
+	"github.com/envoyproxy/protoc-gen-validate/templates/java"
 )
 
 const (
@@ -39,6 +41,11 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 
 	for _, f := range targets {
 		m.Push(f.Name().String())
+
+		// skip generate when all disabled or does not contain rules
+		if !m.CheckUsed(f) {
+			continue
+		}
 
 		for _, msg := range f.AllMessages() {
 			m.CheckRules(msg)
