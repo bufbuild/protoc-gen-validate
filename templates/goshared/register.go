@@ -11,8 +11,8 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
-	"github.com/lyft/protoc-gen-star"
-	"github.com/lyft/protoc-gen-star/lang/go"
+	pgs "github.com/lyft/protoc-gen-star"
+	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
 )
 
 func Register(tpl *template.Template, params pgs.Parameters) {
@@ -306,7 +306,17 @@ func (fns goSharedFuncs) externalEnums(file pgs.File) []pgs.Enum {
 
 	for _, msg := range file.AllMessages() {
 		for _, fld := range msg.Fields() {
-			if en := fld.Type().Enum(); fld.Type().IsEnum() && en.Package().ProtoName() != fld.Package().ProtoName() && fns.PackageName(en) != fns.PackageName(fld) {
+			var en pgs.Enum
+
+			if fld.Type().IsEnum() {
+				en = fld.Type().Enum()
+			}
+
+			if fld.Type().IsRepeated() {
+				en = fld.Type().Element().Enum()
+			}
+
+			if en != nil && en.Package().ProtoName() != fld.Package().ProtoName() && fns.PackageName(en) != fns.PackageName(fld) {
 				out = append(out, en)
 			}
 		}
