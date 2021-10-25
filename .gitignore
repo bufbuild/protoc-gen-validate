@@ -16,6 +16,8 @@ __pycache__/
 /tests/harness/cases/gogo
 /tests/harness/cases/other_package/go
 /tests/harness/cases/other_package/gogo
+/tests/harness/cases/yet_another_package/go
+/tests/harness/cases/yet_another_package/gogo
 /tests/harness/go/harness.pb.go
 /tests/harness/go/main/go-harness
 /tests/harness/go/main/go-harness.exe
