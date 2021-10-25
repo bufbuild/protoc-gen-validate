@@ -20,7 +20,7 @@ import (
 
 	"google.golang.org/protobuf/types/known/anypb"
 
-	{{ range $path, $pkg := enumPackages (externalEnums .) }}
+	{{ range $pkg, $path := enumPackages (externalEnums .) }}
 		{{ $pkg }} "{{ $path }}"
 	{{ end }}
 )

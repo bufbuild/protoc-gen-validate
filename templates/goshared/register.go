@@ -3,6 +3,7 @@ package goshared
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 	"text/template"
 
@@ -325,11 +326,23 @@ func (fns goSharedFuncs) externalEnums(file pgs.File) []pgs.Enum {
 	return out
 }
 
-func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.FilePath]pgs.Name {
-	out := make(map[pgs.FilePath]pgs.Name, len(enums))
+func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]pgs.FilePath {
+	out := make(map[pgs.Name]pgs.FilePath, len(enums))
+
+	nameCollision := make(map[pgs.Name]int)
 
 	for _, en := range enums {
-		out[fns.ImportPath(en)] = fns.PackageName(en)
+
+		pkgName := fns.PackageName(en)
+
+		path, ok := out[pkgName]
+
+		if ok && path != fns.ImportPath(en) {
+			nameCollision[pkgName] = nameCollision[pkgName] + 1
+			pkgName = pkgName + pgs.Name(strconv.Itoa(nameCollision[pkgName]))
+		}
+
+		out[pkgName] = fns.ImportPath(en)
 	}
 
 	return out
