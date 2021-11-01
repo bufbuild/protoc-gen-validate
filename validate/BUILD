@@ -35,6 +35,7 @@ go_proto_library(
     name = "validate_go_proto",
     importpath = "github.com/envoyproxy/protoc-gen-validate/validate",
     proto = ":validate_proto",
+    gc_goopts = ["-trimpath=$(BINDIR)=>."],
 )
 
 cc_library(

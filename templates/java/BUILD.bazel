@@ -15,6 +15,7 @@ go_library(
         "none.go",
         "num.go",
         "oneof.go",
+        "plugin.go",
         "register.go",
         "repeated.go",
         "required.go",

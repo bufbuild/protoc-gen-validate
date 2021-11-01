@@ -15,7 +15,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func RegisterModule(tpl *template.Template, params pgs.Parameters) {
+func registerModule(tpl *template.Template, params pgs.Parameters) {
 	fns := CCFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
@@ -91,7 +91,7 @@ func RegisterModule(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("wrapper").Parse(wrapperTpl))
 }
 
-func RegisterHeader(tpl *template.Template, params pgs.Parameters) {
+func registerHeader(tpl *template.Template, params pgs.Parameters) {
 	fns := CCFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
@@ -107,7 +107,7 @@ func RegisterHeader(tpl *template.Template, params pgs.Parameters) {
 // TODO(rodaine): break pgsgo dependency here (with equivalent pgscc subpackage)
 type CCFuncs struct{ pgsgo.Context }
 
-func CcFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.FilePath {
+func ccFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.FilePath {
 	out := pgs.FilePath(f.Name().String())
 	out = out.SetExt(".pb.validate." + tpl.Name())
 	return &out

@@ -6,6 +6,7 @@ go_library(
         "duration.go",
         "file.go",
         "message.go",
+        "plugin.go",
         "register.go",
         "required.go",
         "timestamp.go",
@@ -13,8 +14,10 @@ go_library(
     importpath = "github.com/envoyproxy/protoc-gen-validate/templates/go",
     visibility = ["//visibility:public"],
     deps = [
+        "//templates/shared",
         "//templates/goshared",
         "@com_github_lyft_protoc_gen_star//:protoc-gen-star",
+        "@com_github_lyft_protoc_gen_star//lang/go",
     ],
 )
 

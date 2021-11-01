@@ -10,6 +10,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//templates",
+        "//templates/shared",
         "//templates/java",
         "//validate",
         "@com_github_lyft_protoc_gen_star//:protoc-gen-star",

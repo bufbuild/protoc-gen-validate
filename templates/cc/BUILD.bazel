@@ -17,6 +17,7 @@ go_library(
         "msg.go",
         "none.go",
         "num.go",
+        "plugin.go",
         "register.go",
         "repeated.go",
         "string.go",

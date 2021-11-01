@@ -16,7 +16,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func RegisterIndex(tpl *template.Template, params pgs.Parameters) {
+func registerIndex(tpl *template.Template, params pgs.Parameters) {
 	fns := javaFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
@@ -28,7 +28,7 @@ func RegisterIndex(tpl *template.Template, params pgs.Parameters) {
 	})
 }
 
-func Register(tpl *template.Template, params pgs.Parameters) {
+func register(tpl *template.Template, params pgs.Parameters) {
 	fns := javaFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
@@ -117,7 +117,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 
 type javaFuncs struct{ pgsgo.Context }
 
-func JavaFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.FilePath {
+func javaFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.FilePath {
 	// Don't generate validators for files that don't import PGV
 	if !importsPvg(f) {
 		return nil
