@@ -34,6 +34,7 @@ proto_library(
     visibility = ["//visibility:public"],
     deps = [
         "//tests/harness/cases/other_package:embed_proto",
+        "//tests/harness/cases/yet_another_package:embed_proto",
         "//validate:validate_proto",
         "@com_google_protobuf//:any_proto",
         "@com_google_protobuf//:duration_proto",
@@ -48,6 +49,7 @@ pgv_go_proto_library(
     proto = ":cases_proto",
     deps = [
         "//tests/harness/cases/other_package:go",
+        "//tests/harness/cases/yet_another_package:go",
         "@org_golang_google_protobuf//types/known/anypb:go_default_library",
         "@org_golang_google_protobuf//types/known/durationpb:go_default_library",
         "@org_golang_google_protobuf//types/known/timestamppb:go_default_library",
@@ -59,6 +61,7 @@ pgv_cc_proto_library(
     name = "cc",
     cc_deps = [
         "//tests/harness/cases/other_package:cc",
+        "//tests/harness/cases/yet_another_package:cc",
     ],
     visibility = ["//tests:__subpackages__"],
     deps = [":cases_proto"],
@@ -75,6 +78,7 @@ pgv_java_proto_library(
     java_deps = [
         ":cases_java_proto",
         "//tests/harness/cases/other_package:java",
+        "//tests/harness/cases/yet_another_package:java",
     ],
     visibility = ["//visibility:public"],
     deps = [":cases_proto"],
@@ -106,6 +110,7 @@ py_proto_library(
     deps = [
         "//validate:validate_py",
         "//tests/harness/cases/other_package:embed_python_proto",
+        "//tests/harness/cases/yet_another_package:embed_python_proto",
         "@com_google_protobuf//:protobuf_python",
     ],
 )

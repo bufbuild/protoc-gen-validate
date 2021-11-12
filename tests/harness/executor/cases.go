@@ -6,6 +6,7 @@ import (
 
 	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
 	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
+	yet_another_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/yet_another_package/go"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/durationpb"
@@ -1022,6 +1023,8 @@ var enumCases = []TestCase{
 
 	{"enum repeated (external) - defined_only - valid", &cases.RepeatedExternalEnumDefined{Val: []other_package.Embed_Enumerated{other_package.Embed_VALUE}}, 0},
 	{"enum repeated (external) - defined_only - invalid", &cases.RepeatedExternalEnumDefined{Val: []other_package.Embed_Enumerated{math.MaxInt32}}, 1},
+
+	{"enum repeated (another external) - defined_only - valid", &cases.RepeatedYetAnotherExternalEnumDefined{Val: []yet_another_package.Embed_Enumerated{yet_another_package.Embed_VALUE}}, 0},
 
 	{"enum map - defined_only - valid", &cases.MapEnumDefined{Val: map[string]cases.TestEnum{"foo": cases.TestEnum_TWO}}, 0},
 	{"enum map - defined_only - invalid", &cases.MapEnumDefined{Val: map[string]cases.TestEnum{"foo": math.MaxInt32}}, 1},

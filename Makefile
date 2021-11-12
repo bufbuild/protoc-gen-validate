@@ -76,6 +76,8 @@ testcases: bin/protoc-gen-go ## generate the test harness case protos
 	mkdir tests/harness/cases/go
 	rm -r tests/harness/cases/other_package/go || true
 	mkdir tests/harness/cases/other_package/go
+	rm -r tests/harness/cases/yet_another_package/go || true
+	mkdir tests/harness/cases/yet_another_package/go
 	# protoc-gen-go makes us go a package at a time
 	cd tests/harness/cases/other_package && \
 	protoc \
@@ -85,13 +87,21 @@ testcases: bin/protoc-gen-go ## generate the test harness case protos
 		--plugin=protoc-gen-go=${GOPATH}/bin/protoc-gen-go \
 		--validate_out="module=${PACKAGE}/tests/harness/cases/other_package/go,lang=go:./go" \
 		./*.proto
+	cd tests/harness/cases/yet_another_package && \
+	protoc \
+		-I . \
+		-I ../../../.. \
+		--go_out="module=${PACKAGE}/tests/harness/cases/yet_another_package/go,${GO_IMPORT}:./go" \
+		--plugin=protoc-gen-go=${GOPATH}/bin/protoc-gen-go \
+		--validate_out="module=${PACKAGE}/tests/harness/cases/yet_another_package/go,lang=go:./go" \
+		./*.proto
 	cd tests/harness/cases && \
 	protoc \
 		-I . \
 		-I ../../.. \
-		--go_out="module=${PACKAGE}/tests/harness/cases/go,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go,${GO_IMPORT}:./go" \
+		--go_out="module=${PACKAGE}/tests/harness/cases/go,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go;other_package,Mtests/harness/cases/yet_another_package/embed.proto=${PACKAGE}/tests/harness/cases/yet_another_package/go,${GO_IMPORT}:./go" \
 		--plugin=protoc-gen-go=${GOPATH}/bin/protoc-gen-go \
-		--validate_out="module=${PACKAGE}/tests/harness/cases/go,lang=go,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go:./go" \
+		--validate_out="module=${PACKAGE}/tests/harness/cases/go,lang=go,Mtests/harness/cases/other_package/embed.proto=${PACKAGE}/tests/harness/cases/other_package/go,Mtests/harness/cases/yet_another_package/embed.proto=${PACKAGE}/tests/harness/cases/yet_another_package/go:./go" \
 		./*.proto
 
 validate/validate.pb.go: bin/protoc-gen-go validate/validate.proto
@@ -103,7 +113,7 @@ validate/validate.pb.go: bin/protoc-gen-go validate/validate.proto
 tests/harness/go/harness.pb.go: bin/protoc-gen-go tests/harness/harness.proto
 	# generates the test harness protos
 	cd tests/harness && protoc -I . \
-		--plugin=protoc-gen-go=$protoc-gen-go \
+		--plugin=protoc-gen-go=${GOPATH}/bin/protoc-gen-go \
 		--go_out="module=${PACKAGE}/tests/harness/go,${GO_IMPORT}:./go" harness.proto
 
 tests/harness/go/main/go-harness:
@@ -162,7 +172,8 @@ clean: ## clean up generated files
 		tests/harness/go/harness.pb.go
 	rm -rf \
 		tests/harness/cases/go \
-		tests/harness/cases/other_package/go
+		tests/harness/cases/other_package/go \
+		tests/harness/cases/yet_another_package/go
 	rm -rf \
 		python/dist \
 		python/*.egg-info
