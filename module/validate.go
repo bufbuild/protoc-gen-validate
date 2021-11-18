@@ -1,11 +1,12 @@
 package module
 
 import (
+	"strings"
+
 	"github.com/envoyproxy/protoc-gen-validate/templates"
 	"github.com/envoyproxy/protoc-gen-validate/templates/java"
 	pgs "github.com/lyft/protoc-gen-star"
 	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
-	"strings"
 )
 
 const (
@@ -39,6 +40,16 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 
 	for _, f := range targets {
 		m.Push(f.Name().String())
+
+		hasValidate := false
+		for _, file := range f.Imports() {
+			if file.Package().ProtoName().String() == "validate" {
+				hasValidate = true
+			}
+		}
+		if !hasValidate {
+			break
+		}
 
 		for _, msg := range f.AllMessages() {
 			m.CheckRules(msg)
