@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/iancoleman/strcase v0.2.0
-	github.com/lyft/protoc-gen-star v0.5.3
+	github.com/lyft/protoc-gen-star v0.6.0
 	github.com/spf13/afero v1.6.0 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616
 	golang.org/x/mod v0.5.0 // indirect
@@ -14,5 +14,3 @@ require (
 	golang.org/x/tools v0.1.5
 	google.golang.org/protobuf v1.27.1
 )
-
-replace github.com/lyft/protoc-gen-star => github.com/sarthak40/protoc-gen-star v0.5.3-0.20210511152005-e0bab4844e07

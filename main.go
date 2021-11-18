@@ -8,7 +8,7 @@ import (
 
 func main() {
 	pgs.
-		Init(pgs.DebugEnv("DEBUG_PGV"), pgs.SupportProto3Optional()).
+		Init(pgs.DebugEnv("DEBUG_PGV")).
 		RegisterModule(module.Validator()).
 		RegisterPostProcessor(pgsgo.GoFmt()).
 		Render()
