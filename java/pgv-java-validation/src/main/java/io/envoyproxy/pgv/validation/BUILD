@@ -12,6 +12,8 @@ java_library(
         "//tests/harness/cases:java",
         "//tests/harness/cases/other_package:embed_java_proto",
         "//tests/harness/cases/other_package:java",
+        "//tests/harness/cases/yet_another_package:embed_java_proto",
+        "//tests/harness/cases/yet_another_package:java",
         "//validate:validate_java",
         "@com_google_guava//jar",
         "@com_google_protobuf//:protobuf_java",
