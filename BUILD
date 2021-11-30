@@ -22,6 +22,7 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//module",
+        "//types/pluginpb",
         "@com_github_lyft_protoc_gen_star//:protoc-gen-star",
         "@com_github_lyft_protoc_gen_star//lang/go",
     ],
