@@ -14,4 +14,5 @@ func RegisterModule(tpl *template.Template, params pgs.Parameters) {
 
 func RegisterHeader(tpl *template.Template, params pgs.Parameters) {
 	cc.RegisterHeader(tpl, params)
+	template.Must(tpl.Parse(headerFileTpl))
 }
