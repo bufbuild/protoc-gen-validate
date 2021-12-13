@@ -28,7 +28,6 @@ go_library(
     deps = [
         "//templates/shared",
         "@com_github_iancoleman_strcase//:strcase",
-        "@com_github_qor_i18n//:go_default_library",
         "@com_github_lyft_protoc_gen_star//:protoc-gen-star",
         "@com_github_lyft_protoc_gen_star//lang/go",
         "@org_golang_google_protobuf//types/known/durationpb",

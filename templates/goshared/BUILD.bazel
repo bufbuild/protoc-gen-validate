@@ -26,10 +26,10 @@ go_library(
     deps = [
         "//templates/shared",
         "@com_github_iancoleman_strcase//:strcase",
-        "@com_github_qor_i18n//:go_default_library",
-        "@com_github_qor_i18n//backends/yaml:go_default_library",
         "@com_github_lyft_protoc_gen_star//:protoc-gen-star",
         "@com_github_lyft_protoc_gen_star//lang/go",
+        "@com_github_qor_i18n//:i18n",
+        "@com_github_qor_i18n//backends/yaml",
         "@org_golang_google_protobuf//types/known/durationpb",
         "@org_golang_google_protobuf//types/known/timestamppb",
     ],
