@@ -137,7 +137,7 @@ following to your pom.xml or build.gradle.
         <plugin>
             <groupId>org.xolstice.maven.plugins</groupId>
             <artifactId>protobuf-maven-plugin</artifactId>
-            <version>0.5.0</version>
+            <version>0.6.1</version>
             <configuration>
                 <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
             </configuration>
@@ -162,18 +162,18 @@ following to your pom.xml or build.gradle.
 ```gradle
 plugins {
     ...
-    id "com.google.protobuf" version "0.8.6"
+    id "com.google.protobuf" version "${protobuf.version}"
     ...
 }
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.5.1"
+        artifact = "com.google.protobuf:protoc:${protoc.version}"
     }
 
     plugins {
         javapgv {
-            artifact = "io.envoyproxy.protoc-gen-validate:protoc-gen-validate:0.1.0"
+            artifact = "io.envoyproxy.protoc-gen-validate:protoc-gen-validate:${pgv.version}"
         }
     }
 
