@@ -3,7 +3,9 @@ package golang
 const requiredTpl = `
 	{{ if .Rules.GetRequired }}
 		if {{ accessor . }} == nil {
-			return {{ err . (t "<prefix>.required" "value is required") }}
+			err := {{ err . (t "<prefix>.required" "value is required") }}
+			if !all { return err }
+			errors = append(errors, err)
 		}
 	{{ end }}
 `

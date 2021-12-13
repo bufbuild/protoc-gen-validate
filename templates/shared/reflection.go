@@ -3,7 +3,7 @@ package shared
 import (
 	"reflect"
 
-	"github.com/golang/protobuf/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 func extractVal(r proto.Message) reflect.Value {

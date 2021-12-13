@@ -2,31 +2,35 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:jvm.bzl", "jvm_maven_import_external")
 
-MAVEN_SERVER_URLS = ["https://repo.maven.apache.org/maven2"]
+_DEFAULT_REPOSITORIES = ["https://repo.maven.apache.org/maven2"]
 
-def pgv_dependencies():
+def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
     if not native.existing_rule("io_bazel_rules_go"):
         http_archive(
             name = "io_bazel_rules_go",
-            sha256 = "608bb3e3788a21aa0653faaa6a3e00ddf806e26aa97a6f0d960ace2b2c958950",
-            strip_prefix = "rules_go-0.23.3",
-            urls = ["https://github.com/bazelbuild/rules_go/archive/v0.23.3.tar.gz"],
+            sha256 = "6f111c57fd50baf5b8ee9d63024874dd2a014b069426156c55adbf6d3d22cb7b",
+            urls = [
+                "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.25.0/rules_go-v0.25.0.tar.gz",
+                "https://github.com/bazelbuild/rules_go/releases/download/v0.25.0/rules_go-v0.25.0.tar.gz",
+            ],
         )
 
     if not native.existing_rule("bazel_gazelle"):
         http_archive(
             name = "bazel_gazelle",
-            sha256 = "2423201f91471ea87925b81962258e27a22cd8ebb4fe355bf033dcf2ad668541",
-            strip_prefix = "bazel-gazelle-0.21.1",
-            urls = ["https://github.com/bazelbuild/bazel-gazelle/archive/v0.21.1.tar.gz"],
+            sha256 = "b85f48fa105c4403326e9525ad2b2cc437babaa6e15a3fc0b1dbab0ab064bc7c",
+            urls = [
+                "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.22.2/bazel-gazelle-v0.22.2.tar.gz",
+                "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.22.2/bazel-gazelle-v0.22.2.tar.gz",
+            ],
         )
 
     if not native.existing_rule("com_google_protobuf"):
         http_archive(
             name = "com_google_protobuf",
-            url = "https://github.com/protocolbuffers/protobuf/archive/v3.11.4.tar.gz",
-            sha256 = "a79d19dcdf9139fa4b81206e318e33d245c4c9da1ffed21c87288ed4380426f9",
-            strip_prefix = "protobuf-3.11.4",
+            url = "https://github.com/protocolbuffers/protobuf/archive/v3.14.0.tar.gz",
+            sha256 = "d0f5f605d0d656007ce6c8b5a82df3037e1d8fe8b121ed42e536f569dec16113",
+            strip_prefix = "protobuf-3.14.0",
         )
 
     # TODO(akonradi): This shouldn't be necesary since the same http_archive block is imported by
@@ -61,7 +65,7 @@ def pgv_dependencies():
             name = "com_google_re2j",
             artifact = "com.google.re2j:re2j:1.2",
             artifact_sha256 = "e9dc705fd4c570344b54a7146b2e3a819cdc271a29793f4acc1a93b56a388e59",
-            server_urls = MAVEN_SERVER_URLS,
+            server_urls = maven_repos,
         )
 
     if not native.existing_rule("com_googlesource_code_re2"):
@@ -77,7 +81,7 @@ def pgv_dependencies():
             name = "com_google_guava",
             artifact = "com.google.guava:guava:27.0-jre",
             artifact_sha256 = "63b09db6861011e7fb2481be7790c7fd4b03f0bb884b3de2ecba8823ad19bf3f",
-            server_urls = MAVEN_SERVER_URLS,
+            server_urls = maven_repos,
         )
 
     if not native.existing_rule("guava"):
@@ -91,7 +95,7 @@ def pgv_dependencies():
             name = "com_google_gson",
             artifact = "com.google.code.gson:gson:2.8.5",
             artifact_sha256 = "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81",
-            server_urls = MAVEN_SERVER_URLS,
+            server_urls = maven_repos,
         )
 
     if not native.existing_rule("gson"):
@@ -105,7 +109,7 @@ def pgv_dependencies():
             name = "error_prone_annotations_maven",
             artifact = "com.google.errorprone:error_prone_annotations:2.3.2",
             artifact_sha256 = "357cd6cfb067c969226c442451502aee13800a24e950fdfde77bcdb4565a668d",
-            server_urls = MAVEN_SERVER_URLS,
+            server_urls = maven_repos,
         )
 
     if not native.existing_rule("error_prone_annotations"):
@@ -119,15 +123,14 @@ def pgv_dependencies():
             name = "org_apache_commons_validator",
             artifact = "commons-validator:commons-validator:1.6",
             artifact_sha256 = "bd62795d7068a69cbea333f6dbf9c9c1a6ad7521443fb57202a44874f240ba25",
-            server_urls = MAVEN_SERVER_URLS,
+            server_urls = maven_repos,
         )
 
-    if not native.existing_rule("io_bazel_rules_python"):
-        git_repository(
-            name = "io_bazel_rules_python",
-            remote = "https://github.com/bazelbuild/rules_python.git",
-            commit = "fdbb17a4118a1728d19e638a5291b4c4266ea5b8",
-            shallow_since = "1557865590 -0400",
+    if not native.existing_rule("rules_python"):
+        http_archive(
+            name = "rules_python",
+            url = "https://github.com/bazelbuild/rules_python/releases/download/0.1.0/rules_python-0.1.0.tar.gz",
+            sha256 = "b6d46438523a3ec0f3cead544190ee13223a52f6a6765a29eae7b7cc24cc83a0",
         )
 
     if not native.existing_rule("rules_proto"):

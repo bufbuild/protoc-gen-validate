@@ -3,7 +3,9 @@ package goshared
 const durationcmpTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 			{{  if $r.Const }}
 				if dur != {{ durLit $r.Const }} {
-					return {{ err . (t "duration.const" "value must equal {{$1}}" (durStr $r.Const)) }}
+					err := {{ err . (t "duration.const" "value must equal {{$1}}" (durStr $r.Const)) }}
+					if !all { return err }
+					errors = append(errors, err)
 				}
 			{{ end }}
 
@@ -17,72 +19,100 @@ const durationcmpTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 				{{ if $r.Gt }}
 					{{  if durGt $r.GetLt $r.GetGt }}
 						if dur <= gt || dur >= lt {
-							return {{ err . (t "duration.between_open" "value must be inside range ({{$1}}, {{$2}})" (durStr $r.GetGt) (durStr $r.GetLt)) }}
+							err := {{ err . (t "duration.between_open" "value must be inside range ({{$1}}, {{$2}})" (durStr $r.GetGt) (durStr $r.GetLt)) }}
+							if !all { return err }
+							errors = append(errors, err)
 						}
 					{{ else }}
 						if dur >= lt && dur <= gt {
-							return {{ err . (t "duration.outside_closed" "value must be outside range [{{$1}}, {{$2}}]" (durStr $r.GetLt) (durStr $r.GetGt)) }}
+							err := {{ err . (t "duration.outside_closed" "value must be outside range [{{$1}}, {{$2}}]" (durStr $r.GetLt) (durStr $r.GetGt)) }}
+							if !all { return err }
+							errors = append(errors, err)
 						}
 					{{ end }}
 				{{ else if $r.Gte }}
 					{{  if durGt $r.GetLt $r.GetGte }}
 						if dur < gte || dur >= lt {
-							return {{ err . (t "duration.between_include_left" "value must be inside range [{{$1}}, {{$2}})" (durStr $r.GetGte) (durStr $r.GetLt)) }}
+							err := {{ err . (t "duration.between_include_left" "value must be inside range [{{$1}}, {{$2}})" (durStr $r.GetGte) (durStr $r.GetLt)) }}
+							if !all { return err }
+							errors = append(errors, err)
 						}
 					{{ else }}
 						if dur >= lt && dur < gte {
-							return {{ err . (t "duration.outside_include_left" "value must be outside range [{{$1}}, {{$2}})" (durStr $r.GetLt) (durStr $r.GetGte)) }}
+							err := {{ err . (t "duration.outside_include_left" "value must be outside range [{{$1}}, {{$2}})" (durStr $r.GetLt) (durStr $r.GetGte)) }}
+							if !all { return err }
+							errors = append(errors, err)
 						}
 					{{ end }}
 				{{ else }}
 					if dur >= lt {
-						return {{ err . (t "duration.lt" "value must be less than {{$1}}" (durStr $r.GetLt)) }}
+						err := {{ err . (t "duration.lt" "value must be less than {{$1}}" (durStr $r.GetLt)) }}
+						if !all { return err }
+						errors = append(errors, err)
 					}
 				{{ end }}
 			{{ else if $r.Lte }}
 				{{ if $r.Gt }}
 					{{  if durGt $r.GetLte $r.GetGt }}
 						if dur <= gt || dur > lte {
-							return {{ err . (t "duration.between_include_right" "value must be inside range ({{$1}}, {{$2}}]" (durStr $r.GetGt) (durStr $r.GetLte)) }}
+							err := {{ err . (t "duration.between_include_right" "value must be inside range ({{$1}}, {{$2}}]" (durStr $r.GetGt) (durStr $r.GetLte)) }}
+							if !all { return err }
+							errors = append(errors, err)
 						}
 					{{ else }}
 						if dur > lte && dur <= gt {
-							return {{ err . (t "duration.outside_include_right" "value must be outside range ({{$1}}, {{$2}}]" (durStr $r.GetLte) (durStr $r.GetGt)) }}
+							err := {{ err . (t "duration.outside_include_right" "value must be outside range ({{$1}}, {{$2}}]" (durStr $r.GetLte) (durStr $r.GetGt)) }}
+							if !all { return err }
+							errors = append(errors, err)
 						}
 					{{ end }}
 				{{ else if $r.Gte }}
 					{{ if durGt $r.GetLte $r.GetGte }}
 						if dur < gte || dur > lte {
-							return {{ err . (t "duration.between_closed" "value must be inside range [{{$1}}, {{$2}}]" (durStr $r.GetGte) (durStr $r.GetLte)) }}
+							err := {{ err . (t "duration.between_closed" "value must be inside range [{{$1}}, {{$2}}]" (durStr $r.GetGte) (durStr $r.GetLte)) }}
+							if !all { return err }
+							errors = append(errors, err)
 						}
 					{{ else }}
 						if dur > lte && dur < gte {
-							return {{ err . (t "duration.outside_open" "value must be outside range ({{$1}}, {{$2}})" (durStr $r.GetLte) (durStr $r.GetGte)) }}
+							err := {{ err . (t "duration.outside_open" "value must be outside range ({{$1}}, {{$2}})" (durStr $r.GetLte) (durStr $r.GetGte)) }}
+							if !all { return err }
+							errors = append(errors, err)
 						}
 					{{ end }}
 				{{ else }}
 					if dur > lte {
-						return {{ err . (t "duration.lte" "value must be less than or equal to {{$1}}" (durStr $r.GetLte)) }}
+						err := {{ err . (t "duration.lte" "value must be less than or equal to {{$1}}" (durStr $r.GetLte)) }}
+						if !all { return err }
+						errors = append(errors, err)
 					}
 				{{ end }}
 			{{ else if $r.Gt }}
 				if dur <= gt {
-					return {{ err . (t "duration.gt" "value must be greater than {{$1}}" (durStr $r.GetGt)) }}
+					err := {{ err . (t "duration.gt" "value must be greater than {{$1}}" (durStr $r.GetGt)) }}
+					if !all { return err }
+					errors = append(errors, err)
 				}
 			{{ else if $r.Gte }}
 				if dur < gte {
-					return {{ err . (t "duration.gte" "value must be greater than or equal to {{$1}}" (durStr $r.GetGte)) }}
+					err := {{ err . (t "duration.gte" "value must be greater than or equal to {{$1}}" (durStr $r.GetGte)) }}
+					if !all { return err }
+					errors = append(errors, err)
 				}
 			{{ end }}
 
 
 			{{ if $r.In }}
 				if _, ok := {{ lookup $f "InLookup" }}[dur]; !ok {
-					return {{ err . (t "duration.in" "value must be in list {{$1}}" $r.In) }}
+					err := {{ err . (t "duration.in" "value must be in list {{$1}}" $r.In) }}
+					if !all { return err }
+					errors = append(errors, err)
 				}
 			{{ else if $r.NotIn }}
 				if _, ok := {{ lookup $f "NotInLookup" }}[dur]; ok {
-					return {{ err . (t "duration.not_in" "value must not be in list {{$1}}" $r.NotIn) }}
+					err := {{ err . (t "duration.not_in" "value must not be in list {{$1}}" $r.NotIn) }}
+					if !all { return err }
+					errors = append(errors, err)
 				}
 			{{ end }}
 `

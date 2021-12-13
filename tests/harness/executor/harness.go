@@ -8,31 +8,30 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 	"sync"
 
-	"strings"
-
 	harness "github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
-	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/context"
+	"google.golang.org/protobuf/proto"
 )
 
 func Harnesses(goFlag, ccFlag, javaFlag, pythonFlag bool, externalHarnessFlag string) []Harness {
 	harnesses := make([]Harness, 0)
 	if goFlag {
-		harnesses = append(harnesses, InitHarness("tests/harness/go/main/go-harness").WithMsgTests())
+		harnesses = append(harnesses, InitHarness("tests/harness/go/main/go-harness", "go").WithMsgTests())
 	}
 	if ccFlag {
-		harnesses = append(harnesses, InitHarness("tests/harness/cc/cc-harness"))
+		harnesses = append(harnesses, InitHarness("tests/harness/cc/cc-harness", "cc"))
 	}
 	if javaFlag {
-		harnesses = append(harnesses, InitHarness("tests/harness/java/java-harness"))
+		harnesses = append(harnesses, InitHarness("tests/harness/java/java-harness", "java"))
 	}
 	if pythonFlag {
-		harnesses = append(harnesses, InitHarness("tests/harness/python/python-harness"))
+		harnesses = append(harnesses, InitHarness("tests/harness/python/python-harness", "python"))
 	}
 	if externalHarnessFlag != "" {
-		harnesses = append(harnesses, InitHarness(externalHarnessFlag))
+		harnesses = append(harnesses, InitHarness(externalHarnessFlag, "external"))
 	}
 	return harnesses
 }
@@ -48,7 +47,7 @@ func (h Harness) WithMsgTests() Harness {
 	return h
 }
 
-func InitHarness(cmd string, args ...string) Harness {
+func InitHarness(cmd string, name string, args ...string) Harness {
 	if runtime.GOOS == "windows" {
 		// Bazel runfiles are not symlinked in on windows,
 		// so we have to use the manifest instead. If the manifest
@@ -72,7 +71,7 @@ func InitHarness(cmd string, args ...string) Harness {
 	}
 
 	return Harness{
-		Name: cmd,
+		Name: name,
 		Exec: initHarness(cmd, args...),
 	}
 }

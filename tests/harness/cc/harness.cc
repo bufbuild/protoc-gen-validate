@@ -33,6 +33,8 @@
 #include "tests/harness/cases/wkt_any.pb.validate.h"
 #include "tests/harness/cases/wkt_duration.pb.h"
 #include "tests/harness/cases/wkt_duration.pb.validate.h"
+#include "tests/harness/cases/wkt_nested.pb.h"
+#include "tests/harness/cases/wkt_nested.pb.validate.h"
 #include "tests/harness/cases/wkt_timestamp.pb.h"
 #include "tests/harness/cases/wkt_timestamp.pb.validate.h"
 #include "tests/harness/cases/wkt_wrappers.pb.h"
@@ -42,6 +44,27 @@
 
 #include "tests/harness/harness.pb.h"
 
+// These macros are defined in the various validation headers and call the
+// X macro once for each message class in the header. Add macros here with new
+// pb.validate.h headers.
+#define X_TESTS_HARNESS_CASES(X) \
+  X_TESTS_HARNESS_CASES_BOOL(X) \
+  X_TESTS_HARNESS_CASES_BYTES(X) \
+  X_TESTS_HARNESS_CASES_ENUMS(X) \
+  X_TESTS_HARNESS_CASES_FILENAME_WITH_DASH(X) \
+  X_TESTS_HARNESS_CASES_MAPS(X) \
+  X_TESTS_HARNESS_CASES_MESSAGES(X) \
+  X_TESTS_HARNESS_CASES_NUMBERS(X) \
+  X_TESTS_HARNESS_CASES_ONEOFS(X) \
+  X_TESTS_HARNESS_CASES_REPEATED(X) \
+  X_TESTS_HARNESS_CASES_STRINGS(X) \
+  X_TESTS_HARNESS_CASES_WKT_ANY(X) \
+  X_TESTS_HARNESS_CASES_WKT_DURATION(X) \
+  X_TESTS_HARNESS_CASES_WKT_NESTED(X) \
+  X_TESTS_HARNESS_CASES_WKT_TIMESTAMP(X) \
+  X_TESTS_HARNESS_CASES_WKT_WRAPPERS(X) \
+  X_TESTS_HARNESS_CASES_KITCHEN_SINK(X) \
+
 namespace {
 
 using tests::harness::TestCase;
@@ -49,8 +72,13 @@ using tests::harness::TestResult;
 using google::protobuf::Any;
 
 std::ostream& operator<<(std::ostream& out, const TestResult& result) {
-  out << "valid: " << result.valid() << " reason: '" << result.reason() << "'"
-      << std::endl;
+  if (result.reasons_size() > 0) {
+    out << "valid: " << result.valid() << " reason: '" << result.reasons(0) << "'"
+        << std::endl;
+  } else {
+    out << "valid: " << result.valid() << " reason: unknown"
+        << std::endl;
+  }
   return out;
 }
 
@@ -70,7 +98,7 @@ void ExitIfFailed(bool succeeded, const pgv::ValidationMsg& err_msg) {
 
   TestResult result;
   result.set_error(true);
-  result.set_reason(pgv::String(err_msg));
+  result.add_reasons(pgv::String(err_msg));
   WriteTestResultAndExit(result);
 }
 
@@ -83,7 +111,7 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
   // validation function can't be specified as a virtual method on the
   // google::protobuf::Message class.
 #define TRY_RETURN_VALIDATE_CALLABLE(CLS) \
-  if (msg.Is<CLS>() && !msg.Is<::tests::harness::cases::MessageIgnored>()) { \
+  if (msg.Is<CLS>()) { \
     return [msg] () {                                      \
       pgv::ValidationMsg err_msg;                          \
       TestResult result;                                   \
@@ -91,46 +119,35 @@ std::function<TestResult()> GetValidationCheck(const Any& msg) {
       msg.UnpackTo(&unpacked);                             \
       try {                                                \
         result.set_valid(Validate(unpacked, &err_msg));    \
-        result.set_reason(std::move(err_msg));             \
+        result.add_reasons(std::move(err_msg));            \
       } catch (pgv::UnimplementedException& e) {           \
         /* don't fail for unimplemented validations */     \
         result.set_valid(false);                           \
         result.set_allowfailure(true);                     \
-        result.set_reason(e.what());                       \
+        result.add_reasons(e.what());                      \
       }                                                    \
       return result;                                       \
     };                                                     \
   }
 
-  // These macros are defined in the various validation headers and call the
-  // above macro once for each message class in the header.
-  X_TESTS_HARNESS_CASES_BOOL(TRY_RETURN_VALIDATE_CALLABLE)
-  X_TESTS_HARNESS_CASES_BYTES(TRY_RETURN_VALIDATE_CALLABLE)
-  X_TESTS_HARNESS_CASES_ENUMS(TRY_RETURN_VALIDATE_CALLABLE)
-  X_TESTS_HARNESS_CASES_MAPS(TRY_RETURN_VALIDATE_CALLABLE)
-  X_TESTS_HARNESS_CASES_MESSAGES(TRY_RETURN_VALIDATE_CALLABLE)
-  X_TESTS_HARNESS_CASES_NUMBERS(TRY_RETURN_VALIDATE_CALLABLE)
-  X_TESTS_HARNESS_CASES_ONEOFS(TRY_RETURN_VALIDATE_CALLABLE)
-  X_TESTS_HARNESS_CASES_REPEATED(TRY_RETURN_VALIDATE_CALLABLE)
-  X_TESTS_HARNESS_CASES_STRINGS(TRY_RETURN_VALIDATE_CALLABLE)
-  X_TESTS_HARNESS_CASES_WKT_ANY(TRY_RETURN_VALIDATE_CALLABLE)
-  X_TESTS_HARNESS_CASES_WKT_DURATION(TRY_RETURN_VALIDATE_CALLABLE)
-  X_TESTS_HARNESS_CASES_WKT_TIMESTAMP(TRY_RETURN_VALIDATE_CALLABLE)
-  X_TESTS_HARNESS_CASES_WKT_WRAPPERS(TRY_RETURN_VALIDATE_CALLABLE)
-  X_TESTS_HARNESS_CASES_KITCHEN_SINK(TRY_RETURN_VALIDATE_CALLABLE)
-  // TODO(akonradi) add macros as the C++ validation code gets fleshed out for
-  // more field types.
-
+X_TESTS_HARNESS_CASES(TRY_RETURN_VALIDATE_CALLABLE)
 #undef TRY_RETURN_VALIDATE_CALLABLE
 
-  // TODO(akonradi) remove this once all C++ validation code is done
-  return []() {
-    TestResult result;
-    result.set_valid(false);
-    result.set_allowfailure(true);
-    result.set_reason("not implemented");
-    return result;
-  };
+  // Special handling for ignored messages, which don't have any code generated
+  // for them.
+  if (msg.Is<::tests::harness::cases::MessageIgnored>()) {
+    return []() {
+      TestResult result;
+      result.set_valid(true);
+      result.set_allowfailure(true);
+      result.add_reasons("no validation possible for ignored messages");
+      return result;
+    };
+  }
+
+  // By default, return a null callable to signal that the message cannot be
+  // handled.
+  return nullptr;
 }
 
 }  // namespace
@@ -146,6 +163,13 @@ int main() {
   ExitIfFailed(test_case.ParseFromIstream(&std::cin), "failed to parse TestCase");
 
   auto validate_fn = GetValidationCheck(test_case.message());
+  if (validate_fn == nullptr) {
+    std::cerr << "No known validator for message type "
+              << test_case.message().type_url()
+              << "; did you add it to the harness?";
+    return 1;
+  }
+
   WriteTestResultAndExit(validate_fn());
 
   return 0;

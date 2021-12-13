@@ -5,10 +5,14 @@ const timestampTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 
 	{{ if or $r.Lt $r.Lte $r.Gt $r.Gte $r.LtNow $r.GtNow $r.Within $r.Const }}
 		if t := {{ accessor . }}; t != nil {
-			ts, err := ptypes.Timestamp(t)
-			if err != nil { return {{ errCause . "err" (t "timestamp.valid" "value is not a valid timestamp") }} }
-
-			{{ template "timestampcmp" . }}
+			ts, err := t.AsTime(), t.CheckValid()
+			if err != nil {
+				err = {{ errCause . "err" (t "timestamp.valid" "vvalue is not a valid timestamp") }}
+				if !all { return err }
+				errors = append(errors, err)
+			} else {
+				{{ template "timestampcmp" . }}
+			}
 		}
 	{{ end }}
 `

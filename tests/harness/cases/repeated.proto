@@ -1,8 +1,7 @@
 syntax = "proto3";
 
 package tests.harness.cases;
-option go_package = "cases";
-
+option go_package = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go;cases";
 import "tests/harness/cases/other_package/embed.proto";
 
 import "validate/validate.proto";
@@ -34,3 +33,4 @@ message RepeatedEmbeddedEnumNotIn { repeated AnotherNotInEnum val = 1 [(validate
 message RepeatedMinAndItemLen { repeated string val = 1 [(validate.rules).repeated = { items { string { len: 3 } }, min_items: 1 }]; }
 message RepeatedMinAndMaxItemLen { repeated string val = 1 [(validate.rules).repeated.min_items = 1, (validate.rules).repeated.max_items = 3]; }
 message RepeatedDuration { repeated google.protobuf.Duration val = 1 [(validate.rules).repeated = { items { duration { gte { nanos: 1000000}}}}]; }
+message RepeatedExactIgnore { repeated uint32 val = 1 [(validate.rules).repeated = {min_items: 3, max_items: 3, ignore_empty: true}]; }

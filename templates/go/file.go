@@ -13,13 +13,14 @@ import (
 	"net/mail"
 	"net/url"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 	"unicode/utf8"
 
-	"github.com/golang/protobuf/ptypes"
+	"google.golang.org/protobuf/types/known/anypb"
 
-	{{ range $path, $pkg := enumPackages (externalEnums .) }}
+	{{ range $pkg, $path := enumPackages (externalEnums .) }}
 		{{ $pkg }} "{{ $path }}"
 	{{ end }}
 )
@@ -36,15 +37,18 @@ var (
 	_ = time.Duration(0)
 	_ = (*url.URL)(nil)
 	_ = (*mail.Address)(nil)
-	_ = ptypes.DynamicAny{}
+	_ = anypb.Any{}
+	_ = sort.Sort
 
-	{{ range (externalEnums .) }}
-		_ = {{ pkg . }}.{{ name . }}(0)
+	{{ range $pkg, $path := enumPackages (externalEnums .) }}
+		_ = {{ $pkg }}.{{ (index (externalEnums $) 0).Parent.Name }}_{{ (index (externalEnums $) 0).Name }}(0)
 	{{ end }}
 )
 
+{{- if fileneeds . "uuid" }}
 // define the regex for a UUID once up-front
 var _{{ snakeCase .File.InputPath.BaseName }}_uuidPattern = regexp.MustCompile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+{{ end }}
 
 {{ range .AllMessages }}
 	{{ template "msg" . }}

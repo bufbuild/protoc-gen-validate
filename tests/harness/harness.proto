@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package tests.harness;
-option go_package = "harness";
+option go_package = "github.com/envoyproxy/protoc-gen-validate/tests/harness/go;harness";
 
 import "google/protobuf/any.proto";
 
@@ -12,6 +12,7 @@ message TestCase {
 message TestResult {
     bool   Valid  = 1;
     bool   Error  = 2;
-    string Reason = 3;
+    repeated string Reasons = 3;
     bool   AllowFailure = 4;
+    bool   CheckMultipleErrors = 5;
 }

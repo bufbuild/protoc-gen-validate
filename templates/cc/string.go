@@ -2,16 +2,19 @@ package cc
 
 const strTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}
+	{{ if $r.GetIgnoreEmpty }}
+		if ({{ accessor . }} != "") {
+	{{ end }}
 	{{ template "const" . }}
 	{{ template "in" . }}
 	{{ if or $r.Len (and $r.MinLen $r.MaxLen (eq $r.GetMinLen $r.GetMaxLen)) }}
 		{{ if $r.Len }}
 			if (pgv::Utf8Len({{ accessor . }}) != {{ $r.GetLen }}) {
-				{{ err . "value must be " $r.GetLen " runes" }}
+				{{ err . "value must be " $r.GetLen " characters" }}
 			}
 		{{ else }}
 			if (pgv::Utf8Len({{ accessor . }}) != {{ $r.GetMinLen }}) {
-				{{ err . "value must be " $r.GetMinLen " runes" }}
+				{{ err . "value must be " $r.GetMinLen " characters" }}
 			}
 		{{ end }}
 	{{ else if $r.MinLen }}
@@ -19,17 +22,17 @@ const strTpl = `
 			{
 				const auto length = pgv::Utf8Len({{ accessor . }});
 				if (length < {{ $r.GetMinLen }} || length > {{ $r.GetMaxLen }}) {
-					{{ err . "value must have between " $r.GetMinLen " and " $r.GetMaxLen " runes inclusive" }}
+					{{ err . "value must have between " $r.GetMinLen " and " $r.GetMaxLen " characters inclusive" }}
 				}
 			}
 		{{ else }}
 			if (pgv::Utf8Len({{ accessor . }}) < {{ $r.GetMinLen }}) {
-				{{ err . "value length must be at least " $r.GetMinLen " runes" }}
+				{{ err . "value length must be at least " $r.GetMinLen " characters" }}
 			}
 		{{ end }}
 	{{ else if $r.MaxLen }}
 		if (pgv::Utf8Len({{ accessor . }}) > {{ $r.GetMaxLen }}) {
-			{{ err . "value length must be at most " $r.GetMaxLen " runes" }}
+			{{ err . "value length must be at most " $r.GetMaxLen " characters" }}
 		}
 	{{ end }}
 
@@ -179,5 +182,8 @@ const strTpl = `
                 if (!RE2::FullMatch(re2::StringPiece({{ accessor . }}), pgv::validate::_uuidPattern)) {
                         {{ err . "value must be a valid UUID" }}
                 }
+	{{ end }}
+	{{ if $r.GetIgnoreEmpty }}
+		}
 	{{ end }}
 `

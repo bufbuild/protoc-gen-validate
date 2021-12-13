@@ -1,7 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "go_default_library",
+    name = "shared",
     srcs = [
         "context.go",
         "disabled.go",
@@ -12,8 +12,15 @@ go_library(
     importpath = "github.com/envoyproxy/protoc-gen-validate/templates/shared",
     visibility = ["//visibility:public"],
     deps = [
-        "//validate:go_default_library",  # keep
-        "@com_github_golang_protobuf//proto:go_default_library",
-        "@com_github_lyft_protoc_gen_star//:go_default_library",
+        "//validate",
+        "@com_github_lyft_protoc_gen_star//:protoc-gen-star",
+        "@org_golang_google_protobuf//proto",
     ],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":shared",
+    deprecation = "Use :shared instead of :go_default_library.  Details about the new naming convention: https://github.com/bazelbuild/bazel-gazelle/pull/863",
+    visibility = ["//visibility:public"],
 )

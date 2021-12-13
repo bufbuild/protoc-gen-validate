@@ -2,7 +2,9 @@ package cc
 
 const repTpl = `
 	{{ $f := .Field }}{{ $r := .Rules }}{{ $typ := inType $f nil }}
-
+	{{ if $r.GetIgnoreEmpty }}
+		if ({{ accessor . }}.size() > 0) {
+	{{ end }}
 	{{ if $r.GetMinItems }}
 		{{ if eq $r.GetMinItems $r.GetMaxItems }}
 			if ({{ accessor . }}.size() != {{ $r.GetMinItems }}) {
@@ -51,11 +53,14 @@ const repTpl = `
 			{{ if $r.GetUnique }}
 				auto p = {{ lookup $f "Unique" }}.emplace(const_cast<{{ $typ }}&>(item));
 				if (p.second == false) {
-					{{ errIdx . "idx" "repeated value must contain unique items" }}
+					{{ errIdx . "i" "repeated value must contain unique items" }}
 				}
 			{{ end }}
 
 			{{ render (.Elem "item" "i") }}
+		}
+	{{ end }}
+	{{ if $r.GetIgnoreEmpty }}
 		}
 	{{ end }}
 `

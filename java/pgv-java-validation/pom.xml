@@ -3,7 +3,7 @@
     <parent>
         <artifactId>pgv-java</artifactId>
         <groupId>io.envoyproxy.protoc-gen-validate</groupId>
-        <version>0.4.2-SNAPSHOT</version>
+        <version>0.6.3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.6.1</version>
+            <version>${google.protobuf.version}</version>
         </dependency>
 
         <!-- Depend on artifacts to ensure they are built before this module -->
@@ -48,7 +48,7 @@
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
-                <version>0.5.0</version>
+                <version>${protobuf.maven.plugin.version}</version>
                 <configuration>
                     <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
                 </configuration>
@@ -65,6 +65,7 @@
                                 <include>tests/harness/harness.proto</include>
                                 <include>tests/harness/cases/*.proto</include>
                                 <include>tests/harness/cases/other_package/*.proto</include>
+                                <include>tests/harness/cases/yet_another_package/*.proto</include>
                             </includes>
                         </configuration>
                     </execution>
@@ -79,6 +80,7 @@
                             <includes>
                                 <include>tests/harness/cases/*.proto</include>
                                 <include>tests/harness/cases/other_package/*.proto</include>
+                                <include>tests/harness/cases/yet_another_package/*.proto</include>
                             </includes>
                             <pluginId>java-pgv</pluginId>
                             <pluginArtifact>io.envoyproxy.protoc-gen-validate:protoc-gen-validate:${project.version}:exe:${os.detected.classifier}</pluginArtifact>

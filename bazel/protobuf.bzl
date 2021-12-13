@@ -21,18 +21,13 @@ def _path_ignoring_repository(f):
         # before "external/workspace", so we need to add the starting index of "external/workspace"
         return f.path[f.path.find(f.owner.workspace_root) + len(f.owner.workspace_root) + 1:]
 
-def _protoc_cc_output_files(proto_file_sources):
-    cc_hdrs = []
-    cc_srcs = []
+def _protoc_cc_output_file(ctx, proto_file):
+    file_path = proto_file.basename
 
-    for p in proto_file_sources:
-        basename = p.basename[:-len(".proto")]
+    if proto_file.basename.endswith(".proto"):
+        file_path = file_path[:-len(".proto")]
 
-        cc_hdrs.append(basename + ".pb.validate.h")
-
-        cc_srcs.append(basename + ".pb.validate.cc")
-
-    return cc_hdrs + cc_srcs
+    return (file_path + ".pb.validate.h", file_path + ".pb.validate.cc")
 
 def _proto_sources(ctx):
     protos = []
@@ -50,9 +45,11 @@ def _output_dir(ctx):
 def _protoc_gen_validate_cc_impl(ctx):
     """Generate C++ protos using protoc-gen-validate plugin"""
     protos = _proto_sources(ctx)
+    out_files = []
 
-    cc_files = _protoc_cc_output_files(protos)
-    out_files = [ctx.actions.declare_file(out) for out in cc_files]
+    for f in protos:
+        for out in _protoc_cc_output_file(ctx, f):
+            out_files.append(ctx.actions.declare_file(out, sibling = f))
 
     dir_out = _output_dir(ctx)
 
@@ -63,37 +60,6 @@ def _protoc_gen_validate_cc_impl(ctx):
     return _protoc_gen_validate_impl(
         ctx = ctx,
         lang = "cc",
-        protos = protos,
-        out_files = out_files,
-        protoc_args = args,
-        package_command = "true",
-    )
-
-def _protoc_python_output_files(proto_file_sources):
-    python_srcs = []
-
-    for p in proto_file_sources:
-        basename = p.basename[:-len(".proto")]
-
-        python_srcs.append(basename.replace("-", "_") + "_pb2.py")
-    return python_srcs
-
-def _protoc_gen_validate_python_impl(ctx):
-    """Generate Python protos using protoc-gen-validate plugin"""
-    protos = _proto_sources(ctx)
-
-    python_files = _protoc_python_output_files(protos)
-    out_files = [ctx.actions.declare_file(out) for out in python_files]
-
-    dir_out = _output_dir(ctx)
-
-    args = [
-        "--python_out=" + dir_out,
-    ]
-
-    return _protoc_gen_validate_impl(
-        ctx = ctx,
-        lang = "python",
         protos = protos,
         out_files = out_files,
         protoc_args = args,
@@ -274,27 +240,4 @@ java_proto_gen_validate = rule(
         "srcjar": "lib%{name}-src.jar",
     },
     implementation = _java_proto_gen_validate_impl,
-)
-
-python_proto_gen_validate = rule(
-    attrs = {
-        "deps": attr.label_list(
-            mandatory = True,
-            providers = [ProtoInfo],
-        ),
-        "_protoc": attr.label(
-            cfg = "host",
-            default = Label("@com_google_protobuf//:protoc"),
-            executable = True,
-            allow_single_file = True,
-        ),
-        "_plugin": attr.label(
-            cfg = "host",
-            default = Label("@com_envoyproxy_protoc_gen_validate//:protoc-gen-validate"),
-            allow_files = True,
-            executable = True,
-        ),
-    },
-    output_to_genfiles = True,
-    implementation = _protoc_gen_validate_python_impl,
 )

@@ -1,8 +1,7 @@
 syntax = "proto3";
 
 package tests.harness.cases;
-option go_package = "cases";
-
+option go_package = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go;cases";
 import "tests/harness/cases/other_package/embed.proto";
 
 import "validate/validate.proto";
@@ -31,5 +30,12 @@ message Message { TestMsg val = 1; }
 message MessageCrossPackage { tests.harness.cases.other_package.Embed val = 1; }
 message MessageSkip { TestMsg val = 1 [(validate.rules).message.skip = true];}
 message MessageRequired { TestMsg val = 1 [(validate.rules).message.required = true]; }
+
+message MessageRequiredOneof {
+    oneof one {
+        option (validate.required) = true;
+        TestMsg val = 1 [(validate.rules).message.required = true];
+    }
+}
 
 message MessageWith3dInside {}

@@ -9,8 +9,11 @@ go_library(
         "//tests/harness:harness_go_proto",
         "//tests/harness/cases:go",
         "//tests/harness/cases/other_package:go",
-        "@com_github_golang_protobuf//proto:go_default_library",
-        "@com_github_golang_protobuf//ptypes:go_default_library",
+        "//tests/harness/cases/yet_another_package:go",
+        "@org_golang_google_protobuf//proto:go_default_library",
+        "@org_golang_google_protobuf//types/known/anypb:go_default_library",
+        "@org_golang_google_protobuf//types/known/durationpb:go_default_library",
+        "@org_golang_google_protobuf//types/known/timestamppb:go_default_library",
     ],
 )
 
