@@ -11,4 +11,4 @@ message TestOptionalMsg {
 }
 
 message MessageRequiredButOptional { optional TestOptionalMsg val = 1 [(validate.rules).message.required = true]; }
-message Int64LTEOptional      { int64 val = 1 [(validate.rules).int64.lte = 64]; }
+message Int64LTEOptional      { optional int64 val = 1 [(validate.rules).int64.lte = 64]; }
