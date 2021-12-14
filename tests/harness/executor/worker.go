@@ -74,8 +74,8 @@ func execTestCase(tc TestCase, harnesses []Harness, out chan<- TestResult) {
 						log.Printf("[%s] (%s harness) expected invalid, got valid: %v", tc.Name, h.Name, res.Reasons)
 						out <- TestResult{false, false}
 					}
-				} else if h.TestErrMsgs && res.Reason != tc.ErrorMsg {
-					log.Printf("[%s] (%s harness) expected error = %s, but got reason %s", tc.Name, h.Name, tc.ErrorMsg, res.Reason)
+				} else if h.TestErrMsgs && res.Reasons != tc.ErrorMsg {
+					log.Printf("[%s] (%s harness) expected error = %s, but got reason %s", tc.Name, h.Name, tc.ErrorMsg, res.Reasons)
 					out <- TestResult{false, false}
 				} else {
 					out <- TestResult{true, false}

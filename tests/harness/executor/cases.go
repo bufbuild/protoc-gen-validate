@@ -1390,3 +1390,8 @@ var kitchenSink = []TestCase{
 	{"kitchensink - field - embedded - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Another: &cases.ComplexTestMsg{}}}, false, "invalid KitchenSinkMessage.Val: embedded message failed validation | caused by: invalid ComplexTestMsg.Const: value must equal abcd", 1},
 	{"kitchensink - field - invalid (transitive)", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", BoolConst: true, Nested: &cases.ComplexTestMsg{}}}, false, "invalid KitchenSinkMessage.Val: embedded message failed validation | caused by: invalid ComplexTestMsg.Nested: embedded message failed validation | caused by: invalid ComplexTestMsg.Const: value must equal abcd", 1},
 }
+
+var nestedCases = []TestCase{
+	{"nested wkt uuid - field - valid", &cases.WktLevelOne{Two: &cases.WktLevelOne_WktLevelTwo{Three: &cases.WktLevelOne_WktLevelTwo_WktLevelThree{Uuid: "f81d16ef-40e2-40c6-bebc-89aaf5292f9a"}}}, true, "", 0},
+	{"nested wkt uuid - field - invalid", &cases.WktLevelOne{Two: &cases.WktLevelOne_WktLevelTwo{Three: &cases.WktLevelOne_WktLevelTwo_WktLevelThree{Uuid: "not-a-valid-uuid"}}}, false, "some error", 1},
+}
