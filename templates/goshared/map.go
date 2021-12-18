@@ -51,7 +51,7 @@ const mapTpl = `
 
 				{{ if $r.GetNoSparse }}
 					if val == nil {
-						err := {{ errIdx . (t "map.no_sparse" "value cannot be sparse, all pairs must be non-nil") }}
+						err := {{ errIdx . "key" "value cannot be sparse, all pairs must be non-nil" }}
 						if !all { return err }
 						errors = append(errors, err)
 					}
