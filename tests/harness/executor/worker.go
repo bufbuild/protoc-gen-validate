@@ -20,6 +20,15 @@ func Work(wg *sync.WaitGroup, in <-chan TestCase, out chan<- TestResult, harness
 	wg.Done()
 }
 
+func stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
+}
+
 func execTestCase(tc TestCase, harnesses []Harness, out chan<- TestResult) {
 	any, err := anypb.New(tc.Message)
 	if err != nil {
@@ -74,8 +83,8 @@ func execTestCase(tc TestCase, harnesses []Harness, out chan<- TestResult) {
 						log.Printf("[%s] (%s harness) expected invalid, got valid: %v", tc.Name, h.Name, res.Reasons)
 						out <- TestResult{false, false}
 					}
-				} else if h.TestErrMsgs && res.Reasons != tc.ErrorMsg {
-					log.Printf("[%s] (%s harness) expected error = %s, but got reason %s", tc.Name, h.Name, tc.ErrorMsg, res.Reasons)
+				} else if h.TestErrMsgs && tc.ErrorMsg != "" && !stringInSlice(tc.ErrorMsg, res.Reasons) {
+					log.Printf("[%s] (%s harness) expected error = %s, but got reasons %s", tc.Name, h.Name, tc.ErrorMsg, res.Reasons)
 					out <- TestResult{false, false}
 				} else {
 					out <- TestResult{true, false}

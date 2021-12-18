@@ -6,12 +6,11 @@ import (
 
 	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
 	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
-	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/any"
-	"google.golang.org/protobuf/types/known/duration"
-	"google.golang.org/protobuf/types/known/timestamp"
-	"google.golang.org/protobuf/types/known/wrappers"
+	any "google.golang.org/protobuf/types/known/anypb"
+	duration "google.golang.org/protobuf/types/known/durationpb"
+	timestamp "google.golang.org/protobuf/types/known/timestamppb"
+	wrappers "google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 type TestCase struct {
@@ -752,7 +751,7 @@ var stringCases = []TestCase{
 	{"string - min bytes - valid", &cases.StringMinBytes{Val: "proto"}, true, "", 0},
 	{"string - min bytes - valid (min)", &cases.StringMinBytes{Val: "quux"}, true, "", 0},
 	{"string - min bytes - valid (multibyte)", &cases.StringMinBytes{Val: "你好"}, true, "", 0},
-	{"string - min bytes - invalid", &cases.StringMinBytes{Val: "", 0}, false, "invalid StringMinBytes.Val: value length must be at least 4 bytes", 1},
+	{"string - min bytes - invalid", &cases.StringMinBytes{Val: ""}, false, "invalid StringMinBytes.Val: value length must be at least 4 bytes", 1},
 
 	{"string - max bytes - valid", &cases.StringMaxBytes{Val: "foo"}, true, "", 0},
 	{"string - max bytes - valid (max)", &cases.StringMaxBytes{Val: "12345678"}, true, "", 0},
@@ -770,41 +769,41 @@ var stringCases = []TestCase{
 	{"string - equal min/max bytes - invalid", &cases.StringEqualMinMaxBytes{Val: "foo"}, false, "invalid StringEqualMinMaxBytes.Val: value length must be between 4 and 8 bytes, inclusive", 1},
 
 	{"string - pattern - valid", &cases.StringPattern{Val: "Foo123"}, true, "", 0},
-	{"string - pattern - invalid", &cases.StringPattern{Val: "!@#$%^&*()"}, false, "invalid StringPattern.Val: value does not match regex pattern \"(?i)^[a-z0-9]+$\"", 0},
-	{"string - pattern - invalid (empty)", &cases.StringPattern{Val: "", 0}, false, "invalid StringPattern.Val: value does not match regex pattern \"(?i)^[a-z0-9]+$\"", 0},
-	{"string - pattern - invalid (null)", &cases.StringPattern{Val: "a\000"}, false, "invalid StringPattern.Val: value does not match regex pattern \"(?i)^[a-z0-9]+$\"", 0},
+	{"string - pattern - invalid", &cases.StringPattern{Val: "!@#$%^&*()"}, false, "invalid StringPattern.Val: value does not match regex pattern \"(?i)^[a-z0-9]+$\"", 1},
+	{"string - pattern - invalid (empty)", &cases.StringPattern{Val: ""}, false, "invalid StringPattern.Val: value does not match regex pattern \"(?i)^[a-z0-9]+$\"", 1},
+	{"string - pattern - invalid (null)", &cases.StringPattern{Val: "a\000"}, false, "invalid StringPattern.Val: value does not match regex pattern \"(?i)^[a-z0-9]+$\"", 1},
 
 	{"string - pattern (escapes) - valid", &cases.StringPatternEscapes{Val: "* \\ x"}, true, "", 0},
-	{"string - pattern (escapes) - invalid", &cases.StringPatternEscapes{Val: "invalid"}, false, "invalid StringPatternEscapes.Val: value does not match regex pattern \"\\\\* \\\\\\\\ \\\\w\"", 0},
-	{"string - pattern (escapes) - invalid (empty)", &cases.StringPatternEscapes{Val: "", 0}, false, "invalid StringPatternEscapes.Val: value does not match regex pattern \"\\\\* \\\\\\\\ \\\\w\"", 0},
+	{"string - pattern (escapes) - invalid", &cases.StringPatternEscapes{Val: "invalid"}, false, "invalid StringPatternEscapes.Val: value does not match regex pattern \"\\\\* \\\\\\\\ \\\\w\"", 1},
+	{"string - pattern (escapes) - invalid (empty)", &cases.StringPatternEscapes{Val: ""}, false, "invalid StringPatternEscapes.Val: value does not match regex pattern \"\\\\* \\\\\\\\ \\\\w\"", 1},
 
 	{"string - prefix - valid", &cases.StringPrefix{Val: "foobar"}, true, "", 0},
 	{"string - prefix - valid (only)", &cases.StringPrefix{Val: "foo"}, true, "", 0},
-	{"string - prefix - invalid", &cases.StringPrefix{Val: "bar"}, false, "invalid StringPrefix.Val: value does not have prefix \"foo\"", 0},
-	{"string - prefix - invalid (case-sensitive)", &cases.StringPrefix{Val: "Foobar"}, false, "invalid StringPrefix.Val: value does not have prefix \"foo\"", 0},
+	{"string - prefix - invalid", &cases.StringPrefix{Val: "bar"}, false, "invalid StringPrefix.Val: value does not have prefix \"foo\"", 1},
+	{"string - prefix - invalid (case-sensitive)", &cases.StringPrefix{Val: "Foobar"}, false, "invalid StringPrefix.Val: value does not have prefix \"foo\"", 1},
 
 	{"string - contains - valid", &cases.StringContains{Val: "candy bars"}, true, "", 0},
 	{"string - contains - valid (only)", &cases.StringContains{Val: "bar"}, true, "", 0},
-	{"string - contains - invalid", &cases.StringContains{Val: "candy bazs"}, false, "invalid StringContains.Val: value does not contain substring \"bar\"", 0},
-	{"string - contains - invalid (case-sensitive)", &cases.StringContains{Val: "Candy Bars"}, false, "invalid StringContains.Val: value does not contain substring \"bar\"", 0},
+	{"string - contains - invalid", &cases.StringContains{Val: "candy bazs"}, false, "invalid StringContains.Val: value does not contain substring \"bar\"", 1},
+	{"string - contains - invalid (case-sensitive)", &cases.StringContains{Val: "Candy Bars"}, false, "invalid StringContains.Val: value does not contain substring \"bar\"", 1},
 
 	{"string - not contains - valid", &cases.StringNotContains{Val: "candy bazs"}, true, "", 0},
 	{"string - not contains - valid (case-sensitive)", &cases.StringNotContains{Val: "Candy Bars"}, true, "", 0},
-	{"string - not contains - invalid", &cases.StringNotContains{Val: "candy bars"}, false, "invalid StringNotContains.Val: value contains substring \"bar\"", 0},
-	{"string - not contains - invalid (equal)", &cases.StringNotContains{Val: "bar"}, false, "invalid StringNotContains.Val: value contains substring \"bar\"", 0},
+	{"string - not contains - invalid", &cases.StringNotContains{Val: "candy bars"}, false, "invalid StringNotContains.Val: value contains substring \"bar\"", 1},
+	{"string - not contains - invalid (equal)", &cases.StringNotContains{Val: "bar"}, false, "invalid StringNotContains.Val: value contains substring \"bar\"", 1},
 
 	{"string - suffix - valid", &cases.StringSuffix{Val: "foobaz"}, true, "", 0},
 	{"string - suffix - valid (only)", &cases.StringSuffix{Val: "baz"}, true, "", 0},
-	{"string - suffix - invalid", &cases.StringSuffix{Val: "foobar"}, false, "invalid StringSuffix.Val: value does not have suffix \"baz\"", 0},
-	{"string - suffix - invalid (case-sensitive)", &cases.StringSuffix{Val: "FooBaz"}, false, "invalid StringSuffix.Val: value does not have suffix \"baz\"", 0},
+	{"string - suffix - invalid", &cases.StringSuffix{Val: "foobar"}, false, "invalid StringSuffix.Val: value does not have suffix \"baz\"", 1},
+	{"string - suffix - invalid (case-sensitive)", &cases.StringSuffix{Val: "FooBaz"}, false, "invalid StringSuffix.Val: value does not have suffix \"baz\"", 1},
 
 	{"string - email - valid", &cases.StringEmail{Val: "foo@bar.com"}, true, "", 0},
 	{"string - email - valid (name)", &cases.StringEmail{Val: "John Smith <foo@bar.com>"}, true, "", 0},
-	{"string - email - invalid", &cases.StringEmail{Val: "foobar"}, false, "invalid StringEmail.Val: value must be a valid email address | caused by: mail: missing '@' or angle-addr", 1},
-	{"string - email - invalid (local segment too long)", &cases.StringEmail{Val: "x0123456789012345678901234567890123456789012345678901234567890123456789@example.com"}, false, "invalid StringEmail.Val: value must be a valid email address | caused by: email address local phrase cannot exceed 64 characters", 1},
-	{"string - email - invalid (hostname too long)", &cases.StringEmail{Val: "foo@x0123456789012345678901234567890123456789012345678901234567890123456789.com"}, false, "invalid StringEmail.Val: value must be a valid email address | caused by: hostname part must be non-empty and cannot exceed 63 characters", 1},
-	{"string - email - invalid (bad hostname)", &cases.StringEmail{Val: "foo@-bar.com"}, false, "invalid StringEmail.Val: value must be a valid email address | caused by: hostname parts cannot begin with hyphens", 1},
-	{"string - email - empty", &cases.StringEmail{Val: "", 0}, false, "invalid StringEmail.Val: value must be a valid email address | caused by: mail: no address", 1},
+	{"string - email - invalid", &cases.StringEmail{Val: "foobar"}, false, "mail: missing '@' or angle-addr", 1},
+	{"string - email - invalid (local segment too long)", &cases.StringEmail{Val: "x0123456789012345678901234567890123456789012345678901234567890123456789@example.com"}, false, "email address local phrase cannot exceed 64 characters", 1},
+	{"string - email - invalid (hostname too long)", &cases.StringEmail{Val: "foo@x0123456789012345678901234567890123456789012345678901234567890123456789.com"}, false, "hostname part must be non-empty and cannot exceed 63 characters", 1},
+	{"string - email - invalid (bad hostname)", &cases.StringEmail{Val: "foo@-bar.com"}, false, "hostname parts cannot begin with hyphens", 1},
+	{"string - email - empty", &cases.StringEmail{Val: ""}, false, "mail: no address", 1},
 
 	{"string - address - valid hostname", &cases.StringAddress{Val: "example.com"}, true, "", 0},
 	{"string - address - valid hostname (uppercase)", &cases.StringAddress{Val: "ASD.example.com"}, true, "", 0},
@@ -825,13 +824,13 @@ var stringCases = []TestCase{
 	{"string - hostname - valid (uppercase)", &cases.StringHostname{Val: "ASD.example.com"}, true, "", 0},
 	{"string - hostname - valid (hyphens)", &cases.StringHostname{Val: "foo-bar.com"}, true, "", 0},
 	{"string - hostname - valid (trailing dot)", &cases.StringHostname{Val: "example.com."}, true, "", 0},
-	{"string - hostname - invalid", &cases.StringHostname{Val: "!@#$%^&"}, false, "invalid StringHostname.Val: value must be a valid hostname | caused by: hostname parts can only contain alphanumeric characters or hyphens, got \"!\"", 0},
-	{"string - hostname - invalid (underscore)", &cases.StringHostname{Val: "foo_bar.com"}, false, "invalid StringHostname.Val: value must be a valid hostname | caused by: hostname parts can only contain alphanumeric characters or hyphens, got \"_\"", 0},
-	{"string - hostname - invalid (too long)", &cases.StringHostname{Val: "x0123456789012345678901234567890123456789012345678901234567890123456789.com"}, false, "invalid StringHostname.Val: value must be a valid hostname | caused by: hostname part must be non-empty and cannot exceed 63 characters", 1},
-	{"string - hostname - invalid (trailing hyphens)", &cases.StringHostname{Val: "foo-bar-.com"}, false, "invalid StringHostname.Val: value must be a valid hostname | caused by: hostname parts cannot end with hyphens", 1},
-	{"string - hostname - invalid (leading hyphens)", &cases.StringHostname{Val: "foo-bar.-com"}, false, "invalid StringHostname.Val: value must be a valid hostname | caused by: hostname parts cannot begin with hyphens", 1},
-	{"string - hostname - invalid (empty)", &cases.StringHostname{Val: "asd..asd.com"}, false, "invalid StringHostname.Val: value must be a valid hostname | caused by: hostname part must be non-empty and cannot exceed 63 characters", 1},
-	{"string - hostname - invalid (IDNs)", &cases.StringHostname{Val: "你好.com"}, false, "invalid StringHostname.Val: value must be a valid hostname | caused by: hostname parts can only contain alphanumeric characters or hyphens, got \"你\"", 0},
+	{"string - hostname - invalid", &cases.StringHostname{Val: "!@#$%^&"}, false, "hostname parts can only contain alphanumeric characters or hyphens, got \"!\"", 1},
+	{"string - hostname - invalid (underscore)", &cases.StringHostname{Val: "foo_bar.com"}, false, "hostname parts can only contain alphanumeric characters or hyphens, got \"_\"", 1},
+	{"string - hostname - invalid (too long)", &cases.StringHostname{Val: "x0123456789012345678901234567890123456789012345678901234567890123456789.com"}, false, "hostname part must be non-empty and cannot exceed 63 characters", 1},
+	{"string - hostname - invalid (trailing hyphens)", &cases.StringHostname{Val: "foo-bar-.com"}, false, "hostname parts cannot end with hyphens", 1},
+	{"string - hostname - invalid (leading hyphens)", &cases.StringHostname{Val: "foo-bar.-com"}, false, "hostname parts cannot begin with hyphens", 1},
+	{"string - hostname - invalid (empty)", &cases.StringHostname{Val: "asd..asd.com"}, false, "hostname part must be non-empty and cannot exceed 63 characters", 1},
+	{"string - hostname - invalid (IDNs)", &cases.StringHostname{Val: "你好.com"}, false, "hostname parts can only contain alphanumeric characters or hyphens, got \"你\"", 1},
 
 	{"string - IP - valid (v4)", &cases.StringIP{Val: "192.168.0.1"}, true, "", 0},
 	{"string - IP - valid (v6)", &cases.StringIP{Val: "3e::99"}, true, "", 0},
@@ -849,12 +848,12 @@ var stringCases = []TestCase{
 	{"string - IPv6 - invalid (erroneous)", &cases.StringIPv6{Val: "ff::fff::0b"}, false, "invalid StringIPv6.Val: value must be a valid IPv6 address", 1},
 
 	{"string - URI - valid", &cases.StringURI{Val: "http://example.com/foo/bar?baz=quux"}, true, "", 0},
-	{"string - URI - invalid", &cases.StringURI{Val: "!@#$%^&*%$#"}, false, "invalid StringURI.Val: value must be a valid URI | caused by: parse \"!@#$%^&*%$#\": invalid URL escape \"%^&\"", 0},
+	{"string - URI - invalid", &cases.StringURI{Val: "!@#$%^&*%$#"}, false, "parse \"!@#$%^&*%$#\": invalid URL escape \"%^&\"", 1},
 	{"string - URI - invalid (relative)", &cases.StringURI{Val: "/foo/bar?baz=quux"}, false, "invalid StringURI.Val: value must be absolute", 1},
 
 	{"string - URI Ref - valid", &cases.StringURIRef{Val: "http://example.com/foo/bar?baz=quux"}, true, "", 0},
 	{"string - URI Ref - valid (relative)", &cases.StringURIRef{Val: "/foo/bar?baz=quux"}, true, "", 0},
-	{"string - URI Ref - invalid", &cases.StringURIRef{Val: "!@#$%^&*%$#"}, false, "invalid StringURIRef.Val: value must be a valid URI | caused by: parse \"!@#$%^&*%$#\": invalid URL escape \"%^&\"", 0},
+	{"string - URI Ref - invalid", &cases.StringURIRef{Val: "!@#$%^&*%$#"}, false, "parse \"!@#$%^&*%$#\": invalid URL escape \"%^&\"", 1},
 
 	{"string - UUID - valid (nil)", &cases.StringUUID{Val: "00000000-0000-0000-0000-000000000000"}, true, "", 0},
 	{"string - UUID - valid (v1)", &cases.StringUUID{Val: "b45c0c80-8880-11e9-a5b1-000000000000"}, true, "", 0},
@@ -867,38 +866,38 @@ var stringCases = []TestCase{
 	{"string - UUID - valid (v4 - case-insensitive)", &cases.StringUUID{Val: "8B208305-00E8-4460-A440-5E0DCD83BB0A"}, true, "", 0},
 	{"string - UUID - valid (v5)", &cases.StringUUID{Val: "a6edc906-2f9f-5fb2-a373-efac406f0ef2"}, true, "", 0},
 	{"string - UUID - valid (v5 - case-insensitive)", &cases.StringUUID{Val: "A6EDC906-2F9F-5FB2-A373-EFAC406F0EF2"}, true, "", 0},
-	{"string - UUID - invalid", &cases.StringUUID{Val: "foobar"}, false, "invalid StringUUID.Val: value must be a valid UUID | caused by: invalid uuid format", 1},
-	{"string - UUID - invalid (bad UUID)", &cases.StringUUID{Val: "ffffffff-ffff-ffff-ffff-fffffffffffff"}, false, "invalid StringUUID.Val: value must be a valid UUID | caused by: invalid uuid format", 1},
+	{"string - UUID - invalid", &cases.StringUUID{Val: "foobar"}, false, "invalid uuid format", 1},
+	{"string - UUID - invalid (bad UUID)", &cases.StringUUID{Val: "ffffffff-ffff-ffff-ffff-fffffffffffff"}, false, "invalid uuid format", 1},
 
 	{"string - http header name - valid", &cases.StringHttpHeaderName{Val: "clustername"}, true, "", 0},
 	{"string - http header name - valid", &cases.StringHttpHeaderName{Val: ":path"}, true, "", 0},
 	{"string - http header name - valid (nums)", &cases.StringHttpHeaderName{Val: "cluster-123"}, true, "", 0},
 	{"string - http header name - valid (special token)", &cases.StringHttpHeaderName{Val: "!+#&.%"}, true, "", 0},
 	{"string - http header name - valid (period)", &cases.StringHttpHeaderName{Val: "CLUSTER.NAME"}, true, "", 0},
-	{"string - http header name - invalid", &cases.StringHttpHeaderName{Val: ":"}, false, "invalid StringHttpHeaderName.Val: value does not match regex pattern \"^:?[0-9a-zA-Z!#$%&'*+-.^_|~`]+$\"", 0},
-	{"string - http header name - invalid", &cases.StringHttpHeaderName{Val: ":path:"}, false, "invalid StringHttpHeaderName.Val: value does not match regex pattern \"^:?[0-9a-zA-Z!#$%&'*+-.^_|~`]+$\"", 0},
-	{"string - http header name - invalid (space)", &cases.StringHttpHeaderName{Val: "cluster name"}, false, "invalid StringHttpHeaderName.Val: value does not match regex pattern \"^:?[0-9a-zA-Z!#$%&'*+-.^_|~`]+$\"", 0},
-	{"string - http header name - invalid (return)", &cases.StringHttpHeaderName{Val: "example\r"}, false, "invalid StringHttpHeaderName.Val: value does not match regex pattern \"^:?[0-9a-zA-Z!#$%&'*+-.^_|~`]+$\"", 0},
-	{"string - http header name - invalid (tab)", &cases.StringHttpHeaderName{Val: "example\t"}, false, "invalid StringHttpHeaderName.Val: value does not match regex pattern \"^:?[0-9a-zA-Z!#$%&'*+-.^_|~`]+$\"", 0},
-	{"string - http header name - invalid (slash)", &cases.StringHttpHeaderName{Val: "/test/long/url"}, false, "invalid StringHttpHeaderName.Val: value does not match regex pattern \"^:?[0-9a-zA-Z!#$%&'*+-.^_|~`]+$\"", 0},
+	{"string - http header name - invalid", &cases.StringHttpHeaderName{Val: ":"}, false, "invalid StringHttpHeaderName.Val: value does not match regex pattern \"^:?[0-9a-zA-Z!#$%&'*+-.^_|~`]+$\"", 1},
+	{"string - http header name - invalid", &cases.StringHttpHeaderName{Val: ":path:"}, false, "invalid StringHttpHeaderName.Val: value does not match regex pattern \"^:?[0-9a-zA-Z!#$%&'*+-.^_|~`]+$\"", 1},
+	{"string - http header name - invalid (space)", &cases.StringHttpHeaderName{Val: "cluster name"}, false, "invalid StringHttpHeaderName.Val: value does not match regex pattern \"^:?[0-9a-zA-Z!#$%&'*+-.^_|~`]+$\"", 1},
+	{"string - http header name - invalid (return)", &cases.StringHttpHeaderName{Val: "example\r"}, false, "invalid StringHttpHeaderName.Val: value does not match regex pattern \"^:?[0-9a-zA-Z!#$%&'*+-.^_|~`]+$\"", 1},
+	{"string - http header name - invalid (tab)", &cases.StringHttpHeaderName{Val: "example\t"}, false, "invalid StringHttpHeaderName.Val: value does not match regex pattern \"^:?[0-9a-zA-Z!#$%&'*+-.^_|~`]+$\"", 1},
+	{"string - http header name - invalid (slash)", &cases.StringHttpHeaderName{Val: "/test/long/url"}, false, "invalid StringHttpHeaderName.Val: value does not match regex pattern \"^:?[0-9a-zA-Z!#$%&'*+-.^_|~`]+$\"", 1},
 
 	{"string - http header value - valid", &cases.StringHttpHeaderValue{Val: "cluster.name.123"}, true, "", 0},
 	{"string - http header value - valid (uppercase)", &cases.StringHttpHeaderValue{Val: "/TEST/LONG/URL"}, true, "", 0},
 	{"string - http header value - valid (spaces)", &cases.StringHttpHeaderValue{Val: "cluster name"}, true, "", 0},
 	{"string - http header value - valid (tab)", &cases.StringHttpHeaderValue{Val: "example\t"}, true, "", 0},
 	{"string - http header value - valid (special token)", &cases.StringHttpHeaderValue{Val: "!#%&./+"}, true, "", 0},
-	{"string - http header value - invalid (NUL)", &cases.StringHttpHeaderValue{Val: "foo\u0000bar"}, false, "invalid StringHttpHeaderValue.Val: value does not match regex pattern \"^[^\\x00-\\b\\n-\\x1f\\u007f]*$\"", 0},
-	{"string - http header value - invalid (DEL)", &cases.StringHttpHeaderValue{Val: "\u007f"}, false, "invalid StringHttpHeaderValue.Val: value does not match regex pattern \"^[^\\x00-\\b\\n-\\x1f\\u007f]*$\"", 0},
-	{"string - http header value - invalid", &cases.StringHttpHeaderValue{Val: "example\r"}, false, "invalid StringHttpHeaderValue.Val: value does not match regex pattern \"^[^\\x00-\\b\\n-\\x1f\\u007f]*$\"", 0},
+	{"string - http header value - invalid (NUL)", &cases.StringHttpHeaderValue{Val: "foo\u0000bar"}, false, "invalid StringHttpHeaderValue.Val: value does not match regex pattern \"^[^\\x00-\\b\\n-\\x1f\\u007f]*$\"", 1},
+	{"string - http header value - invalid (DEL)", &cases.StringHttpHeaderValue{Val: "\u007f"}, false, "invalid StringHttpHeaderValue.Val: value does not match regex pattern \"^[^\\x00-\\b\\n-\\x1f\\u007f]*$\"", 1},
+	{"string - http header value - invalid", &cases.StringHttpHeaderValue{Val: "example\r"}, false, "invalid StringHttpHeaderValue.Val: value does not match regex pattern \"^[^\\x00-\\b\\n-\\x1f\\u007f]*$\"", 1},
 
 	{"string - non-strict valid header - valid", &cases.StringValidHeader{Val: "cluster.name.123"}, true, "", 0},
 	{"string - non-strict valid header - valid (uppercase)", &cases.StringValidHeader{Val: "/TEST/LONG/URL"}, true, "", 0},
 	{"string - non-strict valid header - valid (spaces)", &cases.StringValidHeader{Val: "cluster name"}, true, "", 0},
 	{"string - non-strict valid header - valid (tab)", &cases.StringValidHeader{Val: "example\t"}, true, "", 0},
 	{"string - non-strict valid header - valid (DEL)", &cases.StringValidHeader{Val: "\u007f"}, true, "", 0},
-	{"string - non-strict valid header - invalid (NUL)", &cases.StringValidHeader{Val: "foo\u0000bar"}, false, "invalid StringValidHeader.Val: value does not match regex pattern \"^[^\\x00\\n\\r]*$\"", 0},
-	{"string - non-strict valid header - invalid (CR)", &cases.StringValidHeader{Val: "example\r"}, false, "invalid StringValidHeader.Val: value does not match regex pattern \"^[^\\x00\\n\\r]*$\"", 0},
-	{"string - non-strict valid header - invalid (NL)", &cases.StringValidHeader{Val: "exa\u000Ample"}, false, "invalid StringValidHeader.Val: value does not match regex pattern \"^[^\\x00\\n\\r]*$\"", 0},
+	{"string - non-strict valid header - invalid (NUL)", &cases.StringValidHeader{Val: "foo\u0000bar"}, false, "invalid StringValidHeader.Val: value does not match regex pattern \"^[^\\x00\\n\\r]*$\"", 1},
+	{"string - non-strict valid header - invalid (CR)", &cases.StringValidHeader{Val: "example\r"}, false, "invalid StringValidHeader.Val: value does not match regex pattern \"^[^\\x00\\n\\r]*$\"", 1},
+	{"string - non-strict valid header - invalid (NL)", &cases.StringValidHeader{Val: "exa\u000Ample"}, false, "invalid StringValidHeader.Val: value does not match regex pattern \"^[^\\x00\\n\\r]*$\"", 1},
 }
 
 var bytesCases = []TestCase{
@@ -934,21 +933,21 @@ var bytesCases = []TestCase{
 	{"bytes - equal min/max len - invalid", &cases.BytesEqualMinMaxLen{Val: []byte("validate")}, false, "invalid BytesEqualMinMaxLen.Val: value length must be 5 bytes", 1},
 
 	{"bytes - pattern - valid", &cases.BytesPattern{Val: []byte("Foo123")}, true, "", 0},
-	{"bytes - pattern - invalid", &cases.BytesPattern{Val: []byte("你好你好")}, false, "invalid BytesPattern.Val: value does not match regex pattern \"^[\\x00-\\u007f]+$\"", 0},
-	{"bytes - pattern - invalid (empty)", &cases.BytesPattern{Val: []byte("")}, false, "invalid BytesPattern.Val: value does not match regex pattern \"^[\\x00-\\u007f]+$\"", 0},
+	{"bytes - pattern - invalid", &cases.BytesPattern{Val: []byte("你好你好")}, false, "invalid BytesPattern.Val: value does not match regex pattern \"^[\\x00-\\u007f]+$\"", 1},
+	{"bytes - pattern - invalid (empty)", &cases.BytesPattern{Val: []byte("")}, false, "invalid BytesPattern.Val: value does not match regex pattern \"^[\\x00-\\u007f]+$\"", 1},
 
 	{"bytes - prefix - valid", &cases.BytesPrefix{Val: []byte{0x99, 0x9f, 0x08}}, true, "", 0},
 	{"bytes - prefix - valid (only)", &cases.BytesPrefix{Val: []byte{0x99}}, true, "", 0},
-	{"bytes - prefix - invalid", &cases.BytesPrefix{Val: []byte("bar")}, false, "invalid BytesPrefix.Val: value does not have prefix \"\\x99\"", 0},
+	{"bytes - prefix - invalid", &cases.BytesPrefix{Val: []byte("bar")}, false, "invalid BytesPrefix.Val: value does not have prefix \"\\x99\"", 1},
 
 	{"bytes - contains - valid", &cases.BytesContains{Val: []byte("candy bars")}, true, "", 0},
 	{"bytes - contains - valid (only)", &cases.BytesContains{Val: []byte("bar")}, true, "", 0},
-	{"bytes - contains - invalid", &cases.BytesContains{Val: []byte("candy bazs")}, false, "invalid BytesContains.Val: value does not contain \"\\x62\\x61\\x72\"", 0},
+	{"bytes - contains - invalid", &cases.BytesContains{Val: []byte("candy bazs")}, false, "invalid BytesContains.Val: value does not contain \"\\x62\\x61\\x72\"", 1},
 
 	{"bytes - suffix - valid", &cases.BytesSuffix{Val: []byte{0x62, 0x75, 0x7A, 0x7A}}, true, "", 0},
 	{"bytes - suffix - valid (only)", &cases.BytesSuffix{Val: []byte("\x62\x75\x7A\x7A")}, true, "", 0},
-	{"bytes - suffix - invalid", &cases.BytesSuffix{Val: []byte("foobar")}, false, "invalid BytesSuffix.Val: value does not have suffix \"\\x62\\x75\\x7A\\x7A\"", 0},
-	{"bytes - suffix - invalid (case-sensitive)", &cases.BytesSuffix{Val: []byte("FooBaz")}, false, "invalid BytesSuffix.Val: value does not have suffix \"\\x62\\x75\\x7A\\x7A\"", 0},
+	{"bytes - suffix - invalid", &cases.BytesSuffix{Val: []byte("foobar")}, false, "invalid BytesSuffix.Val: value does not have suffix \"\\x62\\x75\\x7A\\x7A\"", 1},
+	{"bytes - suffix - invalid (case-sensitive)", &cases.BytesSuffix{Val: []byte("FooBaz")}, false, "invalid BytesSuffix.Val: value does not have suffix \"\\x62\\x75\\x7A\\x7A\"", 1},
 
 	{"bytes - IP - valid (v4)", &cases.BytesIP{Val: []byte{0xC0, 0xA8, 0x00, 0x01}}, true, "", 0},
 	{"bytes - IP - valid (v6)", &cases.BytesIP{Val: []byte("\x20\x01\x0D\xB8\x85\xA3\x00\x00\x00\x00\x8A\x2E\x03\x70\x73\x34")}, true, "", 0},
@@ -1018,8 +1017,8 @@ var messageCases = []TestCase{
 
 	{"message - field - valid", &cases.Message{Val: &cases.TestMsg{Const: "foo"}}, true, "", 0},
 	{"message - field - valid (unset)", &cases.Message{}, true, "", 0},
-	{"message - field - invalid", &cases.Message{Val: &cases.TestMsg{}}, false, "invalid Message.Val: embedded message failed validation | caused by: invalid TestMsg.Const: value must equal foo", 1},
-	{"message - field - invalid (transitive)", &cases.Message{Val: &cases.TestMsg{Const: "foo", Nested: &cases.TestMsg{}}}, false, "invalid Message.Val: embedded message failed validation | caused by: invalid TestMsg.Nested: embedded message failed validation | caused by: invalid TestMsg.Const: value must equal foo", 1},
+	{"message - field - invalid", &cases.Message{Val: &cases.TestMsg{}}, false, "invalid TestMsg.Const: value must equal foo", 1},
+	{"message - field - invalid (transitive)", &cases.Message{Val: &cases.TestMsg{Const: "foo", Nested: &cases.TestMsg{}}}, false, "invalid TestMsg.Const: value must equal foo", 1},
 
 	{"message - skip - valid", &cases.MessageSkip{Val: &cases.TestMsg{}}, true, "", 0},
 
@@ -1028,8 +1027,8 @@ var messageCases = []TestCase{
 
 	{"message - cross-package embed none - valid", &cases.MessageCrossPackage{Val: &other_package.Embed{Val: 1}}, true, "", 0},
 	{"message - cross-package embed none - valid (nil)", &cases.MessageCrossPackage{}, true, "", 0},
-	{"message - cross-package embed none - invalid (empty)", &cases.MessageCrossPackage{Val: &other_package.Embed{}}, false, "invalid MessageCrossPackage.Val: embedded message failed validation | caused by: invalid Embed.Val: value must be greater than 0", 1},
-	{"message - cross-package embed none - invalid", &cases.MessageCrossPackage{Val: &other_package.Embed{Val: -1}}, false, "invalid MessageCrossPackage.Val: embedded message failed validation | caused by: invalid Embed.Val: value must be greater than 0", 1},
+	{"message - cross-package embed none - invalid (empty)", &cases.MessageCrossPackage{Val: &other_package.Embed{}}, false, "invalid Embed.Val: value must be greater than 0", 1},
+	{"message - cross-package embed none - invalid", &cases.MessageCrossPackage{Val: &other_package.Embed{Val: -1}}, false, "invalid Embed.Val: value must be greater than 0", 1},
 }
 
 var repeatedCases = []TestCase{
@@ -1038,17 +1037,17 @@ var repeatedCases = []TestCase{
 	{"repeated - embed none - valid", &cases.RepeatedEmbedNone{Val: []*cases.Embed{{Val: 1}}}, true, "", 0},
 	{"repeated - embed none - valid (nil)", &cases.RepeatedEmbedNone{}, true, "", 0},
 	{"repeated - embed none - valid (empty)", &cases.RepeatedEmbedNone{Val: []*cases.Embed{}}, true, "", 0},
-	{"repeated - embed none - invalid", &cases.RepeatedEmbedNone{Val: []*cases.Embed{{Val: -1}}}, false, "invalid RepeatedEmbedNone.Val[0]: embedded message failed validation | caused by: invalid Embed.Val: value must be greater than 0", 1},
+	{"repeated - embed none - invalid", &cases.RepeatedEmbedNone{Val: []*cases.Embed{{Val: -1}}}, false, "invalid Embed.Val: value must be greater than 0", 1},
 
 	{"repeated - cross-package embed none - valid", &cases.RepeatedEmbedCrossPackageNone{Val: []*other_package.Embed{{Val: 1}}}, true, "", 0},
 	{"repeated - cross-package embed none - valid (nil)", &cases.RepeatedEmbedCrossPackageNone{}, true, "", 0},
 	{"repeated - cross-package embed none - valid (empty)", &cases.RepeatedEmbedCrossPackageNone{Val: []*other_package.Embed{}}, true, "", 0},
-	{"repeated - cross-package embed none - invalid", &cases.RepeatedEmbedCrossPackageNone{Val: []*other_package.Embed{{Val: -1}}}, false, "invalid RepeatedEmbedCrossPackageNone.Val[0]: embedded message failed validation | caused by: invalid Embed.Val: value must be greater than 0", 1},
+	{"repeated - cross-package embed none - invalid", &cases.RepeatedEmbedCrossPackageNone{Val: []*other_package.Embed{{Val: -1}}}, false, "invalid Embed.Val: value must be greater than 0", 1},
 
 	{"repeated - min - valid", &cases.RepeatedMin{Val: []*cases.Embed{{Val: 1}, {Val: 2}, {Val: 3}}}, true, "", 0},
 	{"repeated - min - valid (equal)", &cases.RepeatedMin{Val: []*cases.Embed{{Val: 1}, {Val: 2}}}, true, "", 0},
 	{"repeated - min - invalid", &cases.RepeatedMin{Val: []*cases.Embed{{Val: 1}}}, false, "invalid RepeatedMin.Val: value must contain at least 2 item(s)", 1},
-	{"repeated - min - invalid (element)", &cases.RepeatedMin{Val: []*cases.Embed{{Val: 1}, {Val: -1}}}, false, "invalid RepeatedMin.Val[1]: embedded message failed validation | caused by: invalid Embed.Val: value must be greater than 0", 1},
+	{"repeated - min - invalid (element)", &cases.RepeatedMin{Val: []*cases.Embed{{Val: 1}, {Val: -1}}}, false, "invalid Embed.Val: value must be greater than 0", 1},
 
 	{"repeated - max - valid", &cases.RepeatedMax{Val: []float64{1, 2}}, true, "", 0},
 	{"repeated - max - valid (equal)", &cases.RepeatedMax{Val: []float64{1, 2, 3}}, true, "", 0},
@@ -1073,7 +1072,7 @@ var repeatedCases = []TestCase{
 	{"repeated - items - valid (empty)", &cases.RepeatedItemRule{Val: []float32{}}, true, "", 0},
 	{"repeated - items - valid (pattern)", &cases.RepeatedItemPattern{Val: []string{"Alpha", "Beta123"}}, true, "", 0},
 	{"repeated - items - invalid", &cases.RepeatedItemRule{Val: []float32{1, -2, 3}}, false, "invalid RepeatedItemRule.Val[1]: value must be greater than 0", 1},
-	{"repeated - items - invalid (pattern)", &cases.RepeatedItemPattern{Val: []string{"Alpha", "!@#$%^&*()"}}, false, "invalid RepeatedItemPattern.Val[1]: value does not match regex pattern \"(?i)^[a-z0-9]+$\"", 0},
+	{"repeated - items - invalid (pattern)", &cases.RepeatedItemPattern{Val: []string{"Alpha", "!@#$%^&*()"}}, false, "invalid RepeatedItemPattern.Val[1]: value does not match regex pattern \"(?i)^[a-z0-9]+$\"", 1},
 	{"repeated - items - invalid (in)", &cases.RepeatedItemIn{Val: []string{"baz"}}, false, "invalid RepeatedItemIn.Val[0]: value must be in list [foo bar]", 1},
 	{"repeated - items - valid (in)", &cases.RepeatedItemIn{Val: []string{"foo"}}, true, "", 0},
 	{"repeated - items - invalid (not_in)", &cases.RepeatedItemNotIn{Val: []string{"foo"}}, false, "invalid RepeatedItemNotIn.Val[0]: value must not be in list [foo bar]", 1},
@@ -1127,22 +1126,22 @@ var mapCases = []TestCase{
 	{"map - no sparse - valid", &cases.MapNoSparse{Val: map[uint32]*cases.MapNoSparse_Msg{1: {}, 2: {}}}, true, "", 0},
 	{"map - no sparse - valid (empty)", &cases.MapNoSparse{Val: map[uint32]*cases.MapNoSparse_Msg{}}, true, "", 0},
 	// sparse maps are no longer supported, so this case is no longer possible
-	//{"map - no sparse - invalid", &cases.MapNoSparse{Val: map[uint32]*cases.MapNoSparse_Msg{1: {}, 2: nil}}, false, "", 0},
+	//{"map - no sparse - invalid", &cases.MapNoSparse{Val: map[uint32]*cases.MapNoSparse_Msg{1: {}, 2: nil}}, false, "", 1},
 
 	{"map - keys - valid", &cases.MapKeys{Val: map[int64]string{-1: "a", -2: "b"}}, true, "", 0},
 	{"map - keys - valid (empty)", &cases.MapKeys{Val: map[int64]string{}}, true, "", 0},
 	{"map - keys - valid (pattern)", &cases.MapKeysPattern{Val: map[string]string{"A": "a"}}, true, "", 0},
 	{"map - keys - invalid", &cases.MapKeys{Val: map[int64]string{1: "a"}}, false, "invalid MapKeys.Val[1]: value must be less than 0", 1},
-	{"map - keys - invalid (pattern)", &cases.MapKeysPattern{Val: map[string]string{"A": "a", "!@#$%^&*()": "b"}}, false, "invalid MapKeysPattern.Val[!@#$%^&*()]: value does not match regex pattern \"(?i)^[a-z0-9]+$\"", 0},
+	{"map - keys - invalid (pattern)", &cases.MapKeysPattern{Val: map[string]string{"A": "a", "!@#$%^&*()": "b"}}, false, "invalid MapKeysPattern.Val[!@#$%^&*()]: value does not match regex pattern \"(?i)^[a-z0-9]+$\"", 1},
 
 	{"map - values - valid", &cases.MapValues{Val: map[string]string{"a": "Alpha", "b": "Beta"}}, true, "", 0},
 	{"map - values - valid (empty)", &cases.MapValues{Val: map[string]string{}}, true, "", 0},
 	{"map - values - valid (pattern)", &cases.MapValuesPattern{Val: map[string]string{"a": "A"}}, true, "", 0},
 	{"map - values - invalid", &cases.MapValues{Val: map[string]string{"a": "A", "b": "BCD"}}, false, "invalid MapValues.Val[a]: value length must be at least 3 runes", 1},
-	{"map - values - invalid (pattern)", &cases.MapValuesPattern{Val: map[string]string{"a": "A", "b": "!@#$%^&*()"}}, false, "invalid MapValuesPattern.Val[b]: value does not match regex pattern \"(?i)^[a-z0-9]+$\"", 0},
+	{"map - values - invalid (pattern)", &cases.MapValuesPattern{Val: map[string]string{"a": "A", "b": "!@#$%^&*()"}}, false, "invalid MapValuesPattern.Val[b]: value does not match regex pattern \"(?i)^[a-z0-9]+$\"", 1},
 
 	{"map - recursive - valid", &cases.MapRecursive{Val: map[uint32]*cases.MapRecursive_Msg{1: {Val: "abc"}}}, true, "", 0},
-	{"map - recursive - invalid", &cases.MapRecursive{Val: map[uint32]*cases.MapRecursive_Msg{1: {}}}, false, "invalid MapRecursive.Val[1]: embedded message failed validation | caused by: invalid MapRecursive_Msg.Val: value length must be at least 3 runes", 1},
+	{"map - recursive - invalid", &cases.MapRecursive{Val: map[uint32]*cases.MapRecursive_Msg{1: {}}}, false, "invalid MapRecursive_Msg.Val: value length must be at least 3 runes", 1},
 }
 
 var oneofCases = []TestCase{
@@ -1153,9 +1152,9 @@ var oneofCases = []TestCase{
 	{"oneof - field - valid (Y)", &cases.OneOf{O: &cases.OneOf_Y{Y: 123}}, true, "", 0},
 	{"oneof - field - valid (Z)", &cases.OneOf{O: &cases.OneOf_Z{Z: &cases.TestOneOfMsg{Val: true}}}, true, "", 0},
 	{"oneof - field - valid (empty)", &cases.OneOf{}, true, "", 0},
-	{"oneof - field - invalid (X)", &cases.OneOf{O: &cases.OneOf_X{X: "fizzbuzz"}}, false, "invalid OneOf.X: value does not have prefix \"foo\"", 0},
+	{"oneof - field - invalid (X)", &cases.OneOf{O: &cases.OneOf_X{X: "fizzbuzz"}}, false, "invalid OneOf.X: value does not have prefix \"foo\"", 1},
 	{"oneof - field - invalid (Y)", &cases.OneOf{O: &cases.OneOf_Y{Y: -1}}, false, "invalid OneOf.Y: value must be greater than 0", 1},
-	{"oneof - filed - invalid (Z)", &cases.OneOf{O: &cases.OneOf_Z{Z: &cases.TestOneOfMsg{}}}, false, "invalid OneOf.Z: embedded message failed validation | caused by: invalid TestOneOfMsg.Val: value must equal true", 1},
+	{"oneof - filed - invalid (Z)", &cases.OneOf{O: &cases.OneOf_Z{Z: &cases.TestOneOfMsg{}}}, false, "invalid TestOneOfMsg.Val: value must equal true", 1},
 
 	{"oneof - required - valid", &cases.OneOfRequired{O: &cases.OneOfRequired_X{X: ""}}, true, "", 0},
 	{"oneof - require - invalid", &cases.OneOfRequired{}, false, "invalid OneOfRequired.O: value is required", 1},
@@ -1195,7 +1194,7 @@ var wrapperCases = []TestCase{
 
 	{"wrapper - string - valid", &cases.WrapperString{Val: &wrappers.StringValue{Value: "foobar"}}, true, "", 0},
 	{"wrapper - string - valid (empty)", &cases.WrapperString{Val: nil}, true, "", 0},
-	{"wrapper - string - invalid", &cases.WrapperString{Val: &wrappers.StringValue{Value: "fizzbuzz"}}, false, "invalid WrapperString.Val: value does not have suffix \"bar\"", 0},
+	{"wrapper - string - invalid", &cases.WrapperString{Val: &wrappers.StringValue{Value: "fizzbuzz"}}, false, "invalid WrapperString.Val: value does not have suffix \"bar\"", 1},
 
 	{"wrapper - bytes - valid", &cases.WrapperBytes{Val: &wrappers.BytesValue{Value: []byte("foo")}}, true, "", 0},
 	{"wrapper - bytes - valid (empty)", &cases.WrapperBytes{Val: nil}, true, "", 0},
@@ -1211,7 +1210,7 @@ var wrapperCases = []TestCase{
 
 	{"wrapper - optional - string (uuid) - valid", &cases.WrapperOptionalUuidString{Val: &wrappers.StringValue{Value: "8b72987b-024a-43b3-b4cf-647a1f925c5d"}}, true, "", 0},
 	{"wrapper - optional - string (uuid) - valid (empty)", &cases.WrapperOptionalUuidString{}, true, "", 0},
-	{"wrapper - optional - string (uuid) - invalid", &cases.WrapperOptionalUuidString{Val: &wrappers.StringValue{Value: "foo"}}, false, "invalid WrapperOptionalUuidString.Val: value must be a valid UUID | caused by: invalid uuid format", 1},
+	{"wrapper - optional - string (uuid) - invalid", &cases.WrapperOptionalUuidString{Val: &wrappers.StringValue{Value: "foo"}}, false, "invalid uuid format", 1},
 
 	{"wrapper - required - float - valid", &cases.WrapperRequiredFloat{Val: &wrappers.FloatValue{Value: 1}}, true, "", 0},
 	{"wrapper - required - float - invalid", &cases.WrapperRequiredFloat{Val: &wrappers.FloatValue{Value: -5}}, false, "invalid WrapperRequiredFloat.Val: value must be greater than 0", 1},
@@ -1352,7 +1351,7 @@ var timestampCases = []TestCase{
 	{"timestamp - gt now - valid (empty)", &cases.TimestampGTNow{}, true, "", 0},
 	{"timestamp - gt now - invalid", &cases.TimestampGTNow{Val: &timestamp.Timestamp{}}, false, "invalid TimestampGTNow.Val: value must be greater than now", 1},
 
-	{"timestamp - within - valid", &cases.TimestampWithin{Val: ptypes.TimestampNow()}, true, "", 0},
+	{"timestamp - within - valid", &cases.TimestampWithin{Val: timestamp.Now()}, true, "", 0},
 	{"timestamp - within - valid (empty)", &cases.TimestampWithin{}, true, "", 0},
 	{"timestamp - within - invalid (below)", &cases.TimestampWithin{Val: &timestamp.Timestamp{}}, false, "invalid TimestampWithin.Val: value must be within 1h0m0s of now", 1},
 	{"timestamp - within - invalid (above)", &cases.TimestampWithin{Val: &timestamp.Timestamp{Seconds: time.Now().Unix() + 7200}}, false, "invalid TimestampWithin.Val: value must be within 1h0m0s of now", 1},
@@ -1386,12 +1385,12 @@ var anyCases = []TestCase{
 var kitchenSink = []TestCase{
 	{"kitchensink - field - valid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", IntConst: 5, BoolConst: false, FloatVal: &wrappers.FloatValue{Value: 1}, DurVal: &duration.Duration{Seconds: 3}, TsVal: &timestamp.Timestamp{Seconds: 17}, FloatConst: 7, DoubleIn: 123, EnumConst: cases.ComplexTestEnum_ComplexTWO, AnyVal: &any.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}, RepTsVal: []*timestamp.Timestamp{{Seconds: 3}}, MapVal: map[int32]string{-1: "a", -2: "b"}, BytesVal: []byte("\x00\x99"), O: &cases.ComplexTestMsg_X{X: "foobar"}}}, true, "", 0},
 	{"kitchensink - valid (unset)", &cases.KitchenSinkMessage{}, true, "", 0},
-	{"kitchensink - field - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{}}, false, "invalid KitchenSinkMessage.Val: embedded message failed validation | caused by: invalid ComplexTestMsg.Const: value must equal abcd", 1},
-	{"kitchensink - field - embedded - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Another: &cases.ComplexTestMsg{}}}, false, "invalid KitchenSinkMessage.Val: embedded message failed validation | caused by: invalid ComplexTestMsg.Const: value must equal abcd", 1},
-	{"kitchensink - field - invalid (transitive)", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", BoolConst: true, Nested: &cases.ComplexTestMsg{}}}, false, "invalid KitchenSinkMessage.Val: embedded message failed validation | caused by: invalid ComplexTestMsg.Nested: embedded message failed validation | caused by: invalid ComplexTestMsg.Const: value must equal abcd", 1},
+	{"kitchensink - field - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{}}, false, "invalid ComplexTestMsg.Const: value must equal abcd", 1},
+	{"kitchensink - field - embedded - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Another: &cases.ComplexTestMsg{}}}, false, "invalid ComplexTestMsg.Const: value must equal abcd", 1},
+	{"kitchensink - field - invalid (transitive)", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", BoolConst: true, Nested: &cases.ComplexTestMsg{}}}, false, "invalid ComplexTestMsg.Const: value must equal abcd", 1},
 }
 
 var nestedCases = []TestCase{
 	{"nested wkt uuid - field - valid", &cases.WktLevelOne{Two: &cases.WktLevelOne_WktLevelTwo{Three: &cases.WktLevelOne_WktLevelTwo_WktLevelThree{Uuid: "f81d16ef-40e2-40c6-bebc-89aaf5292f9a"}}}, true, "", 0},
-	{"nested wkt uuid - field - invalid", &cases.WktLevelOne{Two: &cases.WktLevelOne_WktLevelTwo{Three: &cases.WktLevelOne_WktLevelTwo_WktLevelThree{Uuid: "not-a-valid-uuid"}}}, false, "some error", 1},
+	{"nested wkt uuid - field - invalid", &cases.WktLevelOne{Two: &cases.WktLevelOne_WktLevelTwo{Three: &cases.WktLevelOne_WktLevelTwo_WktLevelThree{Uuid: "not-a-valid-uuid"}}}, false, "invalid uuid format", 1},
 }
