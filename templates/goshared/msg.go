@@ -33,7 +33,7 @@ func (m {{ (msgTyp .).Pointer }}) validate(all bool) error {
 			{{ render (context .) }}
 		{{ end }}
 
-		{{ range .OneOfs }}
+		{{ range .RealOneOfs }}
 			switch m.{{ name . }}.(type) {
 				{{ range .Fields }}
 					case {{ oneof . }}:
@@ -51,9 +51,16 @@ func (m {{ (msgTyp .).Pointer }}) validate(all bool) error {
 			}
 		{{ end }}
 
+		{{ range .SyntheticOneOfFields }}
+			if m.{{ name . }} != nil {
+				{{ render (context .) }}
+			}
+		{{ end }}
+
 		if len(errors) > 0 {
 			return {{ multierrname . }}(errors)
 		}
+		
 		return nil
 	{{ end -}}
 }
