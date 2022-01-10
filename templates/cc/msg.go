@@ -46,6 +46,13 @@ const msgTpl = `
 			{{- end }}
 		};
 	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetAny "In" }} {{ if .Rules.Items.GetAny.In }}
+	const std::set<string> {{ lookup .Field "InLookup" }} = {
+			{{- range .Rules.Items.GetAny.In }}
+				{{ inKey $f . }},
+			{{- end }}
+		};
+	{{ end }}{{ end }}
 	{{ end }}{{ end }}
 
 	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
@@ -59,6 +66,13 @@ const msgTpl = `
 	{{ if has .Rules.Items.GetEnum "NotIn" }} {{ if .Rules.Items.GetEnum.NotIn }}
 	const std::set<{{ inType .Field .Rules.Items.GetEnum.NotIn }}> {{ lookup .Field "NotInLookup" }} = {
 			{{- range .Rules.Items.GetEnum.NotIn }}
+				{{ inKey $f . }},
+			{{- end }}
+		};
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetAny "NotIn" }} {{ if .Rules.Items.GetAny.NotIn }}
+	const std::set<string> {{ lookup .Field "NotInLookup" }} = {
+			{{- range .Rules.Items.GetAny.NotIn }}
 				{{ inKey $f . }},
 			{{- end }}
 		};
