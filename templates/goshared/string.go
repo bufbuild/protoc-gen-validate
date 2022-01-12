@@ -119,15 +119,51 @@ const strTpl = `
 			if !all { return err }
 			errors = append(errors, err)
 		}
+	{{ else if $r.GetIpPrefix }}
+		if ip, net, err := net.ParseCIDR({{ accessor . }}); err != nil || !ip.Mask(net.Mask).Equal(ip) {
+			err := {{ err . "value must be a valid IP prefix" }}
+			if !all { return err }
+			errors = append(errors, err)
+		}
+	{{ else if $r.GetIpWithPrefixlen }}
+		if _, _, err := net.ParseCIDR({{ accessor . }}); err != nil  {
+			err := {{ err . "value must be a valid IP address with prefixlen" }}
+			if !all { return err }
+			errors = append(errors, err)
+		}
 	{{ else if $r.GetIpv4 }}
 		if ip := net.ParseIP({{ accessor . }}); ip == nil || ip.To4() == nil {
 			err := {{ err . "value must be a valid IPv4 address" }}
 			if !all { return err }
 			errors = append(errors, err)
 		}
+	{{ else if $r.GetIpv4Prefix }}
+		if ip, net, err := net.ParseCIDR({{ accessor . }}); err != nil || !ip.Mask(net.Mask).Equal(ip) || ip.To4() == nil {
+			err := {{ err . "value must be a valid IPv4 prefix" }}
+			if !all { return err }
+			errors = append(errors, err)
+		}
+	{{ else if $r.GetIpv4WithPrefixlen }}
+		if ip, _, err := net.ParseCIDR({{ accessor . }}); err != nil || ip.To4() == nil {
+			err := {{ err . "value must be a valid IPv4 address with prefixlen" }}
+			if !all { return err }
+			errors = append(errors, err)
+		}
 	{{ else if $r.GetIpv6 }}
 		if ip := net.ParseIP({{ accessor . }}); ip == nil || ip.To4() != nil {
 			err := {{ err . "value must be a valid IPv6 address" }}
+			if !all { return err }
+			errors = append(errors, err)
+		}
+	{{ else if $r.GetIpv6Prefix }}
+		if ip, net, err := net.ParseCIDR({{ accessor . }}); err != nil || !ip.Mask(net.Mask).Equal(ip) || ip.To6() == nil {
+			err := {{ err . "value must be a valid IPv6 prefix" }}
+			if !all { return err }
+			errors = append(errors, err)
+		}
+	{{ else if $r.GetIpv4WithPrefixlen }}
+		if ip, _, err := net.ParseCIDR({{ accessor . }}); err != nil || ip.To6() == nil {
+			err := {{ err . "value must be a valid IPv6 address with prefixlen" }}
 			if !all { return err }
 			errors = append(errors, err)
 		}

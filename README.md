@@ -377,13 +377,37 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
   // x must be a valid IP address (either v4 or v6)
   string x = 1 [(validate.rules).string.ip = true];
 
+  // x must be a valid IP prefix with slash notation (either v4 or v6)
+  // See: ipv4_prefix & ipv6_prefix
+  string x = 1 [(validate.rules).string.ip_prefix = true];
+
+  // x must be a valid IP address with prefix length by slash notation (either v4 or v6)
+  // See: ipv4_with_prefixlen & ipv6_with_prefixlen
+  string x = 1 [(validate.rules).string.ip_with_prefixlen = true];
+
   // x must be a valid IPv4 address
   // eg: "192.168.0.1"
   string x = 1 [(validate.rules).string.ipv4 = true];
 
+  // x must be a valid IPv4 prefix with slash notation
+  // eg: "192.168.0.0/22" (The host part must be all-zero)
+  string x = 1 [(validate.rules).string.ipv4_prefix = true];
+
+  // x must be a valid IPv4 address with prefix length by slash notation
+  // eg: "192.168.1.1/22"
+  string x = 1 [(validate.rules).string.ipv4_with_prefixlen = true];
+
   // x must be a valid IPv6 address
   // eg: "fe80::3"
   string x = 1 [(validate.rules).string.ipv6 = true];
+
+  // x must be a valid IPv6 prefix with slash notation.
+  // eg: "fe80::/64" (The host part must be all-zero)
+  string x = 1 [(validate.rules).string.ipv6_prefix = true];
+
+  // x must be a valid IPv6 address with prefix length by slash notation.
+  // eg: "fe80::3/64"
+  string x = 1 [(validate.rules).string.ipv6_with_prefixlen = true];
 
   // x must be a valid absolute URI (via RFC 3986)
   string x = 1 [(validate.rules).string.uri = true];

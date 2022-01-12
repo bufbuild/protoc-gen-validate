@@ -30,8 +30,14 @@
 | hostname               |✅|✅|✅|✅|✅|
 | address                |✅|✅|✅|✅|✅|
 | ip                     |✅|✅|✅|✅|✅|
+| ip_prefix              |✅|✅|❌|❌|❌|
+| ip_with_prefixlen      |✅|✅|❌|❌|❌|
 | ipv4                   |✅|✅|✅|✅|✅|
+| ipv4_prefix            |✅|✅|❌|❌|❌|
+| ipv4_with_prefixlen    |✅|✅|❌|❌|❌|
 | ipv6                   |✅|✅|✅|✅|✅|
+| ipv6_prefix            |✅|✅|❌|❌|❌|
+| ipv6_with_prefixlen    |✅|✅|❌|❌|❌|
 | uri                    |✅|✅|❌|✅|✅|
 | uri_ref                |✅|✅|❌|✅|✅|
 | uuid                   |✅|✅|✅|✅|✅|
