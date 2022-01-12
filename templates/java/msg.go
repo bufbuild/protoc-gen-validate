@@ -15,7 +15,7 @@ const msgInnerTpl = `
 	{{- range .NonOneOfFields }}
 		{{ renderConstants (context .) }}
 	{{ end }}
-	{{ range .OneOfs }}
+	{{ range .RealOneOfs }}
 		{{ template "oneOfConst" . }}
 	{{ end }}
 
@@ -27,7 +27,7 @@ const msgInnerTpl = `
 	{{ range .NonOneOfFields -}}
 		{{ render (context .) }}
 	{{ end -}}
-	{{ range .OneOfs }}
+	{{ range .RealOneOfs }}
 		{{ template "oneOf" . }}
 	{{- end -}}
 	{{- end }}
