@@ -279,6 +279,10 @@ var int64Cases = []TestCase{
 	{"int64 - exclusive gte & lte - invalid", &cases.Int64ExGTELTE{Val: 200}, 1},
 
 	{"int64 - ignore_empty gte & lte - valid", &cases.Int64Ignore{Val: 0}, 0},
+
+	{"int64 optional - lte - valid", &cases.Int64LTEOptional{Val: &wrapperspb.Int64(63).Value}, 0},
+	{"int64 optional - lte - valid (equal)", &cases.Int64LTEOptional{Val: &wrapperspb.Int64(64).Value}, 0},
+	{"int64 optional - lte - valid (unset)", &cases.Int64LTEOptional{}, 0},
 }
 
 var uint32Cases = []TestCase{
@@ -1059,6 +1063,9 @@ var messageCases = []TestCase{
 	{"message - cross-package embed none - valid (nil)", &cases.MessageCrossPackage{}, 0},
 	{"message - cross-package embed none - valid (empty)", &cases.MessageCrossPackage{Val: &other_package.Embed{}}, 1},
 	{"message - cross-package embed none - invalid", &cases.MessageCrossPackage{Val: &other_package.Embed{Val: -1}}, 1},
+
+	{"message - required - valid", &cases.MessageRequiredButOptional{Val: &cases.TestMsg{Const: "foo"}}, 0},
+	{"message - required - valid (unset)", &cases.MessageRequiredButOptional{}, 0},
 }
 
 var repeatedCases = []TestCase{

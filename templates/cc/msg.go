@@ -116,7 +116,7 @@ bool Validate(const {{ class . }}& m, pgv::ValidationMsg* err) {
 		{{ range .NonOneOfFields }}
 			{{- render (context .) -}}
 		{{ end -}}
-		{{ range .OneOfs }}
+		{{ range .RealOneOfs }}
 			switch (m.{{ .Name }}_case()) {
 				{{ range .Fields -}}
 					case {{ oneof . }}:
