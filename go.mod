@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/iancoleman/strcase v0.2.0
-	github.com/lyft/protoc-gen-star v0.5.3
+	github.com/lyft/protoc-gen-star v0.6.0
 	github.com/qor/admin v1.2.0 // indirect
 	github.com/qor/cache v0.0.0-20171031031927-c9d48d1f13ba // indirect
 	github.com/qor/i18n v0.0.0-20210601022951-0f75814734d3
