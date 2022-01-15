@@ -3,7 +3,7 @@ load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 load("@rules_cc//cc:defs.bzl", "cc_library")
 load(":protobuf.bzl", "cc_proto_gen_validate", "java_proto_gen_validate")
 
-def pgv_go_proto_library(name, proto = None, deps = [], **kwargs):
+def pgv_go_proto_library(name, proto = None, deps = [], compilers = ["@io_bazel_rules_go//proto:go_proto"], **kwargs):
     go_proto_compiler(
         name = "pgv_plugin_go",
         suffix = ".pb.validate.go",
@@ -16,7 +16,7 @@ def pgv_go_proto_library(name, proto = None, deps = [], **kwargs):
         name = name,
         proto = proto,
         deps = ["@com_envoyproxy_protoc_gen_validate//validate:go_default_library"] + deps,
-        compilers = ["@io_bazel_rules_go//proto:go_proto", "pgv_plugin_go"],
+        compilers = compilers + ["pgv_plugin_go"],
         visibility = ["//visibility:public"],
         **kwargs
     )
