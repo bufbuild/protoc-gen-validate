@@ -99,6 +99,9 @@ message FloatRules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 8;
+
+    // You can customize the error message
+    optional string error_msg = 9;
 }
 
 // DoubleRules describes the constraints applied to `double` values
@@ -135,6 +138,9 @@ message DoubleRules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 8;
+
+    // You can customize the error message
+    optional string error_msg = 9;
 }
 
 // Int32Rules describes the constraints applied to `int32` values
@@ -171,6 +177,9 @@ message Int32Rules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 8;
+
+    // You can customize the error message
+    optional string error_msg = 9;
 }
 
 // Int64Rules describes the constraints applied to `int64` values
@@ -207,6 +216,9 @@ message Int64Rules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 8;
+
+    // You can customize the error message
+    optional string error_msg = 9;
 }
 
 // UInt32Rules describes the constraints applied to `uint32` values
@@ -243,6 +255,9 @@ message UInt32Rules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 8;
+
+    // You can customize the error message
+    optional string error_msg = 9;
 }
 
 // UInt64Rules describes the constraints applied to `uint64` values
@@ -279,6 +294,9 @@ message UInt64Rules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 8;
+
+    // You can customize the error message
+    optional string error_msg = 9;
 }
 
 // SInt32Rules describes the constraints applied to `sint32` values
@@ -315,6 +333,9 @@ message SInt32Rules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 8;
+
+    // You can customize the error message
+    optional string error_msg = 9;
 }
 
 // SInt64Rules describes the constraints applied to `sint64` values
@@ -351,6 +372,9 @@ message SInt64Rules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 8;
+
+    // You can customize the error message
+    optional string error_msg = 9;
 }
 
 // Fixed32Rules describes the constraints applied to `fixed32` values
@@ -387,6 +411,9 @@ message Fixed32Rules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 8;
+
+    // You can customize the error message
+    optional string error_msg = 9;
 }
 
 // Fixed64Rules describes the constraints applied to `fixed64` values
@@ -423,6 +450,9 @@ message Fixed64Rules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 8;
+
+    // You can customize the error message
+    optional string error_msg = 9;
 }
 
 // SFixed32Rules describes the constraints applied to `sfixed32` values
@@ -459,6 +489,9 @@ message SFixed32Rules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 8;
+
+    // You can customize the error message
+    optional string error_msg = 9;
 }
 
 // SFixed64Rules describes the constraints applied to `sfixed64` values
@@ -495,12 +528,18 @@ message SFixed64Rules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 8;
+
+    // You can customize the error message
+    optional string error_msg = 9;
 }
 
 // BoolRules describes the constraints applied to `bool` values
 message BoolRules {
     // Const specifies that this field must be exactly the specified value
     optional bool const = 1;
+
+    // You can customize the error message
+    optional string error_msg = 2;
 }
 
 // StringRules describe the constraints applied to `string` values
@@ -617,6 +656,9 @@ message StringRules {
   // IgnoreEmpty specifies that the validation rules of this field should be
   // evaluated only if the field is not empty
   optional bool ignore_empty = 26;
+
+  // You can customize the error message
+  optional string error_msg = 27;
 }
 
 // WellKnownRegex contain some well-known patterns.
@@ -690,6 +732,9 @@ message BytesRules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 14;
+
+    // You can customize the error message
+    optional string error_msg = 15;
 }
 
 // EnumRules describe the constraints applied to enum values
@@ -708,6 +753,9 @@ message EnumRules {
     // NotIn specifies that this field cannot be equal to one of the specified
     // values
     repeated int32 not_in       = 4;
+
+    // You can customize the error message
+    optional string error_msg = 5;
 }
 
 // MessageRules describe the constraints applied to embedded message values.
@@ -719,6 +767,9 @@ message MessageRules {
 
     // Required specifies that this field must be set
     optional bool required = 2;
+
+    // You can customize the error message
+    optional string error_msg = 3;
 }
 
 // RepeatedRules describe the constraints applied to `repeated` values
@@ -744,6 +795,9 @@ message RepeatedRules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 5;
+
+    // You can customize the error message
+    optional string error_msg = 6;
 }
 
 // MapRules describe the constraints applied to `map` values
@@ -771,6 +825,9 @@ message MapRules {
     // IgnoreEmpty specifies that the validation rules of this field should be
     // evaluated only if the field is not empty
     optional bool ignore_empty = 6;
+
+    // You can customize the error message
+    optional string error_msg = 7;
 }
 
 // AnyRules describe constraints applied exclusively to the
@@ -786,6 +843,9 @@ message AnyRules {
     // NotIn specifies that this field's `type_url` must not be equal to any of
     // the specified values.
     repeated string not_in = 3;
+
+    // You can customize the error message
+    optional string error_msg = 4;
 }
 
 // DurationRules describe the constraints applied exclusively to the
@@ -820,6 +880,9 @@ message DurationRules {
     // NotIn specifies that this field cannot be equal to one of the specified
     // values
     repeated google.protobuf.Duration not_in = 8;
+
+    // You can customize the error message
+    optional string error_msg = 9;
 }
 
 // TimestampRules describe the constraints applied exclusively to the
@@ -859,4 +922,7 @@ message TimestampRules {
     // current time. This constraint can be used alone or with the LtNow and
     // GtNow rules.
     optional google.protobuf.Duration within = 9;
+
+    // You can customize the error message
+    optional string error_msg = 10;
 }
