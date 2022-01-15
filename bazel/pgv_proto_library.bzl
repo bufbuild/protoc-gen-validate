@@ -8,14 +8,14 @@ def pgv_go_proto_library(name, proto = None, deps = [], **kwargs):
         name = "pgv_plugin_go",
         suffix = ".pb.validate.go",
         valid_archive = False,
-        plugin = "//:protoc-gen-validate",
+        plugin = "@com_envoyproxy_protoc_gen_validate//:protoc-gen-validate",
         options = ["lang=go"],
     )
 
     go_proto_library(
         name = name,
         proto = proto,
-        deps = ["//validate:go_default_library"] + deps,
+        deps = ["@com_envoyproxy_protoc_gen_validate//validate:go_default_library"] + deps,
         compilers = ["@io_bazel_rules_go//proto:go_proto", "pgv_plugin_go"],
         visibility = ["//visibility:public"],
         **kwargs
