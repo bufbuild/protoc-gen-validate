@@ -173,3 +173,5 @@ message SFixed64ExGTELTE { sfixed64 val = 1 [(validate.rules).sfixed64 = {lte: 1
 message SFixed64Ignore   { sfixed64 val = 1 [(validate.rules).sfixed64 = {lte: 128, gte: 256, ignore_empty: true}]; }
 
 message Int64LTEOptional      { optional int64 val = 1 [(validate.rules).int64.lte = 64]; }
+
+message SFixed64IgnoreErrorMsg   { sfixed64 val = 1 [(validate.rules).sfixed64 = {lte: 128, gte: 256, error_msg: "custom error msg sfix64 ignore"}]; }

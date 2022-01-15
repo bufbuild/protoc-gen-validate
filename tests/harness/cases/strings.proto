@@ -37,3 +37,5 @@ message StringHttpHeaderName { string val = 1 [(validate.rules).string.well_know
 message StringHttpHeaderValue     { string val = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_VALUE]; }
 message StringValidHeader    { string val = 1 [(validate.rules).string = {well_known_regex: HTTP_HEADER_VALUE, strict: false}]; }
 message StringUUIDIgnore     { string val = 1 [(validate.rules).string = {uuid: true, ignore_empty: true}]; }
+
+message StringUUIDIgnoreErrorMsg     { string val = 1 [(validate.rules).string = {uuid: true, error_msg: "custom error msg string uuid"}]; }

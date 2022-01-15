@@ -46,3 +46,5 @@ message RepeatedYetAnotherExternalEnumDefined { repeated yet_another_package.Emb
 
 message MapEnumDefined { map<string, TestEnum> val = 1 [(validate.rules).map.values.enum.defined_only = true]; }
 message MapExternalEnumDefined { map<string, other_package.Embed.Enumerated> val = 1 [(validate.rules).map.values.enum.defined_only = true]; }
+
+message EnumAliasNotInErrorMsg { TestEnumAlias val = 1 [(validate.rules).enum = { not_in: [1], error_msg: "custom error msg in enum alias not in"}]; }

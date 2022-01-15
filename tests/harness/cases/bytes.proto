@@ -21,3 +21,5 @@ message BytesIP          { bytes val = 1 [(validate.rules).bytes.ip = true]; }
 message BytesIPv4        { bytes val = 1 [(validate.rules).bytes.ipv4 = true]; }
 message BytesIPv6        { bytes val = 1 [(validate.rules).bytes.ipv6 = true]; }
 message BytesIPv6Ignore  { bytes val = 1 [(validate.rules).bytes = {ipv6: true, ignore_empty: true}]; }
+
+message BytesIPv6IgnoreErrorMsg  { bytes val = 1 [(validate.rules).bytes = {ipv6: true, ignore_empty: true, error_msg: "custom bytes ipv6 ignore error msg"}]; }

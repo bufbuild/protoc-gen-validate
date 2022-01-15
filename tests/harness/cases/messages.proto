@@ -40,3 +40,6 @@ message MessageRequiredOneof {
 }
 
 message MessageWith3dInside {}
+
+
+message MessageRequiredErrorMsg { TestMsg val = 1 [(validate.rules).message = {required: true, error_msg: "custom error msg message required"}]; }
