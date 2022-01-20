@@ -1,6 +1,13 @@
 package goshared
 
 const ltgtTpl = `{{ $f := .Field }}{{ $r := .Rules }}
+	{{ if or $r.Lt $r.Gt $r.Lte $r.Gte }}
+		if val :=  {{ accessor . }}; math.IsNaN(float64(val)) {
+			err := {{ err . "value can't be NaN" }}
+			if !all { return err }
+			errors = append(errors, err)
+		}
+	{{ end }}
 	{{ if $r.Lt }}
 		{{ if $r.Gt }}
 			{{  if gt $r.GetLt $r.GetGt }}

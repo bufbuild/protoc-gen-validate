@@ -9,6 +9,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"math"
 	"net"
 	"net/mail"
 	"net/url"
@@ -39,6 +40,7 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
+	_ = math.IsNaN
 
 	{{ range $pkg, $enum := enumPackages (externalEnums .) }}
 	_ = {{ $pkg }}.{{ $enum.Name }}(0)

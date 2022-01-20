@@ -66,52 +66,63 @@ var floatCases = []TestCase{
 
 	{"float - const - valid", &cases.FloatConst{Val: 1.23}, 0},
 	{"float - const - invalid", &cases.FloatConst{Val: 4.56}, 1},
+	{"float - const - invalid", &cases.FloatConst{Val: math.NaN()}, 1},
 
 	{"float - in - valid", &cases.FloatIn{Val: 7.89}, 0},
 	{"float - in - invalid", &cases.FloatIn{Val: 10.11}, 1},
+	{"float - in - invalid", &cases.FloatIn{Val: math.NaN()}, 1},
 
 	{"float - not in - valid", &cases.FloatNotIn{Val: 1}, 0},
 	{"float - not in - invalid", &cases.FloatNotIn{Val: 0}, 1},
+	{"float - not in - invalid", &cases.FloatNotIn{Val: math.NaN()}, 1},
 
 	{"float - lt - valid", &cases.FloatLT{Val: -1}, 0},
 	{"float - lt - invalid (equal)", &cases.FloatLT{Val: 0}, 1},
 	{"float - lt - invalid", &cases.FloatLT{Val: 1}, 1},
+	{"float - lt - invalid", &cases.FloatLT{Val: math.NaN()}, 1},
 
 	{"float - lte - valid", &cases.FloatLTE{Val: 63}, 0},
 	{"float - lte - valid (equal)", &cases.FloatLTE{Val: 64}, 0},
 	{"float - lte - invalid", &cases.FloatLTE{Val: 65}, 1},
+	{"float - lte - invalid (NaN)", &cases.FloatLTE{Val: math.NaN()}, 1},
 
 	{"float - gt - valid", &cases.FloatGT{Val: 17}, 0},
 	{"float - gt - invalid (equal)", &cases.FloatGT{Val: 16}, 1},
 	{"float - gt - invalid", &cases.FloatGT{Val: 15}, 1},
+	{"float - lte - invalid (NaN)", &cases.FloatGT{Val: math.NaN()}, 1},
 
 	{"float - gte - valid", &cases.FloatGTE{Val: 9}, 0},
 	{"float - gte - valid (equal)", &cases.FloatGTE{Val: 8}, 0},
 	{"float - gte - invalid", &cases.FloatGTE{Val: 7}, 1},
+	{"float - gte - invalid (NaN)", &cases.FloatGTE{Val: math.NaN()}, 1},
 
 	{"float - gt & lt - valid", &cases.FloatGTLT{Val: 5}, 0},
 	{"float - gt & lt - invalid (above)", &cases.FloatGTLT{Val: 11}, 1},
 	{"float - gt & lt - invalid (below)", &cases.FloatGTLT{Val: -1}, 1},
 	{"float - gt & lt - invalid (max)", &cases.FloatGTLT{Val: 10}, 1},
 	{"float - gt & lt - invalid (min)", &cases.FloatGTLT{Val: 0}, 1},
+	{"float - gt & lt - invalid (NaN)", &cases.FloatGTLT{Val: math.NaN()}, 1},
 
 	{"float - exclusive gt & lt - valid (above)", &cases.FloatExLTGT{Val: 11}, 0},
 	{"float - exclusive gt & lt - valid (below)", &cases.FloatExLTGT{Val: -1}, 0},
 	{"float - exclusive gt & lt - invalid", &cases.FloatExLTGT{Val: 5}, 1},
 	{"float - exclusive gt & lt - invalid (max)", &cases.FloatExLTGT{Val: 10}, 1},
 	{"float - exclusive gt & lt - invalid (min)", &cases.FloatExLTGT{Val: 0}, 1},
+	{"float - exclusive gt & lt - invalid (NaN)", &cases.FloatExLTGT{Val: math.NaN()}, 1},
 
 	{"float - gte & lte - valid", &cases.FloatGTELTE{Val: 200}, 0},
 	{"float - gte & lte - valid (max)", &cases.FloatGTELTE{Val: 256}, 0},
 	{"float - gte & lte - valid (min)", &cases.FloatGTELTE{Val: 128}, 0},
 	{"float - gte & lte - invalid (above)", &cases.FloatGTELTE{Val: 300}, 1},
 	{"float - gte & lte - invalid (below)", &cases.FloatGTELTE{Val: 100}, 1},
+	{"float - gte & lte - invalid (NaN)", &cases.FloatGTELTE{Val: math.NaN()}, 1},
 
 	{"float - exclusive gte & lte - valid (above)", &cases.FloatExGTELTE{Val: 300}, 0},
 	{"float - exclusive gte & lte - valid (below)", &cases.FloatExGTELTE{Val: 100}, 0},
 	{"float - exclusive gte & lte - valid (max)", &cases.FloatExGTELTE{Val: 256}, 0},
 	{"float - exclusive gte & lte - valid (min)", &cases.FloatExGTELTE{Val: 128}, 0},
 	{"float - exclusive gte & lte - invalid", &cases.FloatExGTELTE{Val: 200}, 1},
+	{"float - exclusive gte & lte - invalid (NaN)", &cases.FloatExGTELTE{Val: math.NaN()}, 1},
 
 	{"float - ignore_empty gte & lte - valid", &cases.FloatIgnore{Val: 0}, 0},
 }
