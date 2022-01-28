@@ -198,7 +198,6 @@ def _java_proto_gen_validate_impl(ctx):
         output_source_jar = ctx.outputs.srcjar,
         output = ctx.outputs.jar,
         java_toolchain = find_java_toolchain(ctx, ctx.attr._java_toolchain),
-        host_javabase = find_java_runtime_toolchain(ctx, ctx.attr._host_javabase),
     )
 
     return [java_info]
@@ -231,10 +230,6 @@ java_proto_gen_validate = rule(
             ],
         ),
         "_java_toolchain": attr.label(default = Label("@bazel_tools//tools/jdk:current_java_toolchain")),
-        "_host_javabase": attr.label(
-            cfg = "host",
-            default = Label("@bazel_tools//tools/jdk:current_host_java_runtime"),
-        ),
     },
     fragments = ["java"],
     provides = [JavaInfo],
