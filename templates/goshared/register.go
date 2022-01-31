@@ -326,8 +326,14 @@ func (fns goSharedFuncs) externalEnums(file pgs.File) []pgs.Enum {
 	return out
 }
 
-func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]pgs.FilePath {
-	out := make(map[pgs.Name]pgs.FilePath, len(enums))
+type EnumPackage struct {
+	Package   pgs.Name
+	FilePath  pgs.FilePath
+	FirstEnum pgs.Enum
+}
+
+func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) []EnumPackage {
+	out := make(map[pgs.Name]EnumPackage, len(enums))
 
 	nameCollision := make(map[pgs.Name]int)
 
@@ -337,15 +343,23 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]pgs.FilePat
 
 		path, ok := out[pkgName]
 
-		if ok && path != fns.ImportPath(en) {
+		if ok && path.FilePath != fns.ImportPath(en) {
 			nameCollision[pkgName] = nameCollision[pkgName] + 1
 			pkgName = pkgName + pgs.Name(strconv.Itoa(nameCollision[pkgName]))
 		}
 
-		out[pkgName] = fns.ImportPath(en)
+		out[pkgName] = EnumPackage{
+			Package:   pkgName,
+			FilePath:  fns.ImportPath(en),
+			FirstEnum: en,
+		}
 	}
 
-	return out
+	outSlice := make([]EnumPackage, 0, len(out))
+	for _, pkg := range out {
+		outSlice = append(outSlice, pkg)
+	}
+	return outSlice
 }
 
 func (fns goSharedFuncs) snakeCase(name string) string {
