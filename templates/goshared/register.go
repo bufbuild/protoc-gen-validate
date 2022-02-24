@@ -3,6 +3,7 @@ package goshared
 import (
 	"fmt"
 	"reflect"
+	"regexp"
 	"strconv"
 	"strings"
 	"text/template"
@@ -20,35 +21,36 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	fns := goSharedFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
-		"accessor":      fns.accessor,
-		"byteStr":       fns.byteStr,
-		"cmt":           pgs.C80,
-		"durGt":         fns.durGt,
-		"durLit":        fns.durLit,
-		"durStr":        fns.durStr,
-		"err":           fns.err,
-		"errCause":      fns.errCause,
-		"errIdx":        fns.errIdx,
-		"errIdxCause":   fns.errIdxCause,
-		"errname":       fns.errName,
-		"multierrname":  fns.multiErrName,
-		"inKey":         fns.inKey,
-		"inType":        fns.inType,
-		"isBytes":       fns.isBytes,
-		"lit":           fns.lit,
-		"lookup":        fns.lookup,
-		"msgTyp":        fns.msgTyp,
-		"name":          fns.Name,
-		"oneof":         fns.oneofTypeName,
-		"pkg":           fns.PackageName,
-		"snakeCase":     fns.snakeCase,
-		"tsGt":          fns.tsGt,
-		"tsLit":         fns.tsLit,
-		"tsStr":         fns.tsStr,
-		"typ":           fns.Type,
-		"unwrap":        fns.unwrap,
-		"externalEnums": fns.externalEnums,
-		"enumPackages":  fns.enumPackages,
+		"accessor":         fns.accessor,
+		"byteStr":          fns.byteStr,
+		"cmt":              pgs.C80,
+		"durGt":            fns.durGt,
+		"durLit":           fns.durLit,
+		"durStr":           fns.durStr,
+		"err":              fns.err,
+		"errCause":         fns.errCause,
+		"errIdx":           fns.errIdx,
+		"errIdxCause":      fns.errIdxCause,
+		"errname":          fns.errName,
+		"multierrname":     fns.multiErrName,
+		"inKey":            fns.inKey,
+		"inType":           fns.inType,
+		"isBytes":          fns.isBytes,
+		"lit":              fns.lit,
+		"lookup":           fns.lookup,
+		"msgTyp":           fns.msgTyp,
+		"name":             fns.Name,
+		"oneof":            fns.oneofTypeName,
+		"pkg":              fns.PackageName,
+		"snakeCase":        fns.snakeCase,
+		"goValidSnakeCase": fns.goValidSnakeCase,
+		"tsGt":             fns.tsGt,
+		"tsLit":            fns.tsLit,
+		"tsStr":            fns.tsStr,
+		"typ":              fns.Type,
+		"unwrap":           fns.unwrap,
+		"externalEnums":    fns.externalEnums,
+		"enumPackages":     fns.enumPackages,
 	})
 
 	template.Must(tpl.New("msg").Parse(msgTpl))
@@ -349,5 +351,12 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]pgs.FilePat
 }
 
 func (fns goSharedFuncs) snakeCase(name string) string {
+	return strcase.ToSnake(name)
+}
+
+// goValidSnakeCase covert string to go valid snake case by replace all special character to underline
+func (fns goSharedFuncs) goValidSnakeCase(name string) string {
+	regex := regexp.MustCompile(`\W`)
+	name = regex.ReplaceAllString(name, "_")
 	return strcase.ToSnake(name)
 }
