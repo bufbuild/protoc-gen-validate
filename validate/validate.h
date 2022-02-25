@@ -59,7 +59,8 @@ public:
 
   static bool CheckMessage(const T& m, ValidationMsg* err)
   {
-    auto val = static_cast<Validator<T>*>(validators()[std::type_index(typeid(T))]);
+    // Run typeid() on the variable vs. the type to allow polymorphic lookup of the validator.
+    auto val = static_cast<Validator<T>*>(validators()[std::type_index(typeid(m))]);
     if (val) {
       return val->check_(m, err);
     }
