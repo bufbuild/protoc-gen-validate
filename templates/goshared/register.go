@@ -198,11 +198,6 @@ func (fns goSharedFuncs) isBytes(f interface {
 	return f.ProtoType() == pgs.BytesT
 }
 
-func (fns goSharedFuncs) isMessage(i interface{}) bool {
-	_, ok := i.(pgs.Message)
-	return ok
-}
-
 func (fns goSharedFuncs) byteStr(x []byte) string {
 	elms := make([]string, len(x))
 	for i, b := range x {
@@ -336,13 +331,13 @@ func (fns goSharedFuncs) externalEnums(file pgs.File) []pgs.Enum {
 func (fns goSharedFuncs) enumName(enum pgs.Enum) string {
 	out := string(enum.Name())
 	parent := enum.Parent()
-    for {
+	for {
 		message, ok := parent.(pgs.Message)
 		if ok {
-          out = string(message.Name()) + "_" + out
-		  parent = message.Parent()
+			out = string(message.Name()) + "_" + out
+			parent = message.Parent()
 		} else {
-          return out
+			return out
 		}
 	}
 }
