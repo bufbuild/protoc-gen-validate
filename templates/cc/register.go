@@ -318,7 +318,8 @@ func (fns CCFuncs) cType(t pgs.FieldType) string {
 		return fns.cTypeOfString(fns.Type(t.Field()).Element().String())
 	}
 
-	return fns.cTypeOfString(fns.Type(t.Field()).String())
+	// Use Value() to strip any potential pointer type.
+	return fns.cTypeOfString(fns.Type(t.Field()).Value().String())
 }
 
 func (fns CCFuncs) cTypeOfString(s string) string {
