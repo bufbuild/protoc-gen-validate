@@ -52,4 +52,8 @@ message EnumInsideOneOf {
     oneof foo {
         TestEnum val = 1 [(validate.rules).enum.defined_only = true];
     }
+
+    oneof bar {
+        TestEnum val2 = 2 [(validate.rules).enum = {defined_only : true not_in : 0}];
+    }
 }

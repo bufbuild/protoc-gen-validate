@@ -226,7 +226,8 @@ func (fns goSharedFuncs) inType(f pgs.Field, x interface{}) string {
 		if f.Type().IsRepeated() {
 			return strings.TrimLeft(fns.Type(f).String(), "[]")
 		} else {
-			return fns.Type(f).String()
+			// Use Value() to strip any potential pointer type.
+			return fns.Type(f).Value().String()
 		}
 	default:
 		// Use Value() to strip any potential pointer type.
