@@ -25,9 +25,4 @@
 #include "tests/harness/cases/wkt_wrappers.pb.h"
 #include "tests/harness/cases/wkt_wrappers.pb.validate.h"
 
-int main(int argc, char **argv) {
-  (void)argc;
-  (void)argv;
-
-  return EXIT_SUCCESS;
-}
+int main() { return EXIT_SUCCESS; }
