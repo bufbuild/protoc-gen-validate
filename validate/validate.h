@@ -47,7 +47,7 @@ public:
   /**
    * Validate/check a generic message object with a registered validator for the concrete message
    * type.
-   * @param m supplies the mesasge reo check.
+   * @param m supplies the message to check.
    * @param err supplies the place to return error information.
    * @return true if the validation passes OR there is no registered validator for the concrete
    *         message type. false is returned if validation explicitly fails.
