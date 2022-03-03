@@ -76,7 +76,7 @@
                      ~ Protobuf guarantees API stability for all 3.x version.
                      ~ https://github.com/protocolbuffers/protobuf/blob/17cc42a45aeab0f78a137fa6be6c36095db32e58/CHANGES.txt#L107-L122
                     -->
-                    <protocArtifact>com.google.protobuf:protoc:3.0.0:exe:${os.detected.classifier}</protocArtifact>
+                    <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
                 </configuration>
                 <executions>
                     <execution>
