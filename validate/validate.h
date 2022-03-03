@@ -44,6 +44,14 @@ using ValidationMsg = std::string;
 
 class BaseValidator {
 public:
+  /**
+   * Validate/check a generic message object with a registered validator for the concrete message
+   * type.
+   * @param m supplies the mesasge reo check.
+   * @param err supplies the place to return error information.
+   * @return true if the validation passes OR there is no registered validator for the concrete
+   *         message type. false is returned if validation explicitly fails.
+   */
   static bool AbstractCheckMessage(const google::protobuf::Message& m, ValidationMsg* err) {
     // Polymorphic lookup is used to see if there is a matching concrete validator. If so, call it.
     // Otherwise return success.
@@ -55,11 +63,8 @@ public:
   }
 
 protected:
-  static std::unordered_map<std::type_index, BaseValidator*>& validators() {
-    static auto* validator_map = new std::unordered_map<std::type_index, BaseValidator*>();
-    return *validator_map;
-  }
-
+  // Used to implement AbstractCheckMessage() above. Every message that is linked into the binary
+  // will register itself by type_index, allowing for polymorphic lookup later.
   static std::unordered_map<std::type_index,
                             std::function<bool(const google::protobuf::Message&, ValidationMsg*)>>&
   abstractValidators() {
@@ -72,19 +77,10 @@ protected:
 template <typename T> class Validator : public BaseValidator {
 public:
   Validator(std::function<bool(const T&, ValidationMsg*)> check) : check_(check) {
-    validators()[std::type_index(typeid(T))] = this;
     abstractValidators()[std::type_index(typeid(T))] = [this](const google::protobuf::Message& m,
                                                               ValidationMsg* err) -> bool {
       return check_(dynamic_cast<const T&>(m), err);
     };
-  }
-
-  static bool CheckMessage(const T& m, ValidationMsg* err) {
-    auto val = static_cast<Validator<T>*>(validators()[std::type_index(typeid(T))]);
-    if (val) {
-      return val->check_(m, err);
-    }
-    return true;
   }
 
 private:
