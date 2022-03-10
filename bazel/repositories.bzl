@@ -33,7 +33,7 @@ def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
             strip_prefix = "protobuf-3.15.3",
         )
 
-    # TODO(akonradi): This shouldn't be necesary since the same http_archive block is imported by
+    # TODO(akonradi): This shouldn't be necessary since the same http_archive block is imported by
     # protobuf_deps from @com_google_protobuf. Investigate why.
     if not native.existing_rule("zlib"):
         http_archive(
