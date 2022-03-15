@@ -58,6 +58,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"typ":           fns.Type,
 		"unwrap":        fns.unwrap,
 		"externalEnums": fns.externalEnums,
+		"enumName":      fns.enumName,
 		"enumPackages":  fns.enumPackages,
 	})
 
@@ -237,10 +238,12 @@ func (fns goSharedFuncs) inType(f pgs.Field, x interface{}) string {
 		if f.Type().IsRepeated() {
 			return strings.TrimLeft(fns.Type(f).String(), "[]")
 		} else {
-			return fns.Type(f).String()
+			// Use Value() to strip any potential pointer type.
+			return fns.Type(f).Value().String()
 		}
 	default:
-		return fns.Type(f).String()
+		// Use Value() to strip any potential pointer type.
+		return fns.Type(f).Value().String()
 	}
 }
 
@@ -336,6 +339,20 @@ func (fns goSharedFuncs) externalEnums(file pgs.File) []pgs.Enum {
 	}
 
 	return out
+}
+
+func (fns goSharedFuncs) enumName(enum pgs.Enum) string {
+	out := string(enum.Name())
+	parent := enum.Parent()
+	for {
+		message, ok := parent.(pgs.Message)
+		if ok {
+			out = string(message.Name()) + "_" + out
+			parent = message.Parent()
+		} else {
+			return out
+		}
+	}
 }
 
 func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]pgs.FilePath {

@@ -1,4 +1,5 @@
-load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_proto_library", "cc_test")
+load("@rules_proto//proto:defs.bzl", "proto_library")
 
 MSVC_C_OPTS = [
     "-WX",
@@ -32,6 +33,29 @@ cc_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//tests/harness:harness_cc_proto",
+        "//tests/harness/cases:cc",
+    ],
+)
+
+proto_library(
+    name = "other_proto",
+    srcs = ["other.proto"],
+)
+
+cc_proto_library(
+    name = "other_cc_proto",
+    deps = ["other_proto"],
+)
+
+cc_test(
+    name = "polymorphic_test",
+    srcs = ["polymorphic_test.cc"],
+    copts = select({
+        ":windows_x86_64": MSVC_C_OPTS,
+        "//conditions:default": POSIX_C_OPTS,
+    }),
+    deps = [
+        ":other_cc_proto",
         "//tests/harness/cases:cc",
     ],
 )

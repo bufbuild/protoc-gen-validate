@@ -6,12 +6,12 @@ package io.envoyproxy.pgv;
 @FunctionalInterface
 public interface ValidatorIndex {
     /**
-     * Retuns the validator for {@code clazz}, or {@code ALWAYS_VALID} if not found.
+     * Returns the validator for {@code clazz}, or {@code ALWAYS_VALID} if not found.
      */
     <T> Validator<T> validatorFor(Class clazz);
 
     /**
-     * Retuns the validator for {@code <T>}, or {@code ALWAYS_VALID} if not found.
+     * Returns the validator for {@code <T>}, or {@code ALWAYS_VALID} if not found.
      */
     @SuppressWarnings("unchecked")
     default <T> Validator<T> validatorFor(Object instance) {
