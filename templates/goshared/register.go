@@ -320,7 +320,7 @@ func (fns goSharedFuncs) externalEnums(file pgs.File) []pgs.Enum {
 				en = fld.Type().Element().Enum()
 			}
 
-			if en != nil && en.Package().ProtoName() != fld.Package().ProtoName() && fns.PackageName(en) != fns.PackageName(fld) {
+			if en != nil && en.Package().ProtoName() != fld.Package().ProtoName() {
 				out = append(out, en)
 			}
 		}
