@@ -1,7 +1,7 @@
 package cc
 
 const repTpl = `
-	{{ $f := .Field }}{{ $r := .Rules }}{{ $typ := inType $f nil }}
+	{{ $f := .Field }}{{ $r := .Rules }}{{ $typ := inType $f nil }} {{ $safeTyp := safeClassName $typ}}
 	{{ if $r.GetIgnoreEmpty }}
 		if ({{ accessor . }}.size() > 0) {
 	{{ end }}
@@ -27,14 +27,14 @@ const repTpl = `
 
 	{{ if $r.GetUnique }}
 	// Implement comparison for wrapped reference types
-	struct cmp {
+	struct {{ $safeTyp }}_cmp {
 		bool operator() (const std::reference_wrapper<{{ $typ }}> lhs, const std::reference_wrapper<{{ $typ }}> rhs) const {
 			return lhs.get() == rhs.get();
 		}
 	};
 
 	// Implement hashing for wrapped reference types
-	struct hash {
+	struct {{ $safeTyp }}_hash {
 		std::hash<{{ $typ }}> hash_fn;
 		bool operator() (const std::reference_wrapper<{{ $typ }}> ref) const {
 			return hash_fn(ref.get());
@@ -42,7 +42,7 @@ const repTpl = `
 	};
 
 	// Save a set of references to avoid copying overhead
-	std::unordered_set<std::reference_wrapper<{{ $typ }}>, hash, cmp> {{ lookup $f "Unique" }};
+	std::unordered_set<std::reference_wrapper<{{ $typ }}>, {{ $safeTyp }}_hash, {{ $safeTyp }}_cmp> {{ lookup $f "Unique" }};
 	{{ end }}
 
 	{{ if or $r.GetUnique (ne (.Elem "" "").Typ "none") }}
@@ -51,7 +51,7 @@ const repTpl = `
 			(void)item;
 
 			{{ if $r.GetUnique }}
-				auto p = {{ lookup $f "Unique" }}.emplace(const_cast<{{ $typ }}&>(item));
+				auto p = {{ lookup $f "Unique" }}.emplace(({{ $typ }}&)(item));
 				if (p.second == false) {
 					{{ errIdx . "i" "repeated value must contain unique items" }}
 				}

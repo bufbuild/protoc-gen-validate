@@ -48,6 +48,7 @@ func RegisterModule(tpl *template.Template, params pgs.Parameters) {
 		"typ":           fns.Type,
 		"unimplemented": fns.failUnimplemented,
 		"unwrap":        fns.unwrap,
+		"safeClassName": fns.safeClassName,
 	})
 	template.Must(tpl.Parse(moduleFileTpl))
 	template.Must(tpl.New("msg").Parse(msgTpl))
@@ -220,7 +221,7 @@ func (fns CCFuncs) errIdxCause(ctx shared.RuleContext, idx, cause string, reason
 func (fns CCFuncs) lookup(f pgs.Field, name string) string {
 	return fmt.Sprintf(
 		"_%s_%s_%s",
-		pgsgo.PGGUpperCamelCase(f.Message().Name()),
+		fns.safeClassName(fns.className(f.Message())),
 		pgsgo.PGGUpperCamelCase(f.Name()),
 		name,
 	)
@@ -435,4 +436,8 @@ func (fns CCFuncs) Type(f pgs.Field) pgsgo.TypeName {
 	}
 
 	return typ
+}
+
+func (fns CCFuncs) safeClassName(msg string) string {
+	return strings.Replace(msg, ":", "_", -1)
 }
