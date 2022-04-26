@@ -115,12 +115,20 @@ func CcFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.File
 }
 
 func (fns CCFuncs) methodName(name interface{}) string {
-	nameStr := fmt.Sprintf("%s", name)
+	nameStr := strings.ToLower(fmt.Sprintf("%s", name))
 	switch nameStr {
 	case "const":
 		return "const_"
 	case "inline":
 		return "inline_"
+	case "float":
+		return "float_"
+	case "double":
+		return "double_"
+	case "bool":
+		return "bool_"
+	case "enum":
+		return "enum_"
 	default:
 		return nameStr
 	}
