@@ -305,9 +305,15 @@ func (fns CCFuncs) cType(t pgs.FieldType) string {
 	if t.IsEmbed() {
 		return fns.className(t.Embed())
 	}
+	if t.IsEnum() {
+		return fns.className(t.Enum())
+	}
+
 	if t.IsRepeated() {
 		if t.ProtoType() == pgs.MessageT {
 			return fns.className(t.Element().Embed())
+		} else if t.ProtoType() == pgs.EnumT {
+			return fns.className(t.Element().Enum())
 		}
 		// Strip the leading []
 		return fns.cTypeOfString(fns.Type(t.Field()).String()[2:])
