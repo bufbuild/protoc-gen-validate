@@ -131,6 +131,12 @@ const strTpl = `
 			if !all { return err }
 			errors = append(errors, err)
 		}
+	{{ else if $r.GetCidr }}
+		if _, net, err := net.ParseCIDR({{accessor .}}); err != nil {
+			err := {{ err . "value must be valid CIDR notation" }}
+			if !all { return err }
+			errors = append(errors, err)
+		}
 	{{ else if $r.GetEmail }}
 		if err := m._validateEmail({{ accessor . }}); err != nil {
 			err = {{ errCause . "err" "value must be a valid email address" }}

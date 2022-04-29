@@ -205,6 +205,17 @@ public class StringValidationTest {
     }
 
     @Test
+    public void cidrWorks() throws ValidationException {
+      // Match
+      StringValidation.cidr("x", "192.0.2.10/24");
+      StringValidation.cidr("x", "2001:db8::/48");
+      // No match
+      assertThatThrownBy(() -> StringValidation.cidr("x", "foo")).isInstanceOf(ValidationException.class);
+      assertThatThrownBy(() -> StringValidation.cidr("x", "192.0.2.0/44")).isInstanceOf(ValidationException.class);
+      assertThatThrownBy(() -> StringValidation.cidr("x", "2001:db8::/200")).isInstanceOf(ValidationException.class);
+    }
+
+    @Test
     public void uriWorks() throws ValidationException {
         // Match
         StringValidation.uri("x", "ftp://ftp.is.co.za/rfc/rfc1808.txt");

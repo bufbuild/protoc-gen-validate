@@ -164,6 +164,35 @@ public final class StringValidation {
         }
     }
 
+    public static void cidr(String field, String value) throws ValidationException {
+        InetAddressValidator ipValidator = InetAddressValidator.getInstance();
+        int offset = value.indexOf("/");
+        if (offset == -1) {
+            throw new ValidationException(field, enquote(value), "doesn't look like CIDR notation");
+        }
+
+        String addr = value.substring(0, offset);
+        String pfx = value.substring(offset + 1);
+        int pfxlen;
+        try {
+            pfxlen = Integer.parseUnsignedInt(pfx);
+        } catch (Exception e) {
+            throw new ValidationException(field, enquote(value), "doesn't look like CIDR notation");
+        }
+
+        if (ipValidator.isValidInet4Address(addr)) {
+          if (pfxlen > 32) {
+            throw new ValidationException(field, enquote(value), "invalid IPv4 mask length");
+          }
+        }
+
+        if (ipValidator.isValidInet6Address(addr)) {
+          if (pfxlen > 128) {
+            throw new ValidationException(field, enquote(value), "invalid IPv6 mask length");
+          }
+        }
+    }
+
     public static void uri(String field, String value) throws ValidationException {
         try {
             URI uri = new URI(value);
