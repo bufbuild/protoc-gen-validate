@@ -1,7 +1,8 @@
 version: 2
 jobs:
   build:
-    machine: true
+    machine:
+      image: ubuntu-2004:202201-02
     working_directory: ~/pgv
     steps:
       - checkout
@@ -13,7 +14,8 @@ jobs:
           fi
 
   javabuild:
-    machine: true
+    machine:
+      image: ubuntu-2004:202201-02
     working_directory: ~/.go_workspace/src/github.com/envoyproxy/protoc-gen-validate/java
     environment:
       MAVEN_OPTS: -Xms512m -Xmx1024m # Customize the JVM maximum heap limit
