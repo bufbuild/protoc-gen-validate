@@ -13,7 +13,9 @@ const oneOfTpl = `
 				{{ end -}}
 				{{- if required . }}
 				default: 
-					io.envoyproxy.pgv.RequiredValidation.required("{{ .FullyQualifiedName }}", null);
+					valctx.getValidationCollector().assertValid( (value) -> {
+						io.envoyproxy.pgv.RequiredValidation.required("{{ .FullyQualifiedName }}", null);
+					},proto);
 				{{- end }}
 			}
 `

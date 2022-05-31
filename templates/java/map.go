@@ -9,16 +9,22 @@ const mapConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 
 const mapTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.GetIgnoreEmpty }}
-			if ( !{{ accessor . }}.isEmpty() ) {
+	if ( !{{ accessor . }}.isEmpty() ) {
 {{- end -}}
 {{- if $r.GetMinPairs }}
-			io.envoyproxy.pgv.MapValidation.min("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMinPairs }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.MapValidation.min("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMinPairs }});
+	},proto);
 {{- end -}}
 {{- if $r.GetMaxPairs }}
-			io.envoyproxy.pgv.MapValidation.max("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMaxPairs }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.MapValidation.max("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMaxPairs }});
+	},proto);
 {{- end -}}
 {{- if $r.GetNoSparse }}
-			io.envoyproxy.pgv.MapValidation.noSparse("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.MapValidation.noSparse("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+	},proto);
 {{- end -}}
 {{ if or (ne (.Elem "" "").Typ "none") (ne (.Key "" "").Typ "none") }}
 			io.envoyproxy.pgv.MapValidation.validateParts({{ accessor . }}.keySet(), key -> {

@@ -36,43 +36,69 @@ const bytesTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			if ( !{{ accessor . }}.isEmpty() ) {
 {{- end -}}
 {{- if $r.Const }}
-			io.envoyproxy.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Const" }});
+			valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+				io.envoyproxy.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Const" }});
+			},proto);
 {{- end -}}
 {{- if $r.Len }}
-			io.envoyproxy.pgv.BytesValidation.length("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetLen }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.BytesValidation.length("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetLen }});
+	},proto);
 {{- end -}}
 {{- if $r.MinLen }}
-			io.envoyproxy.pgv.BytesValidation.minLength("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMinLen }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.BytesValidation.minLength("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMinLen }});
+	},proto);
 {{- end -}}
 {{- if $r.MaxLen }}
-			io.envoyproxy.pgv.BytesValidation.maxLength("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMaxLen }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.BytesValidation.maxLength("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMaxLen }});
+	},proto);
 {{- end -}}
 {{- if $r.Pattern }}
-			io.envoyproxy.pgv.BytesValidation.pattern("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Pattern" }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.BytesValidation.pattern("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Pattern" }});
+	},proto);
 {{- end -}}
 {{- if $r.Prefix }}
-			io.envoyproxy.pgv.BytesValidation.prefix("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Prefix" }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.BytesValidation.prefix("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Prefix" }});
+	},proto);
 {{- end -}}
 {{- if $r.Contains }}
-			io.envoyproxy.pgv.BytesValidation.contains("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Contains" }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.BytesValidation.contains("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Contains" }});
+	},proto);
 {{- end -}}
 {{- if $r.Suffix }}
-			io.envoyproxy.pgv.BytesValidation.suffix("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Suffix" }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.BytesValidation.suffix("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Suffix" }});
+	},proto);
 {{- end -}}
 {{- if $r.GetIp }}
-			io.envoyproxy.pgv.BytesValidation.ip("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.BytesValidation.ip("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+	},proto);
 {{- end -}}
 {{- if $r.GetIpv4 }}
-			io.envoyproxy.pgv.BytesValidation.ipv4("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.BytesValidation.ipv4("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+	},proto);
 {{- end -}}
 {{- if $r.GetIpv6 }}
-			io.envoyproxy.pgv.BytesValidation.ipv6("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.BytesValidation.ipv6("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+	},proto);
 {{- end -}}
 {{- if $r.In }}
-			io.envoyproxy.pgv.CollectiveValidation.in("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "In" }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.CollectiveValidation.in("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "In" }});
+	},proto);
 {{- end -}}
 {{- if $r.NotIn }}
-			io.envoyproxy.pgv.CollectiveValidation.notIn("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "NotIn" }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.CollectiveValidation.notIn("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "NotIn" }});
+	},proto);
 {{- end -}}
 {{- if $r.GetIgnoreEmpty }}
 			}

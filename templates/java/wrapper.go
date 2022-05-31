@@ -8,5 +8,7 @@ const wrapperTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 				{{- render (unwrap .) }}
 			}
 			{{ if .MessageRules.GetRequired }} else {
-				throw new io.envoyproxy.pgv.ValidationException("{{ $f }}", "null", "is required");
+				valctx.getValidationCollector().assertValid( (value) -> {
+					throw new io.envoyproxy.pgv.ValidationException("{{ $f }}", "null", "is required");
+				},proto);
 			} {{ end }}`

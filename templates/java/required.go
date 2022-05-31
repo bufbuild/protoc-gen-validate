@@ -3,9 +3,13 @@ package java
 const requiredTpl = `{{ $f := .Field }}
 	{{- if .Rules.GetRequired }}
 		if ({{ hasAccessor . }}) {
-			io.envoyproxy.pgv.RequiredValidation.required("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+			valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+				io.envoyproxy.pgv.RequiredValidation.required("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+			},proto);
 		} else {
-			io.envoyproxy.pgv.RequiredValidation.required("{{ $f.FullyQualifiedName }}", null);
+			valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+				io.envoyproxy.pgv.RequiredValidation.required("{{ $f.FullyQualifiedName }}", null);
+			},proto);
 		};
 	{{- end -}}
 `

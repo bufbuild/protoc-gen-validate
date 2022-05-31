@@ -55,6 +55,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"unwrap":                   fns.unwrap,
 		"renderConstants":          fns.renderConstants(tpl),
 		"constantName":             fns.constantName,
+		"safeName":                 fns.safeName,
 	})
 
 	template.Must(tpl.Parse(fileTpl))
@@ -299,6 +300,13 @@ func (fns javaFuncs) accessor(ctx shared.RuleContext) string {
 		return ctx.AccessorOverride
 	}
 	return fns.fieldAccessor(ctx.Field)
+}
+
+func (fns javaFuncs) safeName(ctx shared.RuleContext, proposal string) string {
+	if fns.accessor(ctx) == proposal {
+		return proposal + "_"
+	}
+	return proposal
 }
 
 func (fns javaFuncs) fieldAccessor(f pgs.Field) string {

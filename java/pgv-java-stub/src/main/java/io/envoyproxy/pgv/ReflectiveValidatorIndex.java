@@ -28,18 +28,18 @@ public final class ReflectiveValidatorIndex implements ValidatorIndex {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Validator<T> validatorFor(Class clazz) {
+    public <T> Validator<T> validatorFor(Class clazz,ValidationContext context) {
         return VALIDATOR_INDEX.computeIfAbsent(clazz, c -> {
             try {
-                return reflectiveValidatorFor(c);
+                return reflectiveValidatorFor(c,context);
             } catch (ReflectiveOperationException ex) {
-                return fallbackIndex.validatorFor(clazz);
+                return fallbackIndex.validatorFor(clazz, context);
             }
         });
     }
 
     @SuppressWarnings("unchecked")
-    private Validator reflectiveValidatorFor(Class clazz) throws ReflectiveOperationException {
+    private Validator reflectiveValidatorFor(Class clazz,ValidationContext context) throws ReflectiveOperationException {
         Class enclosingClass = clazz;
         while (enclosingClass.getEnclosingClass() != null) {
             enclosingClass = enclosingClass.getEnclosingClass();
@@ -49,6 +49,6 @@ public final class ReflectiveValidatorIndex implements ValidatorIndex {
         Class validatorClass = clazz.getClassLoader().loadClass(validatorClassName);
         ValidatorImpl impl = (ValidatorImpl) validatorClass.getDeclaredMethod("validatorFor", Class.class).invoke(null, clazz);
 
-        return proto -> impl.assertValid(proto, ReflectiveValidatorIndex.this);
+        return (proto) -> impl.assertValid(proto, context);
     }
 }

@@ -12,9 +12,9 @@ public interface ValidatorImpl<T> {
      * @param proto the protobuf object to validate.
      * @throws ValidationException with the first validation error encountered.
      */
-    void assertValid(T proto, ValidatorIndex index) throws ValidationException;
+    void assertValid(T proto, ValidationContext context) throws ValidationException;
 
-    ValidatorImpl ALWAYS_VALID = (proto, index) -> {
+    ValidatorImpl ALWAYS_VALID = (proto, context) -> {
         // Do nothing. Always valid.
     };
 }

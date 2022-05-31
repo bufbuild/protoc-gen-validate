@@ -18,16 +18,24 @@ const enumConstTpl = `{{ $ctx := . }}{{ $f := .Field }}{{ $r := .Rules -}}
 
 const enumTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.Const }}
-			io.envoyproxy.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", {{ accessor . }}, 
-				{{ javaTypeFor . }}.forNumber({{ $r.GetConst }}));
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", {{ accessor . }}, 
+					{{ javaTypeFor . }}.forNumber({{ $r.GetConst }}));
+	},proto);
 {{- end -}}
 {{- if $r.GetDefinedOnly }}
-			io.envoyproxy.pgv.EnumValidation.definedOnly("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.EnumValidation.definedOnly("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+	},proto);
 {{- end -}}
 {{- if $r.In }}
-			io.envoyproxy.pgv.CollectiveValidation.in("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "In" }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.CollectiveValidation.in("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "In" }});
+	},proto);
 {{- end -}}
 {{- if $r.NotIn }}
-			io.envoyproxy.pgv.CollectiveValidation.notIn("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "NotIn" }});
+	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+		io.envoyproxy.pgv.CollectiveValidation.notIn("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "NotIn" }});
+	},proto);
 {{- end -}}
 `

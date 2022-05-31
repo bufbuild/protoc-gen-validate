@@ -46,7 +46,7 @@ public class ReflectiveValidatorIndexTest {
         ValidatorIndex fallback = new ValidatorIndex() {
             @Override
             @SuppressWarnings("unchecked")
-            public <T> Validator<T> validatorFor(Class clazz) {
+            public <T> Validator<T> validatorFor(Class clazz,ValidationContext context) {
                 called.set(true);
                 return Validator.ALWAYS_VALID;
             }
