@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @author rlamont
  */
-public class ValidateAllExceptionCollector implements ValidationCollector {
+public class ValidateAllExceptionInterceptor implements ValidatorInterceptor {
     private final List<ValidationException> exceptionList = new ArrayList<>();
     @Override
     @SuppressWarnings("unchecked")

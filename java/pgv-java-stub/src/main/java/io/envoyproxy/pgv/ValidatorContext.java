@@ -16,14 +16,14 @@
 package io.envoyproxy.pgv;
 
 /**
- *
+ * {@code ValidatorContext} defines the entry point for finding {@link Validator} instances for a given type.
  * @author rlamont
  */
-public class ValidationContext {
+public class ValidatorContext {
     public final ValidatorIndex validationIndex;
-    public final ValidationCollector validationCollector;
+    public final ValidatorInterceptor validationCollector;
 
-    public ValidationContext(ValidatorIndex validationIndex, ValidationCollector validationCollector) {
+    public ValidatorContext(ValidatorIndex validationIndex, ValidatorInterceptor validationCollector) {
         this.validationIndex = validationIndex;
         this.validationCollector = validationCollector;
     }
@@ -32,7 +32,7 @@ public class ValidationContext {
         return validationIndex;
     }
 
-    public ValidationCollector getValidationCollector() {
+    public ValidatorInterceptor getValidationCollector() {
         return validationCollector;
     }
 

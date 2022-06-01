@@ -19,12 +19,12 @@ package io.envoyproxy.pgv;
  *
  * @author rlamont
  */
-public interface ValidationCollector {
+public interface ValidatorInterceptor {
     
     void assertValid(Validator validator,Object proto ) throws ValidationException;
     
     @SuppressWarnings("unchecked")
-    ValidationCollector PASS_THROUGH = (validator,proto) -> {
+    ValidatorInterceptor PASS_THROUGH = (validator,proto) -> {
          
         validator.assertValid(proto);
     };

@@ -5,6 +5,8 @@ import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.Message;
 import io.envoyproxy.pgv.ReflectiveValidatorIndex;
 import io.envoyproxy.pgv.UnimplementedException;
+import io.envoyproxy.pgv.ValidateAllExceptionInterceptor;
+import io.envoyproxy.pgv.ValidatorContext;
 import io.envoyproxy.pgv.ValidationException;
 import io.envoyproxy.pgv.ValidatorIndex;
 import tests.harness.Harness;
@@ -14,6 +16,7 @@ import io.envoyproxy.pgv.validate.Validate;
 
 import java.io.IOException;
 import java.util.Arrays;
+import io.envoyproxy.pgv.ValidatorInterceptor;
 
 @SuppressWarnings("unchecked")
 public class JavaHarness {
@@ -46,7 +49,10 @@ public class JavaHarness {
             message = typeMap.unpackAny(testCase.getMessage());
             ValidatorIndex validatorIndex = new ReflectiveValidatorIndex();
             validatorIndex.validatorFor(message).assertValid(message);
-
+            writeResult(Harness.TestResult.newBuilder().setValid(true).build());
+            ValidatorInterceptor collector = new ValidateAllExceptionInterceptor();
+            ValidatorContext valContext = new ValidatorContext(validatorIndex, collector);
+            valContext.validatorFor(message).assertValid(message);
             writeResult(Harness.TestResult.newBuilder().setValid(true).build());
         } catch (UnimplementedException ex) {
             writeResult(Harness.TestResult.newBuilder().setValid(false).setAllowFailure(true).addReasons(ex.getMessage()).build());

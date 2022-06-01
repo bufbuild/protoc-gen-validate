@@ -31,7 +31,7 @@ public class ExplicitValidatorIndexTest {
         ValidatorIndex fallback = new ValidatorIndex() {
             @Override
             @SuppressWarnings("unchecked")
-            public <T> Validator<T> validatorFor(Class clazz,ValidationContext context) {
+            public <T> Validator<T> validatorFor(Class clazz,ValidatorContext context) {
                 called.set(true);
                 return Validator.ALWAYS_VALID;
             }

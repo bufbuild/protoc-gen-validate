@@ -5,7 +5,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.rpc.BadRequest;
 import com.google.rpc.Status;
 import io.envoyproxy.pgv.ReflectiveValidatorIndex;
-import io.envoyproxy.pgv.ValidationContext;
+import io.envoyproxy.pgv.ValidatorContext;
 import io.envoyproxy.pgv.ValidationException;
 import io.envoyproxy.pgv.Validator;
 import io.envoyproxy.pgv.ValidatorIndex;
@@ -60,7 +60,7 @@ public class ValidatingServerInterceptorTest {
     public void InterceptorRejectsInvalidMessages() {
         ValidatingServerInterceptor interceptor = new ValidatingServerInterceptor(new ValidatorIndex() {
             @Override
-            public <T> Validator<T> validatorFor(Class clazz,ValidationContext valctx) {
+            public <T> Validator<T> validatorFor(Class clazz,ValidatorContext valctx) {
                 return proto -> {
                     throw new ValidationException("one", "", "is invalid");
                 };
