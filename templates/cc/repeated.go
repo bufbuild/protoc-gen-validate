@@ -1,7 +1,7 @@
 package cc
 
 const repTpl = `
-	{{ $f := .Field }}{{ $r := .Rules }}{{ $typ := inType $f nil }} {{ $safeTyp := safeClassName $typ}}
+	{{ $f := .Field }}{{ $r := .Rules }}{{ $typ := inType $f nil }} {{ $safeTyp := lookup $f ""}}
 	{{ if $r.GetIgnoreEmpty }}
 		if ({{ accessor . }}.size() > 0) {
 	{{ end }}

@@ -19,6 +19,8 @@
 // many of which interfere with our code here and down
 // the line in various extensions.
 #undef DELETE
+#undef ABSOLUTE
+#undef RELATIVE
 #undef ERROR
 #undef GetMessage
 #undef interface
