@@ -590,7 +590,7 @@ Person x = 1;
 - **min_pairs/max_pairs**: these rules control how many KV pairs are contained in this field
 
   ```protobuf
-  // x must contain at most 3 KV pairs
+  // x must contain at least 3 KV pairs
   map<string, uint64> x = 1 [(validate.rules).map.min_pairs = 3];
 
   // x must contain between 5 and 10 KV pairs
