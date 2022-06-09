@@ -343,23 +343,32 @@ func (fns goSharedFuncs) enumName(enum pgs.Enum) string {
 	}
 }
 
-func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]pgs.FilePath {
-	out := make(map[pgs.Name]pgs.FilePath, len(enums))
+type enumPackageInfo struct {
+	Path  pgs.FilePath
+	Enums []pgs.Enum
+}
+
+func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]enumPackageInfo {
+	out := make(map[pgs.Name]enumPackageInfo, len(enums))
 
 	nameCollision := make(map[pgs.Name]int)
 
 	for _, en := range enums {
-
 		pkgName := fns.PackageName(en)
 
-		path, ok := out[pkgName]
+		packageInfo, ok := out[pkgName]
 
-		if ok && path != fns.ImportPath(en) {
+		enumImportPath := fns.ImportPath(en)
+
+		if ok && packageInfo.Path != enumImportPath {
 			nameCollision[pkgName] = nameCollision[pkgName] + 1
 			pkgName = pkgName + pgs.Name(strconv.Itoa(nameCollision[pkgName]))
 		}
 
-		out[pkgName] = fns.ImportPath(en)
+		packageInfo.Path = enumImportPath
+		packageInfo.Enums = append(packageInfo.Enums, en)
+
+		out[pkgName] = packageInfo
 	}
 
 	return out
