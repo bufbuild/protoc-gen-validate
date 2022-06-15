@@ -96,6 +96,17 @@
                         <goals>
                             <goal>test-compile</goal>
                         </goals>
+                        <configuration>
+                            <protoTestSourceRoot>../../</protoTestSourceRoot>
+                            <includes>
+                                <include>java/pgv-java-stub/src/test/proto/*.proto</include>
+                                <include>tests/harness/harness.proto</include>
+                                <include>tests/harness/cases/*.proto</include>
+                                <include>tests/harness/cases/other_package/*.proto</include>
+                                <include>tests/harness/cases/yet_another_package/*.proto</include>
+                            </includes>
+                            
+                        </configuration>
                     </execution>
                     <execution>
                         <id>test-protoc-java-pgv</id>
@@ -103,9 +114,20 @@
                             <goal>test-compile-custom</goal>
                         </goals>
                         <configuration>
+                            <protoTestSourceRoot>../../</protoTestSourceRoot>
+                            <includes>
+                                <include>java/pgv-java-stub/src/test/proto/*.proto</include>
+                                <include>tests/harness/cases/*.proto</include>
+                                <include>tests/harness/cases/other_package/*.proto</include>
+                                <include>tests/harness/cases/yet_another_package/*.proto</include>
+                            </includes>
                             <pluginParameter>lang=java</pluginParameter>
                             <pluginId>java-pgv</pluginId>
                             <pluginArtifact>io.envoyproxy.protoc-gen-validate:protoc-gen-validate:${project.version}:exe:${os.detected.classifier}</pluginArtifact>
+                            <!--protoSourceRoot>../../</protoSourceRoot>
+                            <includes>
+                                <include>java/pgv-java-stub/src/test/proto/*.proto</include>
+                            </includes-->
                         </configuration>
                     </execution>
                 </executions>

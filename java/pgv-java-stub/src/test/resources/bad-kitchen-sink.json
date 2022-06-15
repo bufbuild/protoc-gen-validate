@@ -1,0 +1,32 @@
+{
+    "val":{
+        "const"  :  "efgh",
+        "nested":{
+            
+        },
+        "int_const" : 7,
+        "enum_const":"ComplexONE",
+        "bool_const" :true,
+        "float_val" :-1.0,
+        "float_const": 10.0,
+        "double_in" :27.857,
+        "dur_val":"19s", 
+        "rep_ts_val":  [
+            "1969-01-01T00:00:0.01Z",
+            "1968-01-01T00:00:0.01Z",
+            "1971-01-01T00:00:0.01Z"
+        ],
+        "any_val":{
+            "@type": "type.googleapis.com/google.protobuf.Timestamp",
+            "value": "2017-01-15T01:30:15.01Z"
+        },
+        "map_val":{
+            "23":"string23",
+            "-1":"goodstring",
+            "57":"string57"
+        },
+        "ts_val":"1970-01-01T00:00:0.01Z",
+        "bytes_val" : "YmFkIHN0dWZm",
+        "x":"valid"
+    }
+}
