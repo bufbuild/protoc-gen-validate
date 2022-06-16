@@ -190,8 +190,23 @@ protobuf {
 ```java
 // Create a validator index that reflectively loads generated validators
 ValidatorIndex index = new ReflectiveValidatorIndex();
+// Attach the validator index to a context
+ValidatorContext context = new ValidatorContext(index);
 // Assert that a message is valid
-index.validatorFor(message.getClass()).assertValid(message);
+context.validatorFor(message.getClass()).assertValid(message);
+
+// To perform all validations without throwing exceptions, create a context with an interceptor
+ValidateAllExceptionInterceptor interceptor = new ValidateAllExceptionInterceptor();
+ValidatorContext contextAll = new ValidatorContext(index, interceptor);
+// validate the message 
+context.validatorFor (message.getClass()).assertValid(message);
+//check the interceptor
+if (! interceptor.isValid()){
+  //review the list of exceptions
+  for(ValidationException exception:interceptor.getAllValidationExceptions()){
+    // ...
+  }
+}
 
 // Create a gRPC client and server interceptor to automatically validate messages (requires pgv-java-grpc module)
 clientStub = clientStub.withInterceptors(new ValidatingClientInterceptor(index));

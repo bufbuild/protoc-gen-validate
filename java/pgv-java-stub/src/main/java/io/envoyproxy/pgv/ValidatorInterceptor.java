@@ -16,9 +16,11 @@
 package io.envoyproxy.pgv;
 
 /**
- *
+ * {@code ValidatorInterceptor} provides a means for injecting behavior into the
+ * validation chain.  It wraps calls to any Validator instance.
  * @author rlamont
  */
+@FunctionalInterface
 public interface ValidatorInterceptor {
     
     void assertValid(Validator validator,Object proto ) throws ValidationException;

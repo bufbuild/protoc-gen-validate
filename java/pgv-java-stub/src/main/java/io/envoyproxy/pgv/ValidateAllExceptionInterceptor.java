@@ -20,7 +20,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
+ * {@code ValidateAllExceptionInterceptor} provides for the validator to perform
+ * all validations and collect all exceptions for later reporting. Exceptions are 
+ * collected into a list which can be retrieved after validation is complete.
  * @author rlamont
  */
 public class ValidateAllExceptionInterceptor implements ValidatorInterceptor {
@@ -36,10 +38,22 @@ public class ValidateAllExceptionInterceptor implements ValidatorInterceptor {
         }
     }
     
+    /**
+     * Retrieve the results of validation. 
+     * @return the {@code List} of {@link ValidationException} objects after 
+     * validation has been performed.  An empty list implies that the {@code Message}
+     * was valid
+     */
     public List<ValidationException> getAllValidationExceptions(){
         return Collections.unmodifiableList(exceptionList);
     }
     
+    /**
+     * Convenience method to quickly deteremine whether validation was successful
+     * or not.
+     * @return true if no {@link ValidationException} objects were created
+     * during validation.
+     */
     public boolean isValid(){
         return exceptionList.isEmpty();
     }
