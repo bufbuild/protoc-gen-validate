@@ -199,7 +199,7 @@ context.validatorFor(message.getClass()).assertValid(message);
 ValidateAllExceptionInterceptor interceptor = new ValidateAllExceptionInterceptor();
 ValidatorContext contextAll = new ValidatorContext(index, interceptor);
 // validate the message 
-context.validatorFor (message.getClass()).assertValid(message);
+context.validatorFor (message.getClass()).validate(message);
 //check the interceptor
 if (! interceptor.isValid()){
   //review the list of exceptions

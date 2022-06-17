@@ -24,9 +24,47 @@ public interface ValidatorInterceptor {
     
     void validate(Validator validator,Object proto ) throws ValidationException;
     
-    @SuppressWarnings("unchecked")
-    ValidatorInterceptor PASS_THROUGH = (validator,proto) -> {
-         
-        validator.assertValid(proto);
+    boolean isValid();
+    
+//    @SuppressWarnings("unchecked")
+//    ValidatorInterceptor PASS_THROUGH = (validator,proto) -> {
+//         
+//        validator.assertValid(proto);
+//    };
+//    
+    ValidatorInterceptor BACKWARD_COMPATIBILITY_INTERCEPTOR = new ValidatorInterceptor() {
+        @Override
+        @SuppressWarnings("unchecked")
+        public void validate(Validator validator, Object proto) throws ValidationException {
+            validator.validate(proto);
+        }
+
+        @Override
+        public boolean isValid() {
+            return true;
+        }
     };
+    
+    public final class PassThroughInterceptor implements ValidatorInterceptor{
+        
+        private boolean valid=true;
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public void validate(Validator validator, Object proto) throws ValidationException {
+            try{
+                validator.validate(proto);
+            }
+            catch(ValidationException ex){
+                valid=false;
+                throw ex;
+            }
+        }
+
+        @Override
+        public boolean isValid() {
+            return valid;
+        }
+        
+    }
 }

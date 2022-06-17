@@ -51,8 +51,8 @@ public class JavaHarness {
             validatorIndex.validatorFor(message).assertValid(message);
             writeResult(Harness.TestResult.newBuilder().setValid(true).build());
             ValidatorInterceptor collector = new ValidateAllExceptionInterceptor();
-            ValidatorContext valContext = new ValidatorContext(validatorIndex, collector);
-            valContext.validatorFor(message).assertValid(message);
+            ValidatorContext valContext = new ValidatorContext(validatorIndex);
+            valContext.assertValid(message,collector);
             writeResult(Harness.TestResult.newBuilder().setValid(true).build());
         } catch (UnimplementedException ex) {
             writeResult(Harness.TestResult.newBuilder().setValid(false).setAllowFailure(true).addReasons(ex.getMessage()).build());

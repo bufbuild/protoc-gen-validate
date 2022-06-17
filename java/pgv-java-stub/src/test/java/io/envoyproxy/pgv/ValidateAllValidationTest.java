@@ -24,14 +24,14 @@ public class ValidateAllValidationTest {
     public void validateAllInterceptorWorks() throws ValidationException {
         ValidateAllExceptionInterceptor interceptor = new ValidateAllExceptionInterceptor();
         ReflectiveValidatorIndex index = new ReflectiveValidatorIndex();
-        ValidatorContext context = new ValidatorContext(index, interceptor);
+        ValidatorContext context = new ValidatorContext(index);
         List<Descriptors.Descriptor> descriptors = KitchenSink.getDescriptor().getMessageTypes();
         TypeRegistry registry = TypeRegistry.newBuilder().add(descriptors).build();
         
         
         KitchenSinkMessage kitchenSink = loadFileFromJson("/bad-kitchen-sink.json",registry);
-        Validator<KitchenSinkMessage> validator= context.validatorFor(KitchenSinkMessage.class);
-        validator.assertValid(kitchenSink);
+        
+        assertFalse(context.isValid(kitchenSink,interceptor));
         List<ValidationException> resultList = interceptor.getAllValidationExceptions();
         resultList.forEach(exc -> {
             System.out.println(exc.getMessage());

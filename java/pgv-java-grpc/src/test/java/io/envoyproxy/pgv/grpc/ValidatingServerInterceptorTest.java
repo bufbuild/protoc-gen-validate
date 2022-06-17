@@ -8,6 +8,7 @@ import io.envoyproxy.pgv.ReflectiveValidatorIndex;
 import io.envoyproxy.pgv.ValidatorContext;
 import io.envoyproxy.pgv.ValidationException;
 import io.envoyproxy.pgv.Validator;
+import io.envoyproxy.pgv.ValidatorExecutionContext;
 import io.envoyproxy.pgv.ValidatorIndex;
 import io.envoyproxy.pgv.grpc.asubpackage.GreeterGrpc;
 import io.envoyproxy.pgv.grpc.asubpackage.HelloJKRequest;
@@ -60,7 +61,7 @@ public class ValidatingServerInterceptorTest {
     public void InterceptorRejectsInvalidMessages() {
         ValidatingServerInterceptor interceptor = new ValidatingServerInterceptor(new ValidatorIndex() {
             @Override
-            public <T> Validator<T> validatorFor(Class clazz,ValidatorContext valctx) {
+            public <T> Validator<T> validatorFor(Class clazz,ValidatorExecutionContext valctx) {
                 return proto -> {
                     throw new ValidationException("one", "", "is invalid");
                 };

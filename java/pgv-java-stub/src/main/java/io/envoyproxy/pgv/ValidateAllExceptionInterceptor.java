@@ -54,6 +54,7 @@ public class ValidateAllExceptionInterceptor implements ValidatorInterceptor {
      * @return true if no {@link ValidationException} objects were created
      * during validation.
      */
+    @Override
     public boolean isValid(){
         return exceptionList.isEmpty();
     }

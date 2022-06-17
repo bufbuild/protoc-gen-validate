@@ -7,7 +7,7 @@ const messageTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 		{{- template "required" . }}
 		{{- if (isOfMessageType $f) }}
 			// Validate {{ $f.Name }}
-			if ({{ hasAccessor . }}) valctx.validatorFor({{ accessor . }}).assertValid({{ accessor . }});
+			if ({{ hasAccessor . }}) valctx.validatorFor({{ accessor . }}).validate({{ accessor . }});
 		{{- end -}}
 	{{- end -}}
 `

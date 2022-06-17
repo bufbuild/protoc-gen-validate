@@ -25,36 +25,51 @@ package io.envoyproxy.pgv;
  */
 public class ValidatorContext {
     public final ValidatorIndex validationIndex;
-    public final ValidatorInterceptor validationInterceptor;
-
-    public ValidatorContext(ValidatorIndex validationIndex, ValidatorInterceptor validationInterceptor) {
-        this.validationIndex = validationIndex;
-        this.validationInterceptor = validationInterceptor;
-    }
 
     public ValidatorContext(ValidatorIndex validationIndex) {
-        this(validationIndex,ValidatorInterceptor.PASS_THROUGH);
-    }
-
-    public ValidatorIndex getValidatorIndex() {
-        return validationIndex;
-    }
-
-    public ValidatorInterceptor getValidatorInterceptor() {
-        return validationInterceptor;
+        this.validationIndex = validationIndex;
     }
 
     /**
-     * Returns the validator for {@code clazz} from the ValidatorIndex, or 
-     * {@code ALWAYS_VALID} if not found.
+     * Package private method to make the {@code ValidatorIndex} available to the
+     * ValidatorContextImpl during validation.
+     * @return the {@link ValidatorIndex} used for validations conducted with
+     * this context.
      */
-    public <T> Validator<T> validatorFor(Class<T> clazz) {
-        return validationIndex.validatorFor(clazz, this);
+    ValidatorIndex getValidatorIndex() {
+        return validationIndex;
     }
     
-    public <T> Validator<T> validatorFor(T object) {
-        return validationIndex.validatorFor(object, this);
+    public void validate(Object obj) throws ValidationException{
+        validate(obj,new ValidatorInterceptor.PassThroughInterceptor());
+    }
+
+    public void validate(Object obj, ValidatorInterceptor interceptor) throws ValidationException {
+        new ValidatorExecutionContext(this, interceptor).validate(obj);
     }
     
+    public boolean isValid(Object obj){
+        return isValid(obj,new ValidatorInterceptor.PassThroughInterceptor());
+    }
+
+    public boolean isValid(Object obj, ValidatorInterceptor interceptor) {
+        try{
+            validate(obj,interceptor);
+        }
+        catch(ValidationException ex){
+            return false;
+        }
+        return interceptor.isValid();
+    }
     
+    public void assertValid(Object obj) throws ValidationException{
+        assertValid(obj,new ValidatorInterceptor.PassThroughInterceptor());
+    }
+
+    public void assertValid(Object obj, ValidatorInterceptor interceptor)  throws ValidationException {
+        validate(obj,interceptor);
+        if (!interceptor.isValid()){
+            throw new ValidationException("UNKNOWN",obj,"Validations failed, check interceptor for details");
+        }
+    }
 }

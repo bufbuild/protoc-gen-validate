@@ -31,7 +31,7 @@ public final class ExplicitValidatorIndex implements ValidatorIndex {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Validator<T> validatorFor(Class clazz,ValidatorContext context) {
+    public <T> Validator<T> validatorFor(Class clazz,ValidatorExecutionContext context) {
         return VALIDATOR_INDEX.computeIfAbsent(clazz, c ->
                 proto -> VALIDATOR_IMPL_INDEX.getOrDefault(c, (p, i) -> fallbackIndex.validatorFor(c,context))
                         .assertValid(proto, context));

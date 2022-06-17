@@ -19,7 +19,7 @@ const msgInnerTpl = `
 		{{ template "oneOfConst" . }}
 	{{ end }}
 
-	public void assertValid({{ qualifiedName . }} proto, io.envoyproxy.pgv.ValidatorContext valctx) throws io.envoyproxy.pgv.ValidationException {
+	public void assertValid({{ qualifiedName . }} proto, io.envoyproxy.pgv.ValidatorExecutionContext valctx) throws io.envoyproxy.pgv.ValidationException {
 	{{ if disabled . }}
 		// Validate is disabled for {{ simpleName . }}
 		return;
