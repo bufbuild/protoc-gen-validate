@@ -7,17 +7,17 @@ const repeatedTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			if ( !{{ accessor . }}.isEmpty() ) {
 {{- end -}}
 {{- if $r.GetMinItems }}
-	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+	valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 		io.envoyproxy.pgv.RepeatedValidation.minItems("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMinItems }});
 	},proto);
 {{- end -}}
 {{- if $r.GetMaxItems }}
-	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+	valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 		io.envoyproxy.pgv.RepeatedValidation.maxItems("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMaxItems }});
 	},proto);
 {{- end -}}
 {{- if $r.GetUnique }}
-	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+	valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 		io.envoyproxy.pgv.RepeatedValidation.unique("{{ $f.FullyQualifiedName }}", {{ accessor . }});
 	},proto);
 {{- end }}

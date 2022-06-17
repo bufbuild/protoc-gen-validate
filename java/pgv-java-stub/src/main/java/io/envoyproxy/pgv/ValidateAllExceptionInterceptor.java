@@ -29,7 +29,7 @@ public class ValidateAllExceptionInterceptor implements ValidatorInterceptor {
     private final List<ValidationException> exceptionList = new ArrayList<>();
     @Override
     @SuppressWarnings("unchecked")
-    public void assertValid(Validator validator, Object proto) throws ValidationException {
+    public void validate(Validator validator, Object proto) throws ValidationException {
         try{
             validator.assertValid(proto);
         }

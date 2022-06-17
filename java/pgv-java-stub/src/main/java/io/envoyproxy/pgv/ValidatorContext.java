@@ -25,23 +25,23 @@ package io.envoyproxy.pgv;
  */
 public class ValidatorContext {
     public final ValidatorIndex validationIndex;
-    public final ValidatorInterceptor validationCollector;
+    public final ValidatorInterceptor validationInterceptor;
 
-    public ValidatorContext(ValidatorIndex validationIndex, ValidatorInterceptor validationCollector) {
+    public ValidatorContext(ValidatorIndex validationIndex, ValidatorInterceptor validationInterceptor) {
         this.validationIndex = validationIndex;
-        this.validationCollector = validationCollector;
+        this.validationInterceptor = validationInterceptor;
     }
 
     public ValidatorContext(ValidatorIndex validationIndex) {
         this(validationIndex,ValidatorInterceptor.PASS_THROUGH);
     }
 
-    public ValidatorIndex getValidationIndex() {
+    public ValidatorIndex getValidatorIndex() {
         return validationIndex;
     }
 
-    public ValidatorInterceptor getValidationCollector() {
-        return validationCollector;
+    public ValidatorInterceptor getValidatorInterceptor() {
+        return validationInterceptor;
     }
 
     /**

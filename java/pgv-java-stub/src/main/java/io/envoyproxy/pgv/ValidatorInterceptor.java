@@ -20,10 +20,9 @@ package io.envoyproxy.pgv;
  * validation chain.  It wraps calls to any Validator instance.
  * @author rlamont
  */
-@FunctionalInterface
 public interface ValidatorInterceptor {
     
-    void assertValid(Validator validator,Object proto ) throws ValidationException;
+    void validate(Validator validator,Object proto ) throws ValidationException;
     
     @SuppressWarnings("unchecked")
     ValidatorInterceptor PASS_THROUGH = (validator,proto) -> {

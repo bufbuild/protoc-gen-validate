@@ -20,12 +20,12 @@ const anyTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 	{{- template "required" . -}}
 
 	{{- if $r.In }}
-			valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+			valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 				if ({{ hasAccessor . }}) io.envoyproxy.pgv.CollectiveValidation.in("{{ $f.FullyQualifiedName }}", {{ accessor . }}.getTypeUrl(), {{ constantName . "In" }});
 			},proto);
 	{{- end -}}
 	{{- if $r.NotIn }}
-			valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+			valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 				if ({{ hasAccessor . }}) io.envoyproxy.pgv.CollectiveValidation.notIn("{{ $f.FullyQualifiedName }}", {{ accessor . }}.getTypeUrl(), {{ constantName . "NotIn" }});
 			},proto);
 	{{- end -}}

@@ -13,7 +13,7 @@ const oneOfTpl = `
 				{{ end -}}
 				{{- if required . }}
 				default: 
-					valctx.getValidationCollector().assertValid( (value) -> {
+					valctx.getValidatorInterceptor().validate( (value) -> {
 						io.envoyproxy.pgv.RequiredValidation.required("{{ .FullyQualifiedName }}", null);
 					},proto);
 				{{- end }}

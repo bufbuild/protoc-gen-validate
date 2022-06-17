@@ -35,43 +35,43 @@ const durationTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- template "required" . -}}
 
 {{- if $r.Const }}
-	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+	valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 		if ({{ hasAccessor . }}) io.envoyproxy.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Const" }});
 	},proto);
 {{- end -}}
 {{- if and (or $r.Lt $r.Lte) (or $r.Gt $r.Gte)}}
-	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+	valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 		if ({{ hasAccessor . }}) io.envoyproxy.pgv.ComparativeValidation.range("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ if $r.Lt }}{{ constantName . "Lt" }}{{ else }}null{{ end }}, {{ if $r.Lte }}{{ constantName . "Lte" }}{{ else }}null{{ end }}, {{ if $r.Gt }}{{ constantName . "Gt" }}{{ else }}null{{ end }}, {{ if $r.Gte }}{{ constantName . "Gte" }}{{ else }}null{{ end }}, com.google.protobuf.util.Durations.comparator());
 	},proto);
 {{- else -}}
 {{- if $r.Lt }}
-	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+	valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 		if ({{ hasAccessor . }}) io.envoyproxy.pgv.ComparativeValidation.lessThan("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Lt" }}, com.google.protobuf.util.Durations.comparator());
 	},proto);
 {{- end -}}
 {{- if $r.Lte }}
-	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+	valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 		if ({{ hasAccessor . }}) io.envoyproxy.pgv.ComparativeValidation.lessThanOrEqual("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Lte" }}, com.google.protobuf.util.Durations.comparator());
 	},proto);
 {{- end -}}
 {{- if $r.Gt }}
-	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+	valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 		if ({{ hasAccessor . }}) io.envoyproxy.pgv.ComparativeValidation.greaterThan("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Gt" }}, com.google.protobuf.util.Durations.comparator());
 	},proto);
 {{- end -}}
 {{- if $r.Gte }}
-	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+	valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 		if ({{ hasAccessor . }}) io.envoyproxy.pgv.ComparativeValidation.greaterThanOrEqual("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Gte" }}, com.google.protobuf.util.Durations.comparator());
 	},proto);
 {{- end -}}
 {{- end -}}
 {{- if $r.In }}
-	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+	valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 		if ({{ hasAccessor . }}) io.envoyproxy.pgv.CollectiveValidation.in("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "In" }});
 	},proto);
 {{- end -}}
 {{- if $r.NotIn }}
-	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+	valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 		if ({{ hasAccessor . }}) io.envoyproxy.pgv.CollectiveValidation.notIn("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "NotIn" }});
 	},proto);
 {{- end -}}

@@ -24,48 +24,48 @@ const timestampTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- template "required" . -}}
 
 {{- if $r.Const }}
-			valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+			valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 				if ({{ hasAccessor . }}) io.envoyproxy.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Const" }});
 			},proto);
 {{- end -}}
 {{- if and (or $r.Lt $r.Lte) (or $r.Gt $r.Gte)}}
-			valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+			valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 				if ({{ hasAccessor . }}) io.envoyproxy.pgv.ComparativeValidation.range("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ if $r.Lt }}{{ constantName . "Lt" }}{{ else }}null{{ end }}, {{ if $r.Lte }}{{ constantName . "Lte" }}{{ else }}null{{ end }}, {{ if $r.Gt }}{{ constantName . "Gt" }}{{ else }}null{{ end }}, {{ if $r.Gte }}{{ constantName . "Gte" }}{{ else }}null{{ end }}, com.google.protobuf.util.Timestamps.comparator());
 			},proto);
 {{- else -}}
 {{- if $r.Lt }}
-			valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+			valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 				if ({{ hasAccessor . }}) io.envoyproxy.pgv.ComparativeValidation.lessThan("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Lt" }}, com.google.protobuf.util.Timestamps.comparator());
 			},proto);
 {{- end -}}
 {{- if $r.Lte }}
-			valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+			valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 				if ({{ hasAccessor . }}) io.envoyproxy.pgv.ComparativeValidation.lessThanOrEqual("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Lte" }}, com.google.protobuf.util.Timestamps.comparator());
 			},proto);
 {{- end -}}
 {{- if $r.Gt }}
-			valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+			valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 				if ({{ hasAccessor . }}) io.envoyproxy.pgv.ComparativeValidation.greaterThan("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Gt" }}, com.google.protobuf.util.Timestamps.comparator());
 			},proto);
 {{- end -}}
 {{- if $r.Gte }}
-			valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+			valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 				if ({{ hasAccessor . }}) io.envoyproxy.pgv.ComparativeValidation.greaterThanOrEqual("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Gte" }}, com.google.protobuf.util.Timestamps.comparator());
 			},proto);
 {{- end -}}
 {{- end -}}
 {{- if $r.LtNow }}
-			valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+			valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 				if ({{ hasAccessor . }}) io.envoyproxy.pgv.ComparativeValidation.lessThan("{{ $f.FullyQualifiedName }}", {{ accessor . }}, io.envoyproxy.pgv.TimestampValidation.currentTimestamp(), com.google.protobuf.util.Timestamps.comparator());
 			},proto);
 {{- end -}}
 {{- if $r.GtNow }}
-			valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+			valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 				if ({{ hasAccessor . }}) io.envoyproxy.pgv.ComparativeValidation.greaterThan("{{ $f.FullyQualifiedName }}", {{ accessor . }}, io.envoyproxy.pgv.TimestampValidation.currentTimestamp(), com.google.protobuf.util.Timestamps.comparator());
 			},proto);
 {{- end -}}
 {{- if $r.Within }}
-			valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+			valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 				if ({{ hasAccessor . }}) io.envoyproxy.pgv.TimestampValidation.within("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Within" }}, io.envoyproxy.pgv.TimestampValidation.currentTimestamp());
 			},proto);
 {{- end -}}

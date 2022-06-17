@@ -12,17 +12,17 @@ const mapTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 	if ( !{{ accessor . }}.isEmpty() ) {
 {{- end -}}
 {{- if $r.GetMinPairs }}
-	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+	valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 		io.envoyproxy.pgv.MapValidation.min("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMinPairs }});
 	},proto);
 {{- end -}}
 {{- if $r.GetMaxPairs }}
-	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+	valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 		io.envoyproxy.pgv.MapValidation.max("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ $r.GetMaxPairs }});
 	},proto);
 {{- end -}}
 {{- if $r.GetNoSparse }}
-	valctx.getValidationCollector().assertValid( ({{ safeName . "value"}}) -> {
+	valctx.getValidatorInterceptor().validate( ({{ safeName . "value"}}) -> {
 		io.envoyproxy.pgv.MapValidation.noSparse("{{ $f.FullyQualifiedName }}", {{ accessor . }});
 	},proto);
 {{- end -}}
