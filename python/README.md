@@ -8,11 +8,13 @@ in `validate.proto`. Implemented Python annotations are listed in the [rules com
 ### Example
 ```python3
 from entities_pb2 import Person
-from protoc_gen_validate.validator import validate, ValidationFailed
+from protoc_gen_validate.validator import validate, ValidationFailed, validate_all
 
 p = Person(first_name="Foo", last_name="Bar", age=42)
 try:
     validate(p)
+    # you can also validate all rules
+    # validate_all(p)
 except ValidationFailed as err:
     print(err)
 ```

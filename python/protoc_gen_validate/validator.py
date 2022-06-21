@@ -1,3 +1,4 @@
+import ast
 import re
 import struct
 import sys
@@ -61,6 +62,62 @@ def _validate_inner(proto_message: Message):
         return generate_validate
     except NameError:
         return locals()['generate_validate']
+
+
+class _Transformer(ast.NodeTransformer):
+    """
+    Consider generated functions has the following structure:
+
+    ```
+    def generate_validate(p):
+        ...
+        if rules_stmt:
+            raise ValidationFailed(msg)
+        ...
+        return None
+    ```
+
+    Transformer made the following three changes:
+
+    1. Define a variable `err` that records all ValidationFailed error messages.
+    2. Convert all `raise ValidationFailed(error_message)` to `err += error_message`.
+    3. When `err` is not an empty string, `raise ValidationFailed(err)`.
+    """
+
+    def visit_FunctionDef(self, node: ast.FunctionDef):
+        self.generic_visit(node)
+        #  add a suffix to the function name
+        node.name = node.name + "_all"
+        node.body.insert(0, ast.parse("err = ''").body[0])
+        return node
+
+    def visit_Raise(self, node: ast.Raise):
+        exc_str = " ".join(str(_.value) for _ in node.exc.args)
+        return ast.parse(rf'err += "\n{exc_str}"').body[0]
+
+    def visit_Return(self, node: ast.Return):
+        return ast.parse("if err:\n    raise ValidationFailed(err)").body[0]
+
+
+# Cache generated functions with the message descriptor's full_name as the cache key
+@lru_cache()
+def _validate_all_inner(proto_message: Message):
+    func = file_template(ValidatingMessage(proto_message))
+    func_ast = ast.parse(func)
+    func_ast = _Transformer().visit(func_ast)
+    func_ast = ast.fix_missing_locations(func_ast)
+    func = ast.unparse(func_ast)
+    global printer
+    printer += func + "\n"
+    exec(func)
+    try:
+        return generate_validate_all
+    except NameError:
+        return locals()['generate_validate_all']
+
+
+def validate_all(proto_message: Message):
+    return _validate_all_inner(ValidatingMessage(proto_message))(proto_message)
 
 
 def print_validate():
