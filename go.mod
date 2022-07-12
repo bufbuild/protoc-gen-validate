@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/iancoleman/strcase v0.2.0
-	github.com/lyft/protoc-gen-star v0.6.0
+	github.com/lyft/protoc-gen-star v0.6.1-0.20211111032917-1635a6baa3f5
 	github.com/spf13/afero v1.6.0 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616
 	golang.org/x/mod v0.5.0 // indirect
