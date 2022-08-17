@@ -41,7 +41,7 @@ var (
 	_ = sort.Sort
 
 	{{ range (externalEnums .) }}
-		_ = {{ pkg . }}.{{ name . }}(0)
+	_ = {{ pkg . }}.{{ name . }}(0)
 	{{ end }}
 )
 
