@@ -20,36 +20,37 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	fns := goSharedFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
-		"accessor":      fns.accessor,
-		"byteStr":       fns.byteStr,
-		"cmt":           pgs.C80,
-		"durGt":         fns.durGt,
-		"durLit":        fns.durLit,
-		"durStr":        fns.durStr,
-		"err":           fns.err,
-		"errCause":      fns.errCause,
-		"errIdx":        fns.errIdx,
-		"errIdxCause":   fns.errIdxCause,
-		"errname":       fns.errName,
-		"multierrname":  fns.multiErrName,
-		"inKey":         fns.inKey,
-		"inType":        fns.inType,
-		"isBytes":       fns.isBytes,
-		"lit":           fns.lit,
-		"lookup":        fns.lookup,
-		"msgTyp":        fns.msgTyp,
-		"name":          fns.Name,
-		"oneof":         fns.oneofTypeName,
-		"pkg":           fns.PackageName,
-		"snakeCase":     fns.snakeCase,
-		"tsGt":          fns.tsGt,
-		"tsLit":         fns.tsLit,
-		"tsStr":         fns.tsStr,
-		"typ":           fns.Type,
-		"unwrap":        fns.unwrap,
-		"externalEnums": fns.externalEnums,
-		"enumName":      fns.enumName,
-		"enumPackages":  fns.enumPackages,
+		"accessor":               fns.accessor,
+		"byteStr":                fns.byteStr,
+		"cmt":                    pgs.C80,
+		"durGt":                  fns.durGt,
+		"durLit":                 fns.durLit,
+		"durStr":                 fns.durStr,
+		"err":                    fns.err,
+		"errCause":               fns.errCause,
+		"errIdx":                 fns.errIdx,
+		"errIdxCause":            fns.errIdxCause,
+		"errname":                fns.errName,
+		"multierrname":           fns.multiErrName,
+		"inKey":                  fns.inKey,
+		"inType":                 fns.inType,
+		"isBytes":                fns.isBytes,
+		"lit":                    fns.lit,
+		"lookup":                 fns.lookup,
+		"msgTyp":                 fns.msgTyp,
+		"name":                   fns.Name,
+		"oneof":                  fns.oneofTypeName,
+		"pkg":                    fns.PackageName,
+		"snakeCase":              fns.snakeCase,
+		"tsGt":                   fns.tsGt,
+		"tsLit":                  fns.tsLit,
+		"tsStr":                  fns.tsStr,
+		"typ":                    fns.Type,
+		"unwrap":                 fns.unwrap,
+		"externalEnums":          fns.externalEnums,
+		"enumName":               fns.enumName,
+		"enumPackages":           fns.enumPackages,
+		"enumeratedEnumPackages": fns.enumeratedEnumPackages,
 	})
 
 	template.Must(tpl.New("msg").Parse(msgTpl))
@@ -360,6 +361,30 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]pgs.FilePat
 		}
 
 		out[pkgName] = fns.ImportPath(en)
+	}
+
+	return out
+}
+
+func (fns goSharedFuncs) enumeratedEnumPackages(enums []pgs.Enum) map[pgs.Name]int {
+	paths := make(map[pgs.Name]pgs.FilePath, len(enums))
+	out := make(map[pgs.Name]int, len(enums))
+
+	nameCollision := make(map[pgs.Name]int)
+
+	for i, en := range enums {
+
+		pkgName := fns.PackageName(en)
+
+		path, ok := paths[pkgName]
+
+		if ok && path != fns.ImportPath(en) {
+			nameCollision[pkgName] = nameCollision[pkgName] + 1
+			pkgName = pkgName + pgs.Name(strconv.Itoa(nameCollision[pkgName]))
+		}
+
+		paths[pkgName] = fns.ImportPath(en)
+		out[pkgName] = i
 	}
 
 	return out
