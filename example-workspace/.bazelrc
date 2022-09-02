@@ -1,0 +1,1 @@
+build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 --incompatible_use_cc_configure_from_rules_cc

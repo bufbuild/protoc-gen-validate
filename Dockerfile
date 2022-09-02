@@ -1,6 +1,5 @@
 FROM ubuntu:focal
 
-
 # apt packages
 ENV INSTALL_DEPS \
   bazel \
@@ -25,8 +24,9 @@ RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # protoc
-ENV PROTOC_VER=3.17.3
+ENV PROTOC_VER=21.5
 ENV PROTOC_REL=protoc-"${PROTOC_VER}"-linux-x86_64.zip
+ENV PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v"${PROTOC_VER}/${PROTOC_REL}" \
   && unzip ${PROTOC_REL} -d protoc \
   && mv protoc /usr/local \
@@ -38,19 +38,23 @@ ENV GOPATH /go
 ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
 ENV GORELEASE go1.17.linux-amd64.tar.gz
 RUN wget -q https://dl.google.com/go/$GORELEASE \
-    && tar -C $(dirname $GOROOT) -xzf $GORELEASE \
-    && rm $GORELEASE \
-    && mkdir -p $GOPATH/{src,bin,pkg}
+  && tar -C $(dirname $GOROOT) -xzf $GORELEASE \
+  && rm $GORELEASE \
+  && mkdir -p $GOPATH/{src,bin,pkg}
 
 # protoc-gen-go
-ENV PGG_VER=v1.27.1
+ENV PGG_VER=v1.28.1
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@${PGG_VER}
 
 # buildozer
-RUN go get github.com/bazelbuild/buildtools/buildozer
+ENV BDR_VER=5.1.0
+RUN go install github.com/bazelbuild/buildtools/buildozer@${BDR_VER}
 
 WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
+
 COPY . .
+
+RUN go get ./...
 
 # python must be on PATH for the execution of py_binary bazel targets, but
 # the distribution we installed doesn't provide this alias

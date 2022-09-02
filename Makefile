@@ -1,6 +1,7 @@
 empty :=
 space := $(empty) $(empty)
 PACKAGE := github.com/envoyproxy/protoc-gen-validate
+GOPATH := $(shell go env GOPATH)
 
 # protoc-gen-go parameters for properly generating the import path for PGV
 VALIDATE_IMPORT := Mvalidate/validate.proto=${PACKAGE}/validate
