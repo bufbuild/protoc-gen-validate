@@ -24,7 +24,7 @@ RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # protoc
-ENV PROTOC_VER=21.5
+ENV PROTOC_VER=3.20.1
 ENV PROTOC_REL=protoc-"${PROTOC_VER}"-linux-x86_64.zip
 ENV PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v"${PROTOC_VER}/${PROTOC_REL}" \
