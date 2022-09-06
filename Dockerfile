@@ -10,6 +10,8 @@ ENV INSTALL_DEPS \
   wget \
   maven \
   patch \
+  gcc \
+  mono-mcs \
   python3 \
   python3-distutils \
   python3-setuptools
@@ -26,7 +28,6 @@ RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8
 # protoc
 ENV PROTOC_VER=3.20.1
 ENV PROTOC_REL=protoc-"${PROTOC_VER}"-linux-x86_64.zip
-ENV PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v"${PROTOC_VER}/${PROTOC_REL}" \
   && unzip ${PROTOC_REL} -d protoc \
   && mv protoc /usr/local \
