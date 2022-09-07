@@ -4,9 +4,9 @@ import (
 	"math"
 	"time"
 
-	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
-	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
-	yet_another_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/yet_another_package/go"
+	cases "github.com/gradalley/protoc-gen-validate/tests/harness/cases/go"
+	other_package "github.com/gradalley/protoc-gen-validate/tests/harness/cases/other_package/go"
+	yet_another_package "github.com/gradalley/protoc-gen-validate/tests/harness/cases/yet_another_package/go"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/durationpb"

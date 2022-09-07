@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	harness "github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
+	harness "github.com/gradalley/protoc-gen-validate/tests/harness/go"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 )
