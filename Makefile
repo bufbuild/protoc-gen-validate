@@ -178,3 +178,11 @@ clean: ## clean up generated files
 	rm -rf \
 		python/dist \
 		python/*.egg-info
+
+HASH := $(shell git rev-parse HEAD)
+
+docker-build:
+	docker build -t protoc_gen_validate:${HASH} .
+
+docker-run:
+	docker run protoc_gen_validate:${HASH} ci

@@ -2,32 +2,35 @@ FROM ubuntu:focal
 
 # apt packages
 ENV INSTALL_DEPS \
-  bazel \
   ca-certificates \
   git \
   make \
+  zip \
   unzip \
+  g++ \
   wget \
   maven \
   patch \
-  gcc \
-  mono-mcs \
   python3 \
   python3-distutils \
-  python3-setuptools
+  python3-setuptools \
+  apt-transport-https \
+  curl \
+  openjdk-8-jdk \
+  gnupg 
 
-RUN apt update && apt install -y -q --no-install-recommends curl openjdk-8-jdk gnupg
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list \
-  && curl https://bazel.build/bazel-release.pub.gpg | apt-key add - \
-  && apt update \
+RUN apt update \
   && apt install -y -q --no-install-recommends ${INSTALL_DEPS} \
-  && apt clean \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+  && apt clean
+
+RUN wget -O bazel https://github.com/bazelbuild/bazel/releases/download/5.3.0/bazel-5.3.0-linux-arm64 && chmod +x bazel
+RUN mv bazel usr/local/bin/bazel
 
 # protoc
 ENV PROTOC_VER=21.5
-ENV PROTOC_REL=protoc-"${PROTOC_VER}"-linux-x86_64.zip
+ENV PROTOC_REL=protoc-"${PROTOC_VER}"-linux-aarch_64.zip
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v"${PROTOC_VER}/${PROTOC_REL}" \
   && unzip ${PROTOC_REL} -d protoc \
   && mv protoc /usr/local \
@@ -37,7 +40,7 @@ RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v"${PROTO
 ENV GOROOT /usr/local/go
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
-ENV GORELEASE go1.17.linux-amd64.tar.gz
+ENV GORELEASE go1.17.linux-arm64.tar.gz
 RUN wget -q https://dl.google.com/go/$GORELEASE \
   && tar -C $(dirname $GOROOT) -xzf $GORELEASE \
   && rm $GORELEASE \
