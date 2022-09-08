@@ -50,6 +50,7 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"externalEnums": fns.externalEnums,
 		"enumName":      fns.enumName,
 		"enumPackages":  fns.enumPackages,
+		"enumType":      fns.enumType,
 	})
 
 	template.Must(tpl.New("msg").Parse(msgTpl))
@@ -363,6 +364,25 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]pgs.FilePat
 	}
 
 	return out
+}
+
+// recursively walks up the parents of the enum until it reaches the root file
+// prepends 'Message_' for each message it sees on the way. This builds up the generated enum type name.
+//
+// intended to be used by the enumType function to build the generate type name.
+func walkEnumParents(parent pgs.ParentEntity, name string) string {
+	switch t := parent.(type) {
+	case pgs.Message:
+		return walkEnumParents(t.Parent(), string(t.Name())+"_"+name)
+	case pgs.File:
+		return name
+	default:
+		panic("enum parent can only resolve to message or file")
+	}
+}
+
+func (fns goSharedFuncs) enumType(enum pgs.Enum) string {
+	return walkEnumParents(enum.Parent(), string(enum.Name()))
 }
 
 func (fns goSharedFuncs) snakeCase(name string) string {
