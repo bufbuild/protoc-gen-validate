@@ -26,7 +26,7 @@ RUN apt update \
 
 # bazel
 ENV BAZEL_VER=5.3.0
-RUN wget -O bazel https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VER}/bazel-${BAZEL_VER}-linux-$([ $(uname -m) = "aarch64" ] && echo "arm64" || echo "amd64") \
+RUN wget -O bazel https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VER}/bazel-${BAZEL_VER}-linux-$([ $(uname -m) = "aarch64" ] && echo "arm64" || echo "x86_64") \
   && chmod +x bazel \
   && mv bazel usr/local/bin/bazel
 
@@ -42,7 +42,7 @@ RUN export PROTOC_REL=protoc-${PROTOC_VER}-linux-$([ $(uname -m) = "aarch64" ] &
 ENV GOROOT /usr/local/go
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
-RUN export GORELEASE=go1.17.linux-$([ $(uname -m) = "aarch64" ] && echo "arm64" || echo "amd64").tar.gz \
+RUN export GORELEASE=go1.18.5.linux-$([ $(uname -m) = "aarch64" ] && echo "arm64" || echo "amd64").tar.gz \
   && wget -q https://dl.google.com/go/$GORELEASE \
   && tar -C $(dirname $GOROOT) -xzf $GORELEASE \
   && rm $GORELEASE \
@@ -53,7 +53,7 @@ ENV PGG_VER=v1.27.1
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@${PGG_VER}
 
 # buildozer
-RUN go get github.com/bazelbuild/buildtools/buildozer
+RUN go install github.com/bazelbuild/buildtools/buildozer@latest
 
 WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
 COPY . .
