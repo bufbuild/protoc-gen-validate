@@ -53,7 +53,12 @@ ENV PGG_VER=v1.27.1
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@${PGG_VER}
 
 # buildozer
-RUN go install github.com/bazelbuild/buildtools/buildozer@latest
+ENV BDR_VER=5.1.0
+RUN go install github.com/bazelbuild/buildtools/buildozer@${BDR_VER} 
+
+# clean go/mod cache
+RUN rm -rf $(go env GOCACHE) \
+  && rm -rf $(go env GOMODCACHE)
 
 WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
 COPY . .
