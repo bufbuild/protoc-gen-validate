@@ -42,7 +42,7 @@ RUN export PROTOC_REL=protoc-${PROTOC_VER}-linux-$([ $(uname -m) = "aarch64" ] &
 ENV GOROOT /usr/local/go
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
-RUN export GORELEASE=go1.18.5.linux-$([ $(uname -m) = "aarch64" ] && echo "arm64" || echo "amd64").tar.gz \
+RUN export GORELEASE=go1.19.1.linux-$([ $(uname -m) = "aarch64" ] && echo "arm64" || echo "amd64").tar.gz \
   && wget -q https://dl.google.com/go/$GORELEASE \
   && tar -C $(dirname $GOROOT) -xzf $GORELEASE \
   && rm $GORELEASE \
