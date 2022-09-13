@@ -50,14 +50,14 @@ RUN export GORELEASE=go1.18.5.linux-$([ $(uname -m) = "aarch64" ] && echo "arm64
 
 # protoc-gen-go
 ENV PGG_VER=v1.27.1
-RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@${PGG_VER}
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@${PGG_VER} \
+  && rm -rf $(go env GOCACHE) \
+  && rm -rf $(go env GOMODCACHE)
 
 # buildozer
 ENV BDR_VER=5.1.0
-RUN go install github.com/bazelbuild/buildtools/buildozer@${BDR_VER} 
-
-# clean go/mod cache
-RUN rm -rf $(go env GOCACHE) \
+RUN go install github.com/bazelbuild/buildtools/buildozer@${BDR_VER} \
+  && rm -rf $(go env GOCACHE) \
   && rm -rf $(go env GOMODCACHE)
 
 WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
