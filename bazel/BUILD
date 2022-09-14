@@ -11,4 +11,3 @@ string_flag(
     build_setting_default = "",
     visibility = ["//visibility:public"],
 )
-
