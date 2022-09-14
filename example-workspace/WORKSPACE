@@ -22,4 +22,5 @@ pgv_dependency_imports()
 
 load("@com_envoyproxy_protoc_gen_validate//:dependencies.bzl", "go_third_party")
 
+# gazelle:repository_macro dependencies.bzl%go_third_party
 go_third_party()
