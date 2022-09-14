@@ -33,3 +33,11 @@ message OneOfRequired {
         int32        under_and_1_number = 4;
     }
 }
+
+message OneOfIgnoreEmpty {
+    oneof o {
+        string       x = 1 [(validate.rules).string = {ignore_empty: true, min_len: 3, max_len: 5}];
+        bytes        y = 2 [(validate.rules).bytes = {ignore_empty: true, min_len: 3, max_len: 5}];
+        int32        z = 3 [(validate.rules).int32 = {lte: 128, gte: 256, ignore_empty: true}];
+    }
+}

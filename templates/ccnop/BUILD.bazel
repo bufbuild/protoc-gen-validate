@@ -13,3 +13,9 @@ go_library(
         "@com_github_lyft_protoc_gen_star//:protoc-gen-star",
     ],
 )
+
+alias(
+    name = "go_default_library",
+    actual = ":ccnop",
+    visibility = ["//visibility:public"],
+)

@@ -181,7 +181,7 @@ def string_template(option_value, name):
     str_templ = """
     {%- set s = o.string -%}
     {% set i = 0 %}
-    {%- if s['ignore_empty'] -%}
+    {%- if s['ignore_empty'] %}
     if {{ name }}:
     {% set i = 4 %}
     {%- endif -%}
@@ -326,7 +326,7 @@ def bool_template(option_value, name):
 def num_template(option_value, name, num):
     num_tmpl = """
     {% set i = 0 %}
-    {%- if num.HasField('ignore_empty') -%}
+    {%- if num.HasField('ignore_empty') %}
     if {{ name }}:
     {% set i = 4 %}
     {%- endif -%}
@@ -701,7 +701,7 @@ def any_template(option_value, name, repeated=False):
 def bytes_template(option_value, name):
     bytes_tmpl = """
     {% set i = 0 %}
-    {%- if b['ignore_empty'] -%}
+    {%- if b['ignore_empty'] %}
     if {{ name }}:
     {% set i = 4 %}
     {%- endif -%}
