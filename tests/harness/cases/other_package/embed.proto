@@ -7,6 +7,10 @@ import "validate/validate.proto";
 
 // Validate message embedding across packages.
 message Embed {
+    message DoubleEmbed {
+        enum DoubleEnumerated { VALUE = 0; }
+    }
+
     int64 val = 1 [(validate.rules).int64.gt = 0];
 
     enum Enumerated { VALUE = 0; }

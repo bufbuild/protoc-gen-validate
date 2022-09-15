@@ -1,3 +1,4 @@
+load("@bazel_skylib//rules:common_settings.bzl", "BuildSettingInfo")
 load("@bazel_tools//tools/jdk:toolchain_utils.bzl", "find_java_runtime_toolchain", "find_java_toolchain")
 load("@rules_proto//proto:defs.bzl", "ProtoInfo")
 
@@ -44,6 +45,7 @@ def _output_dir(ctx):
 
 def _protoc_gen_validate_cc_impl(ctx):
     """Generate C++ protos using protoc-gen-validate plugin"""
+    flavor = ctx.attr._flavor[BuildSettingInfo].value or ""
     protos = _proto_sources(ctx)
     out_files = []
 
@@ -54,7 +56,7 @@ def _protoc_gen_validate_cc_impl(ctx):
     dir_out = _output_dir(ctx)
 
     args = [
-        "--validate_out=lang=cc:" + dir_out,
+        "--validate_out=lang=cc" + flavor + ":" + dir_out,
     ]
 
     return _protoc_gen_validate_impl(
@@ -119,6 +121,7 @@ cc_proto_gen_validate = rule(
             allow_files = True,
             executable = True,
         ),
+        "_flavor": attr.label(default = ":template-flavor"),
     },
     output_to_genfiles = True,
     implementation = _protoc_gen_validate_cc_impl,
@@ -195,7 +198,6 @@ def _java_proto_gen_validate_impl(ctx):
         output_source_jar = ctx.outputs.srcjar,
         output = ctx.outputs.jar,
         java_toolchain = find_java_toolchain(ctx, ctx.attr._java_toolchain),
-        host_javabase = find_java_runtime_toolchain(ctx, ctx.attr._host_javabase),
     )
 
     return [java_info]
@@ -228,10 +230,6 @@ java_proto_gen_validate = rule(
             ],
         ),
         "_java_toolchain": attr.label(default = Label("@bazel_tools//tools/jdk:current_java_toolchain")),
-        "_host_javabase": attr.label(
-            cfg = "host",
-            default = Label("@bazel_tools//tools/jdk:current_host_java_runtime"),
-        ),
     },
     fragments = ["java"],
     provides = [JavaInfo],

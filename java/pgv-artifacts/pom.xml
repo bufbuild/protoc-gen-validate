@@ -3,7 +3,7 @@
     <parent>
         <artifactId>pgv-java</artifactId>
         <groupId>io.envoyproxy.protoc-gen-validate</groupId>
-        <version>0.6.4-SNAPSHOT</version>
+        <version>0.6.8-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -36,6 +36,26 @@
                             <environmentVariables>
                                 <GOOS>darwin</GOOS>
                                 <GOARCH>amd64</GOARCH>
+                            </environmentVariables>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>osx-aarch_64</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <executable>go</executable>
+                            <arguments>
+                                <argument>build</argument>
+                                <argument>-o</argument>
+                                <argument>${project.build.directory}/protoc-gen-validate-${project.version}-osx-aarch_64.exe</argument>
+                                <argument>../..</argument>
+                            </arguments>
+                            <environmentVariables>
+                                <GOOS>darwin</GOOS>
+                                <GOARCH>arm64</GOARCH>
                             </environmentVariables>
                         </configuration>
                     </execution>
@@ -138,6 +158,21 @@
                                     <file>${project.build.directory}/protoc-gen-validate-${project.version}-osx-x86_64.exe</file>
                                     <type>exe</type>
                                     <classifier>osx-x86_64</classifier>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>osx-aarch_64</id>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>${project.build.directory}/protoc-gen-validate-${project.version}-osx-aarch_64.exe</file>
+                                    <type>exe</type>
+                                    <classifier>osx-aarch_64</classifier>
                                 </artifact>
                             </artifacts>
                         </configuration>
