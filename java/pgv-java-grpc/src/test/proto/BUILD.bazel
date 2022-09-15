@@ -18,7 +18,7 @@ go_proto_library(
     importpath = "github.com/envoyproxy/protoc-gen-validate/java/pgv-java-grpc/src/test/proto",
     proto = ":io_envoyproxy_pgv_grpc_proto",
     visibility = ["//visibility:public"],
-    deps = ["//validate"],
+    deps = ["//validate:validate_go"],
 )
 
 go_library(

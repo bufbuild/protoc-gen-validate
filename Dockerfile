@@ -1,33 +1,39 @@
 FROM ubuntu:focal
 
-
+ENV DEBIAN_FRONTEND=noninteractive
 # apt packages
 ENV INSTALL_DEPS \
-  bazel \
   ca-certificates \
   git \
   make \
+  zip \
   unzip \
+  g++ \
   wget \
   maven \
   patch \
   python3 \
   python3-distutils \
-  python3-setuptools
+  python3-setuptools \
+  apt-transport-https \
+  curl \
+  openjdk-8-jdk \
+  gnupg 
 
-RUN apt update && apt install -y -q --no-install-recommends curl openjdk-8-jdk gnupg
-
-RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list \
-  && curl https://bazel.build/bazel-release.pub.gpg | apt-key add - \
-  && apt update \
+RUN apt update \
   && apt install -y -q --no-install-recommends ${INSTALL_DEPS} \
-  && apt clean \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+  && apt clean
+
+# bazel
+ENV BAZEL_VER=5.3.0
+RUN wget -O bazel https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VER}/bazel-${BAZEL_VER}-linux-$([ $(uname -m) = "aarch64" ] && echo "arm64" || echo "x86_64") \
+  && chmod +x bazel \
+  && mv bazel usr/local/bin/bazel
 
 # protoc
-ENV PROTOC_VER=3.17.3
-ENV PROTOC_REL=protoc-"${PROTOC_VER}"-linux-x86_64.zip
-RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v"${PROTOC_VER}/${PROTOC_REL}" \
+ENV PROTOC_VER=21.5
+RUN export PROTOC_REL=protoc-${PROTOC_VER}-linux-$([ $(uname -m) = "aarch64" ] && echo "aarch" || echo "x86")_64.zip \
+  && wget https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VER}/${PROTOC_REL} \
   && unzip ${PROTOC_REL} -d protoc \
   && mv protoc /usr/local \
   && ln -s /usr/local/protoc/bin/protoc /usr/local/bin
@@ -36,18 +42,23 @@ RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v"${PROTO
 ENV GOROOT /usr/local/go
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
-ENV GORELEASE go1.17.linux-amd64.tar.gz
-RUN wget -q https://dl.google.com/go/$GORELEASE \
-    && tar -C $(dirname $GOROOT) -xzf $GORELEASE \
-    && rm $GORELEASE \
-    && mkdir -p $GOPATH/{src,bin,pkg}
+RUN export GORELEASE=go1.19.1.linux-$([ $(uname -m) = "aarch64" ] && echo "arm64" || echo "amd64").tar.gz \
+  && wget -q https://dl.google.com/go/$GORELEASE \
+  && tar -C $(dirname $GOROOT) -xzf $GORELEASE \
+  && rm $GORELEASE \
+  && mkdir -p $GOPATH/{src,bin,pkg}
 
 # protoc-gen-go
 ENV PGG_VER=v1.27.1
-RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@${PGG_VER}
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@${PGG_VER} \
+  && rm -rf $(go env GOCACHE) \
+  && rm -rf $(go env GOMODCACHE)
 
 # buildozer
-RUN go get github.com/bazelbuild/buildtools/buildozer
+ENV BDR_VER=5.1.0
+RUN go install github.com/bazelbuild/buildtools/buildozer@${BDR_VER} \
+  && rm -rf $(go env GOCACHE) \
+  && rm -rf $(go env GOMODCACHE)
 
 WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
 COPY . .
