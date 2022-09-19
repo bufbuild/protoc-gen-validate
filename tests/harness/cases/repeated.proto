@@ -6,6 +6,7 @@ import "tests/harness/cases/other_package/embed.proto";
 
 import "validate/validate.proto";
 import "google/protobuf/duration.proto";
+import "google/protobuf/any.proto";
 
 message Embed { int64 val = 1 [(validate.rules).int64.gt = 0]; }
 enum AnEnum {
@@ -30,6 +31,8 @@ message RepeatedEnumIn { repeated AnEnum val = 1 [(validate.rules).repeated.item
 message RepeatedEnumNotIn { repeated AnEnum val = 1 [(validate.rules).repeated.items.enum = {not_in: [0]}]; }
 message RepeatedEmbeddedEnumIn { repeated AnotherInEnum val = 1 [(validate.rules).repeated.items.enum = {in: [0]}]; enum AnotherInEnum {A = 0; B = 1; }}
 message RepeatedEmbeddedEnumNotIn { repeated AnotherNotInEnum val = 1 [(validate.rules).repeated.items.enum = {not_in: [0]}]; enum AnotherNotInEnum {A = 0; B = 1; }}
+message RepeatedAnyIn { repeated google.protobuf.Any val = 1 [(validate.rules).repeated.items.any = {in: ["type.googleapis.com/google.protobuf.Duration"]}]; }
+message RepeatedAnyNotIn { repeated google.protobuf.Any val = 1 [(validate.rules).repeated.items.any = {not_in: ["type.googleapis.com/google.protobuf.Timestamp"]}]; }
 message RepeatedMinAndItemLen { repeated string val = 1 [(validate.rules).repeated = { items { string { len: 3 } }, min_items: 1 }]; }
 message RepeatedMinAndMaxItemLen { repeated string val = 1 [(validate.rules).repeated.min_items = 1, (validate.rules).repeated.max_items = 3]; }
 message RepeatedDuration { repeated google.protobuf.Duration val = 1 [(validate.rules).repeated = { items { duration { gte { nanos: 1000000}}}}]; }
