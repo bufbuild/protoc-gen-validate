@@ -1,0 +1,21 @@
+name: Release Python Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        run: |
+          docker run --rm \
+          --env PYPI_REPO=pypi \
+          --env PGV_PYPI_TOKEN="${{secrets.PGV_PYPI_TOKEN}}" \
+          protoc-gen-validate python-release
