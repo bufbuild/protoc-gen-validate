@@ -53,6 +53,11 @@ java_proto_library(
     deps = [":validate_proto"],
 )
 
+filegroup(
+    name = "validate_src",
+    srcs = ["validate.proto"],
+)
+
 alias(
     name = "go_default_library",
     actual = ":validate",

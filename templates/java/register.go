@@ -269,13 +269,13 @@ func underscoreBetweenConsecutiveUppercase(name string) string {
 func appendOuterClassName(outerClassName string, file pgs.File) string {
 	conflict := false
 
-	for _, enum := range file.Enums() {
+	for _, enum := range file.AllEnums() {
 		if enum.Name().String() == outerClassName {
 			conflict = true
 		}
 	}
 
-	for _, message := range file.Messages() {
+	for _, message := range file.AllMessages() {
 		if message.Name().String() == outerClassName {
 			conflict = true
 		}

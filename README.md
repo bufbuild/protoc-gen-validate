@@ -365,7 +365,7 @@ Check the [constraint rule comparison matrix](rule_comparison.md) for language-s
 - **well-known formats**: these rules provide advanced constraints for common string patterns. These constraints will typically be more permissive and performant than equivalent regular expression patterns, while providing more explanatory failure descriptions.
 
   ```protobuf
-  // x must be a valid email address (via RFC 1034)
+  // x must be a valid email address (via RFC 5322)
   string x = 1 [(validate.rules).string.email = true];
 
   // x must be a valid address (IP or Hostname).
@@ -590,7 +590,7 @@ Person x = 1;
 - **min_pairs/max_pairs**: these rules control how many KV pairs are contained in this field
 
   ```protobuf
-  // x must contain at most 3 KV pairs
+  // x must contain at least 3 KV pairs
   map<string, uint64> x = 1 [(validate.rules).map.min_pairs = 3];
 
   // x must contain between 5 and 10 KV pairs

@@ -10,6 +10,7 @@
         <module>pgv-java-validation</module>
         <module>pgv-java-grpc</module>
         <module>pgv-artifacts</module>
+        <module>pgv-test-coverage-report</module>
     </modules>
 
     <packaging>pom</packaging>

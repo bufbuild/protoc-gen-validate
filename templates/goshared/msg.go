@@ -181,6 +181,13 @@ var _ interface{
 			{{- end }}
 		}
 	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetAny "In" }} {{ if .Rules.Items.GetAny.In }}
+		var {{ lookup .Field "InLookup" }} = map[string]struct{}{
+			{{- range .Rules.Items.GetAny.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
 	{{ end }}{{ end }}
 
 	{{ if has .Rules "Items"}}{{ if .Rules.Items }}
@@ -194,6 +201,13 @@ var _ interface{
 	{{ if has .Rules.Items.GetEnum "NotIn" }} {{ if .Rules.Items.GetEnum.NotIn }}
 		var {{ lookup .Field "NotInLookup" }} = map[{{ inType .Field .Rules.Items.GetEnum.NotIn }}]struct{}{
 			{{- range .Rules.Items.GetEnum.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetAny "NotIn" }} {{ if .Rules.Items.GetAny.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[string]struct{}{
+			{{- range .Rules.Items.GetAny.NotIn }}
 				{{ inKey $f . }}: {},
 			{{- end }}
 		}
