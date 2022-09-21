@@ -343,8 +343,13 @@ func (fns goSharedFuncs) enumName(enum pgs.Enum) string {
 	}
 }
 
-func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]pgs.FilePath {
-	out := make(map[pgs.Name]pgs.FilePath, len(enums))
+type NormalizedEnum struct {
+	FilePath pgs.FilePath
+	Name     string
+}
+
+func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]NormalizedEnum {
+	out := make(map[pgs.Name]NormalizedEnum, len(enums))
 
 	nameCollision := make(map[pgs.Name]int)
 
@@ -352,14 +357,18 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]pgs.FilePat
 
 		pkgName := fns.PackageName(en)
 
-		path, ok := out[pkgName]
-
-		if ok && path != fns.ImportPath(en) {
-			nameCollision[pkgName] = nameCollision[pkgName] + 1
-			pkgName = pkgName + pgs.Name(strconv.Itoa(nameCollision[pkgName]))
+		if normalized, ok := out[pkgName]; ok {
+			if normalized.FilePath != fns.ImportPath(en) {
+				nameCollision[pkgName] = nameCollision[pkgName] + 1
+				pkgName = pkgName + pgs.Name(strconv.Itoa(nameCollision[pkgName]))
+			}
 		}
 
-		out[pkgName] = fns.ImportPath(en)
+		out[pkgName] = NormalizedEnum{
+			Name:     fns.enumName(en),
+			FilePath: fns.ImportPath(en),
+		}
+
 	}
 
 	return out
