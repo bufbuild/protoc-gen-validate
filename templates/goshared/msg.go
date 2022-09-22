@@ -34,22 +34,41 @@ func (m {{ (msgTyp .).Pointer }}) validate(all bool) error {
 		{{ end }}
 
 		{{ range .RealOneOfs }}
-			switch m.{{ name . }}.(type) {
-				{{ range .Fields }}
+			{{- $oneof := . }}
+			{{- if required . }}
+			oneof{{ name $oneof }}Present := false
+			{{- end }}
+			switch v := m.{{ name . }}.(type) {
+				{{- range .Fields }}
+					{{- $context := (context .) }}
 					case {{ oneof . }}:
-						{{ render (context .) }}
-				{{ end }}
-				{{ if required . }}
-					default:
-						err := {{ errname .Message }}{
-							field: "{{ name . }}",
-							reason: "value is required",
+						if v == nil {
+							err := {{ errname .Message }}{
+								field: "{{ name $oneof }}",
+								reason: "oneof value cannot be a typed-nil",
+							}
+							if !all { return err }
+							errors = append(errors, err)
 						}
-						if !all { return err }
-						errors = append(errors, err)
-				{{ end }}
+						{{- if required $oneof }}
+						oneof{{ name $oneof }}Present = true
+						{{- end }}
+						{{ render $context }}
+				{{- end }}
+					default:
+						_ = v // ensures v is used
 			}
-		{{ end }}
+			{{- if required . }}
+			if !oneof{{ name $oneof }}Present {
+				err := {{ errname .Message }}{
+					field: "{{ name $oneof }}",
+					reason: "value is required",
+				}
+				if !all { return err }
+				errors = append(errors, err)
+			}
+			{{- end }}
+		{{- end }}
 
 		{{ range .SyntheticOneOfFields }}
 			if m.{{ name . }} != nil {
