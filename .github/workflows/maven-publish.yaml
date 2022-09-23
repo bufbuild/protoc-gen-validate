@@ -66,9 +66,10 @@ jobs:
         run: |
           mvn -B -s ${{ github.workspace }}/.github/settings.xml \
           release:prepare \
-#          release:perform \
           -Darguments=-s ${{ github.workspace }}/.github/settings.xml \
-#          -DreleaseVersion=${{ github.event.inputs.releaseVersion }} \
           -DreleaseVersion=v0.6.8-rc.1 \
-#          -DdevelopmentVersion=${{ github.event.inputs.developmentVersion }}
           -DdevelopmentVersion=v0.6.8-rc.1-SNAPSHOT
+
+#          release:perform \
+#          -DreleaseVersion=${{ github.event.inputs.releaseVersion }} \
+#          -DdevelopmentVersion=${{ github.event.inputs.developmentVersion }}
