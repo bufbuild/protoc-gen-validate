@@ -8,20 +8,11 @@ on:
   release:
     types: [created]
 
-env:
-  SONATYPE_USER: ${{secrets.SONATYPE_USER}}
-  SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
-  GPG_KEY_NAME: ${{secrets.GPG_KEY_NAME}}
-  GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
-  GPG_KEY: ${{secrets.GPG_KEY}}
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: PGV
     permissions:
       contents: read
-      packages: write
 
     steps:
       - uses: actions/checkout@v3
@@ -34,6 +25,27 @@ jobs:
       - name: Verify with Maven
         working-directory: ${{ github.workspace }}/java
         run: mvn -B verify
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      SONATYPE_USER: ${{secrets.SONATYPE_USER}}
+      SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
+      GPG_KEY_NAME: ${{secrets.GPG_KEY_NAME}}
+      GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
+      GPG_KEY: ${{secrets.GPG_KEY}}
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
 
       - name: Install gpg secret key
         if: github.ref == 'refs/heads/main'

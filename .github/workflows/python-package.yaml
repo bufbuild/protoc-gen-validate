@@ -7,7 +7,7 @@ on:
 jobs:
   build-linux:
     runs-on: ubuntu-latest
-    environment: PGV
+    environment: production
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.10
