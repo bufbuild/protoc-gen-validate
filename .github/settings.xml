@@ -35,6 +35,12 @@
             </properties>
         </profile>
     </profiles>
+    <configuration>
+        <gpgArguments>
+            <arg>--pinentry-mode</arg>
+            <arg>loopback</arg>
+        </gpgArguments>
+    </configuration>
     <activeProfiles>
         <activeProfile>ci</activeProfile>
         <activeProfile>signing</activeProfile>
