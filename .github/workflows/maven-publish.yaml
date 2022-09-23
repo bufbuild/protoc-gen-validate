@@ -50,7 +50,7 @@ jobs:
       - name: Publish to GitHub Packages Apache Maven
         if: github.ref == 'refs/heads/main'
         run: |
-          mvn -B -s ${{ github.workspace }}/.circleci/settings.xml release:prepare release:perform \
-          -Darguments=-s ${{ github.workspace }}/.circleci/settings.xml \
+          mvn -B -s ${{ github.workspace }}/.github/settings.xml release:prepare release:perform \
+          -Darguments=-s ${{ github.workspace }}/.github/settings.xml \
           -DreleaseVersion=${{ github.event.inputs.releaseVersion }} \
           -DdevelopmentVersion=${{ github.event.inputs.developmentVersion }}
