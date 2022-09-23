@@ -21,6 +21,7 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
+          settings-path: ${{ github.workspace }}/.github/settings.xml
 
       - name: Verify with Maven
         working-directory: ${{ github.workspace }}/java
@@ -52,6 +53,7 @@ jobs:
           server-password: ${{ env.SONATYPE_PASSWORD }}
           gpg-private-key: ${{ env.GPG_PRIVATE_KEY }}
           gpg-passphrase: ${{ env.GPG_PASSPHRASE }}
+          settings-path: ${{ github.workspace }}/.github/settings.xml
 
       - name: Configure Git User
         #        if: github.ref == 'refs/heads/main'
@@ -60,6 +62,7 @@ jobs:
           git config --global user.name "envoy-bot"
 
       - name: Publish to Apache Maven Central
+        working-directory: ${{ github.workspace }}/java
         run: mvn release:prepare
         env:
           MAVEN_USERNAME: ${{ env.SONATYPE_USER }}
