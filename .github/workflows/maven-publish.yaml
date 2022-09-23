@@ -44,8 +44,8 @@ jobs:
       - name: Configure Git User
         if: github.ref == 'refs/heads/main'
         run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
+          git config --global user.email "envoy-bot@users.noreply.github.com"
+          git config --global user.name "envoy-bot"
 
       - name: Publish to GitHub Packages Apache Maven
         if: github.ref == 'refs/heads/main'
