@@ -1,5 +1,5 @@
 # This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
-# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
+## For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
 
 name: Maven Package
 
@@ -27,9 +27,9 @@ jobs:
         run: mvn -B verify
 
   deploy:
-    if: github.ref == 'refs/heads/main'
+#    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    environment: production
+#    environment: production
     env:
       SONATYPE_USER: ${{secrets.SONATYPE_USER}}
       SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
@@ -49,22 +49,26 @@ jobs:
           distribution: "temurin"
 
       - name: Install gpg secret key
-        if: github.ref == 'refs/heads/main'
+#        if: github.ref == 'refs/heads/main'
         run: |
           echo ${{env.GPG_KEY}} | base64 --decode > signing-key
           gpg --passphrase ${{env.GPG_PASSPHRASE}} --import signing-key
           shred signing-key
 
       - name: Configure Git User
-        if: github.ref == 'refs/heads/main'
+#        if: github.ref == 'refs/heads/main'
         run: |
           git config --global user.email "envoy-bot@users.noreply.github.com"
           git config --global user.name "envoy-bot"
 
       - name: Publish to GitHub Packages Apache Maven
-        if: github.ref == 'refs/heads/main'
+#        if: github.ref == 'refs/heads/main'
         run: |
-          mvn -B -s ${{ github.workspace }}/.github/settings.xml release:prepare release:perform \
+          mvn -B -s ${{ github.workspace }}/.github/settings.xml \
+          release:prepare \
+#          release:perform \
           -Darguments=-s ${{ github.workspace }}/.github/settings.xml \
-          -DreleaseVersion=${{ github.event.inputs.releaseVersion }} \
-          -DdevelopmentVersion=${{ github.event.inputs.developmentVersion }}
+#          -DreleaseVersion=${{ github.event.inputs.releaseVersion }} \
+          -DreleaseVersion=v0.6.8-rc.1 \
+#          -DdevelopmentVersion=${{ github.event.inputs.developmentVersion }}
+          -DdevelopmentVersion=v0.6.8-rc.1-SNAPSHOT
