@@ -1,0 +1,28 @@
+name: ci
+
+on:
+  pull_request:
+
+env:
+  TEST_TAG: protoc-gen-validate:${{ github.sha }}
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build and export to Docker
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          load: true
+          push: false
+          tags: ${{ env.TEST_TAG }}
+      - name: Run
+        run: |
+          docker run --rm ${{ env.TEST_TAG }} ci
