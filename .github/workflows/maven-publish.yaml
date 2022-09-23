@@ -27,6 +27,7 @@ jobs:
         run: mvn -B verify
 
   deploy:
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     environment: production
     env:
