@@ -27,9 +27,8 @@ jobs:
         run: mvn -B verify
 
   deploy:
-    #    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    #    environment: production
     env:
       SONATYPE_USER: ${{secrets.SONATYPE_USER}}
       SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
@@ -54,7 +53,6 @@ jobs:
           gpg-passphrase: ${{ env.GPG_PASSPHRASE }}
 
       - name: Configure Git User
-        #        if: github.ref == 'refs/heads/main'
         run: |
           git config --global user.email "envoy-bot@users.noreply.github.com"
           git config --global user.name "envoy-bot"
@@ -66,7 +64,3 @@ jobs:
           MAVEN_USERNAME: ${{ env.SONATYPE_USER }}
           MAVEN_CENTRAL_TOKEN: ${{ env.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ env.GPG_PASSPHRASE }}
-
-#          release:perform \
-#          -DreleaseVersion=${{ github.event.inputs.releaseVersion }} \
-#          -DdevelopmentVersion=${{ github.event.inputs.developmentVersion }}
