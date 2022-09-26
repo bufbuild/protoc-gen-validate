@@ -41,13 +41,18 @@ jobs:
           git config --global user.email "envoy-bot@users.noreply.github.com"
           git config --global user.name "envoy-bot"
 
+      - name: Set VERSION variable from tag
+        run: |
+          VERSION=${{ github.ref_name }}
+          echo "VERSION=${VERSION:1}" >> $GITHUB_ENV
+
       - name: Publish to Apache Maven Central
         working-directory: ${{ github.workspace }}/java
         run: |
           mvn release:prepare --batch-mode \
-          -DreleaseVersion=${{ github.ref_name }} \
-          -DdevelopmentVersion=${{ github.ref_name }}-SNAPSHOT \
-          -Dtag=${{ github.ref_name }} -X
+          -DreleaseVersion=${VERSION} \
+          -DdevelopmentVersion=${VERSION}-SNAPSHOT \
+          -Dtag=V${VERSION} -X
         env:
           MAVEN_USERNAME: ${{ env.SONATYPE_USER }}
           MAVEN_CENTRAL_TOKEN: ${{ env.SONATYPE_PASSWORD }}
