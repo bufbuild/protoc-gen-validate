@@ -52,7 +52,7 @@ jobs:
           mvn release:prepare --batch-mode \
           -DreleaseVersion=${VERSION} \
           -DdevelopmentVersion=${VERSION}-SNAPSHOT \
-          -Dtag=V${VERSION} -X
+          -Dtag=v${VERSION} -X
         env:
           MAVEN_USERNAME: ${{ env.SONATYPE_USER }}
           MAVEN_CENTRAL_TOKEN: ${{ env.SONATYPE_PASSWORD }}
