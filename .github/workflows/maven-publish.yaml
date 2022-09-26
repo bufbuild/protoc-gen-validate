@@ -5,8 +5,9 @@ name: Maven Package
 
 on:
   pull_request:
-  release:
-    types: [ created ]
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   build:
@@ -27,7 +28,7 @@ jobs:
         run: mvn -B verify
 
   deploy:
-    if: github.ref == 'refs/heads/main'
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     env:
       SONATYPE_USER: ${{secrets.SONATYPE_USER}}
