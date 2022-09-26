@@ -40,7 +40,7 @@ Manually releasing from git history is a more involved process, but allows you
 to release from any point in the history.
 
 1. Create a new `release/x.y.z` branch at the point you want to release.
-1. Copy `.circleci\settings.xml` to a scratch location.
+1. Copy `.github\settings.xml` to a scratch location.
 1. Fill out the parameters in `settings.xml`. You will need a published GPG key
    for code signing and the EnvoyReleaseBot sonatype username and password.
 1. Execute the release command, substituting the path to `settings.xml`, the
