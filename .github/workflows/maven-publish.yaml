@@ -1,34 +1,15 @@
 # This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
 ## For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
 
-name: Maven Package
+name: Maven Deploy
 
 on:
-  pull_request:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: "17"
-          distribution: "temurin"
-
-      - name: Verify with Maven
-        working-directory: ${{ github.workspace }}/java
-        run: mvn -B verify
-
   deploy:
-    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     env:
       SONATYPE_USER: ${{secrets.SONATYPE_USER}}
@@ -42,6 +23,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref_name }}
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -60,7 +43,11 @@ jobs:
 
       - name: Publish to Apache Maven Central
         working-directory: ${{ github.workspace }}/java
-        run: mvn release:prepare
+        run: |
+          mvn release:prepare --batch-mode \
+          -DreleaseVersion=${{ github.ref_name }} \
+          -DdevelopmentVersion=${{ github.ref_name }}-SNAPSHOT \
+          -Dtag=${{ github.ref_name }} -X
         env:
           MAVEN_USERNAME: ${{ env.SONATYPE_USER }}
           MAVEN_CENTRAL_TOKEN: ${{ env.SONATYPE_PASSWORD }}
