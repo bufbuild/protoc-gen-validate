@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.head_ref }}
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -44,7 +44,11 @@ jobs:
 
       - name: Publish to Apache Maven Central
         working-directory: ${{ github.workspace }}/java
-        run: mvn release:prepare
+        run: |
+          mvn release:prepare --batch-mode \
+          -DreleaseVersion=${{ github.head_ref }} \
+          -DdevelopmentVersion=${{ github.head_ref }}-SNAPSHOT \
+          -Dtag=${{ github.head_ref }} -X
         env:
           MAVEN_USERNAME: ${{ env.SONATYPE_USER }}
           MAVEN_CENTRAL_TOKEN: ${{ env.SONATYPE_PASSWORD }}
