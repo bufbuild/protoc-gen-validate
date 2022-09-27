@@ -6,7 +6,7 @@ name: Maven Deploy
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+(-rc.[0-9]+)*'
 
 jobs:
   deploy:
@@ -17,6 +17,9 @@ jobs:
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       GPG_KEY_NAME: ${{secrets.GPG_KEY_NAME}}
       GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
+      MAVEN_USERNAME: ${ SONATYPE_USER }
+      MAVEN_CENTRAL_TOKEN: ${ SONATYPE_PASSWORD }
+      MAVEN_GPG_PASSPHRASE: ${ GPG_PASSPHRASE }
     permissions:
       contents: read
       packages: write
@@ -41,14 +44,66 @@ jobs:
           git config --global user.email "envoy-bot@users.noreply.github.com"
           git config --global user.name "envoy-bot"
 
-      - name: Publish to Apache Maven Central
+      - name: Install with Maven
         working-directory: ${{ github.workspace }}/java
-        run: |
-          mvn release:prepare --batch-mode \
-          -DreleaseVersion=${{ github.ref_name }} \
-          -DdevelopmentVersion=${{ github.ref_name }}-SNAPSHOT \
-          -Dtag=${{ github.ref_name }} -X
+        run: mvn -B install
+
+      - name: 'Configure gpg signing'
         env:
-          MAVEN_USERNAME: ${{ env.SONATYPE_USER }}
-          MAVEN_CENTRAL_TOKEN: ${{ env.SONATYPE_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ env.GPG_PASSPHRASE }}
+          GPG_KEY: ${{ secrets.gpg_key }}
+          GPG_KEY_NAME: ${{ secrets.gpg_key_name }}
+          GPG_PASSPHRASE: ${{ secrets.gpg_passphrase }}
+        run: |
+          # https://github.com/keybase/keybase-issues/issues/2798
+          export GPG_TTY=$(tty)
+          # Import gpg keys and warm the passphrase to avoid the gpg
+          # passphrase prompt when initating a deploy
+          # `--pinentry-mode=loopback` could be needed to ensure we
+          # suppress the gpg prompt
+          echo $GPG_KEY | base64 --decode > signing-key
+          gpg --passphrase $GPG_PASSPHRASE --batch --import signing-key
+          shred signing-key
+          
+          find . -type f \( -iname "pom.xml" -o -iname "*.jar" \) -print0 | while read -d $'\0' file
+          do
+            gpg --pinentry-mode=loopback --passphrase $GPG_PASSPHRASE -ab $file
+          done
+
+      - name: 'Release to sonatype repository'
+        working-directory: ${{ github.workspace }}/java
+        env:
+          READWRITE_USER: ${{ secrets.SONATYPE_USER }}
+          READWRITE_API_KEY: ${{ secrets.SONATYPE_PASSWORD }}
+          ENVOY_PROXY_PROFILE_ID: ${{ secrets.ENVOY_PROXY_PROFILE_ID }}
+        run: |
+          python sonatype_nexus_upload.py \
+            --profile_id=$ENVOY_PROXY_PROFILE_ID \
+            --version=${{ github.ref_name }} \
+            --files \
+              ./pgv-test-coverage-report/pom.xml \
+              ./pgv-test-coverage-report/target/pgv-test-coverage-report-0.6.9-SNAPSHOT.jar \
+              ./pgv-java-grpc/pom.xml \
+              ./pgv-java-grpc/target/pgv-java-grpc-0.6.9-SNAPSHOT.jar \
+              ./pgv-java-grpc/target/pgv-java-grpc-0.6.9-SNAPSHOT-sources.jar \
+              ./pom.xml \
+              ./pgv-java-validation/pom.xml \
+              ./pgv-java-validation/target/pgv-java-validation-0.6.9-SNAPSHOT-sources.jar \
+              ./pgv-java-validation/target/pgv-java-validation-0.6.9-SNAPSHOT.jar \
+              ./pgv-artifacts/pom.xml \
+              ./pgv-java-stub/pom.xml \
+              ./pgv-java-stub/target/pgv-java-stub-0.6.9-SNAPSHOT.jar \
+              ./pgv-java-stub/target/pgv-java-stub-0.6.9-SNAPSHOT-sources.jar \
+            --signed_files \
+              ./pgv-test-coverage-report/pom.xml.asc \
+              ./pgv-java-grpc/pom.xml.asc \
+              ./pom.xml.asc \
+              ./pgv-java-validation/pom.xml.asc \
+              ./pgv-artifacts/pom.xml.asc \
+              ./pgv-java-stub/pom.xml.asc \
+              ./pgv-test-coverage-report/target/pgv-test-coverage-report-0.6.9-SNAPSHOT.jar.asc \
+              ./pgv-java-grpc/target/pgv-java-grpc-0.6.9-SNAPSHOT.jar.asc \
+              ./pgv-java-grpc/target/pgv-java-grpc-0.6.9-SNAPSHOT-sources.jar.asc \
+              ./pgv-java-validation/target/pgv-java-validation-0.6.9-SNAPSHOT.jar.asc \
+              ./pgv-java-validation/target/pgv-java-validation-0.6.9-SNAPSHOT-sources.jar.asc \
+              ./pgv-java-stub/target/pgv-java-stub-0.6.9-SNAPSHOT.jar.asc \
+              ./pgv-java-stub/target/pgv-java-stub-0.6.9-SNAPSHOT-sources.jar.asc

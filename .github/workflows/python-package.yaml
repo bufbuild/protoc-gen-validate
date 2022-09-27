@@ -6,13 +6,14 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
-  build-linux:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v3
-        run: |
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - run: |
           docker run --rm \
           --env PYPI_REPO=pypi \
           --env PGV_PYPI_TOKEN="${{secrets.PGV_PYPI_TOKEN}}" \
