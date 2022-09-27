@@ -1,7 +1,7 @@
 name: ci
 
 on:
-#  pull_request:
+  pull_request:
 
 env:
   TEST_TAG: protoc-gen-validate:${{ github.sha }}
