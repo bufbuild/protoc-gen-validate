@@ -4,6 +4,7 @@
 name: Maven Deploy
 
 on:
+  pull_request:
   push:
     tags:
       - 'v*.*.*'
@@ -27,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.head_ref }}
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -60,6 +61,9 @@ jobs:
           # passphrase prompt when initating a deploy
           # `--pinentry-mode=loopback` could be needed to ensure we
           # suppress the gpg prompt
+          
+          
+          
           echo $GPG_KEY | base64 --decode > signing-key
           gpg --passphrase $GPG_PASSPHRASE --batch --import signing-key
           shred signing-key
@@ -78,7 +82,7 @@ jobs:
         run: |
           python sonatype_nexus_upload.py \
             --profile_id=$ENVOY_PROXY_PROFILE_ID \
-            --version=${{ github.ref_name }} \
+            --version=0.6.9-rc.0 \
             --files \
               ./pgv-test-coverage-report/pom.xml \
               ./pgv-java-grpc/pom.xml \
