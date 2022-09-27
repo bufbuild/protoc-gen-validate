@@ -83,31 +83,42 @@ jobs:
           python sonatype_nexus_upload.py \
             --profile_id=$ENVOY_PROXY_PROFILE_ID \
             --version=0.6.9-rc.0 \
+            --artifact_id=pgv-java-grpc \
             --files \
-              ./pgv-test-coverage-report/pom.xml \
               ./pgv-java-grpc/pom.xml \
-              ./pom.xml \
-              ./pgv-java-validation/pom.xml \
-              ./pgv-artifacts/pom.xml \
-              ./pgv-java-stub/pom.xml \
-              ./pgv-test-coverage-report/target/pgv-test-coverage-report-0.6.9-rc.0-SNAPSHOT.jar \
               ./pgv-java-grpc/target/pgv-java-grpc-0.6.9-rc.0-SNAPSHOT.jar \
+              ./pgv-java-grpc/target/pgv-java-grpc-0.6.9-rc.0-SNAPSHOT-javadoc.jar \
               ./pgv-java-grpc/target/pgv-java-grpc-0.6.9-rc.0-SNAPSHOT-sources.jar \
+            --signed_files \
+              ./pgv-java-grpc/pom.xml.asc \
+              ./pgv-java-grpc/target/pgv-java-grpc-0.6.9-rc.0-SNAPSHOT.jar.asc \
+              ./pgv-java-grpc/target/pgv-java-grpc-0.6.9-rc.0-SNAPSHOT-javadoc.jar.asc \
+              ./pgv-java-grpc/target/pgv-java-grpc-0.6.9-rc.0-SNAPSHOT-sources.jar.asc && \
+          python sonatype_nexus_upload.py \
+            --profile_id=$ENVOY_PROXY_PROFILE_ID \
+            --version=0.6.9-rc.0 \
+            --artifact_id=pgv-java-validation \
+            --files \
+              ./pgv-java-validation/pom.xml \
+              ./pgv-java-validation/target/pgv-java-validation-0.6.9-rc.0-SNAPSHOT-javadoc.jar \
               ./pgv-java-validation/target/pgv-java-validation-0.6.9-rc.0-SNAPSHOT-sources.jar \
               ./pgv-java-validation/target/pgv-java-validation-0.6.9-rc.0-SNAPSHOT.jar \
+            --signed_files \
+              ./pgv-java-validation/pom.xml.asc \
+              ./pgv-java-validation/target/pgv-java-validation-0.6.9-rc.0-SNAPSHOT.jar.asc \
+              ./pgv-java-validation/target/pgv-java-validation-0.6.9-rc.0-SNAPSHOT-javadoc.jar.asc \
+              ./pgv-java-validation/target/pgv-java-validation-0.6.9-rc.0-SNAPSHOT-sources.jar.asc && \
+          python sonatype_nexus_upload.py \
+            --profile_id=$ENVOY_PROXY_PROFILE_ID \
+            --version=0.6.9-rc.0 \
+            --artifact_id=pgv-java-stub \
+            --files \
+              ./pgv-java-stub/pom.xml \
               ./pgv-java-stub/target/pgv-java-stub-0.6.9-rc.0-SNAPSHOT.jar \
+              ./pgv-java-stub/target/pgv-java-stub-0.6.9-rc.0-SNAPSHOT-javadoc.jar \
               ./pgv-java-stub/target/pgv-java-stub-0.6.9-rc.0-SNAPSHOT-sources.jar \
             --signed_files \
-              ./pgv-test-coverage-report/pom.xml.asc \
-              ./pgv-java-grpc/pom.xml.asc \
-              ./pom.xml.asc \
-              ./pgv-java-validation/pom.xml.asc \
-              ./pgv-artifacts/pom.xml.asc \
               ./pgv-java-stub/pom.xml.asc \
-              ./pgv-test-coverage-report/target/pgv-test-coverage-report-0.6.9-rc.0-SNAPSHOT.jar.asc \
-              ./pgv-java-grpc/target/pgv-java-grpc-0.6.9-rc.0-SNAPSHOT.jar.asc \
-              ./pgv-java-grpc/target/pgv-java-grpc-0.6.9-rc.0-SNAPSHOT-sources.jar.asc \
-              ./pgv-java-validation/target/pgv-java-validation-0.6.9-rc.0-SNAPSHOT.jar.asc \
-              ./pgv-java-validation/target/pgv-java-validation-0.6.9-rc.0-SNAPSHOT-sources.jar.asc \
               ./pgv-java-stub/target/pgv-java-stub-0.6.9-rc.0-SNAPSHOT.jar.asc \
-              ./pgv-java-stub/target/pgv-java-stub-0.6.9-rc.0-SNAPSHOT-sources.jar.asc
+              ./pgv-java-stub/target/pgv-java-stub-0.6.9-rc.0-SNAPSHOT-javadoc.jar.asc \
+              ./pgv-java-stub/target/pgv-java-stub-0.6.9-rc.0-SNAPSHOT-sources.jar.asc && \
