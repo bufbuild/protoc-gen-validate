@@ -20,11 +20,6 @@ BASE64_ENCODED_CREDENTIALS = base64.b64encode("{}:{}".format(_USER_CREDS, _KEY_C
 
 _ARTIFACT_HOST_URL = "https://oss.sonatype.org/service/local/staging"
 _GROUP_ID = "io.envoyproxy.protoc-gen-validate"
-_ARTIFACT_ID = "protoc-gen-validate"
-_LOCAL_INSTALL_PATH = os.path.expanduser("~/.m2/repository/{directory}/envoy".format(
-    directory=_GROUP_ID.replace(".", "/"),
-    artifact_id=_ARTIFACT_ID))
-
 
 def _resolve_name(file):
     file_name, file_extension = os.path.splitext(file)
@@ -52,8 +47,10 @@ def _resolve_name(file):
             return "", extension
 
 
-def _install_locally(version, files):
-    path = "{}/{}".format(_LOCAL_INSTALL_PATH, version)
+def _install_locally(version, artifact_id, files):
+    local_path = os.path.expanduser("~/.m2/repository/{directory}/envoy".format(
+        directory=_GROUP_ID.replace(".", "/"), artifact_id=artifact_id))
+    path = "{}/{}".format(local_path, version)
 
     if os.path.exists(path):
         shutil.rmtree(path)
@@ -63,7 +60,7 @@ def _install_locally(version, files):
     for file in files:
         suffix, file_extension = _resolve_name(file)
         basename = "{name}-{version}{suffix}.{extension}".format(
-            name=_ARTIFACT_ID,
+            name=artifact_id,
             version=version,
             suffix=suffix,
             extension=file_extension
@@ -127,7 +124,7 @@ def _create_staging_repository(profile_id):
         raise e
 
 
-def _upload_files(staging_id, version, files, ascs, sha256):
+def _upload_files(staging_id, artifact_id, version, files, ascs, sha256):
     uploaded_file_count = 0
 
     # aggregate all the files for uploading
@@ -137,7 +134,7 @@ def _upload_files(staging_id, version, files, ascs, sha256):
         print("Uploading file {}".format(file))
         suffix, file_extension = _resolve_name(file)
         basename = "{name}-{version}{suffix}.{extension}".format(
-            name=_ARTIFACT_ID,
+            name=artifact_id,
             version=version,
             suffix=suffix,
             extension=file_extension
@@ -147,7 +144,7 @@ def _upload_files(staging_id, version, files, ascs, sha256):
             _ARTIFACT_HOST_URL,
             "deployByRepositoryId/{}".format(staging_id),
             _GROUP_ID.replace('.', "/"),
-            _ARTIFACT_ID,
+            artifact_id,
             version,
             basename
         )
@@ -265,6 +262,10 @@ def _build_parser():
                         curl -u {usr}:{psswrd} -H "Accept: application/json"
                         https://oss.sonatype.org//nexus/service/local/staging/profile_repositories
                         """)
+    parser.add_argument("--artifact_id", required=False,
+                        help="""
+                        The artifact_id of the binary.
+                        """)
     parser.add_argument("--version", default="LOCAL-SNAPSHOT",
                         help="""
                         The version of the artifact to be published. `LOCAL-SNAPSHOT` is defaulted
@@ -305,7 +306,7 @@ if __name__ == "__main__":
 
     version = args.version
     if args.local:
-        _install_locally(version, args.files)
+        _install_locally(version, args.artifact_id, args.files)
     else:
         staging_id = ""
 
@@ -320,7 +321,7 @@ if __name__ == "__main__":
         try:
             print("Uploading files...")
             sha256_files = _create_sha256_files(args.files)
-            uploaded_file_count = _upload_files(staging_id, version, args.files, args.signed_files, sha256_files)
+            uploaded_file_count = _upload_files(staging_id, args.artifact_id, version, args.files, args.signed_files, sha256_files)
             if uploaded_file_count > 0:
                 print("Uploading files complete!")
                 print("Closing staging repository...")
