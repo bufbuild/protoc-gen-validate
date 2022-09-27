@@ -56,4 +56,9 @@
             </plugin>
         </plugins>
     </build>
+    <distributionManagement>
+        <relocation>
+            <groupId>build.buf.protoc-gen-validate</groupId>
+        </relocation>
+    </distributionManagement>
 </project>
