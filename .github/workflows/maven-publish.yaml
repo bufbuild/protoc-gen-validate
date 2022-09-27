@@ -121,4 +121,4 @@ jobs:
               ./pgv-java-stub/pom.xml.asc \
               ./pgv-java-stub/target/pgv-java-stub-0.6.9-rc.0-SNAPSHOT.jar.asc \
               ./pgv-java-stub/target/pgv-java-stub-0.6.9-rc.0-SNAPSHOT-javadoc.jar.asc \
-              ./pgv-java-stub/target/pgv-java-stub-0.6.9-rc.0-SNAPSHOT-sources.jar.asc && \
+              ./pgv-java-stub/target/pgv-java-stub-0.6.9-rc.0-SNAPSHOT-sources.jar.asc
