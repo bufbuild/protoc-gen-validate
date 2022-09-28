@@ -26,11 +26,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '18'
           server-id: sonatype-nexus-snapshots # Value of the distributionManagement/repository/id field of the pom.xml
           server-username: ${ env.SONATYPE_USER } # env variable for username in deploy
           server-password: ${ env.SONATYPE_PASSWORD } # env variable for token in deploy
