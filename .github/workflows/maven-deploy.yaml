@@ -11,18 +11,19 @@ on:
     tags:
       - 'v*.*.*'
 
+env:
+  SONATYPE_USER: ${{secrets.SONATYPE_USER}}
+  SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
+  GPG_KEY_NAME: ${{secrets.GPG_KEY_NAME}}
+  GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
+  MAVEN_USERNAME: ${{secrets.SONATYPE_USER}}
+  MAVEN_CENTRAL_TOKEN: ${{secrets.SONATYPE_PASSWORD}}
+  MAVEN_GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
+  GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      SONATYPE_USER: ${{secrets.SONATYPE_USER}}
-      SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
-      GPG_KEY_NAME: ${{secrets.GPG_KEY_NAME}}
-      GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
-      MAVEN_USERNAME: ${{secrets.SONATYPE_USER}}
-      MAVEN_CENTRAL_TOKEN: ${{secrets.SONATYPE_PASSWORD}}
-      MAVEN_GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
-      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
     steps:
       - uses: actions/checkout@v3
