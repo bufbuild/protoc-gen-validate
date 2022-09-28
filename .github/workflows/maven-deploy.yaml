@@ -23,10 +23,11 @@ jobs:
       MAVEN_USERNAME: ${ SONATYPE_USER }
       MAVEN_CENTRAL_TOKEN: ${ SONATYPE_PASSWORD }
       MAVEN_GPG_PASSPHRASE: ${ GPG_PASSPHRASE }
+      MAVEN_OPTS: "--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED"
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
