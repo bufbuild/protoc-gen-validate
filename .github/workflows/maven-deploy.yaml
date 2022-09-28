@@ -27,16 +27,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          server-id: sonatype-nexus-snapshots # Value of the distributionManagement/repository/id field of the pom.xml
-          server-username: ${ env.SONATYPE_USER } # env variable for username in deploy
-          server-password: ${ env.SONATYPE_PASSWORD } # env variable for token in deploy
-          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }} # Value of the GPG private key to import - without any modification
-          gpg-passphrase: ${ env.GPG_PASSPHRASE }  # env variable for GPG private key passphrase
 
       - name: 'Configure gpg signing'
         env:
@@ -53,6 +43,13 @@ jobs:
           echo $GPG_KEY | base64 --decode > signing-key
           gpg --passphrase $GPG_PASSPHRASE --batch --import signing-key
           shred signing-key
+          
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          server-id: github
 
       - name: Build with Maven
         working-directory: ${{ github.workspace }}/java
@@ -63,6 +60,17 @@ jobs:
         run: mvn deploy -s settings.xml
         env:
           GITHUB_TOKEN: ${{ github.token }} # GITHUB_TOKEN is the default env for the password
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          server-id: sonatype-nexus-snapshots # Value of the distributionManagement/repository/id field of the pom.xml
+          server-username: ${ env.SONATYPE_USER } # env variable for username in deploy
+          server-password: ${ env.SONATYPE_PASSWORD } # env variable for token in deploy
+          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }} # Value of the GPG private key to import - without any modification
+          gpg-passphrase: ${ env.GPG_PASSPHRASE }  # env variable for GPG private key passphrase
 
       - name: Publish to Maven Packages Apache Maven
         working-directory: ${{ github.workspace }}/java
