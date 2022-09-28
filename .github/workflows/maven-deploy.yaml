@@ -4,6 +4,7 @@
 name: Maven Deploy
 
 on:
+  pull_request: 
   push:
     branches:
       - main
@@ -14,9 +15,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
+      SONATYPE_USER: ${{secrets.SONATYPE_USER}}
+      SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       GPG_KEY_NAME: ${{secrets.GPG_KEY_NAME}}
       GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
+      MAVEN_USERNAME: ${ SONATYPE_USER }
+      MAVEN_CENTRAL_TOKEN: ${ SONATYPE_PASSWORD }
+      MAVEN_GPG_PASSPHRASE: ${ GPG_PASSPHRASE }
 
     steps:
       - uses: actions/checkout@v3
@@ -25,8 +31,11 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          gpg-private-key: ${{ env.GPG_PRIVATE_KEY }}
-          gpg-passphrase: ${{ env.GPG_PASSPHRASE }}
+          server-id: sonatype-nexus-snapshots # Value of the distributionManagement/repository/id field of the pom.xml
+          server-username: ${ env.SONATYPE_USER } # env variable for username in deploy
+          server-password: ${ env.SONATYPE_PASSWORD } # env variable for token in deploy
+          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }} # Value of the GPG private key to import - without any modification
+          gpg-passphrase: ${ env.GPG_PASSPHRASE }  # env variable for GPG private key passphrase
 
       - name: Build with Maven
         working-directory: ${{ github.workspace }}/java
