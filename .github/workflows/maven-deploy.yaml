@@ -41,6 +41,22 @@ jobs:
         working-directory: ${{ github.workspace }}/java
         run: mvn -B package --file pom.xml
 
+      - name: 'Configure gpg signing'
+        env:
+          GPG_KEY: ${{ secrets.gpg_key }}
+          GPG_KEY_NAME: ${{ secrets.gpg_key_name }}
+          GPG_PASSPHRASE: ${{ secrets.gpg_passphrase }}
+        run: |
+          # https://github.com/keybase/keybase-issues/issues/2798
+          export GPG_TTY=$(tty)
+          # Import gpg keys and warm the passphrase to avoid the gpg
+          # passphrase prompt when initating a deploy
+          # `--pinentry-mode=loopback` could be needed to ensure we
+          # suppress the gpg prompt
+          echo $GPG_KEY | base64 --decode > signing-key
+          gpg --passphrase $GPG_PASSPHRASE --batch --import signing-key
+          shred signing-key
+
       - name: Publish to GitHub Packages Apache Maven
         working-directory: ${{ github.workspace }}/java
         run: mvn deploy -s settings.xml
