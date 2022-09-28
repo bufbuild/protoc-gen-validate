@@ -43,7 +43,7 @@ jobs:
         uses: actions/setup-java@v3
         with: # running setup-java again overwrites the settings.xml
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
           server-id: sonatype-nexus-snapshots # Value of the distributionManagement/repository/id field of the pom.xml
           server-username: MAVEN_USERNAME # env variable for username in deploy
           server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
