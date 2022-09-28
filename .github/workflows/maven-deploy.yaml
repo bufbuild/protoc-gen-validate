@@ -42,10 +42,6 @@ jobs:
 #          gpg-private-key: ${{ env.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
 #          gpg-passphrase: ${{ env.GPG_PASSPHRASE }} # env variable for GPG private key passphrase
 #
-#      - name: Build with Maven
-#        working-directory: ${{ github.workspace }}/java
-#        run: mvn -B package --file pom.xml
-#
 #      - name: Publish to Apache Maven Central
 #        working-directory: ${{ github.workspace }}/java
 #        run: mvn deploy -s settings.xml
