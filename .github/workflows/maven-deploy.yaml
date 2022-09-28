@@ -15,38 +15,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-#      - uses: actions/checkout@v3
-#      - name: Set up JDK 11
-#        uses: actions/setup-java@v3
-#        with:
-#          distribution: 'temurin'
-#          java-version: '17'
-
-
-#      - name: Publish to GitHub Packages Apache Maven
-#        run: mvn deploy
-#        env:
-#          GITHUB_TOKEN: ${{ github.token }} # GITHUB_TOKEN is the default env for the password
-
-      - name: Set up Apache Maven Central
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
         uses: actions/setup-java@v3
-        with: # running setup-java again overwrites the settings.xml
+        with:
           distribution: 'temurin'
-          java-version: '11'
-          server-id: sonatype-nexus-snapshots # Value of the distributionManagement/repository/id field of the pom.xml
-          server-username: ${{ env.SONATYPE_USER }} # env variable for username in deploy
-          server-password: ${{ env.SONATYPE_PASSWORD }} # env variable for token in deploy
-          gpg-private-key: ${{ env.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
-          gpg-passphrase: ${{ env.GPG_PASSPHRASE }} # env variable for GPG private key passphrase
-    
+          java-version: '17'
+
       - name: Build with Maven
         working-directory: ${{ github.workspace }}/java
         run: mvn -B package --file pom.xml
 
-      - name: Publish to Apache Maven Central
-        working-directory: ${{ github.workspace }}/java
-        run: mvn deploy -s settings.xml
+      - name: Publish to GitHub Packages Apache Maven
+        run: mvn deploy
         env:
-          MAVEN_USERNAME: ${{ env.SONATYPE_USER }}
-          MAVEN_CENTRAL_TOKEN: ${{ env.SONATYPE_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ env.GPG_PASSPHRASE }}
+          GITHUB_TOKEN: ${{ github.token }} # GITHUB_TOKEN is the default env for the password
+
+#      - name: Set up Apache Maven Central
+#        uses: actions/setup-java@v3
+#        with: # running setup-java again overwrites the settings.xml
+#          distribution: 'temurin'
+#          java-version: '11'
+#          server-id: sonatype-nexus-snapshots # Value of the distributionManagement/repository/id field of the pom.xml
+#          server-username: ${{ env.SONATYPE_USER }} # env variable for username in deploy
+#          server-password: ${{ env.SONATYPE_PASSWORD }} # env variable for token in deploy
+#          gpg-private-key: ${{ env.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+#          gpg-passphrase: ${{ env.GPG_PASSPHRASE }} # env variable for GPG private key passphrase
+#
+#      - name: Build with Maven
+#        working-directory: ${{ github.workspace }}/java
+#        run: mvn -B package --file pom.xml
+#
+#      - name: Publish to Apache Maven Central
+#        working-directory: ${{ github.workspace }}/java
+#        run: mvn deploy -s settings.xml
+#        env:
+#          MAVEN_USERNAME: ${{ env.SONATYPE_USER }}
+#          MAVEN_CENTRAL_TOKEN: ${{ env.SONATYPE_PASSWORD }}
+#          MAVEN_GPG_PASSPHRASE: ${{ env.GPG_PASSPHRASE }}
