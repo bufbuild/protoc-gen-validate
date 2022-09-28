@@ -22,6 +22,7 @@ jobs:
       MAVEN_USERNAME: ${{secrets.SONATYPE_USER}}
       MAVEN_CENTRAL_TOKEN: ${{secrets.SONATYPE_PASSWORD}}
       MAVEN_GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
     steps:
       - uses: actions/checkout@v3
