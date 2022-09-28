@@ -4,7 +4,7 @@
 name: Maven Deploy
 
 on:
-  pull_request: 
+  pull_request:
   push:
     branches:
       - main
@@ -45,6 +45,9 @@ jobs:
         working-directory: ${{ github.workspace }}/java
         run: mvn deploy -s settings.xml
         env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USER }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GITHUB_TOKEN: ${{ github.token }} # GITHUB_TOKEN is the default env for the password
 
 #      - name: Set up Apache Maven Central
