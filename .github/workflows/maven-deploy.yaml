@@ -13,6 +13,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      GPG_KEY_NAME: ${{secrets.GPG_KEY_NAME}}
+      GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
 
     steps:
       - uses: actions/checkout@v3
