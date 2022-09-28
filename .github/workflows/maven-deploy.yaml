@@ -17,21 +17,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '11'
+#      - name: Set up JDK
+#        uses: actions/setup-java@v3
+#        with:
+#          distribution: 'temurin'
+#          java-version: '11'
 
-      - name: Build with Maven
-        working-directory: ${{ github.workspace }}/java
-        run: mvn -B package --file pom.xml
 
-      - name: Publish to GitHub Packages Apache Maven
-        working-directory: ${{ github.workspace }}/java
-        run: mvn deploy
-        env:
-          GITHUB_TOKEN: ${{ github.token }} # GITHUB_TOKEN is the default env for the password
+#      - name: Publish to GitHub Packages Apache Maven
+#        working-directory: ${{ github.workspace }}/java
+#        run: mvn deploy
+#        env:
+#          GITHUB_TOKEN: ${{ github.token }} # GITHUB_TOKEN is the default env for the password
 
       - name: Set up Apache Maven Central
         uses: actions/setup-java@v3
@@ -43,6 +40,10 @@ jobs:
           server-password: MAVEN_CENTRAL_TOKEN # env variable for token in deploy
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
           gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+
+      - name: Build with Maven
+        working-directory: ${{ github.workspace }}/java
+        run: mvn -B package --file pom.xml
 
       - name: Publish to Apache Maven Central
         working-directory: ${{ github.workspace }}/java
