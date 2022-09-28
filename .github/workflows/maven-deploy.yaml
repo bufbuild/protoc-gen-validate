@@ -25,6 +25,8 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          gpg-private-key: ${{ env.GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ env.GPG_PASSPHRASE }}
 
       - name: Build with Maven
         working-directory: ${{ github.workspace }}/java
