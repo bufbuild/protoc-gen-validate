@@ -19,6 +19,9 @@ jobs:
       SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
       GPG_KEY_NAME: ${{secrets.GPG_KEY_NAME}}
       GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
+      MAVEN_USERNAME: ${{secrets.SONATYPE_USER}}
+      MAVEN_CENTRAL_TOKEN: ${{secrets.SONATYPE_PASSWORD}}
+      MAVEN_GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
 
     steps:
       - uses: actions/checkout@v3
