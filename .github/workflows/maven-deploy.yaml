@@ -27,7 +27,8 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Publish to GitHub Packages Apache Maven
-        run: mvn deploy
+        working-directory: ${{ github.workspace }}/java
+        run: mvn deploy -s settings.xml
         env:
           GITHUB_TOKEN: ${{ github.token }} # GITHUB_TOKEN is the default env for the password
 
