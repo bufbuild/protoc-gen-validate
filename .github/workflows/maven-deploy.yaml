@@ -37,15 +37,11 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_SECRET_KEY }} # Value of the GPG private key to import - without any modification
           gpg-passphrase: ${ env.GPG_PASSPHRASE }  # env variable for GPG private key passphrase
 
-      - name: Build with Maven
-        working-directory: ${{ github.workspace }}/java
-        run: mvn -B package --file pom.xml
-
       - name: 'Configure gpg signing'
         env:
-          GPG_KEY: ${{ secrets.gpg_key }}
-          GPG_KEY_NAME: ${{ secrets.gpg_key_name }}
-          GPG_PASSPHRASE: ${{ secrets.gpg_passphrase }}
+          GPG_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           # https://github.com/keybase/keybase-issues/issues/2798
           export GPG_TTY=$(tty)
@@ -56,6 +52,10 @@ jobs:
           echo $GPG_KEY | base64 --decode > signing-key
           gpg --passphrase $GPG_PASSPHRASE --batch --import signing-key
           shred signing-key
+
+      - name: Build with Maven
+        working-directory: ${{ github.workspace }}/java
+        run: mvn -B package --file pom.xml
 
       - name: Publish to GitHub Packages Apache Maven
         working-directory: ${{ github.workspace }}/java
