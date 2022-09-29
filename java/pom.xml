@@ -4,7 +4,7 @@
 
     <groupId>io.envoyproxy.protoc-gen-validate</groupId>
     <artifactId>pgv-java</artifactId>
-    <version>0.6.9-rc.1-SNAPSHOT</version>
+    <version>0.6.9-rc.1</version>
     <modules>
         <module>pgv-java-stub</module>
         <module>pgv-java-validation</module>
