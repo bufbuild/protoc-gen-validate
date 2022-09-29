@@ -4,7 +4,7 @@
 
     <groupId>build.buf.protoc-gen-validate</groupId>
     <artifactId>pgv-java</artifactId>
-    <version>0.6.9-rc.2-SNAPSHOT</version>
+    <version>0.6.9-rc.4-SNAPSHOT</version>
     <modules>
         <module>pgv-java-stub</module>
         <module>pgv-java-validation</module>
@@ -213,8 +213,5 @@
             <id>sonatype-nexus-snapshots</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
-        <relocation>
-            <groupId>build.buf.protoc-gen-validate</groupId>
-        </relocation>
     </distributionManagement>
 </project>
