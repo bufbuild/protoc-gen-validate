@@ -21,6 +21,7 @@ jobs:
       MAVEN_CENTRAL_TOKEN: ${ SONATYPE_PASSWORD }
       MAVEN_GPG_PASSPHRASE: ${ GPG_PASSPHRASE }
       MAVEN_OPTS: "--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED"
+      HEAD_REF: ${{ github.head_ref }}
 
     steps:
       - uses: actions/checkout@v3
@@ -62,8 +63,8 @@ jobs:
         run: |
           mvn -B -s settings.xml clean release:prepare \
           -Darguments="-s settings.xml" \
-          -DreleaseVersion=${{ github.ref_name }} \
-          -DdevelopmentVersion=${{ github.ref_name }}-SNAPSHOT \
+          -DreleaseVersion=${{ github.head_ref }} \
+          -DdevelopmentVersion=${{ github.head_ref }}-SNAPSHOT \
           -DscmCommentPrefix="java release: "
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USER }}
