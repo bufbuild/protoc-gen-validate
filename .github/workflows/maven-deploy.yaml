@@ -4,6 +4,7 @@
 name: Maven Deploy
 
 on:
+  pull_request:
   push:
     tags:
       - 'v*.*.*'
