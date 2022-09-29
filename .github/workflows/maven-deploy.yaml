@@ -4,10 +4,7 @@
 name: Maven Deploy
 
 on:
-  pull_request:
   push:
-    branches:
-      - main
     tags:
       - 'v*.*.*'
 
@@ -44,23 +41,6 @@ jobs:
           gpg --passphrase $GPG_PASSPHRASE --batch --import signing-key
           shred signing-key
           
-#      - name: Set up JDK
-#        uses: actions/setup-java@v3
-#        with:
-#          distribution: 'temurin'
-#          java-version: '17'
-#          server-id: github
-
-#      - name: Build with Maven
-#        working-directory: ${{ github.workspace }}/java
-#        run: mvn -B package --file pom.xml
-
-#      - name: Publish to GitHub Packages Apache Maven
-#        working-directory: ${{ github.workspace }}/java
-#        run: mvn deploy -s settings.xml
-#        env:
-#          GITHUB_TOKEN: ${{ github.token }} # GITHUB_TOKEN is the default env for the password
-
       - name: Configure GIT
         run: |
           git config --global user.email "envoy-bot@users.noreply.github.com" 
@@ -82,8 +62,8 @@ jobs:
         run: |
           mvn -B -s settings.xml clean release:prepare \
           -Darguments="-s settings.xml" \
-          -DreleaseVersion=0.6.9-rc.0 \
-          -DdevelopmentVersion=0.6.9-rc.0-SNAPSHOT \
+          -DreleaseVersion=${{ github.ref_name }} \
+          -DdevelopmentVersion=${{ github.ref_name }}-SNAPSHOT \
           -DscmCommentPrefix="java release: "
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USER }}
