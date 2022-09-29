@@ -74,7 +74,12 @@ jobs:
 
       - name: Publish to Maven Packages Apache Maven
         working-directory: ${{ github.workspace }}/java
-        run: mvn deploy -s settings.xml
+        run: |
+          mvn -B -s settings.xml clean release:prepare \
+          -Darguments="-s settings.xml" \
+          -DreleaseVersion=0.6.9-rc.0 \
+          -DdevelopmentVersion=0.6.9-rc.0-SNAPSHOT \
+          -DscmCommentPrefix="java release: "
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USER }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
