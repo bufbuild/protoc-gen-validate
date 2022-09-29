@@ -4,6 +4,7 @@
 name: Maven Deploy
 
 on:
+  pull_request:
   push:
     tags:
       - 'v*.*.*'
@@ -52,7 +53,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          server-id: sonatype-nexus-staging # Value of the distributionManagement/repository/id field of the pom.xml
+          server-id: sonatype-nexus-snapshots # Value of the distributionManagement/repository/id field of the pom.xml
           server-username: ${ env.SONATYPE_USER } # env variable for username in deploy
           server-password: ${ env.SONATYPE_PASSWORD } # env variable for token in deploy
           gpg-private-key: ${{ secrets.GPG_SECRET_KEY }} # Value of the GPG private key to import - without any modification
@@ -61,7 +62,7 @@ jobs:
       - name: Publish to Maven Packages Apache Maven
         working-directory: ${{ github.workspace }}/java
         run: |
-          mvn -B -s settings.xml clean release:prepare \
+          mvn -B -s settings.xml clean deploy \
           -Darguments="-s settings.xml" \
           -DreleaseVersion=${{ github.head_ref }} \
           -DdevelopmentVersion=${{ github.head_ref }}-SNAPSHOT \
