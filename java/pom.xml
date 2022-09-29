@@ -205,7 +205,7 @@
         <url>https://github.com/envoyproxy/protoc-gen-validate</url>
         <connection>scm:git:git@github.com:lyft/protoc-gen-validate.git</connection>
         <developerConnection>scm:git:git@github.com:lyft/protoc-gen-validate.git</developerConnection>
-      <tag>${env.HEAD_REF}</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <distributionManagement>

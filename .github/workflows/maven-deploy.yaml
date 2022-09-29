@@ -62,7 +62,7 @@ jobs:
       - name: Publish to Maven Packages Apache Maven
         working-directory: ${{ github.workspace }}/java
         run: |
-          mvn -B -s settings.xml clean release:prepare \
+          mvn -B -s settings.xml clean deploy \
           -Darguments="-s settings.xml" \
           -DreleaseVersion=${{ github.head_ref }} \
           -DdevelopmentVersion=${{ github.head_ref }}-SNAPSHOT \
