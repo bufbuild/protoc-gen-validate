@@ -477,7 +477,7 @@ func (fns javaFuncs) tsLit(ts *timestamppb.Timestamp) string {
 }
 
 func (fns javaFuncs) oneofTypeName(f pgs.Field) pgsgo.TypeName {
-	return pgsgo.TypeName(fmt.Sprintf("%s", strings.ToUpper(f.Name().String())))
+	return pgsgo.TypeName(strings.ToUpper(f.Name().String()))
 }
 
 func (fns javaFuncs) isOfFileType(o interface{}) bool {
