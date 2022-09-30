@@ -167,7 +167,8 @@ func (fns CCFuncs) packageName(msg pgs.Entity) string {
 
 func (fns CCFuncs) quote(s interface {
 	String() string
-}) string {
+},
+) string {
 	return strconv.Quote(s.String())
 }
 
@@ -262,7 +263,8 @@ func (fns CCFuncs) lit(x interface{}) string {
 
 func (fns CCFuncs) isBytes(f interface {
 	ProtoType() pgs.ProtoType
-}) bool {
+},
+) bool {
 	return f.ProtoType() == pgs.BytesT
 }
 

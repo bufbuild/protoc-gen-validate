@@ -7,16 +7,18 @@ import (
 	"unicode/utf8"
 
 	"github.com/envoyproxy/protoc-gen-validate/validate"
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-var unknown = ""
-var httpHeaderName = "^:?[0-9a-zA-Z!#$%&'*+-.^_|~\x60]+$"
-var httpHeaderValue = "^[^\u0000-\u0008\u000A-\u001F\u007F]*$"
-var headerString = "^[^\u0000\u000A\u000D]*$" // For non-strict validation.
+var (
+	unknown         = ""
+	httpHeaderName  = "^:?[0-9a-zA-Z!#$%&'*+-.^_|~\x60]+$"
+	httpHeaderValue = "^[^\u0000-\u0008\u000A-\u001F\u007F]*$"
+	headerString    = "^[^\u0000\u000A\u000D]*$" // For non-strict validation.
+)
 
 // Map from well known regex to regex pattern.
 var regex_map = map[string]*string{
@@ -468,7 +470,7 @@ func (m *Module) checkLen(len, min, max *uint64) {
 func (m *Module) checkWellKnownRegex(wk validate.KnownRegex, r *validate.StringRules) {
 	if wk != 0 {
 		m.Assert(r.Pattern == nil, "regex `well_known_regex` and regex `pattern` are incompatible")
-		var non_strict = r.Strict != nil && *r.Strict == false
+		non_strict := r.Strict != nil && *r.Strict == false
 		if (wk.String() == "HTTP_HEADER_NAME" || wk.String() == "HTTP_HEADER_VALUE") && non_strict {
 			// Use non-strict header validation.
 			r.Pattern = regex_map["HEADER_STRING"]

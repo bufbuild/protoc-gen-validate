@@ -3,10 +3,10 @@ package shared
 import (
 	"text/template"
 
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 )
 
-func RegisterFunctions(tpl *template.Template, params pgs.Parameters) {
+func RegisterFunctions(tpl *template.Template, _ pgs.Parameters) {
 	tpl.Funcs(map[string]interface{}{
 		"disabled":  Disabled,
 		"ignored":   Ignored,

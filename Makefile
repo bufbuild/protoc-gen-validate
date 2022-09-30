@@ -52,6 +52,18 @@ bin/shadow:
 bin/golint:
 	GOBIN=$(shell pwd)/bin go install golang.org/x/lint/golint
 
+bin/goimports:
+	go install golang.org/x/tools/cmd/goimports@latest
+
+bin/gofumpt:
+	go install mvdan.cc/gofumpt@latest
+
+imports: bin/goimports lint
+	goimports -w -l .
+
+fumpt: bin/gofumpt imports
+	gofumpt -w -l .
+
 bin/protoc-gen-go:
 	GOBIN=$(shell pwd)/bin go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.27.1
 

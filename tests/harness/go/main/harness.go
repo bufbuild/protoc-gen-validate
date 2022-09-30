@@ -6,11 +6,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
 	_ "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
 	_ "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
 	_ "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/yet_another_package/go"
-	"github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -54,8 +52,10 @@ func main() {
 	checkValid(err, multierr)
 }
 
-type hasAllErrors interface{ AllErrors() []error }
-type hasCause interface{ Cause() error }
+type (
+	hasAllErrors interface{ AllErrors() []error }
+	hasCause     interface{ Cause() error }
+)
 
 func checkValid(err, multierr error) {
 	if err == nil && multierr == nil {

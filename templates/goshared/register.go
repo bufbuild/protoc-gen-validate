@@ -194,7 +194,8 @@ func (fns goSharedFuncs) lit(x interface{}) string {
 
 func (fns goSharedFuncs) isBytes(f interface {
 	ProtoType() pgs.ProtoType
-}) bool {
+},
+) bool {
 	return f.ProtoType() == pgs.BytesT
 }
 

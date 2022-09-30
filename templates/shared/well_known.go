@@ -2,7 +2,7 @@ package shared
 
 import (
 	"github.com/envoyproxy/protoc-gen-validate/validate"
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 )
 
 type WellKnown string
@@ -27,7 +27,6 @@ func FileNeeds(f pgs.File, wk WellKnown) bool {
 // Needs returns true if a well-known string validator is needed for this
 // message.
 func Needs(m pgs.Message, wk WellKnown) bool {
-
 	for _, f := range m.Fields() {
 		var rules validate.FieldRules
 		if _, err := f.Extension(validate.E_Rules, &rules); err != nil {

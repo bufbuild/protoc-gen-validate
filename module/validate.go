@@ -1,12 +1,13 @@
 package module
 
 import (
+	"path/filepath"
+	"strings"
+
 	"github.com/envoyproxy/protoc-gen-validate/templates"
 	"github.com/envoyproxy/protoc-gen-validate/templates/java"
 	pgs "github.com/lyft/protoc-gen-star"
 	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
-	"path/filepath"
-	"strings"
 )
 
 const (

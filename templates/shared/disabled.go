@@ -2,7 +2,7 @@ package shared
 
 import (
 	"github.com/envoyproxy/protoc-gen-validate/validate"
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 )
 
 // Disabled returns true if validations are disabled for msg
@@ -11,7 +11,7 @@ func Disabled(msg pgs.Message) (disabled bool, err error) {
 	return
 }
 
-// Ignore returns true if validations aren't to be generated for msg
+// Ignored returns true if validations aren't to be generated for msg
 func Ignored(msg pgs.Message) (ignored bool, err error) {
 	_, err = msg.Extension(validate.E_Ignored, &ignored)
 	return
