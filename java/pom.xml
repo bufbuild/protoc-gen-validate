@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.envoyproxy.protoc-gen-validate</groupId>
+    <groupId>build.buf.protoc-gen-validate</groupId>
     <artifactId>pgv-java</artifactId>
-    <version>0.6.9-rc.0-SNAPSHOT</version>
+    <version>VERSION</version>
     <modules>
         <module>pgv-java-stub</module>
         <module>pgv-java-validation</module>
@@ -29,14 +29,9 @@
 
     <developers>
         <developer>
-            <id>rmichela</id>
-            <name>Ryan Michela</name>
-            <email>rmichela@salesforce.com</email>
-        </developer>
-        <developer>
-            <id>ramaraochavali</id>
-            <name>Rama Chavali</name>
-            <email>rama.rao@salesforce.com</email>
+            <id>elliotmjackson</id>
+            <name>Elliot Jackson</name>
+            <email>ejackson@buf.build</email>
         </developer>
     </developers>
 
@@ -205,7 +200,7 @@
         <url>https://github.com/envoyproxy/protoc-gen-validate</url>
         <connection>scm:git:git@github.com:lyft/protoc-gen-validate.git</connection>
         <developerConnection>scm:git:git@github.com:lyft/protoc-gen-validate.git</developerConnection>
-      <tag>v0.6.9-rc.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <distributionManagement>
