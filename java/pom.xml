@@ -144,6 +144,9 @@
                             <autoVersionSubmodules>true</autoVersionSubmodules>
                             <tagNameFormat>v@{project.version}-java</tagNameFormat>
                             <scmCommentPrefix>java release: </scmCommentPrefix>
+                            <checkModificationExcludes>
+                                <checkModificationExclude>java/pom.xml</checkModificationExclude>
+                            </checkModificationExcludes>
                         </configuration>
                         <!-- No executions -->
                     </plugin>
@@ -184,6 +187,12 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -196,7 +205,7 @@
         <url>https://github.com/envoyproxy/protoc-gen-validate</url>
         <connection>scm:git:git@github.com:lyft/protoc-gen-validate.git</connection>
         <developerConnection>scm:git:git@github.com:lyft/protoc-gen-validate.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>v0.6.9-rc.0</tag>
   </scm>
 
     <distributionManagement>

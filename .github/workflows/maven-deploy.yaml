@@ -1,0 +1,71 @@
+# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
+## For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
+
+name: Maven Deploy
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SONATYPE_USER: ${{secrets.SONATYPE_USER}}
+      SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      GPG_KEY_NAME: ${{secrets.GPG_KEY_NAME}}
+      GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
+      MAVEN_USERNAME: ${ SONATYPE_USER }
+      MAVEN_CENTRAL_TOKEN: ${ SONATYPE_PASSWORD }
+      MAVEN_GPG_PASSPHRASE: ${ GPG_PASSPHRASE }
+      MAVEN_OPTS: "--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 'Configure gpg signing'
+        env:
+          GPG_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          # https://github.com/keybase/keybase-issues/issues/2798
+          export GPG_TTY=$(tty)
+          # Import gpg keys and warm the passphrase to avoid the gpg
+          # passphrase prompt when initating a deploy
+          # `--pinentry-mode=loopback` could be needed to ensure we
+          # suppress the gpg prompt
+          echo $GPG_KEY | base64 --decode > signing-key
+          gpg --passphrase $GPG_PASSPHRASE --batch --import signing-key
+          shred signing-key
+          
+      - name: Configure GIT
+        run: |
+          git config --global user.email "envoy-bot@users.noreply.github.com" 
+          git config --global user.name "envoy-bot"
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          server-id: sonatype-nexus-staging # Value of the distributionManagement/repository/id field of the pom.xml
+          server-username: ${ env.SONATYPE_USER } # env variable for username in deploy
+          server-password: ${ env.SONATYPE_PASSWORD } # env variable for token in deploy
+          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }} # Value of the GPG private key to import - without any modification
+          gpg-passphrase: ${ env.GPG_PASSPHRASE }  # env variable for GPG private key passphrase
+
+      - name: Publish to Maven Packages Apache Maven
+        working-directory: ${{ github.workspace }}/java
+        run: |
+          mvn -B -s settings.xml clean release:prepare \
+          -Darguments="-s settings.xml" \
+          -DreleaseVersion=${{ github.ref_name }} \
+          -DdevelopmentVersion=${{ github.ref_name }}-SNAPSHOT \
+          -DscmCommentPrefix="java release: "
+        env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USER }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}

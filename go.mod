@@ -14,3 +14,7 @@ require (
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/protobuf v1.28.1
 )
+
+retract (
+	[v0.6.9, v0.6.12] // Published accidentally
+)
