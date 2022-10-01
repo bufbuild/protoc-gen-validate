@@ -5,8 +5,6 @@ name: Maven Deploy
 
 on:
   push:
-    branches:
-      - main
     tags:
       - 'v*.*.*'
 
@@ -14,45 +12,60 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
+      SONATYPE_USER: ${{secrets.SONATYPE_USER}}
+      SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       GPG_KEY_NAME: ${{secrets.GPG_KEY_NAME}}
       GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
+      MAVEN_USERNAME: ${ SONATYPE_USER }
+      MAVEN_CENTRAL_TOKEN: ${ SONATYPE_PASSWORD }
+      MAVEN_GPG_PASSPHRASE: ${ GPG_PASSPHRASE }
+      MAVEN_OPTS: "--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED"
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 11
+
+      - name: 'Configure gpg signing'
+        env:
+          GPG_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          # https://github.com/keybase/keybase-issues/issues/2798
+          export GPG_TTY=$(tty)
+          # Import gpg keys and warm the passphrase to avoid the gpg
+          # passphrase prompt when initating a deploy
+          # `--pinentry-mode=loopback` could be needed to ensure we
+          # suppress the gpg prompt
+          echo $GPG_KEY | base64 --decode > signing-key
+          gpg --passphrase $GPG_PASSPHRASE --batch --import signing-key
+          shred signing-key
+          
+      - name: Configure GIT
+        run: |
+          git config --global user.email "envoy-bot@users.noreply.github.com" 
+          git config --global user.name "envoy-bot"
+
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
-          gpg-private-key: ${{ env.GPG_PRIVATE_KEY }}
-          gpg-passphrase: ${{ env.GPG_PASSPHRASE }}
+          server-id: sonatype-nexus-staging # Value of the distributionManagement/repository/id field of the pom.xml
+          server-username: ${ env.SONATYPE_USER } # env variable for username in deploy
+          server-password: ${ env.SONATYPE_PASSWORD } # env variable for token in deploy
+          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }} # Value of the GPG private key to import - without any modification
+          gpg-passphrase: ${ env.GPG_PASSPHRASE }  # env variable for GPG private key passphrase
 
-      - name: Build with Maven
+      - name: Publish to Maven Packages Apache Maven
         working-directory: ${{ github.workspace }}/java
-        run: mvn -B package --file pom.xml
-
-      - name: Publish to GitHub Packages Apache Maven
-        working-directory: ${{ github.workspace }}/java
-        run: mvn deploy -s settings.xml
+        run: |
+          mvn -B -s settings.xml clean release:prepare \
+          -Darguments="-s settings.xml" \
+          -DreleaseVersion=${{ github.ref_name }} \
+          -DdevelopmentVersion=${{ github.ref_name }}-SNAPSHOT \
+          -DscmCommentPrefix="java release: "
         env:
-          GITHUB_TOKEN: ${{ github.token }} # GITHUB_TOKEN is the default env for the password
-
-#      - name: Set up Apache Maven Central
-#        uses: actions/setup-java@v3
-#        with: # running setup-java again overwrites the settings.xml
-#          distribution: 'temurin'
-#          java-version: '11'
-#          server-id: sonatype-nexus-snapshots # Value of the distributionManagement/repository/id field of the pom.xml
-#          server-username: ${{ env.SONATYPE_USER }} # env variable for username in deploy
-#          server-password: ${{ env.SONATYPE_PASSWORD }} # env variable for token in deploy
-#          gpg-private-key: ${{ env.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
-#          gpg-passphrase: ${{ env.GPG_PASSPHRASE }} # env variable for GPG private key passphrase
-#
-#      - name: Publish to Apache Maven Central
-#        working-directory: ${{ github.workspace }}/java
-#        run: mvn deploy -s settings.xml
-#        env:
-#          MAVEN_USERNAME: ${{ env.SONATYPE_USER }}
-#          MAVEN_CENTRAL_TOKEN: ${{ env.SONATYPE_PASSWORD }}
-#          MAVEN_GPG_PASSPHRASE: ${{ env.GPG_PASSPHRASE }}
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USER }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
