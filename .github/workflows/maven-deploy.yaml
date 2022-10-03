@@ -14,21 +14,22 @@ jobs:
     env:
       SONATYPE_USER: ${{secrets.SONATYPE_USER}}
       SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
-      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       GPG_KEY_NAME: ${{secrets.GPG_KEY_NAME}}
       GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
-      MAVEN_USERNAME: ${ SONATYPE_USER }
-      MAVEN_CENTRAL_TOKEN: ${ SONATYPE_PASSWORD }
-      MAVEN_GPG_PASSPHRASE: ${ GPG_PASSPHRASE }
       MAVEN_OPTS: "--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED"
+      REF_NAME: ${{ github.ref_name }}
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: 'Configure gpg signing'
+      - name: Set VERSION variable from tag
+        run: |
+          VERSION=${{ env.REF_NAME }}
+          echo "VERSION=${VERSION:1}" >> $GITHUB_ENV
+
+      - name: 'Configure GPG signing'
         env:
           GPG_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
           # https://github.com/keybase/keybase-issues/issues/2798
@@ -51,19 +52,23 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          server-id: sonatype-nexus-staging # Value of the distributionManagement/repository/id field of the pom.xml
-          server-username: ${ env.SONATYPE_USER } # env variable for username in deploy
-          server-password: ${ env.SONATYPE_PASSWORD } # env variable for token in deploy
-          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }} # Value of the GPG private key to import - without any modification
-          gpg-passphrase: ${ env.GPG_PASSPHRASE }  # env variable for GPG private key passphrase
+          server-id: sonatype-nexus-snapshots
+          server-username: ${ env.SONATYPE_USER }
+          server-password: ${ env.SONATYPE_PASSWORD }
+          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
+          gpg-passphrase: ${ env.GPG_PASSPHRASE }
+
+      - name: Update version in pom
+        working-directory: ${{ github.workspace }}/java
+        run: mvn -B versions:set -DnewVersion=${{ env.VERSION }} -DgenerateBackupPoms=false
 
       - name: Publish to Maven Packages Apache Maven
         working-directory: ${{ github.workspace }}/java
         run: |
-          mvn -B -s settings.xml clean release:prepare \
+          mvn -B -s settings.xml clean deploy \
           -Darguments="-s settings.xml" \
-          -DreleaseVersion=${{ github.ref_name }} \
-          -DdevelopmentVersion=${{ github.ref_name }}-SNAPSHOT \
+          -DreleaseVersion=${{ env.VERSION }} \
+          -DdevelopmentVersion=${{ env.VERSION }}-SNAPSHOT \
           -DscmCommentPrefix="java release: "
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USER }}
