@@ -6,7 +6,7 @@ on:
       - 'v*.*.*'
 
 env:
-  TEST_TAG: protoc-gen-validate:${{ github.sha }}
+  IMAGE_TAG: protoc-gen-validate:${{ github.sha }}
 
 jobs:
   deploy:
@@ -30,4 +30,4 @@ jobs:
           docker run --rm \
           --env PYPI_REPO=pypi \
           --env PGV_PYPI_TOKEN="${{ secrets.PGV_PYPI_TOKEN }}" \
-          ${{ env.TEST_TAG }} python-release
+          ${{ env.IMAGE_TAG }} python-release
