@@ -4,7 +4,6 @@
 name: Maven Deploy
 
 on:
-  pull_request:
   push:
     tags:
       - 'v*.*.*'
@@ -18,8 +17,7 @@ jobs:
       GPG_KEY_NAME: ${{secrets.GPG_KEY_NAME}}
       GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
       MAVEN_OPTS: "--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED"
-      REF_NAME: v0.6.13
-#      REF_NAME: ${{ github.ref_name }}
+      REF_NAME: ${{ github.ref_name }}
 
     steps:
       - uses: actions/checkout@v3
