@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.envoyproxy.protoc-gen-validate</groupId>
+    <groupId>build.buf.protoc-gen-validate</groupId>
     <artifactId>pgv-java</artifactId>
-    <version>0.6.9-rc.0-SNAPSHOT</version>
+    <version>VERSION</version>
     <modules>
         <module>pgv-java-stub</module>
         <module>pgv-java-validation</module>
@@ -29,14 +29,9 @@
 
     <developers>
         <developer>
-            <id>rmichela</id>
-            <name>Ryan Michela</name>
-            <email>rmichela@salesforce.com</email>
-        </developer>
-        <developer>
-            <id>ramaraochavali</id>
-            <name>Rama Chavali</name>
-            <email>rama.rao@salesforce.com</email>
+            <id>elliotmjackson</id>
+            <name>Elliot Jackson</name>
+            <email>ejackson@buf.build</email>
         </developer>
     </developers>
 
@@ -50,7 +45,7 @@
         <re2j.version>1.5</re2j.version>
         <commons.validator.version>1.7</commons.validator.version>
         <grpc.version>1.42.1</grpc.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <assertj.version>3.11.1</assertj.version>
         <java.version>1.8</java.version>
         <proto-google-common-protos.version>2.7.0</proto-google-common-protos.version>
@@ -164,7 +159,7 @@
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>sonatype-nexus-staging</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
                         </configuration>
                     </plugin>
@@ -205,13 +200,13 @@
         <url>https://github.com/envoyproxy/protoc-gen-validate</url>
         <connection>scm:git:git@github.com:lyft/protoc-gen-validate.git</connection>
         <developerConnection>scm:git:git@github.com:lyft/protoc-gen-validate.git</developerConnection>
-      <tag>v0.6.9-rc.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <distributionManagement>
         <snapshotRepository>
             <id>sonatype-nexus-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
