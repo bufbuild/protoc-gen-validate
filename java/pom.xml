@@ -4,7 +4,7 @@
 
     <groupId>io.envoyproxy.protoc-gen-validate</groupId>
     <artifactId>pgv-java</artifactId>
-    <version>0.6.9-rc.0-SNAPSHOT</version>
+    <version>VERSION</version>
     <modules>
         <module>pgv-java-stub</module>
         <module>pgv-java-validation</module>
@@ -213,5 +213,8 @@
             <id>sonatype-nexus-snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+        <relocation>
+            <groupId>build.buf.protoc-gen-validate</groupId>
+        </relocation>
     </distributionManagement>
 </project>
