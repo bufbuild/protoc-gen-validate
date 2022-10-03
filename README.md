@@ -1,4 +1,18 @@
+![The Buf logo](./.github/buf-logo.svg)
+
 # protoc-gen-validate (PGV)
+
+![License](https://img.shields.io/github/license/envoyproxy/protoc-gen-validate?color=blue)
+![Release](https://img.shields.io/github/v/release/envoyproxy/protoc-gen-validate?include_prereleases)
+![Slack](https://img.shields.io/badge/slack-buf-%23e01563)
+
+> The team at [@bufbuild](https://github.com/bufbuild) are happy to annouce we will begin to maintain PGV! It fills a huge gap in the protobuf ecosystem and deserves careful stewardship.
+>
+> As a company, our incentives are well-aligned with the PGV community's. We want protobuf to be feature-complete and easy to use for personal projects, tiny startups, and giant megacorporations alike, because wider protobuf adoption is at the centre of our mission.
+>
+> We will take care not to break existing PGV users, and we can devote enough time to the project to clear out the issue backlog and possibly support additional languages. We will, of course, keep everything under an Apache 2 license.
+>
+> We appreciate the PGV community's continued paitence whilst we iron out a detailed transition plan and thank the [@envoyproxy](https://gtihub.com/envoyproxy) team for all that hard work they've put in to date.
 
 *This project is currently in **alpha**. The API should be considered unstable and likely to change*
 
