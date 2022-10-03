@@ -116,6 +116,11 @@ bool Validate(const {{ class . }}& m, pgv::ValidationMsg* err) {
 		{{ range .NonOneOfFields }}
 			{{- render (context .) -}}
 		{{ end -}}
+		{{ range .SyntheticOneOfFields }}
+			if ({{ hasAccessor (context .) }}) {
+				{{ render (context .) }}
+			}
+		{{ end }}
 		{{ range .RealOneOfs }}
 			switch (m.{{ .Name }}_case()) {
 				{{ range .Fields -}}
