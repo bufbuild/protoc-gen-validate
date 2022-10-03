@@ -78,9 +78,15 @@ Installing PGV can currently only be done from source:
 ```sh
 # fetches this repo into $GOPATH
 go get -d github.com/envoyproxy/protoc-gen-validate
+```
 
+> #### 💡 Yes, our go module path is `github.com/envoyproxy/protoc-gen-validate` **not** `bufbuild` this is intentional.
+> Changing the module path is effectively creating a new, independent module.  We would prefer not to break our users. The Go team are working on better `cmd/go` support for modules that change paths, but progress is slow. Until then, we will continue to use the `envoyproxy` module path.
+
+```
+git clone github.com/bufbuild/protoc-gen-validate
 # installs PGV into $GOPATH/bin
-make build
+cd protoc-gen-validate && make build
 ```
 
 ### Parameters
