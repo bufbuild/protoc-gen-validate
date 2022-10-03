@@ -1,4 +1,10 @@
+![The Buf logo](./.github/buf-logo.svg)
+
 # protoc-gen-validate (PGV)
+
+![License](https://img.shields.io/github/license/envoyproxy/protoc-gen-validate?color=blue)
+![Release](https://img.shields.io/github/v/release/envoyproxy/protoc-gen-validate?include_prereleases)
+![Slack](https://img.shields.io/badge/slack-buf-%23e01563)
 
 *This project is currently in **alpha**. The API should be considered unstable and likely to change*
 
