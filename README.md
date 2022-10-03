@@ -125,7 +125,7 @@ following to your pom.xml or build.gradle.
 ```xml
 <dependencies>
     <dependency>
-        <groupId> io.envoyproxy.protoc-gen-validate</groupId>
+        <groupId>build.buf.protoc-gen-validate</groupId>
         <artifactId>pgv-java-stub</artifactId>
         <version>${pgv.version}</version>
     </dependency>
@@ -156,7 +156,7 @@ following to your pom.xml or build.gradle.
                     <configuration>
                         <pluginParameter>lang=java</pluginParameter>
                         <pluginId>java-pgv</pluginId>
-                        <pluginArtifact>io.envoyproxy.protoc-gen-validate:protoc-gen-validate:${pgv.version}:exe:${os.detected.classifier}</pluginArtifact>
+                        <pluginArtifact>build.buf.protoc-gen-validate:protoc-gen-validate:${pgv.version}:exe:${os.detected.classifier}</pluginArtifact>
                     </configuration>
                 </execution>
             </executions>
@@ -179,7 +179,7 @@ protobuf {
 
     plugins {
         javapgv {
-            artifact = "io.envoyproxy.protoc-gen-validate:protoc-gen-validate:${pgv.version}"
+            artifact = "build.buf.protoc-gen-validate:protoc-gen-validate:${pgv.version}"
         }
     }
 
