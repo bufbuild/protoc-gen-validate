@@ -12,8 +12,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      SONATYPE_USER: ${{secrets.SONATYPE_USER}}
-      SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
+      SONATYPE_USER: ${{secrets.BUF_SONATYPE_USER}}
+      SONATYPE_PASSWORD: ${{secrets.BUF_SONATYPE_PASSWORD}}
       GPG_KEY_NAME: ${{secrets.GPG_KEY_NAME}}
       GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
       MAVEN_OPTS: "--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED"
@@ -71,6 +71,6 @@ jobs:
           -DdevelopmentVersion=${{ env.VERSION }}-SNAPSHOT \
           -DscmCommentPrefix="java release: "
         env:
-          MAVEN_USERNAME: ${{ secrets.SONATYPE_USER }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_USERNAME: ${{ env.SONATYPE_USER }}
+          MAVEN_CENTRAL_TOKEN: ${{ env.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
