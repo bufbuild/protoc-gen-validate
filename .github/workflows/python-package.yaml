@@ -1,6 +1,7 @@
 name: Release Python Package
 
 on:
+  pull_request:
   push:
     tags:
       - 'v*.*.*'
