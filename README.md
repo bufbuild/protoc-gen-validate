@@ -606,10 +606,10 @@ Person x = 1;
   map<string, uint64> x = 1 [(validate.rules).map.min_pairs = 3];
 
   // x must contain between 5 and 10 KV pairs
-  map<string, string> x = 1 [(validate.rules)].map = {min_pairs: 5, max_pairs: 10}];
+  map<string, string> x = 1 [(validate.rules).map = {min_pairs: 5, max_pairs: 10}];
 
   // x must contain exactly 7 KV pairs
-  map<string, Person> x = 1 [(validate.rules)].map = {min_pairs: 7, max_pairs: 7}];
+  map<string, Person> x = 1 [(validate.rules).map = {min_pairs: 7, max_pairs: 7}];
   ```
 
 - **no_sparse**: for map fields with message values, setting this rule to true disallows keys with unset values.
