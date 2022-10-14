@@ -29,5 +29,4 @@ jobs:
       - run: |
           docker run --rm \
           --env PYPI_REPO=pypi \
-#          --env PGV_PYPI_TOKEN="${{ secrets.PGV_PYPI_TOKEN }}" \
           ${{ env.IMAGE_TAG }} python-release
