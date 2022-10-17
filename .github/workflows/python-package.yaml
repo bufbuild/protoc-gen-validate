@@ -1,6 +1,7 @@
 name: Release Python Package
 
 on:
+  pull_request:
   push:
     tags:
       - 'v*.*.*'
@@ -29,4 +30,4 @@ jobs:
           docker run --rm \
           --env PYPI_REPO=pypi \
           --env PGV_PYPI_TOKEN="${{ secrets.PGV_PYPI_TOKEN }}" \
-          ${{ env.IMAGE_TAG }} python-release
+          ${{ env.IMAGE_TAG }} SETUPTOOLS_SCM_PRETEND_VERSION=${{ github.ref_name }} python-release
