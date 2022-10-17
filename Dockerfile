@@ -25,7 +25,7 @@ RUN apt update \
   && apt clean
 
 # bazel
-ENV BAZEL_VER=5.3.0
+ENV BAZEL_VER=5.3.1
 RUN wget -O bazel https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VER}/bazel-${BAZEL_VER}-linux-$([ $(uname -m) = "aarch64" ] && echo "arm64" || echo "x86_64") \
   && chmod +x bazel \
   && mv bazel usr/local/bin/bazel
