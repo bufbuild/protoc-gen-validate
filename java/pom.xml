@@ -42,7 +42,7 @@
         <google.protobuf.version>3.19.4</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
-        <re2j.version>1.5</re2j.version>
+        <re2j.version>1.7</re2j.version>
         <commons.validator.version>1.7</commons.validator.version>
         <grpc.version>1.50.0</grpc.version>
         <junit.version>4.13.1</junit.version>
