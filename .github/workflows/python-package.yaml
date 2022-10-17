@@ -8,6 +8,8 @@ on:
 
 env:
   IMAGE_TAG: protoc-gen-validate:${{ github.sha }}
+#  REF_NAME: ${{ github.ref_name }}
+  REF_NAME: v0.0.1
 
 jobs:
   deploy:
@@ -30,4 +32,4 @@ jobs:
           docker run --rm \
           --env PYPI_REPO=pypi \
           --env PGV_PYPI_TOKEN="${{ secrets.PGV_PYPI_TOKEN }}" \
-          ${{ env.IMAGE_TAG }} SETUPTOOLS_SCM_PRETEND_VERSION=${{ github.ref_name }} python-release
+          ${{ env.IMAGE_TAG }} SETUPTOOLS_SCM_PRETEND_VERSION=${{ env.REF_NAME }} python-release
