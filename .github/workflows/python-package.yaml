@@ -1,15 +1,13 @@
 name: Release Python Package
 
 on:
-  pull_request:
   push:
     tags:
       - 'v*.*.*'
 
 env:
   IMAGE_TAG: protoc-gen-validate:${{ github.sha }}
-#  REF_NAME: ${{ github.ref_name }}
-  REF_NAME: v0.0.1
+  REF_NAME: ${{ github.ref_name }}
 
 jobs:
   deploy:
