@@ -1,25 +1,19 @@
 package io.envoyproxy.pgv;
 
 import com.google.re2j.Pattern;
-import org.apache.commons.validator.routines.DomainValidator;
-import org.apache.commons.validator.routines.EmailValidator;
-import org.apache.commons.validator.routines.InetAddressValidator;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import org.apache.commons.validator.routines.DomainValidator;
+import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.commons.validator.routines.InetAddressValidator;
 
 /**
  * {@code StringValidation} implements PGV validation for protobuf {@code String} fields.
  */
 @SuppressWarnings("WeakerAccess")
 public final class StringValidation {
-    private static final int UUID_DASH_1 = 8;
-    private static final int UUID_DASH_2 = 13;
-    private static final int UUID_DASH_3 = 18;
-    private static final int UUID_DASH_4 = 23;
-    private static final int UUID_LEN = 36;
-
     private StringValidation() {
         // Intentionally left blank.
     }
@@ -187,25 +181,45 @@ public final class StringValidation {
      * Validates if the given value is a UUID or GUID in RFC 4122 hyphenated
      * ({@code 00000000-0000-0000-0000-000000000000}) form; both lower and upper
      * hex digits are accepted.
+     * <p>
+     * The implementation is the same Java uses for UUID parsing since Java 15,
+     * but without the alternate path that accepts invalid UUIDs, and without
+     * actually constructing a UUID.
+     *
+     * @see <a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=JDK-8196334">JDK-8196334</a>
+     * @see <a href="https://github.com/openjdk/jdk/commit/ebadfaeb2e1cc7b5ce5f101cd8a539bc5478cf5b">OpenJDK Commit</a>
      */
     public static void uuid(final String field, final String value) throws ValidationException {
-        final char[] chars = value.toCharArray();
-
-        err: if (chars.length == UUID_LEN) {
-            for (int i = 0; i < chars.length; i++) {
-                final char c = chars[i];
-                if (i == UUID_DASH_1 || i == UUID_DASH_2 || i == UUID_DASH_3 || i == UUID_DASH_4) {
-                    if (c != '-') {
-                        break err;
-                    }
-                } else if ((c < '0' || c > '9') && (c < 'a' || c > 'f') && (c < 'A' || c > 'F')) {
-                    break err;
+        if (value.length() == 36) {
+            final char dash1 = value.charAt(8);
+            final char dash2 = value.charAt(13);
+            final char dash3 = value.charAt(18);
+            final char dash4 = value.charAt(23);
+            if (dash1 == '-' && dash2 == '-' && dash3 == '-' && dash4 == '-') {
+                final byte[] nibbles = UuidHolder.NIBBLES;
+                final long msb1 = uuidParse4Nibbles(nibbles, value, 0);
+                final long msb2 = uuidParse4Nibbles(nibbles, value, 4);
+                final long msb3 = uuidParse4Nibbles(nibbles, value, 9);
+                final long msb4 = uuidParse4Nibbles(nibbles, value, 14);
+                final long lsb1 = uuidParse4Nibbles(nibbles, value, 19);
+                final long lsb2 = uuidParse4Nibbles(nibbles, value, 24);
+                final long lsb3 = uuidParse4Nibbles(nibbles, value, 28);
+                final long lsb4 = uuidParse4Nibbles(nibbles, value, 32);
+                if ((msb1 | msb2 | msb3 | msb4 | lsb1 | lsb2 | lsb3 | lsb4) >= 0) {
+                    return;
                 }
             }
-            return;
         }
 
         throw new ValidationException(field, enquote(value), "invalid UUID string");
+    }
+
+    private static long uuidParse4Nibbles(final byte[] nibbles, final String value, final int i) {
+        final char c1 = value.charAt(i);
+        final char c2 = value.charAt(i + 1);
+        final char c3 = value.charAt(i + 2);
+        final char c4 = value.charAt(i + 3);
+        return (c1 | c2 | c3 | c4) > 0xff ? -1 : nibbles[c1] << 12 | nibbles[c2] << 8 | nibbles[c3] << 4 | nibbles[c4];
     }
 
     private static String enquote(String value) {
@@ -219,5 +233,43 @@ public final class StringValidation {
             }
         }
         return true;
+    }
+
+    /**
+     * This class implements the <i>static holder singleton pattern</i> for the
+     * additional data required in the {@link #uuid(String, String) uuid}
+     * validation method. With it, we can postpone the allocation of the
+     * {@link #NIBBLES} array until we really need it, in a thread safe manner.
+     */
+    private static class UuidHolder {
+        private static final byte[] NIBBLES;
+
+        static {
+            final byte[] ns = new byte[256];
+            Arrays.fill(ns, (byte) -1);
+            ns['0'] = 0;
+            ns['1'] = 1;
+            ns['2'] = 2;
+            ns['3'] = 3;
+            ns['4'] = 4;
+            ns['5'] = 5;
+            ns['6'] = 6;
+            ns['7'] = 7;
+            ns['8'] = 8;
+            ns['9'] = 9;
+            ns['A'] = 10;
+            ns['B'] = 11;
+            ns['C'] = 12;
+            ns['D'] = 13;
+            ns['E'] = 14;
+            ns['F'] = 15;
+            ns['a'] = 10;
+            ns['b'] = 11;
+            ns['c'] = 12;
+            ns['d'] = 13;
+            ns['e'] = 14;
+            ns['f'] = 15;
+            NIBBLES = ns;
+        }
     }
 }
