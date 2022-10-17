@@ -146,7 +146,7 @@ python-release: prepare-python-release
 	# but why there's a collision or why setuptools stopped respecting the `build_lib` flag is unclear.
 	# As a workaround, we build a source distribution and then separately build a wheel from it.
 	python3.8 -m pip wheel --wheel-dir python/dist --no-deps python/dist/*
-	#python3.8 -m twine upload --verbose --skip-existing --repository ${PYPI_REPO} --username "__token__" --password ${PGV_PYPI_TOKEN} python/dist/*
+	python3.8 -m twine upload --verbose --skip-existing --repository ${PYPI_REPO} --username "__token__" --password ${PGV_PYPI_TOKEN} python/dist/*
 
 .PHONY: check-generated
 check-generated: ## run during CI; this checks that the checked-in generated code matches the generated version.
