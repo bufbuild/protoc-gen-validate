@@ -12,7 +12,6 @@ from google.protobuf.message import Message
 from jinja2 import Template
 from validate_email import validate_email
 
-
 if sys.version_info > (3, 9):
     unparse = ast.unparse
 else:
