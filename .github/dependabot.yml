@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: "gomod" 
+    directory: "/" 
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "gomod" 
+    directory: "/tests" 
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "maven" 
+    directory: "/java" 
+    schedule:
+      interval: "weekly"

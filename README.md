@@ -1,4 +1,10 @@
+![The Buf logo](./.github/buf-logo.svg)
+
 # protoc-gen-validate (PGV)
+
+![License](https://img.shields.io/github/license/bufbuild/protoc-gen-validate?color=blue)
+![Release](https://img.shields.io/github/v/release/bufbuild/protoc-gen-validate?include_prereleases)
+![Slack](https://img.shields.io/badge/slack-buf-%23e01563)
 
 *This project is currently in **alpha**. The API should be considered unstable and likely to change*
 
@@ -72,9 +78,15 @@ Installing PGV can currently only be done from source:
 ```sh
 # fetches this repo into $GOPATH
 go get -d github.com/envoyproxy/protoc-gen-validate
+```
 
+> #### 💡 Yes, our go module path is `github.com/envoyproxy/protoc-gen-validate` **not** `bufbuild` this is intentional.
+> Changing the module path is effectively creating a new, independent module.  We would prefer not to break our users. The Go team are working on better `cmd/go` support for modules that change paths, but progress is slow. Until then, we will continue to use the `envoyproxy` module path.
+
+```
+git clone github.com/bufbuild/protoc-gen-validate
 # installs PGV into $GOPATH/bin
-make build
+cd protoc-gen-validate && make build
 ```
 
 ### Parameters
@@ -119,7 +131,7 @@ following to your pom.xml or build.gradle.
 ```xml
 <dependencies>
     <dependency>
-        <groupId> io.envoyproxy.protoc-gen-validate</groupId>
+        <groupId>build.buf.protoc-gen-validate</groupId>
         <artifactId>pgv-java-stub</artifactId>
         <version>${pgv.version}</version>
     </dependency>
@@ -150,7 +162,7 @@ following to your pom.xml or build.gradle.
                     <configuration>
                         <pluginParameter>lang=java</pluginParameter>
                         <pluginId>java-pgv</pluginId>
-                        <pluginArtifact>io.envoyproxy.protoc-gen-validate:protoc-gen-validate:${pgv.version}:exe:${os.detected.classifier}</pluginArtifact>
+                        <pluginArtifact>build.buf.protoc-gen-validate:protoc-gen-validate:${pgv.version}:exe:${os.detected.classifier}</pluginArtifact>
                     </configuration>
                 </execution>
             </executions>
@@ -173,7 +185,7 @@ protobuf {
 
     plugins {
         javapgv {
-            artifact = "io.envoyproxy.protoc-gen-validate:protoc-gen-validate:${pgv.version}"
+            artifact = "build.buf.protoc-gen-validate:protoc-gen-validate:${pgv.version}"
         }
     }
 
@@ -594,10 +606,10 @@ Person x = 1;
   map<string, uint64> x = 1 [(validate.rules).map.min_pairs = 3];
 
   // x must contain between 5 and 10 KV pairs
-  map<string, string> x = 1 [(validate.rules)].map = {min_pairs: 5, max_pairs: 10}];
+  map<string, string> x = 1 [(validate.rules).map = {min_pairs: 5, max_pairs: 10}];
 
   // x must contain exactly 7 KV pairs
-  map<string, Person> x = 1 [(validate.rules)].map = {min_pairs: 7, max_pairs: 7}];
+  map<string, Person> x = 1 [(validate.rules).map = {min_pairs: 7, max_pairs: 7}];
   ```
 
 - **no_sparse**: for map fields with message values, setting this rule to true disallows keys with unset values.

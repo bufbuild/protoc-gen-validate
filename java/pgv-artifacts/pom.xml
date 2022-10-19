@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>pgv-java</artifactId>
-        <groupId>io.envoyproxy.protoc-gen-validate</groupId>
-        <version>0.6.8-SNAPSHOT</version>
+        <groupId>build.buf.protoc-gen-validate</groupId>
+        <version>VERSION</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -136,6 +136,26 @@
                             <environmentVariables>
                                 <GOOS>windows</GOOS>
                                 <GOARCH>amd64</GOARCH>
+                            </environmentVariables>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>linux-aarch_64</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <executable>go</executable>
+                            <arguments>
+                                <argument>build</argument>
+                                <argument>-o</argument>
+                                <argument>${project.build.directory}/protoc-gen-validate-${project.version}-linux-aarch_64.exe</argument>
+                                <argument>../..</argument>
+                            </arguments>
+                            <environmentVariables>
+                                <GOOS>linux</GOOS>
+                                <GOARCH>arm64</GOARCH>
                             </environmentVariables>
                         </configuration>
                     </execution>

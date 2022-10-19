@@ -7,7 +7,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/envoyproxy/protoc-gen-validate/validate"
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -468,7 +468,7 @@ func (m *Module) checkLen(len, min, max *uint64) {
 func (m *Module) checkWellKnownRegex(wk validate.KnownRegex, r *validate.StringRules) {
 	if wk != 0 {
 		m.Assert(r.Pattern == nil, "regex `well_known_regex` and regex `pattern` are incompatible")
-		var non_strict = r.Strict != nil && *r.Strict == false
+		var non_strict = r.Strict != nil && !*r.Strict
 		if (wk.String() == "HTTP_HEADER_NAME" || wk.String() == "HTTP_HEADER_VALUE") && non_strict {
 			// Use non-strict header validation.
 			r.Pattern = regex_map["HEADER_STRING"]
