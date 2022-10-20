@@ -123,8 +123,7 @@ into `../generated/example.pb.validate.go`:
 ```sh
 protoc \
   -I . \
-  -I ${GOPATH}/src \
-  -I ${GOPATH}/src/github.com/bufbuild/protoc-gen-validate \
+  -I validate.proto \
   --go_out=":../generated" \
   --validate_out="lang=go:../generated" \
   example.proto
