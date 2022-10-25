@@ -87,7 +87,7 @@ Installing PGV can currently only be done from source:
 go get -d github.com/bufbuild/protoc-gen-validate
 ```
 
-> #### 💡 Yes, our go module path is `github.com/bufbuild/protoc-gen-validate` **
+> #### 💡 Yes, our go module path is `github.com/envoyproxy/protoc-gen-validate` **
 not** `bufbuild` this is intentional.
 > Changing the module path is effectively creating a new, independent module. We
 > would prefer not to break our users. The Go team are working on
@@ -123,7 +123,7 @@ into `../generated/example.pb.validate.go`:
 ```sh
 protoc \
   -I . \
-  -I validate.proto \
+  -I path/to/validate/ \ 
   --go_out=":../generated" \
   --validate_out="lang=go:../generated" \
   example.proto
