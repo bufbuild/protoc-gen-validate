@@ -50,7 +50,6 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 		"externalEnums": fns.externalEnums,
 		"enumName":      fns.enumName,
 		"enumPackages":  fns.enumPackages,
-		"list":          fns.list,
 	})
 
 	template.Must(tpl.New("msg").Parse(msgTpl))
@@ -377,18 +376,4 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]NormalizedE
 
 func (fns goSharedFuncs) snakeCase(name string) string {
 	return strcase.ToSnake(name)
-}
-
-func (fns goSharedFuncs) list(f pgs.Field, list []int32) string {
-	stringList := make([]string, 0, len(list))
-	if enum := f.Type().Enum(); enum != nil {
-		for _, n := range list {
-			stringList = append(stringList, enum.Values()[n].Name().String())
-		}
-	} else {
-		for _, n := range list {
-			stringList = append(stringList, fmt.Sprint(n))
-		}
-	}
-	return "[" + strings.Join(stringList, " ") + "]"
 }

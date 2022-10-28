@@ -3,7 +3,7 @@ package shared
 import (
 	"text/template"
 
-	"github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star"
 )
 
 func RegisterFunctions(tpl *template.Template, params pgs.Parameters) {
@@ -16,5 +16,6 @@ func RegisterFunctions(tpl *template.Template, params pgs.Parameters) {
 		"has":       Has,
 		"needs":     Needs,
 		"fileneeds": FileNeeds,
+		"inList":    inList,
 	})
 }
