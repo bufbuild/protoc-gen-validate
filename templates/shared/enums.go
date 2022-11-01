@@ -7,8 +7,12 @@ import (
 	pgs "github.com/lyft/protoc-gen-star"
 )
 
-// inList - returns list between box brackets, if type is ENUM, instead of numbers enum values are used
-func inList(f pgs.Field, list []int32) string {
+func isEnum(f pgs.Field) bool {
+	return f.Type().IsEnum()
+}
+
+// enumList - if type is ENUM, enum values are returned
+func enumList(f pgs.Field, list []int32) string {
 	stringList := make([]string, 0, len(list))
 	if enum := f.Type().Enum(); enum != nil {
 		for _, n := range list {

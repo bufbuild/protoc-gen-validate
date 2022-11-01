@@ -16,6 +16,7 @@ func RegisterFunctions(tpl *template.Template, params pgs.Parameters) {
 		"has":       Has,
 		"needs":     Needs,
 		"fileneeds": FileNeeds,
-		"inList":    inList,
+		"isEnum":    isEnum,
+		"enumList":  enumList,
 	})
 }
