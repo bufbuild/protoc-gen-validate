@@ -12,3 +12,5 @@ updates:
     directory: "/java" 
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 40
+
