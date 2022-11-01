@@ -77,10 +77,10 @@ const durationTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 
 			{{ if $r.In }}
 				if ({{ lookup $f "InLookup" }}.find(dur) == {{ lookup $f "InLookup" }}.end())
-					{{ err . "value must be in list " (inList $f $r.In) }}
+					{{ err . "value must be in list " $r.In }}
 			{{ else if $r.NotIn }}
 				if ({{ lookup $f "NotInLookup" }}.find(dur) != {{ lookup $f "NotInLookup" }}.end())
-					{{ err . "value must not be in list " (inList $f $r.NotIn) }}
+					{{ err . "value must not be in list " $r.NotIn }}
 			{{ end }}
 	        }
 	    }
