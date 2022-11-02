@@ -20,11 +20,21 @@ on:
 env:
   PRERELEASE: ${{github.event.inputs.prerelease}}
   DEFAULT_BUMP: ${{github.event.inputs.bump}}
+  APP_ID: 257305
 
 jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ env.APP_ID }}
+          private_key: ${{ secrets.TOKEN_EXCHANGE_GH_APP_PRIVATE_KEY }}
+          repository: ${{ github.repository }}
+          permissions: >-
+            {"contents": "write"}
       - uses: actions/checkout@v3
         with:
           fetch-depth: "0"
@@ -34,5 +44,5 @@ jobs:
       - run: npm install -g semver
       - name: Bump version and push tag
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: .github/actions/github-tag-action/entrypoint.sh
