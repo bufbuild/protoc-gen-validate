@@ -5,16 +5,26 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      release:
+      prerelease:
         type: boolean
-        description: Remove SNAPSHOT?
+        description: Pre-release?
+        default: true
+      bump:
+        type: choice
+        description: Which version?
+        default: 'minor'
+        options:
+          - minor
+          - patch
+
+env:
+  PRERELEASE: ${{github.event.inputs.prerelease}}
+  DEFAULT_BUMP: ${{github.event.inputs.bump}}
 
 jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - if: ${{ github.event.inputs.release == false }}
-        run: echo "PRERELEASE=true" >> $GITHUB_ENV
       - uses: actions/checkout@v3
         with:
           fetch-depth: "0"
@@ -25,7 +35,4 @@ jobs:
       - name: Bump version and push tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
-          DEFAULT_BUMP: "minor"
-          PRERELEASE_SUFFIX: "SNAPSHOT"
         run: .github/actions/github-tag-action/entrypoint.sh
