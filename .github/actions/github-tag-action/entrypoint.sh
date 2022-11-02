@@ -4,7 +4,7 @@ set -o pipefail
 
 # config
 default_semvar_bump=${DEFAULT_BUMP:-minor}
-with_v=${WITH_V:-false}
+with_v=${WITH_V:-true}
 release_branches=${RELEASE_BRANCHES:-}
 custom_tag=${CUSTOM_TAG:-}
 source=${SOURCE:-.}
@@ -47,7 +47,7 @@ then
 fi
 
 setOutput() {
-echo "${1}=${2}" >> "${GITHUB_OUTPUT}"
+    echo "${1}=${2}" >> "${GITHUB_OUTPUT}"
 }
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)
@@ -88,6 +88,8 @@ case "$tag_context" in
         exit 1;;
 esac
 
+echo "tag_context=$tag_context"
+
 # if there are none, start tags at INITIAL_VERSION
 if [ -z "$tag" ]
 then
@@ -110,9 +112,11 @@ fi
 
 # get current commit hash for tag
 tag_commit=$(git rev-list -n 1 "$tag")
+echo "tag_commit=$tag_commit"
 
 # get current commit hash
 commit=$(git rev-parse HEAD)
+echo "commit=$commit"
 
 if [ "$tag_commit" == "$commit" ]
 then
@@ -152,32 +156,30 @@ esac
 if $pre_release
 then
     # already a pre-release available, bump it
-    if [[ "$pre_tag" =~ $new ]] && [[ "$pre_tag" =~ $suffix ]]
+    newPreTagFmt="$new+(-$suffix\.[0-9]+)$"
+    exists="$(git tag --list --merged HEAD --sort=-v:refname | grep -E "$newPreTagFmt" | head -n 1)"
+    if [[ $exists != "" ]]
     then
-        if $with_v
-        then
-            new=v$(semver -i prerelease "${pre_tag}" --preid "${suffix}")
-        else
-            new=$(semver -i prerelease "${pre_tag}" --preid "${suffix}")
-        fi
-        echo -e "Bumping ${suffix} pre-tag ${pre_tag}. New pre-tag ${new}"
+      echo -e "Found parent to ${new} pre-tag ${exists}..."
+      new=$(semver -i prerelease "${exists}" --preid "${suffix}")
+      echo -e "Bumping ${suffix} pre-tag ${exists}. New pre-tag ${new}"
+    elif [[ "$pre_tag" =~ $new ]] && [[ "$pre_tag" =~ $suffix ]]
+    then
+      new=$(semver -i prerelease "${pre_tag}" --preid "${suffix}")
+      echo -e "Bumping ${suffix} pre-tag ${pre_tag}. New pre-tag ${new}"
     else
-        if $with_v
-        then
-            new="v$new-$suffix.0"
-        else
-            new="$new-$suffix.0"
-        fi
-        echo -e "Setting ${suffix} pre-tag ${pre_tag} - With pre-tag ${new}"
+      new="$new-$suffix.0"
+      echo -e "Setting ${suffix} pre-tag ${pre_tag} - With pre-tag ${new}"
     fi
     part="pre-$part"
-else
-    if $with_v
-    then
-        new="v$new"
-    fi
-    echo -e "Bumping tag ${tag} - New tag ${new}"
 fi
+
+if $with_v
+then
+    new="v$new"
+fi
+
+echo -e "Bumping tag ${tag} - New tag ${new}"
 
 # as defined in readme if CUSTOM_TAG is used any semver calculations are irrelevant.
 if [ -n "$custom_tag" ]
