@@ -25,3 +25,11 @@ func enumList(f pgs.Field, list []int32) string {
 	}
 	return "[" + strings.Join(stringList, " ") + "]"
 }
+
+// enumVal - if type is ENUM, enum value is returned
+func enumVal(f pgs.Field, val int32) string {
+	if enum := f.Type().Enum(); enum != nil {
+		return enum.Values()[val].Name().String()
+	}
+	return fmt.Sprint(val)
+}

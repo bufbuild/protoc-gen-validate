@@ -18,5 +18,6 @@ func RegisterFunctions(tpl *template.Template, params pgs.Parameters) {
 		"fileneeds": FileNeeds,
 		"isEnum":    isEnum,
 		"enumList":  enumList,
+		"enumVal":   enumVal,
 	})
 }
