@@ -1018,9 +1018,9 @@ docker run --rm \
 docker run --rm \
   bufbuild/protoc-gen-validate ci
 
-# executes the 'build' & 'generate-testdata' make targets
+# executes the 'build' & 'testcases' make targets
 docker run --rm \
-  bufbuild/protoc-gen-validate build generate-testdata
+  bufbuild/protoc-gen-validate build testcases
   
 # override the entrypoint and interact with the container directly
 # this can be useful when wanting to run bazel commands without 
