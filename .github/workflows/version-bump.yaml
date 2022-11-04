@@ -1,6 +1,5 @@
 name: Version Bump
 on:
-  pull_request:
   push:
     branches:
       - main
