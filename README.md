@@ -1031,11 +1031,7 @@ docker run --rm \
 ```
 
 [protoc-source]:   https://github.com/google/protobuf
-
 [protoc-releases]: https://github.com/google/protobuf/releases
-
 [pg*]:             https://github.com/bufbuild/protoc-gen-star
-
 [re2]:             https://github.com/google/re2/wiki/Syntax
-
 [wkts]:            https://developers.google.com/protocol-buffers/docs/reference/google.protobuf
