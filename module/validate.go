@@ -45,7 +45,7 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 		lang = langParamValue
 		m.Assert(lang != "", "`lang` parameter must be set")
 	} else if langParamValue != "" {
-		m.Fail("unsupported `lang` parameter")
+		m.Fail("unknown `lang` parameter")
 	}
 
 	module := m.Parameters().Str(moduleParam)
