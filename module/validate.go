@@ -1,12 +1,13 @@
 package module
 
 import (
+	"path/filepath"
+	"strings"
+
 	"github.com/envoyproxy/protoc-gen-validate/templates"
 	"github.com/envoyproxy/protoc-gen-validate/templates/java"
 	pgs "github.com/lyft/protoc-gen-star"
 	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
-	"path/filepath"
-	"strings"
 )
 
 const (
@@ -18,9 +19,17 @@ const (
 type Module struct {
 	*pgs.ModuleBase
 	ctx pgsgo.Context
+	// lang contains the selected language (one of 'cc', 'go', 'java').
+	// It is initialized in ValidatorForLanguage.
+	// If unset, it will be parsed as the 'lang' parameter.
+	lang string
 }
 
 func Validator() pgs.Module { return &Module{ModuleBase: &pgs.ModuleBase{}} }
+
+func ValidatorForLanguage(lang string) pgs.Module {
+	return &Module{lang: lang, ModuleBase: &pgs.ModuleBase{}}
+}
 
 func (m *Module) InitContext(ctx pgs.BuildContext) {
 	m.ModuleBase.InitContext(ctx)
@@ -30,8 +39,12 @@ func (m *Module) InitContext(ctx pgs.BuildContext) {
 func (m *Module) Name() string { return validatorName }
 
 func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Package) []pgs.Artifact {
-	lang := m.Parameters().Str(langParam)
-	m.Assert(lang != "", "`lang` parameter must be set")
+	lang := m.lang
+	if lang == "" {
+		lang = m.Parameters().Str(langParam)
+		m.Assert(lang != "", "`lang` parameter must be set")
+	}
+
 	module := m.Parameters().Str(moduleParam)
 
 	// Process file-level templates
