@@ -47,5 +47,7 @@ jobs:
           go install google.golang.org/protobuf/cmd/protoc-gen-go@${PGG_VER}
           go install github.com/bazelbuild/buildtools/buildozer@${BDR_VER}
           pip install -r requirements.txt
+      - name: Build
+        run: make build
       - name: Run
         run: make ci
