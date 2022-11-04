@@ -3,9 +3,9 @@ bazel-*
 !vendor/*
 
 /bin
-/cmd/protoc-gen-cpp/protoc-gen-validate-cpp
-/cmd/protoc-gen-go/protoc-gen-validate-go
-/cmd/protoc-gen-java/protoc-gen-validate-java
+/cmd/protoc-gen-validate-cpp/protoc-gen-validate-cpp
+/cmd/protoc-gen-validate-go/protoc-gen-validate-go
+/cmd/protoc-gen-validate-java/protoc-gen-validate-java
 /dist/
 /protoc-gen-validate
 
