@@ -7,9 +7,9 @@ on:
 env:
   # Keep these versions in sync with the Dockerfile
   BDR_VER: '5.1.0'
-  GO_VER: '1.19.1'
-  PGG_VER: 'v1.27.1'
-  PROTOC_VER: '21.5'
+  GO_VER: '1.19.3'
+  PGG_VER: 'v1.28.1'
+  PROTOC_VER: '21.9'
   PYTHON_VER: '3.8'
   TEST_TAG: protoc-gen-validate:${{ github.sha }}
 

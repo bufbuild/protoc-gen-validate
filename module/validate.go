@@ -1,7 +1,6 @@
 package module
 
 import (
-	"fmt"
 	"path/filepath"
 	"strings"
 
@@ -46,7 +45,7 @@ func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Packag
 		lang = langParamValue
 		m.Assert(lang != "", "`lang` parameter must be set")
 	} else if langParamValue != "" {
-		m.Assert(lang == langParamValue, fmt.Sprintf("`lang` parameter mismatch with plugin language: %q != %q", langParamValue, lang))
+		m.Fail("unsupported `lang` parameter")
 	}
 
 	module := m.Parameters().Str(moduleParam)
