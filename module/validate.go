@@ -1,6 +1,7 @@
 package module
 
 import (
+	"fmt"
 	"path/filepath"
 	"strings"
 
@@ -40,9 +41,12 @@ func (m *Module) Name() string { return validatorName }
 
 func (m *Module) Execute(targets map[string]pgs.File, pkgs map[string]pgs.Package) []pgs.Artifact {
 	lang := m.lang
+	langParamValue := m.Parameters().Str(langParam)
 	if lang == "" {
-		lang = m.Parameters().Str(langParam)
+		lang = langParamValue
 		m.Assert(lang != "", "`lang` parameter must be set")
+	} else if langParamValue != "" {
+		m.Assert(lang == langParamValue, fmt.Sprintf("`lang` parameter mismatch with plugin language: %q != %q", langParamValue, lang))
 	}
 
 	module := m.Parameters().Str(moduleParam)
