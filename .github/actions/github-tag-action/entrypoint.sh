@@ -88,8 +88,6 @@ case "$tag_context" in
         exit 1;;
 esac
 
-echo "tag_context=$tag_context"
-
 # if there are none, start tags at INITIAL_VERSION
 if [ -z "$tag" ]
 then
@@ -112,11 +110,9 @@ fi
 
 # get current commit hash for tag
 tag_commit=$(git rev-list -n 1 "$tag")
-echo "tag_commit=$tag_commit"
 
 # get current commit hash
 commit=$(git rev-parse HEAD)
-echo "commit=$commit"
 
 if [ "$tag_commit" == "$commit" ]
 then
