@@ -154,7 +154,7 @@ func (fns goSharedFuncs) errCause(ctx shared.RuleContext, rule string, cause str
 	return fns.errIdxCause(ctx, "", rule, cause, reason...)
 }
 
-func (fns goSharedFuncs) errIdx(ctx shared.RuleContext, idx string, rule string, reason ...interface{}) string {
+func (fns goSharedFuncs) errIdx(ctx shared.RuleContext, rule string, idx string, reason ...interface{}) string {
 	return fns.errIdxCause(ctx, idx, rule, "nil", reason...)
 }
 
