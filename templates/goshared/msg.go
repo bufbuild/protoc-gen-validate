@@ -127,7 +127,7 @@ func (e {{ errname . }}) Cause() error { return e.cause }
 func (e {{ errname . }}) Key() bool { return e.key }
 
 // Rule function returns the validation rule
-func (e {{ errname . }}) Rule() bool { return e.rule }
+func (e {{ errname . }}) Rule() string { return e.rule }
 
 // ErrorName returns error name.
 func (e {{ errname . }}) ErrorName() string { return "{{ errname . }}" }
