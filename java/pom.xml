@@ -38,7 +38,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <protoc.version>3.19.4</protoc.version>
+        <protoc.version>3.21.9</protoc.version>
         <google.protobuf.version>3.21.9</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
@@ -197,11 +197,11 @@
     </profiles>
 
     <scm>
-        <url>https://github.com/envoyproxy/protoc-gen-validate</url>
-        <connection>scm:git:git@github.com:lyft/protoc-gen-validate.git</connection>
-        <developerConnection>scm:git:git@github.com:lyft/protoc-gen-validate.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <url>https://github.com/bufbuild/protoc-gen-validate</url>
+        <connection>scm:git:git@github.com:bufbuild/protoc-gen-validate.git</connection>
+        <developerConnection>scm:git:git@github.com:bufbuild/protoc-gen-validate.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
     <distributionManagement>
         <snapshotRepository>
