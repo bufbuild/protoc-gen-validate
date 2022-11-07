@@ -19,7 +19,7 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
-
+          cache: "maven"
       - name: Verify with Maven
         working-directory: ${{ github.workspace }}/java
         run: mvn -B verify

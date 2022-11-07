@@ -25,7 +25,7 @@ build: validate/validate.pb.go ## generates the PGV binary and installs it into 
 
 .PHONY: bazel
 bazel: ## generate the PGV plugin with Bazel
-	bazel build //tests/...
+	bazel build //cmd/... //tests/...
 
 .PHONY: build_generation_tests
 build_generation_tests:
@@ -53,7 +53,7 @@ bin/golint:
 	GOBIN=$(shell pwd)/bin go install golang.org/x/lint/golint
 
 bin/protoc-gen-go:
-	GOBIN=$(shell pwd)/bin go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.27.1
+	GOBIN=$(shell pwd)/bin go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28.1
 
 bin/harness:
 	cd tests && go build -o ../bin/harness ./harness/executor
