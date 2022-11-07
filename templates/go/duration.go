@@ -7,7 +7,7 @@ const durationTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 		if d := {{ accessor . }}; d != nil {
 			dur, err := d.AsDuration(), d.CheckValid()
 			if err != nil {
-				err = {{ errCause . "err" "value is not a valid duration" }}
+				err = {{ errCause . "duration.valid" "err" "value is not a valid duration" }}
 				if !all { return err }
 				errors = append(errors, err)
 			} else {

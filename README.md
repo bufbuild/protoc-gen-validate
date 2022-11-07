@@ -275,6 +275,63 @@ function.
 
 ## Constraint Rules
 
+### A note on range-based rules
+
+Any rules that specify a value in a range (such as combining `lt` and `gte`) will, when failing
+result in a `code` (indicating which rule failed) expressed as either `in_range` or `out_of_range`.
+
+The plain `in_range` is an _inclusive_ range, while `out_of_range` is an _exclusive_ range, to complement
+`in_range`.
+
+Both of these have an `_exclusive` and `_inclusive` suffix respectively, to represent the "non-standard"
+type of range. There are also further `_lower` and `_upper` modifiers to indicate that only the upper or lower bound
+is inclusive or exclusive.
+
+#### Examples
+
+```
+gte=5,lte=10
+```
+This is parsed as a `{type}.in_range` code . e.g `int.in_range` or `string.in_range`.
+
+```
+lt=5,gt=10
+```
+This is parsed as a `{type}.out_of_range` code. e.g `int.out_of_range` or `string.out_of_range`.
+or `string.in_range`.
+
+```
+gt=5,lt=10
+```
+This is parsed as a `{type}.in_range_exclusive`.
+
+```
+lte=5,gte=10
+```
+This is parsed as a `{type}.out_of_range_inclusive`.
+
+```
+gte=5,lt=10
+```
+This is parsed as a `{type}.in_range_upper_exclusive`.
+
+```
+gt=5,lte=10
+```
+This is parsed as a `{type}.in_range_lower_exclusive`.
+
+```
+lt=5,gte=10
+```
+This is parsed as a `{type}.out_of_range_upper_inclusive`.
+
+```
+lte=5,gt=10
+```
+This is parsed as a `{type}.out_of_range_lower_inclusive`.
+
+### Constraints
+
 [The provided constraints](validate/validate.proto) are modeled largerly after
 those in JSON Schema. PGV rules can be mixed for the same field; the plugin
 ensures the rules applied to a field cannot contradict before code generation.

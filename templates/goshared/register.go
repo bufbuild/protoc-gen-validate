@@ -109,7 +109,7 @@ func (fns goSharedFuncs) multiErrName(m pgs.Message) pgs.Name {
 	return fns.Name(m) + "MultiError"
 }
 
-func (fns goSharedFuncs) errIdxCause(ctx shared.RuleContext, idx, cause string, reason ...interface{}) string {
+func (fns goSharedFuncs) errIdxCause(ctx shared.RuleContext, idx, rule string, cause string, reason ...interface{}) string {
 	f := ctx.Field
 	n := fns.Name(f)
 
@@ -135,25 +135,27 @@ func (fns goSharedFuncs) errIdxCause(ctx shared.RuleContext, idx, cause string, 
 	return fmt.Sprintf(`%s{
 		field: %s,
 		reason: %q,
+		rule: %q,
 		%s%s
 	}`,
 		fns.errName(f.Message()),
 		fld,
 		fmt.Sprint(reason...),
+		rule,
 		causeFld,
 		keyFld)
 }
 
-func (fns goSharedFuncs) err(ctx shared.RuleContext, reason ...interface{}) string {
-	return fns.errIdxCause(ctx, "", "nil", reason...)
+func (fns goSharedFuncs) err(ctx shared.RuleContext, rule string, reason ...interface{}) string {
+	return fns.errIdxCause(ctx, "", rule, "nil", reason...)
 }
 
-func (fns goSharedFuncs) errCause(ctx shared.RuleContext, cause string, reason ...interface{}) string {
-	return fns.errIdxCause(ctx, "", cause, reason...)
+func (fns goSharedFuncs) errCause(ctx shared.RuleContext, rule string, cause string, reason ...interface{}) string {
+	return fns.errIdxCause(ctx, "", rule, cause, reason...)
 }
 
-func (fns goSharedFuncs) errIdx(ctx shared.RuleContext, idx string, reason ...interface{}) string {
-	return fns.errIdxCause(ctx, idx, "nil", reason...)
+func (fns goSharedFuncs) errIdx(ctx shared.RuleContext, idx string, rule string, reason ...interface{}) string {
+	return fns.errIdxCause(ctx, idx, rule, "nil", reason...)
 }
 
 func (fns goSharedFuncs) lookup(f pgs.Field, name string) string {

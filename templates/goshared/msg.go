@@ -109,6 +109,7 @@ func (m {{ multierrname . }}) AllErrors() []error { return m }
 type {{ errname . }} struct {
 	field  string
 	reason string
+	rule   string
 	cause  error
 	key    bool
 }
@@ -124,6 +125,9 @@ func (e {{ errname . }}) Cause() error { return e.cause }
 
 // Key function returns key value.
 func (e {{ errname . }}) Key() bool { return e.key }
+
+// Rule function returns the validation rule
+func (e {{ errname . }}) Rule() bool { return e.rule }
 
 // ErrorName returns error name.
 func (e {{ errname . }}) ErrorName() string { return "{{ errname . }}" }
