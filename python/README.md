@@ -8,13 +8,22 @@ in `validate.proto`. Implemented Python annotations are listed in the [rules com
 ### Example
 ```python3
 from entities_pb2 import Person
-from protoc_gen_validate.validator import validate, ValidationFailed
+from protoc_gen_validate.validator import validate, ValidationFailed, validate_all
 
-p = Person(first_name="Foo", last_name="Bar", age=42)
+p = Person(name="Foo")
 try:
     validate(p)
 except ValidationFailed as err:
-    print(err)
+    print(err)  # p.id is not greater than 999
+    
+try:
+    validate_all(p)
+except ValidationFailed as err:
+    print(err)  
+    # p.id is not greater than 999
+    # p.email is not a valid email
+    # p.name pattern does not match ^[^[0-9]A-Za-z]+( [^[0-9]A-Za-z]+)*$
+    # home is required.
 ```
 
 [pgv-home]: https://github.com/envoyproxy/protoc-gen-validate

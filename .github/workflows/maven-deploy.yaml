@@ -6,7 +6,7 @@ name: Maven Deploy
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   build:
@@ -52,6 +52,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'maven'
           server-id: sonatype-nexus-snapshots
           server-username: ${ env.SONATYPE_USER }
           server-password: ${ env.SONATYPE_PASSWORD }

@@ -1,2 +1,4 @@
 .git/
 .idea/
+.bin/
+dist/

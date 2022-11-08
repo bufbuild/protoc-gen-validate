@@ -17,7 +17,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>osx-x86_64</id>
@@ -168,7 +168,7 @@
                 <version>3.3.0</version>
                 <executions>
                     <execution>
-                        <id>osx-x86_64</id>
+                        <id>attach-artifacts</id>
                         <goals>
                             <goal>attach-artifact</goal>
                         </goals>
@@ -179,76 +179,31 @@
                                     <type>exe</type>
                                     <classifier>osx-x86_64</classifier>
                                 </artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>osx-aarch_64</id>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
                                 <artifact>
                                     <file>${project.build.directory}/protoc-gen-validate-${project.version}-osx-aarch_64.exe</file>
                                     <type>exe</type>
                                     <classifier>osx-aarch_64</classifier>
                                 </artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>linux_x86_32</id>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
+                                <artifact>
+                                    <file>${project.build.directory}/protoc-gen-validate-${project.version}-linux-aarch_64.exe</file>
+                                    <type>exe</type>
+                                    <classifier>linux-aarch_64</classifier>
+                                </artifact>
                                 <artifact>
                                     <file>${project.build.directory}/protoc-gen-validate-${project.version}-linux-x86_32.exe</file>
                                     <type>exe</type>
                                     <classifier>linux-x86_32</classifier>
                                 </artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>linux_x86_64</id>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
                                 <artifact>
                                     <file>${project.build.directory}/protoc-gen-validate-${project.version}-linux-x86_64.exe</file>
                                     <type>exe</type>
                                     <classifier>linux-x86_64</classifier>
                                 </artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>windows-x86_32</id>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
                                 <artifact>
                                     <file>${project.build.directory}/protoc-gen-validate-${project.version}-windows-x86_32.exe</file>
                                     <type>exe</type>
                                     <classifier>windows-x86_32</classifier>
                                 </artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>windows-x86_64</id>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
                                 <artifact>
                                     <file>${project.build.directory}/protoc-gen-validate-${project.version}-windows-x86_64.exe</file>
                                     <type>exe</type>

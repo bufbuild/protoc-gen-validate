@@ -1,3 +1,4 @@
+import ast
 import re
 import struct
 import sys
@@ -10,6 +11,12 @@ from urllib import parse as urlparse
 from google.protobuf.message import Message
 from jinja2 import Template
 from validate_email import validate_email
+
+if sys.version_info > (3, 9):
+    unparse = ast.unparse
+else:
+    import astunparse
+    unparse = astunparse.unparse
 
 printer = ""
 
@@ -61,6 +68,168 @@ def _validate_inner(proto_message: Message):
         return generate_validate
     except NameError:
         return locals()['generate_validate']
+
+
+class ChangeFuncName(ast.NodeTransformer):
+    def visit_FunctionDef(self, node: ast.FunctionDef):
+        node.name = node.name + "_all"  # add a suffix to the function name
+        return node
+
+
+class InitErr(ast.NodeTransformer):
+    def visit_FunctionDef(self, node: ast.FunctionDef):
+        node.body.insert(0, ast.parse("err = []").body[0])
+        return node
+
+
+class ReturnErr(ast.NodeTransformer):
+    def visit_Return(self, node: ast.Return):
+        # Change the return value of the function from None to err
+        if hasattr(node.value, "value") and getattr(node.value, "value") is None:
+            return ast.parse("return err").body[0]
+        return node
+
+
+class ChangeInnerCall(ast.NodeTransformer):
+    def visit_Call(self, node: ast.Call):
+        """Changed the validation function of nested messages from `validate` to
+        `_validate_all`"""
+        if isinstance(node.func, ast.Name) and node.func.id == "validate":
+            node.func.id = "_validate_all"
+        return node
+
+
+class ChangeRaise(ast.NodeTransformer):
+    def visit_Raise(self, node: ast.Raise):
+        """
+        before:
+            raise ValidationFailed(reason)
+        after:
+            err.append(reason)
+        """
+        # According to the content in the template, the exception object of all `raise`
+        # statements is `ValidationFailed`.
+        if not isinstance(node.exc, ast.Call):
+            return node
+        return ast.Expr(
+            value=ast.Call(
+                args=node.exc.args,
+                keywords=node.exc.keywords,
+                func=ast.Attribute(
+                    attr="append", ctx=ast.Load(), value=ast.Name(id="err", ctx=ast.Load())
+                ),
+            )
+        )
+
+
+class ChangeEmbedded(ast.NodeTransformer):
+    """For embedded messages, there is a special structure in the template as follows:
+
+    if _has_field(p, \"{{ name.split('.')[-1] }}\"):
+        embedded = validate(p.{{ name }})
+        if embedded is not None:
+            return embedded
+
+    We need to convert this code into the following form:
+
+    if _has_field(p, \"{{ name.split('.')[-1] }}\"):
+        err += _validate_all(p.{{ name }}
+
+    """
+    @staticmethod
+    def _is_embedded_node(node: ast.Assign):
+        """Check if substructures match
+
+        pattern:
+        embedded = validate(p.{{ name }})
+        """
+        if not isinstance(node, ast.Assign):
+            return False
+        if len(node.targets) != 1:
+            return False
+        target = node.targets[0]
+        value = node.value
+        if not (isinstance(target, ast.Name) and isinstance(value, ast.Call)):
+            return False
+        if not target.id == "embedded":
+            return False
+        return True
+
+    def visit_If(self, node: ast.If):
+        self.generic_visit(node)
+        for child in ast.iter_child_nodes(node):
+            if self._is_embedded_node(child):
+                new_node = ast.AugAssign(
+                    target=ast.Name(id="err", ctx=ast.Store()), op=ast.Add(), value=child.value
+                )  # err += _validate_all(p.{{ name }}
+                node.body = [new_node]
+                return node
+        return node
+
+
+class ChangeExpr(ast.NodeTransformer):
+
+    """If there is a pure `_validate_all` function call in the template function,
+    its return value needs to be recorded in err
+
+    before:
+    _validate_all(item)
+
+    after:
+    err += _validate_all(item}
+
+    """
+
+    def visit_Expr(self, node: ast.Expr):
+        if not isinstance(node.value, ast.Call):
+            return node
+        call_node = node.value
+        if not isinstance(call_node.func, ast.Name):
+            return node
+        if not call_node.func.id == "_validate_all":
+            return node
+        return ast.AugAssign(
+            target=ast.Name(id="err", ctx=ast.Store()), op=ast.Add(), value=call_node
+        )  # err += _validate_all(item}
+
+
+# Cache generated functions with the message descriptor's full_name as the cache key
+@lru_cache()
+def _validate_all_inner(proto_message: Message):
+    func = file_template(ValidatingMessage(proto_message))
+    comment = func.split("\n")[1]
+    func_ast = ast.parse(rf"{func}")
+    for transformer in [
+        ChangeFuncName,
+        InitErr,
+        ReturnErr,
+        ChangeInnerCall,
+        ChangeRaise,
+        ChangeEmbedded,
+        ChangeExpr,
+    ]:  # order is important!
+        func_ast = ast.fix_missing_locations(transformer().visit(func_ast))
+    func_ast = ast.fix_missing_locations(func_ast)
+    func = unparse(func_ast)
+    func = comment + " All" + "\n" + func
+    global printer
+    printer += func + "\n"
+    exec(func)
+    try:
+        return generate_validate_all
+    except NameError:
+        return locals()['generate_validate_all']
+
+
+def _validate_all(proto_message: Message) -> str:
+    return _validate_all_inner(ValidatingMessage(proto_message))(proto_message)
+
+
+# raise ValidationFailed if err
+def validate_all(proto_message: Message):
+    err = _validate_all(proto_message)
+    if err:
+        raise ValidationFailed('\n'.join(err))
 
 
 def print_validate():

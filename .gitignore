@@ -3,6 +3,10 @@ bazel-*
 !vendor/*
 
 /bin
+/cmd/protoc-gen-validate-cpp/protoc-gen-validate-cpp
+/cmd/protoc-gen-validate-go/protoc-gen-validate-go
+/cmd/protoc-gen-validate-java/protoc-gen-validate-java
+/dist/
 /protoc-gen-validate
 
 /python/LICENSE
