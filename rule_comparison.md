@@ -55,6 +55,7 @@
 | const                  |✅|✅|✅|✅|✅|
 | defined_only           |✅|✅|✅|✅|✅|
 | in/not_in              |✅|✅|✅|✅|✅|
+| in/not_in/const <br> enum value in error |✅|✅|✅|✅|❌|
 
 ## Messages
 | Constraint Rule | Go | GoGo | C++ | Java | Python |
