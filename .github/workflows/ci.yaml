@@ -1,28 +1,56 @@
 name: ci
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
+  workflow_dispatch:
 
 env:
+  # Keep these versions in sync with the Dockerfile
+  BDR_VER: '5.1.0'
+  GO_VER: '1.19.3'
+  PGG_VER: 'v1.28.1'
+  PROTOC_VER: '21.9'
+  PYTHON_VER: '3.8'
   TEST_TAG: protoc-gen-validate:${{ github.sha }}
 
 jobs:
-  docker:
+  ci:
     runs-on: ubuntu-latest
     steps:
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/bazelisk
+            ~/.cache/bazel
+            ~/.cache/protoc
+          key: ${{ runner.os }}-build-cache
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Build and export to Docker
-        uses: docker/build-push-action@v3
+      - uses: actions/setup-go@v3
         with:
-          context: .
-          load: true
-          push: false
-          tags: ${{ env.TEST_TAG }}
-      - name: Run
+          go-version: ${{ env.GO_VER }}
+          cache: true
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VER }}
+          cache: 'pip'
+      - name: Install Dependencies
         run: |
-          docker run --rm ${{ env.TEST_TAG }} ci
+          mkdir -p ~/.cache/protoc
+          PROTOC_ZIP="${HOME}/.cache/protoc/${PROTOC_VER}.zip"
+          if [[ ! -f "${PROTOC_ZIP}" ]]; then
+              curl -fsSL -o "${PROTOC_ZIP}" https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VER}/protoc-${PROTOC_VER}-linux-x86_64.zip
+          fi
+          unzip -q ${PROTOC_ZIP} -d ~/protoc
+          echo "${HOME}/protoc/bin" >> $GITHUB_PATH
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@${PGG_VER}
+          go install github.com/bazelbuild/buildtools/buildozer@${BDR_VER}
+          pip install -r requirements.txt
+      - name: Build
+        run: make build
+      - name: Run
+        run: make ci
