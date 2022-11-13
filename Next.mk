@@ -72,11 +72,21 @@ harness: $(go_harness) $(cc_harness) ## Runs PGV harness test
 	@$(go) run tests/harness/executor/*.go $(addprefix -,$(HARNESS_LANGUAGES))
 
 # Note: ./templates/go/file.go is ignored.
+# TODO(dio): Format *.proto using buf format.
+# TODO(dio): Format files outside Go and Python.
 format: $(buildifier) $(gosimports) ## Format source code files.
 	@$(buildifier) --lint=fix $(bazel_files)
 	@$(go) mod tidy
 	@$(go)fmt -s -w $(nongen_go_sources)
 	@$(gosimports) -local $$(sed -ne 's/^module //gp' go.mod) -w $(nongen_go_sources)
+# The following requires "pip3 install -r requirements.txt". For macOS, the default "bin" directory
+# most likely is at ~/Library/Python/3.9/bin.
+	@flake8 --config=python/setup.cfg python/protoc_gen_validate/validator.py
+	@isort --check-only python/protoc_gen_validate/validator.py
+
+# TODO(dio): Lint non-Go files.
+lint: $(golangci-lint) $(nongen_go_sources) ## Lint source code files.
+	@$(golangci-lint) run --timeout 5m --config $< ./...
 
 check: ## Check consistency
 	@if [ ! -z "`git status -s`" ]; then \

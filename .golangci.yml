@@ -1,0 +1,137 @@
+# This is built using https://github.com/golangci/golangci-lint/blob/master/.golangci.example.yml
+# to fix false positives see https://github.com/golangci/golangci-lint#false-positives
+run:
+  # Timeout for analysis, e.g. 30s, 5m, default is 1m.
+  deadline: 5m
+
+  # If invoked with -mod=readonly, the go command is disallowed from the implicit
+  # automatic updating of go.mod described above. Instead, it fails when any changes
+  # to go.mod are needed. This setting is most useful to check that go.mod does
+  # not need updates, such as in a continuous integration and testing system.
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    - "bodyclose"
+    - "depguard"
+    - "dupl"
+    - "goconst"
+    - "gofmt"
+    - "goimports"
+    - "gosimple"
+    - "misspell"
+    - "nakedret"
+    - "prealloc"
+    - "unconvert"
+    - "unparam"
+    - "lll"
+    - "revive"
+    - "gocyclo"
+    - "gocritic"
+    - "gomoddirectives"
+    - "gosec"
+
+  disable:
+    - "gochecknoglobals"
+    - "gochecknoinits"
+
+# All available settings of specific linters.
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: false
+  govet:
+    # Report about shadowed variables.
+    check-shadowing: true
+    settings:
+      printf:  # analyzer name, run `go tool vet help` to see all analyzers.
+        funcs:  # run `go tool vet help printf` to see available settings for `printf` analyzer.
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
+  gofmt:
+    simplify: true
+  gocyclo:
+    min-complexity: 15 # evaluate this value, seems like too high.
+  dupl:
+    # Tokens count to trigger issue, 150 by default.
+    threshold: 100
+  goconst:
+    min-occurrences: 3
+  misspell:
+    locale: US
+  lll:
+    line-length: 150
+  unused:
+    check-exported: false
+  unparam:
+    check-exported: false
+  revive:
+    rules:
+      - name: exported
+        Disabled: true # currently exported rule (https://github.com/mgechev/revive/blob/master/rule/exported.go) is disabled.
+
+  gocritic:
+    enabled-checks:  # non-default checks we decided to also add.
+      - boolExprSimplify
+      - builtinShadow
+      - commentedOutCode
+      - commentedOutImport
+      - docStub
+      - emptyFallthrough
+      - hexLiteral
+      - initClause
+      - methodExprCall
+      - nilValReturn
+      - octalLiteral
+      - typeAssertChain
+      - typeUnparen
+      - unnecessaryBlock
+      - weakCond
+      - yodaStyleExpr
+      - emptyStringTest
+      - importShadow
+      - nestingReduce
+      - paramTypeCombine
+      - ptrToRefParam
+      - sloppyReassign
+      - unlabelStmt
+
+    # Enable multiple checks by tags, run `GL_DEBUG=gocritic golangci-lint` run to see all tags and checks.
+    # Empty list by default. See https://github.com/go-critic/go-critic#usage -> section "Tags".
+    enabled-tags: [ "performance" ]
+
+    settings:  # settings passed to gocritic.
+      captLocal:  # must be valid enabled check name.
+        paramsOnly: true
+      rangeValCopy:
+        sizeThreshold: 32
+
+issues:
+  # List of regexps of issue texts to exclude, empty list by default.
+  # But independently from this option we use default exclude patterns,
+  # it can be disabled by `exclude-use-default: false`. To list all
+  # excluded by default patterns execute `golangci-lint run --help`
+  exclude: [ ]
+
+  # Excluding configuration per-path, per-linter, per-text and per-source.
+  exclude-rules:
+    # Exclude some linters from running on tests files.
+    - path: _test\.go
+      linters:
+        - errcheck
+        - dupl
+        - gosec
+        - lll
+
+  # Independently from option `exclude` we use default exclude patterns, it can be disabled by this
+  # option. To list all excluded by default patterns execute `golangci-lint run --help`.
+  # Default value for this option is true.
+  exclude-use-default: false
+
+  # Maximum issues count per one linter. Set to 0 to disable. Default is 50.
+  max-issues-per-linter: 0
+
+  # Maximum count of issues with the same text. Set to 0 to disable. Default is 3.
+  max-same-issues: 0

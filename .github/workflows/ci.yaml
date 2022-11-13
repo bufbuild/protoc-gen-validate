@@ -39,11 +39,23 @@ jobs:
           go-version: "1.19.3"
           cache: true
 
+      - uses: golangci/golangci-lint-action@v3 # For caching.
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: 'pip'
+
       - name: Build
         run: make -f Next.mk clean build
 
       - name: Format
-        run: make -f Next.mk format
+        run: |
+          pip3 install -r requirements.txt
+          make -f Next.mk format
+
+      - name: Lint
+        run: make -f Next.mk lint
 
       - name: Check
         run: make -f Next.mk check # check the consistency.
