@@ -108,9 +108,9 @@ py_proto_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//validate:validate_py",
         "//tests/harness/cases/other_package:embed_python_proto",
         "//tests/harness/cases/yet_another_package:embed_python_proto",
+        "//validate:validate_py",
         "@com_google_protobuf//:protobuf_python",
     ],
 )

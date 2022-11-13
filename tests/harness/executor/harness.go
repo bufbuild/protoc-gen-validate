@@ -11,9 +11,10 @@ import (
 	"strings"
 	"sync"
 
-	harness "github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
 	"golang.org/x/net/context"
 	"google.golang.org/protobuf/proto"
+
+	harness "github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
 )
 
 func Harnesses(goFlag, ccFlag, javaFlag, pythonFlag bool, externalHarnessFlag string) []Harness {

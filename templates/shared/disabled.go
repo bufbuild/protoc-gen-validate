@@ -1,8 +1,9 @@
 package shared
 
 import (
+	pgs "github.com/lyft/protoc-gen-star"
+
 	"github.com/envoyproxy/protoc-gen-validate/validate"
-	"github.com/lyft/protoc-gen-star"
 )
 
 // Disabled returns true if validations are disabled for msg
