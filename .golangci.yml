@@ -27,8 +27,10 @@ linters:
     - "lll"
     - "revive"
     - "gocyclo"
-    - "gocritic"
-    - "gomoddirectives"
+    # Disable gocritic for now.
+    # - "gocritic"
+    # Disable gomoddirectives for now.
+    # - "gomoddirectives"
     - "gosec"
 
   disable:
@@ -53,7 +55,7 @@ linters-settings:
   gofmt:
     simplify: true
   gocyclo:
-    min-complexity: 15 # evaluate this value, seems like too high.
+    min-complexity: 50 # evaluate this value, seems like too high.
   dupl:
     # Tokens count to trigger issue, 150 by default.
     threshold: 100
@@ -62,7 +64,7 @@ linters-settings:
   misspell:
     locale: US
   lll:
-    line-length: 150
+    line-length: 500 # consider to reduce this.
   unused:
     check-exported: false
   unparam:
