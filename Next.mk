@@ -31,6 +31,13 @@ export PATH := $(root_dir)$(current_binary_path):$(go_tools_dir)/bin:$(prepackag
 # The main generated file.
 validate_pb_go := validate/validate.pb.go
 
+# List of harness test cases.
+tests_harness_cases := \
+	/harness \
+	/harness/cases \
+	/harness/cases/other_package \
+	/harness/cases/yet_another_package
+
 # Include versions of tools we build on-demand
 include Tools.mk
 # This provides the "help" target.
@@ -42,7 +49,11 @@ include tools/build/Env.mk
 protoc := $(prepackaged_tools_dir)/bin/protoc
 
 # Go based tools.
+bazel         := $(go_tools_dir)/bin/bazelisk
 protoc-gen-go := $(go_tools_dir)/bin/protoc-gen-go
+
+test: $(bazel) $(tests_harness_cases) ## Run tests
+	@$(bazel) test //tests/... --test_output=errors
 
 build: $(current_binary) ## Build the plugin
 
@@ -64,5 +75,23 @@ $(validate_pb_go): $(protoc) $(protoc-gen-go) validate/validate.proto
 # Build target for current binary.
 build/$(name)_%/$(name)$(goexe): $(validate_pb_go)
 	@GOBIN=$(root_dir)$(current_binary_path) $(go) install .
+
+# Generate all required files for harness tests in Go.
+$(tests_harness_cases): $(current_binary)
+	$(call generate-test-cases-go,tests$@)
+
+# Generates a test-case for Go.
+define generate-test-cases-go
+	@cd $1 && \
+	mkdir -p go && \
+	$(protoc) \
+		-I . \
+		-I $(root_dir) \
+		--go_opt=paths=source_relative \
+		--go_out=go \
+		--validate_opt=paths=source_relative \
+		--validate_out=lang=go:go \
+		*.proto
+endef
 
 include tools/build/Installer.mk
