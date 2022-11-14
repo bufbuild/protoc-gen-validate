@@ -1,0 +1,37 @@
+name: "build"
+
+on:
+  push: # We run tests on non-tagged pushes to main.
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+
+  pull_request: # We also run tests on pull requests targeted at the main branch.
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+
+defaults:
+  run: # use bash as the default shell.
+    shell: bash
+
+jobs:
+  test:
+    name: "Run tests"
+    runs-on: ubuntu-20.04
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-go@v3
+        with:
+          go-version: "1.19.3"
+          cache: true
+
+      - name: "Generate *.pb.go and build the plugin binary"
+        run: make -f Next.mk clean build # we do "clean build" here, hence *.pb.go is regenerated.
+
+      - name: "Verify clean check-in"
+        run: make -f Next.mk check

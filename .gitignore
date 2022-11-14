@@ -47,3 +47,16 @@ __pycache__/
 .settings
 .idea/
 .ijwb/
+
+# Local cache directory.
+.cache
+
+# Local build directory.
+/build
+
+# Generated test cases Go files.
+/tests/harness/**/*.pb.go
+/tests/harness/**/*.pb.validate.go
+
+# Harness test binary.
+/tests/harness/**/*-harness
