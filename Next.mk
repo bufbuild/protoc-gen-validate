@@ -68,6 +68,20 @@ check: ## Verify contents of last commit
 		git diff --exit-code; \
 	fi
 
+# This provides shortcut to various bazel related targets.
+sanity: bazel-build bazel-build-tests-generation bazel-test-example-workspace
+
+bazel-build: $(bazel) ## Build the plugin using bazel
+	@$(bazel) build //:$(name)
+	@mkdir -p $(current_binary_path)
+	@cp -f bazel-bin/$(name)_/$(name)$(goexe) $(current_binary)
+
+bazel-build-tests-generation: $(bazel) ## Build tests generation using bazel
+	@$(bazel) build //tests/generation/...
+
+bazel-test-example-workspace: $(bazel) ## Test example workspace using bazel
+	@cd example-workspace && bazel test //... --test_output=errors
+
 # Generate validate/validate.pb.go from validate/validate.proto.
 $(validate_pb_go): $(protoc) $(protoc-gen-go) validate/validate.proto
 	@$(protoc) -I . --go_opt=paths=source_relative --go_out=. $(filter %.proto,$^)

@@ -57,3 +57,6 @@ jobs:
 
       - name: "Run tests"
         run: make -f Next.mk test
+
+      - name: "Run sanity checks"
+        run: make -f Next.mk sanity
