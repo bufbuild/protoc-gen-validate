@@ -46,7 +46,6 @@ using std::string;
 {{ range .AllMessages }}
 {{- if not (ignored .) -}}
 {{- if not (disabled .) -}}
-pgv::Validator<{{ class . }}> {{ staticVarName . }}(static_cast<bool(*)(const {{ class .}}&, pgv::ValidationMsg*)>({{ package .}}::Validate));
 {{- end -}}
 {{ end }}
 {{ end }}
