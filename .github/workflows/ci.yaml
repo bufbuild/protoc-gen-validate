@@ -20,14 +20,14 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/bazelisk
-            ~/.cache/bazel
-            ~/.cache/protoc
-          key: ${{ runner.os }}-build-cache
+#       - name: Cache
+#         uses: actions/cache@v3
+#         with:
+#           path: |
+#             ~/.cache/bazelisk
+#             ~/.cache/bazel
+#             ~/.cache/protoc
+#           key: ${{ runner.os }}-build-cache
       - name: Checkout
         uses: actions/checkout@v3
       - uses: actions/setup-go@v3
