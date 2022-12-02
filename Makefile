@@ -159,7 +159,7 @@ check-generated: ## run during CI; this checks that the checked-in generated cod
 	done
 
 .PHONY: ci
-ci: lint bazel testcases bazel-tests build_generation_tests example-workspace check-generated
+ci: testcases tests/harness/go/harness.pb.go lint bazel bazel-tests build_generation_tests example-workspace check-generated
 
 .PHONY: clean
 clean: ## clean up generated files
