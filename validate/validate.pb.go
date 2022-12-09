@@ -2699,10 +2699,10 @@ type RepeatedRules struct {
 	// items at a maximum
 	MaxItems *uint64 `protobuf:"varint,2,opt,name=max_items,json=maxItems" json:"max_items,omitempty"`
 	// Unique specifies that all elements in this field must be unique. This
-	// contraint is only applicable to scalar and enum types (messages are not
+	// constraint is only applicable to scalar and enum types (messages are not
 	// supported).
 	Unique *bool `protobuf:"varint,3,opt,name=unique" json:"unique,omitempty"`
-	// Items specifies the contraints to be applied to each item in the field.
+	// Items specifies the constraints to be applied to each item in the field.
 	// Repeated message fields will still execute validation against each item
 	// unless skip is specified here.
 	Items *FieldRules `protobuf:"bytes,4,opt,name=items" json:"items,omitempty"`
