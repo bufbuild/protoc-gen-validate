@@ -1,0 +1,62 @@
+name: "build"
+
+on:
+  push: # We run tests on non-tagged pushes to main.
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+
+  pull_request: # We also run tests on pull requests targeted at the main branch.
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+
+defaults:
+  run: # use bash as the default shell.
+    shell: bash
+
+jobs:
+  test:
+    name: "Run tests"
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Cancel when duplicated
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-go@v3
+        with:
+          go-version: "1.19.3"
+          cache: true
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Download cache for bazel
+        uses: actions/cache@v3
+        with:
+          path: "~/.cache/bazel"
+          key: test-${{ runner.os }}-bazel-cache
+
+      - name: "Install python requirements"
+        run: "pip3 install -r requirements.txt --no-deps"
+
+      - name: "Generate *.pb.go and build the plugin binary"
+        run: make -f Next.mk clean build # we do "clean build" here, hence validate.pb.go is regenerated.
+
+      - name: "Verify clean check-in"
+        run: make -f Next.mk check # we do verification after validate.pb.go is regenerated.
+
+      - name: "Run tests"
+        run: make -f Next.mk test
+
+      - name: "Run sanity checks"
+        run: make -f Next.mk sanity
