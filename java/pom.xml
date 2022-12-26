@@ -39,7 +39,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <protoc.version>3.21.9</protoc.version>
-        <google.protobuf.version>3.21.9</google.protobuf.version>
+        <google.protobuf.version>3.21.10</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
         <re2j.version>1.7</re2j.version>
@@ -49,7 +49,7 @@
         <assertj.version>3.23.1</assertj.version>
         <java.release>8</java.release>
         <java.version>1.8</java.version>
-        <proto-google-common-protos.version>2.10.0</proto-google-common-protos.version>
+        <proto-google-common-protos.version>2.11.0</proto-google-common-protos.version>
     </properties>
 
     <dependencies>
