@@ -11,12 +11,24 @@ func isEnum(f pgs.Field) bool {
 	return f.Type().IsEnum()
 }
 
+func enumNamesMap(values []pgs.EnumValue) (m map[int32]string) {
+	m = make(map[int32]string)
+	for _, v := range values {
+		// TODO: Allow aliases?
+		if _, exists := m[v.Value()]; !exists {
+			m[v.Value()] = v.Name().String()
+		}
+	}
+	return m
+}
+
 // enumList - if type is ENUM, enum values are returned
 func enumList(f pgs.Field, list []int32) string {
 	stringList := make([]string, 0, len(list))
 	if enum := f.Type().Enum(); enum != nil {
+		names := enumNamesMap(enum.Values())
 		for _, n := range list {
-			stringList = append(stringList, enum.Values()[n].Name().String())
+			stringList = append(stringList, names[n])
 		}
 	} else {
 		for _, n := range list {
@@ -29,7 +41,7 @@ func enumList(f pgs.Field, list []int32) string {
 // enumVal - if type is ENUM, enum value is returned
 func enumVal(f pgs.Field, val int32) string {
 	if enum := f.Type().Enum(); enum != nil {
-		return enum.Values()[val].Name().String()
+		return enumNamesMap(enum.Values())[val]
 	}
 	return fmt.Sprint(val)
 }
