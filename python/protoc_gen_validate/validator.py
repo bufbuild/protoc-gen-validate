@@ -308,9 +308,6 @@ def const_template(option_value, name):
     {%- elif str(o.bool) and o.bool['const'] != "" -%}
     if {{ name }} != {{ o.bool['const'] }}:
         raise ValidationFailed(\"{{ name }} not equal to {{ o.bool['const'] }}\")
-    {%- elif str(o.enum) and o.enum['const'] -%}
-    if {{ name }} != {{ o.enum['const'] }}:
-        raise ValidationFailed(\"{{ name }} not equal to {{ o.enum['const'] }}\")
     {%- elif str(o.bytes) and o.bytes.HasField('const') -%}
         {% if sys.version_info[0] >= 3 %}
     if {{ name }} != {{ o.bytes['const'] }}:
@@ -828,17 +825,52 @@ def enum_values(field):
     return [x.number for x in field.enum_type.values]
 
 
+def enum_name(field, number):
+    for x in field.enum_type.values:
+        if x.number == number:
+            return x.name
+    return ""
+
+
+def enum_names(field, numbers):
+    m = {x.number: x.name for x in field.enum_type.values}
+    return "[" + "".join([m[n] for n in numbers]) + "]"
+
+
+def enum_const_template(value, name, field):
+    const_tmpl = """{%- if str(value) and value['const'] -%}
+    if {{ name }} != {{ value['const'] }}:
+        raise ValidationFailed(\"{{ name }} not equal to {{ enum_name(field, value['const']) }}\")
+    {%- endif -%}
+    """
+    return Template(const_tmpl).render(value=value, name=name, field=field, enum_name=enum_name, str=str)
+
+
+def enum_in_template(value, name, field):
+    in_tmpl = """
+    {%- if value['in'] %}
+    if {{ name }} not in {{ value['in'] }}:
+        raise ValidationFailed(\"{{ name }} not in {{ enum_names(field, value['in']) }}\")
+    {%- endif -%}
+    {%- if value['not_in'] %}
+    if {{ name }} in {{ value['not_in'] }}:
+        raise ValidationFailed(\"{{ name }} in {{ enum_names(field, value['not_in']) }}\")
+    {%- endif -%}
+    """
+    return Template(in_tmpl).render(value=value, name=name, field=field, enum_names=enum_names)
+
+
 def enum_template(option_value, name, field):
     enum_tmpl = """
-    {{ const_template(option_value, name) -}}
-    {{ in_template(option_value.enum, name) -}}
+    {{ enum_const_template(option_value.enum, name, field) -}}
+    {{ enum_in_template(option_value.enum, name, field) -}}
     {% if option_value.enum['defined_only'] %}
     if {{ name }} not in {{ enum_values(field) }}:
         raise ValidationFailed(\"{{ name }} is not defined\")
     {% endif %}
     """
-    return Template(enum_tmpl).render(option_value=option_value, name=name, const_template=const_template,
-                                      in_template=in_template, field=field, enum_values=enum_values)
+    return Template(enum_tmpl).render(option_value=option_value, name=name, enum_const_template=enum_const_template,
+                                      enum_in_template=enum_in_template, field=field, enum_values=enum_values)
 
 
 def any_template(option_value, name, repeated=False):
