@@ -7,7 +7,7 @@ require (
 	github.com/lyft/protoc-gen-star v0.6.2
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616
 	golang.org/x/net v0.4.0
-	golang.org/x/tools v0.3.0
+	golang.org/x/tools v0.4.0
 	google.golang.org/protobuf v1.28.1
 )
 
