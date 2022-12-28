@@ -80,7 +80,11 @@ err = p.Validate() // err: nil
 
 ### Installation
 
-Installing PGV can currently only be done from source:
+#### Download from GitHub Releases
+
+Download assets from [GitHub Releases](https://github.com/bufbuild/protoc-gen-validate/releases) and unarchive them and add plugins into `$PATH`.
+
+#### Build from source
 
 ```sh
 # fetches this repo into $GOPATH
