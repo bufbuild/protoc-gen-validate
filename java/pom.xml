@@ -39,12 +39,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <protoc.version>3.21.9</protoc.version>
-        <google.protobuf.version>3.21.10</google.protobuf.version>
+        <google.protobuf.version>3.21.12</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
         <re2j.version>1.7</re2j.version>
         <commons.validator.version>1.7</commons.validator.version>
-        <grpc.version>1.51.0</grpc.version>
+        <grpc.version>1.51.1</grpc.version>
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.23.1</assertj.version>
         <java.release>8</java.release>
@@ -151,7 +151,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>versions-maven-plugin</artifactId>
-                        <version>2.13.0</version>
+                        <version>2.14.2</version>
                     </plugin>
 
                     <plugin>
