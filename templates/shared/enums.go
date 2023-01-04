@@ -14,7 +14,6 @@ func isEnum(f pgs.Field) bool {
 func enumNamesMap(values []pgs.EnumValue) (m map[int32]string) {
 	m = make(map[int32]string)
 	for _, v := range values {
-		// TODO: Allow aliases?
 		if _, exists := m[v.Value()]; !exists {
 			m[v.Value()] = v.Name().String()
 		}
