@@ -8,6 +8,7 @@ go_library(
         "functions.go",
         "reflection.go",
         "well_known.go",
+        "enums.go"
     ],
     importpath = "github.com/envoyproxy/protoc-gen-validate/templates/shared",
     visibility = ["//visibility:public"],
