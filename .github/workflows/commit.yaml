@@ -50,13 +50,13 @@ jobs:
         run: "pip3 install -r requirements.txt --no-deps"
 
       - name: "Generate *.pb.go and build the plugin binary"
-        run: make -f Next.mk clean build # we do "clean build" here, hence validate.pb.go is regenerated.
+        run: make clean build # we do "clean build" here, hence validate.pb.go is regenerated.
 
       - name: "Verify clean check-in"
-        run: make -f Next.mk check # we do verification after validate.pb.go is regenerated.
+        run: make check # we do verification after validate.pb.go is regenerated.
 
       - name: "Run tests"
-        run: make -f Next.mk test
+        run: make test
 
       - name: "Run sanity checks"
-        run: make -f Next.mk sanity
+        run: make sanity

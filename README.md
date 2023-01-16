@@ -82,7 +82,9 @@ err = p.Validate() // err: nil
 
 #### Download from GitHub Releases
 
-Download assets from [GitHub Releases](https://github.com/bufbuild/protoc-gen-validate/releases) and unarchive them and add plugins into `$PATH`.
+Download assets
+from [GitHub Releases](https://github.com/bufbuild/protoc-gen-validate/releases)
+and unarchive them and add plugins into `$PATH`.
 
 #### Build from source
 
@@ -91,7 +93,8 @@ Download assets from [GitHub Releases](https://github.com/bufbuild/protoc-gen-va
 go get -d github.com/envoyproxy/protoc-gen-validate
 ```
 
-> #### 💡 Yes, our go module path is `github.com/envoyproxy/protoc-gen-validate` **not** `bufbuild` this is intentional.
+> #### 💡 Yes, our go module path is `github.com/envoyproxy/protoc-gen-validate`
+**not** `bufbuild` this is intentional.
 > Changing the module path is effectively creating a new, independent module. We
 > would prefer not to break our users. The Go team are working on
 > better `cmd/go`
@@ -983,18 +986,15 @@ plugin for the target language(s) should be installed as well.
 
 ### Make Targets
 
-- **`make build`**: generates the constraints proto and compiles PGV
+- `make test`: Executes the test-cases against each language's test harness.
+- `make build`: Generates the constraints proto and compiles PGV
   into `$GOPATH/bin`
-
-- **`make lint`**: runs static-analysis rules against the PGV codebase,
-  including `golint`, `go vet`, and `gofmt -s`
-
-- **`make testcases`**: generates the proto files
-  in [`/tests/harness/cases`](/tests/harness/cases). These are used by the test
-  harness to verify the validation rules generated for each language.
-
-- **`make harness`**: executes the test-cases against each language's test
-  harness.
+- `make clean`: Clean all build and test artifacts
+- `make check`: Verification after validate.pb.go is regenerated against
+  contents of last commit
+- `make bazel-build`: Build the plugin using bazel
+- `make bazel-build-tests-generation`: Build tests generation using bazel
+- `make bazel-test-example-workspace`: Test example workspace using bazel
 
 ### Run all tests under Bazel
 
