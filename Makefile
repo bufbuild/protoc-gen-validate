@@ -58,8 +58,8 @@ test: $(bazel) $(tests_harness_cases) ## Run tests
 build: $(current_binary) ## Build the plugin
 
 clean: ## Clean all build and test artifacts
-	@rm -f $(validate_pb_go)
 	@rm -f $(current_binary_path)
+	@rm -f $(tests_harness_cases)
 
 check: ## Verify contents of last commit
 	@# Make sure the check-in is clean
