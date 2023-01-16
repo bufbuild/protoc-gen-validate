@@ -44,7 +44,7 @@
 
         <re2j.version>1.7</re2j.version>
         <commons.validator.version>1.7</commons.validator.version>
-        <grpc.version>1.51.1</grpc.version>
+        <grpc.version>1.52.1</grpc.version>
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.24.1</assertj.version>
         <java.release>8</java.release>
