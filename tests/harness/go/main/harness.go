@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 
@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	b, err := ioutil.ReadAll(os.Stdin)
+	b, err := io.ReadAll(os.Stdin)
 	checkErr(err)
 
 	tc := new(harness.TestCase)
@@ -56,6 +56,7 @@ func main() {
 
 type hasAllErrors interface{ AllErrors() []error }
 type hasCause interface{ Cause() error }
+type hasRule interface{ Rule() string }
 
 func checkValid(err, multierr error) {
 	if err == nil && multierr == nil {
@@ -84,12 +85,16 @@ func checkValid(err, multierr error) {
 		return
 	}
 	reasons := mergeReasons(nil, m)
+	rules := mergeRules(nil, m)
 	if rootCause.Error() != reasons[0] {
 		checkErr(fmt.Errorf("different first message, Validate()==%q, ValidateAll()==%q", rootCause.Error(), reasons[0]))
 		return
 	}
 
-	resp(&harness.TestResult{Reasons: reasons})
+	resp(&harness.TestResult{
+		Reasons: reasons,
+		Rules:   rules,
+	})
 }
 
 func mergeReasons(reasons []string, multi hasAllErrors) []string {
@@ -106,6 +111,23 @@ func mergeReasons(reasons []string, multi hasAllErrors) []string {
 		}
 	}
 	return reasons
+}
+
+func mergeRules(rules []string, multi hasAllErrors) []string {
+	for _, err := range multi.AllErrors() {
+		if multi, ok := err.(hasAllErrors); ok {
+			rules = mergeRules(rules, multi)
+		} else {
+			ruledErr, ok := err.(hasRule)
+			if !ok {
+				continue
+			}
+
+			rules = append(rules, ruledErr.Rule())
+		}
+	}
+
+	return rules
 }
 
 func checkErr(err error) {

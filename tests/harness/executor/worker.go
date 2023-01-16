@@ -13,6 +13,16 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
+type SupportedLanguages = []string
+type FeatureSet struct {
+	errorRules SupportedLanguages
+}
+
+// a map from features to harness names for features that may not yet have support across all languages
+var featureSupport = &FeatureSet{
+	errorRules: []string{"go"}, // error_rules indicates support for a machine-readable `rule` in addition to the human-readable `reason`
+}
+
 func Work(wg *sync.WaitGroup, in <-chan TestCase, out chan<- TestResult, harnesses []Harness) {
 	for tc := range in {
 		execTestCase(tc, harnesses, out)
@@ -21,14 +31,14 @@ func Work(wg *sync.WaitGroup, in <-chan TestCase, out chan<- TestResult, harness
 }
 
 func execTestCase(tc TestCase, harnesses []Harness, out chan<- TestResult) {
-	any, err := anypb.New(tc.Message)
+	tcMessage, err := anypb.New(tc.Message)
 	if err != nil {
 		log.Printf("unable to convert test case %q to Any - %v", tc.Name, err)
 		out <- TestResult{false, false}
 		return
 	}
 
-	b, err := proto.Marshal(&harness.TestCase{Message: any})
+	b, err := proto.Marshal(&harness.TestCase{Message: tcMessage})
 	if err != nil {
 		log.Printf("unable to marshal test case %q - %v", tc.Name, err)
 		out <- TestResult{false, false}
@@ -90,6 +100,30 @@ func execTestCase(tc TestCase, harnesses []Harness, out chan<- TestResult) {
 					out <- TestResult{false, false}
 				}
 				return
+			}
+
+			// test for failing rules being accurate
+			for _, lang := range featureSupport.errorRules {
+				if lang != h.Name {
+					continue
+				}
+
+				for _, rule := range tc.ExpectedRules {
+					matched := false
+					for _, failedRule := range res.Rules {
+						if failedRule == rule {
+							matched = true
+							break
+						}
+					}
+
+					if matched {
+						continue
+					}
+
+					log.Printf("[%s] (%s harness) expected %s rule in list of failed rules, got:\n %v", tc.Name, h.Name, rule, strings.Join(res.Rules, "\n "))
+					out <- TestResult{false, false}
+				}
 			}
 
 			out <- TestResult{true, false}
