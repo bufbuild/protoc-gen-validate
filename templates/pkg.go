@@ -1,6 +1,9 @@
 package templates
 
 import (
+	"github.com/envoyproxy/protoc-gen-validate/templates/cc"
+	pgs "github.com/lyft/protoc-gen-star/v2"
+	pgsgo "github.com/lyft/protoc-gen-star/v2/lang/go"
 	"text/template"
 
 	"github.com/envoyproxy/protoc-gen-validate/templates/ccnop"
