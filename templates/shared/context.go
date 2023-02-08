@@ -6,7 +6,7 @@ import (
 	"text/template"
 
 	"github.com/envoyproxy/protoc-gen-validate/validate"
-	pgs "github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star/v2"
 	"google.golang.org/protobuf/proto"
 )
 
