@@ -49,7 +49,7 @@
         <assertj.version>3.24.1</assertj.version>
         <java.release>8</java.release>
         <java.version>1.8</java.version>
-        <proto-google-common-protos.version>2.12.0</proto-google-common-protos.version>
+        <proto-google-common-protos.version>2.14.1</proto-google-common-protos.version>
     </properties>
 
     <dependencies>
