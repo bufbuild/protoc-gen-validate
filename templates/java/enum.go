@@ -24,6 +24,9 @@ const enumTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.GetDefinedOnly }}
 			io.envoyproxy.pgv.EnumValidation.definedOnly("{{ $f.FullyQualifiedName }}", {{ accessor . }});
 {{- end -}}
+{{- if $r.GetSpecified }}
+			io.envoyproxy.pgv.EnumValidation.specified("{{ $f.FullyQualifiedName }}", {{ accessor . }});
+{{- end -}}
 {{- if $r.In }}
 			io.envoyproxy.pgv.CollectiveValidation.in("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "In" }});
 {{- end -}}

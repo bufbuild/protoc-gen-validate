@@ -32,6 +32,9 @@ message EnumAliasConst { TestEnumAlias val = 1 [(validate.rules).enum.const = 2]
 message EnumDefined { TestEnum val = 1 [(validate.rules).enum.defined_only = true];}
 message EnumAliasDefined { TestEnumAlias val = 1 [(validate.rules).enum.defined_only = true];}
 
+message EnumSpecified { TestEnum val = 1 [(validate.rules).enum.specified = true];}
+message EnumAliasSpecified { TestEnumAlias val = 1 [(validate.rules).enum.specified = true];}
+
 message EnumIn      { TestEnum val = 1 [(validate.rules).enum = { in: [0, 2]}];}
 message EnumAliasIn { TestEnumAlias val = 1 [(validate.rules).enum = { in: [0, 2]}];}
 

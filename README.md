@@ -603,6 +603,14 @@ enum State {
   State x = 1 [(validate.rules).enum.defined_only = true];
   ```
 
+- **specified**: the field must be one of the specified values in the enum
+  descriptor except zero (by [convention](https://protobuf.dev/programming-guides/style/#enums) it means UNSPECIFIED).
+
+  ```protobuf
+  // x can only be PENDING or ACTIVE
+  State x = 1 [(validate.rules).enum.specified = true];
+  ```
+
 - **in/not_in**: these two rules permit specifying allow/denylists for the
   values of a field.
 

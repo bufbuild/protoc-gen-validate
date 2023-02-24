@@ -868,6 +868,12 @@ def enum_template(option_value, name, field):
     if {{ name }} not in {{ enum_values(field) }}:
         raise ValidationFailed(\"{{ name }} is not defined\")
     {% endif %}
+    {% if option_value.enum['specified'] %}
+    if {{ name }} not in {{ enum_values(field) }}:
+        raise ValidationFailed(\"{{ name }} is not defined\")
+    if {{ name }} == 0:
+        raise ValidationFailed(\"{{ name }} is zero\")
+    {% endif %}
     """
     return Template(enum_tmpl).render(option_value=option_value, name=name, enum_const_template=enum_const_template,
                                       enum_in_template=enum_in_template, field=field, enum_values=enum_values)

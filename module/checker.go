@@ -246,7 +246,7 @@ func (m *Module) CheckBytes(r *validate.BytesRules) {
 func (m *Module) CheckEnum(ft FieldType, r *validate.EnumRules) {
 	m.checkIns(len(r.In), len(r.NotIn))
 
-	if r.GetDefinedOnly() && len(r.In) > 0 {
+	if (r.GetDefinedOnly() || r.GetSpecified()) && len(r.In) > 0 {
 		typ, ok := ft.(interface {
 			Enum() pgs.Enum
 		})
@@ -262,9 +262,17 @@ func (m *Module) CheckEnum(ft FieldType, r *validate.EnumRules) {
 			vals[val.Value()] = struct{}{}
 		}
 
+		if r.GetSpecified() {
+			delete(vals, 0)
+		}
+
 		for _, in := range r.In {
 			if _, ok = vals[in]; !ok {
-				m.Failf("undefined `in` value (%d) conflicts with `defined_only` rule")
+				rule := "defined_only"
+				if r.GetSpecified() {
+					rule = "specified"
+				}
+				m.Failf("undefined `in` value (%d) conflicts with `%s` rule", in, rule)
 			}
 		}
 	}

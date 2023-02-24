@@ -1006,6 +1006,13 @@ var enumCases = []TestCase{
 	{"enum alias - defined_only - valid", &cases.EnumAliasDefined{Val: 1}, 0},
 	{"enum alias - defined_only - invalid", &cases.EnumAliasDefined{Val: math.MaxInt32}, 1},
 
+	{"enum - specified - valid", &cases.EnumSpecified{Val: 1}, 0},
+	{"enum - specified - invalid", &cases.EnumSpecified{Val: math.MaxInt32}, 1},
+	{"enum - specified - invalid (zero)", &cases.EnumSpecified{Val: 0}, 1},
+	{"enum alias - specified - valid", &cases.EnumAliasSpecified{Val: 2}, 0},
+	{"enum alias - specified - invalid", &cases.EnumAliasSpecified{Val: math.MaxInt32}, 1},
+	{"enum alias - specified - invalid (zero)", &cases.EnumAliasSpecified{Val: 0}, 1},
+
 	{"enum - in - valid", &cases.EnumIn{Val: cases.TestEnum_TWO}, 0},
 	{"enum - in - invalid", &cases.EnumIn{Val: cases.TestEnum_ONE}, 1},
 	{"enum alias - in - valid", &cases.EnumAliasIn{Val: cases.TestEnumAlias_A}, 0},

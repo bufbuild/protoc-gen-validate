@@ -708,6 +708,12 @@ message EnumRules {
     // NotIn specifies that this field cannot be equal to one of the specified
     // values
     repeated int32 not_in       = 4;
+
+    // Specified specifies that this field must be only one of the defined
+    // values for this enum except zero, failing on any undefined value.
+    // Effectively it's the same as {defined_only: true, not_in: 0}.
+    // By convention zero means UNSPECIFIED, see https://protobuf.dev/programming-guides/style/#enums
+    optional bool  specified    = 5;
 }
 
 // MessageRules describe the constraints applied to embedded message values.

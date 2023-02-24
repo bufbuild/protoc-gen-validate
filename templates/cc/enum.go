@@ -14,4 +14,17 @@ const enumTpl = `
 				{{ err . "value must be one of the defined enum values" }}
 			}
 		{{ end }}
+
+		{{ if $r.GetSpecified }}
+			{{ if or $f.Type.IsRepeated $f.Type.IsMap }}
+				if (!{{ class $f.Type.Element.Enum }}_IsValid({{ accessor . }})) {
+			{{ else }}
+				if (!{{ class $f.Type.Enum }}_IsValid({{ accessor . }})) {
+			{{ end }}
+				{{ err . "value must be one of the defined enum values" }}
+			}
+			if ({{ accessor . }} == 0) {
+				{{ err . "value must be non-zero" }}
+			}
+		{{ end }}
 `
