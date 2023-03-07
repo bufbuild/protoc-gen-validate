@@ -4,13 +4,15 @@ import (
 	"bytes"
 	"context"
 	"log"
+	"reflect"
 	"strings"
 	"sync"
 	"time"
 
-	harness "github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
+
+	harness "github.com/envoyproxy/protoc-gen-validate/tests/harness/go"
 )
 
 type SupportedLanguages = []string
@@ -108,20 +110,8 @@ func execTestCase(tc TestCase, harnesses []Harness, out chan<- TestResult) {
 					continue
 				}
 
-				for _, rule := range tc.ExpectedRules {
-					matched := false
-					for _, failedRule := range res.Rules {
-						if failedRule == rule {
-							matched = true
-							break
-						}
-					}
-
-					if matched {
-						continue
-					}
-
-					log.Printf("[%s] (%s harness) expected %s rule in list of failed rules, got:\n %v", tc.Name, h.Name, rule, strings.Join(res.Rules, "\n "))
+				if !reflect.DeepEqual(res.Rules, tc.ExpectedRules) {
+					log.Printf("[%s] (%s harness) expected rules to be %v, got %v", tc.Name, h.Name, tc.ExpectedRules, res.Rules)
 					out <- TestResult{false, false}
 				}
 			}

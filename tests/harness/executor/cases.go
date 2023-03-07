@@ -4,14 +4,15 @@ import (
 	"math"
 	"time"
 
-	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
-	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
-	yet_another_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/yet_another_package/go"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
+
+	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
+	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
+	yet_another_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/yet_another_package/go"
 )
 
 type TestCase struct {
@@ -176,25 +177,25 @@ var int32Cases = []TestCase{
 	{"int32 - none - valid", &cases.Int32None{Val: 123}, 0, nil},
 
 	{"int32 - const - valid", &cases.Int32Const{Val: 1}, 0, nil},
-	{"int32 - const - invalid", &cases.Int32Const{Val: 2}, 1, nil},
+	{"int32 - const - invalid", &cases.Int32Const{Val: 2}, 1, []string{"int32.const"}},
 
 	{"int32 - in - valid", &cases.Int32In{Val: 3}, 0, nil},
-	{"int32 - in - invalid", &cases.Int32In{Val: 5}, 1, nil},
+	{"int32 - in - invalid", &cases.Int32In{Val: 5}, 1, []string{"int32.in"}},
 
 	{"int32 - not in - valid", &cases.Int32NotIn{Val: 1}, 0, nil},
-	{"int32 - not in - invalid", &cases.Int32NotIn{Val: 0}, 1, nil},
+	{"int32 - not in - invalid", &cases.Int32NotIn{Val: 0}, 1, []string{"int32.not_in"}},
 
 	{"int32 - lt - valid", &cases.Int32LT{Val: -1}, 0, nil},
-	{"int32 - lt - invalid (equal)", &cases.Int32LT{Val: 0}, 1, nil},
-	{"int32 - lt - invalid", &cases.Int32LT{Val: 1}, 1, nil},
+	{"int32 - lt - invalid (equal)", &cases.Int32LT{Val: 0}, 1, []string{"int32.lt"}},
+	{"int32 - lt - invalid", &cases.Int32LT{Val: 1}, 1, []string{"int32.lt"}},
 
 	{"int32 - lte - valid", &cases.Int32LTE{Val: 63}, 0, nil},
 	{"int32 - lte - valid (equal)", &cases.Int32LTE{Val: 64}, 0, nil},
-	{"int32 - lte - invalid", &cases.Int32LTE{Val: 65}, 1, nil},
+	{"int32 - lte - invalid", &cases.Int32LTE{Val: 65}, 1, []string{"int32.lte"}},
 
 	{"int32 - gt - valid", &cases.Int32GT{Val: 17}, 0, nil},
-	{"int32 - gt - invalid (equal)", &cases.Int32GT{Val: 16}, 1, nil},
-	{"int32 - gt - invalid", &cases.Int32GT{Val: 15}, 1, nil},
+	{"int32 - gt - invalid (equal)", &cases.Int32GT{Val: 16}, 1, []string{"int32.gt"}},
+	{"int32 - gt - invalid", &cases.Int32GT{Val: 15}, 1, []string{"int32.gt"}},
 
 	{"int32 - gte - valid", &cases.Int32GTE{Val: 9}, 0, nil},
 	{"int32 - gte - valid (equal)", &cases.Int32GTE{Val: 8}, 0, nil},

@@ -2,3 +2,4 @@
 .idea/
 .bin/
 dist/
+.cache/
