@@ -46,7 +46,7 @@
         <commons.validator.version>1.7</commons.validator.version>
         <grpc.version>1.51.1</grpc.version>
         <junit.version>4.13.2</junit.version>
-        <assertj.version>3.24.1</assertj.version>
+        <assertj.version>3.24.2</assertj.version>
         <java.release>8</java.release>
         <java.version>1.8</java.version>
         <proto-google-common-protos.version>2.12.0</proto-google-common-protos.version>
