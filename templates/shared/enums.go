@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	pgs "github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star/v2"
 )
 
 func isEnum(f pgs.Field) bool {

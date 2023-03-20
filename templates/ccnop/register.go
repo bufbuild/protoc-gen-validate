@@ -4,7 +4,7 @@ import (
 	"text/template"
 
 	"github.com/envoyproxy/protoc-gen-validate/templates/cc"
-	pgs "github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star/v2"
 )
 
 func RegisterModule(tpl *template.Template, params pgs.Parameters) {
