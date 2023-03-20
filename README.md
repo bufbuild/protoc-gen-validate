@@ -153,6 +153,25 @@ There's also support for the `module=example.com/foo`
 flag [described here](https://developers.google.com/protocol-buffers/docs/reference/go-generated#invocation)
 .
 
+With newer Buf CLI versions (>v1.9.0), you can use the new plugin key instead of using the `protoc` command directly:
+
+```
+# buf.gen.yaml
+
+version: v1
+plugins:
+  - plugin: buf.build/bufbuild/validate-go
+    out: gen
+```
+
+```
+# proto/buf.yaml
+
+version: v1
+deps:
+  - buf.build/envoyproxy/protoc-gen-validate
+```
+
 #### Java
 
 Java generation is integrated with the existing protobuf toolchain for java
