@@ -17,3 +17,5 @@ require (
 	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
 )
+
+retract [v0.6.9, v0.6.12] // Published accidentally
