@@ -25,13 +25,13 @@ RUN apt update \
   && apt clean
 
 # bazel
-ENV BAZEL_VER=5.3.2
+ENV BAZEL_VER=6.1.1
 RUN wget -q -O bazel https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VER}/bazel-${BAZEL_VER}-linux-$([ $(uname -m) = "aarch64" ] && echo "arm64" || echo "x86_64") \
   && chmod +x bazel \
   && mv bazel usr/local/bin/bazel
 
 # protoc
-ENV PROTOC_VER=21.9
+ENV PROTOC_VER=22.2
 RUN export PROTOC_REL=protoc-${PROTOC_VER}-linux-$([ $(uname -m) = "aarch64" ] && echo "aarch" || echo "x86")_64.zip \
   && wget -q https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VER}/${PROTOC_REL} \
   && unzip ${PROTOC_REL} -d protoc \
@@ -50,13 +50,13 @@ RUN export GORELEASE=go1.20.2.linux-$([ $(uname -m) = "aarch64" ] && echo "arm64
   && mkdir -p $GOPATH/{src,bin,pkg}
 
 # protoc-gen-go
-ENV PGG_VER=v1.28.1
+ENV PGG_VER=v1.30.0
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@${PGG_VER} \
   && rm -rf $(go env GOCACHE) \
   && rm -rf $(go env GOMODCACHE)
 
 # buildozer
-ENV BDR_VER=5.1.0
+ENV BDR_VER=6.0.1
 RUN go install github.com/bazelbuild/buildtools/buildozer@${BDR_VER} \
   && rm -rf $(go env GOCACHE) \
   && rm -rf $(go env GOMODCACHE)

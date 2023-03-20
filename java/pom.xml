@@ -38,7 +38,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <protoc.version>3.21.9</protoc.version>
+        <protoc.version>3.22.2</protoc.version>
         <google.protobuf.version>3.21.12</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
