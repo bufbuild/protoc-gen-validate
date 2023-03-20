@@ -21,6 +21,7 @@ go_library(
     importpath = "github.com/envoyproxy/protoc-gen-validate/cmd/protoc-gen-validate-java",
     visibility = ["//visibility:private"],
     deps = [
+        "//internal",
         "//module",
         "@com_github_lyft_protoc_gen_star//:protoc-gen-star",
         "@com_github_lyft_protoc_gen_star//lang/go",
