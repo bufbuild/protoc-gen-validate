@@ -2,15 +2,23 @@ builds:
   - main: .
     id: "protoc-gen-validate"
     binary: "protoc-gen-validate"
+    ldflags:
+      - -s -w -X github.com/envoyproxy/protoc-gen-validate/internal.version={{.Version}}
   - main: ./cmd/protoc-gen-validate-cpp
     id: "protoc-gen-validate-cpp"
     binary: "protoc-gen-validate-cpp"
+    ldflags:
+      - -s -w -X github.com/envoyproxy/protoc-gen-validate/internal.version={{.Version}}
   - main: ./cmd/protoc-gen-validate-go
     id: "protoc-gen-validate-go"
     binary: "protoc-gen-validate-go"
+    ldflags:
+      - -s -w -X github.com/envoyproxy/protoc-gen-validate/internal.version={{.Version}}
   - main: ./cmd/protoc-gen-validate-java
     id: "protoc-gen-validate-java"
     binary: "protoc-gen-validate-java"
+    ldflags:
+      - -s -w -X github.com/envoyproxy/protoc-gen-validate/internal.version={{.Version}}
 
 release:
   # If set to true, will not auto-publish the release.

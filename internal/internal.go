@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-var version = "0.10.0-dev"
+var version = "0.0.0-dev"
 
 // CheckVersionFlag checks if len(os.Args) is 2, and the second
 // arg is "--version". If so, it prints the current version and exits.
