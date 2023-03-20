@@ -32,7 +32,7 @@ jobs:
 
       - uses: actions/setup-go@v3
         with:
-          go-version: "1.19.3"
+          go-version: "1.20.x"
           cache: true
 
       - uses: actions/setup-python@v4

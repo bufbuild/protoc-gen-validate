@@ -3,7 +3,7 @@
 set -o pipefail
 
 # config
-default_semvar_bump=${DEFAULT_BUMP:-minor}
+default_semvar_bump=${DEFAULT_BUMP:-patch}
 with_v=${WITH_V:-true}
 release_branches=${RELEASE_BRANCHES:-}
 custom_tag=${CUSTOM_TAG:-}
