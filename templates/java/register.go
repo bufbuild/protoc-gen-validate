@@ -10,8 +10,8 @@ import (
 
 	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 	"github.com/iancoleman/strcase"
-	pgs "github.com/lyft/protoc-gen-star"
-	pgsgo "github.com/lyft/protoc-gen-star/lang/go"
+	pgs "github.com/lyft/protoc-gen-star/v2"
+	pgsgo "github.com/lyft/protoc-gen-star/v2/lang/go"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -466,13 +466,13 @@ func (fns javaFuncs) byteArrayLit(bytes []uint8) string {
 
 func (fns javaFuncs) durLit(dur *durationpb.Duration) string {
 	return fmt.Sprintf(
-		"io.envoyproxy.pgv.TimestampValidation.toDuration(%d,%d)",
+		"io.envoyproxy.pgv.TimestampValidation.toDuration(%dL,%d)",
 		dur.GetSeconds(), dur.GetNanos())
 }
 
 func (fns javaFuncs) tsLit(ts *timestamppb.Timestamp) string {
 	return fmt.Sprintf(
-		"io.envoyproxy.pgv.TimestampValidation.toTimestamp(%d,%d)",
+		"io.envoyproxy.pgv.TimestampValidation.toTimestamp(%dL,%d)",
 		ts.GetSeconds(), ts.GetNanos())
 }
 
