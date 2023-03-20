@@ -219,9 +219,9 @@ def go_third_party():
 
     go_repository(
         name = "com_github_lyft_protoc_gen_star",
-        importpath = "github.com/lyft/protoc-gen-star",
-        sum = "h1:erE0rdztuaDq3bpGifD95wfoPrSZc95nGA6tbiNYh6M=",
-        version = "v0.6.1",
+        importpath = "github.com/lyft/protoc-gen-star/v2",
+        sum = "h1:keaAo8hRuAT0O3DfJ/wM3rufbAjGeJ1lAtWZHDjKGB0=",
+        version = "v2.0.1",
     )
     go_repository(
         name = "com_github_pkg_errors",

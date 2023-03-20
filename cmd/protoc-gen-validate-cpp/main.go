@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/envoyproxy/protoc-gen-validate/internal"
 	"github.com/envoyproxy/protoc-gen-validate/module"
-	pgs "github.com/lyft/protoc-gen-star"
+	pgs "github.com/lyft/protoc-gen-star/v2"
 	"google.golang.org/protobuf/types/pluginpb"
 )
 
