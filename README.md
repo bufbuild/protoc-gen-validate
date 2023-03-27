@@ -97,7 +97,7 @@ go get -d github.com/envoyproxy/protoc-gen-validate
 > better `cmd/go`
 > support for modules that change paths, but progress is slow. Until then, we
 > will
-> continue to use the `bufbuild` module path.
+> continue to use the `envoyproxy` module path.
 
 ```
 git clone github.com/bufbuild/protoc-gen-validate
