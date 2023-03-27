@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/iancoleman/strcase v0.2.0
-	github.com/lyft/protoc-gen-star/v2 v2.0.1
+	github.com/lyft/protoc-gen-star/v2 v2.0.3
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616
 	golang.org/x/net v0.8.0
 	golang.org/x/tools v0.7.0
