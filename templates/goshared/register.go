@@ -223,6 +223,22 @@ func (fns goSharedFuncs) inType(f pgs.Field, x interface{}) string {
 			return pgsgo.TypeName(fmt.Sprintf("%T", x)).Element().String()
 		}
 	case pgs.EnumT:
+		ens := fns.enumPackages(fns.externalEnums(f.File()))
+		// Check if the imported name of the enum has collided and been renamed
+		if len(ens) != 0 {
+			var enType pgs.Entity = f.Type().Enum()
+			if f.Type().IsRepeated() {
+				enType = f.Type().Element().Enum()
+			}
+
+			enImportPath := fns.ImportPath(enType)
+			for pkg, en := range ens {
+				if en.FilePath == enImportPath {
+					return pkg.String() + "." + en.Name
+				}
+			}
+		}
+
 		if f.Type().IsRepeated() {
 			return strings.TrimLeft(fns.Type(f).String(), "[]")
 		} else {
@@ -320,7 +336,7 @@ func (fns goSharedFuncs) externalEnums(file pgs.File) []pgs.Enum {
 				en = fld.Type().Element().Enum()
 			}
 
-			if en != nil && en.Package().ProtoName() != fld.Package().ProtoName() && fns.PackageName(en) != fns.PackageName(fld) {
+			if en != nil && en.File().Package().ProtoName() != msg.File().Package().ProtoName() {
 				out = append(out, en)
 			}
 		}
@@ -352,21 +368,27 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]NormalizedE
 	out := make(map[pgs.Name]NormalizedEnum, len(enums))
 
 	nameCollision := make(map[pgs.Name]int)
+	nameNormalized := make(map[pgs.FilePath]struct{})
 
 	for _, en := range enums {
+		enImportPath := fns.ImportPath(en)
+		if _, ok := nameNormalized[enImportPath]; ok {
+			continue
+		}
 
 		pkgName := fns.PackageName(en)
 
 		if normalized, ok := out[pkgName]; ok {
-			if normalized.FilePath != fns.ImportPath(en) {
+			if normalized.FilePath != enImportPath {
 				nameCollision[pkgName] = nameCollision[pkgName] + 1
 				pkgName = pkgName + pgs.Name(strconv.Itoa(nameCollision[pkgName]))
 			}
 		}
 
+		nameNormalized[enImportPath] = struct{}{}
 		out[pkgName] = NormalizedEnum{
 			Name:     fns.enumName(en),
-			FilePath: fns.ImportPath(en),
+			FilePath: enImportPath,
 		}
 
 	}
