@@ -226,7 +226,7 @@ func (fns goSharedFuncs) inType(f pgs.Field, x interface{}) string {
 		ens := fns.enumPackages(fns.externalEnums(f.File()))
 		// Check if the imported name of the enum has collided and been renamed
 		if len(ens) != 0 {
-			var enType pgs.Entity = f.Type().Enum()
+			var enType = f.Type().Enum()
 			if f.Type().IsRepeated() {
 				enType = f.Type().Element().Enum()
 			}
@@ -234,7 +234,7 @@ func (fns goSharedFuncs) inType(f pgs.Field, x interface{}) string {
 			enImportPath := fns.ImportPath(enType)
 			for pkg, en := range ens {
 				if en.FilePath == enImportPath {
-					return pkg.String() + "." + en.Name
+					return pkg.String() + "." + fns.enumName(enType)
 				}
 			}
 		}
