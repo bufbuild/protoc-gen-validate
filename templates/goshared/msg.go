@@ -234,6 +234,20 @@ var _ interface{
 	{{ end }}{{ end }}
 
 	{{ if has .Rules "Keys"}}{{ if .Rules.Keys }}
+	{{ if has .Rules.Keys.GetString_ "In" }} {{ if .Rules.Keys.GetString_.In }}
+		var {{ lookup .Field "InLookup" }} = map[{{ inType .Field .Rules.Keys.GetString_.In }}]struct{}{
+			{{- range .Rules.Keys.GetString_.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Keys.GetString_ "NotIn" }} {{ if .Rules.Keys.GetString_.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[{{ inType .Field .Rules.Keys.GetString_.NotIn }}]struct{}{
+			{{- range .Rules.Keys.GetString_.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
 	{{ if has .Rules.Keys.GetString_ "Pattern" }} {{ if .Rules.Keys.GetString_.Pattern }}
 		var {{ lookup .Field "Pattern" }} = regexp.MustCompile({{ lit .Rules.Keys.GetString_.GetPattern }})
 	{{ end }}{{ end }}
