@@ -36,3 +36,6 @@ message MultipleMaps {
   map <int32, bool> second = 2 [(validate.rules).map.keys.int32.lt = 0];
   map <int32, bool> third = 3 [(validate.rules).map.keys.int32.gt = 0];
 }
+
+message MapKeysIn {map<string, string> val = 1 [(validate.rules).map.keys.string = {in: ["foo", "bar"]}]; }
+message MapKeysNotIn {map<string, string> val = 1 [(validate.rules).map.keys.string = {not_in: ["foo", "bar"]}]; }
