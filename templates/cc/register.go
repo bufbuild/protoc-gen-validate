@@ -295,6 +295,20 @@ func (fns CCFuncs) inType(f pgs.Field, x interface{}) string {
 		default:
 			return fns.className(f.Type().Element().Embed())
 		}
+	case pgs.EnumT:
+		var fldEn = f.Type().Enum()
+		if f.Type().IsRepeated() {
+			fldEn = f.Type().Element().Enum()
+		}
+
+		if fns.ImportPath(f) == fns.ImportPath(fldEn) {
+			if f.Type().IsRepeated() {
+				return fns.cTypeOfString(fns.Type(f).Value().String()[2:])
+			}
+			return fns.cTypeOfString(fns.Type(f).Value().String())
+		}
+
+		return fns.PackageName(fldEn).String() + "::" + fns.Type(f).Value().String()
 	default:
 		return fns.cType(f.Type())
 	}
@@ -355,7 +369,7 @@ func (fns CCFuncs) inKey(f pgs.Field, x interface{}) string {
 			return fns.lit(x)
 		}
 	case pgs.EnumT:
-		return fmt.Sprintf("%s(%d)", fns.cType(f.Type()), x.(int32))
+		return fmt.Sprintf("%s(%d)", fns.inType(f, x), x.(int32))
 	default:
 		return fns.lit(x)
 	}
@@ -429,7 +443,8 @@ func (fns CCFuncs) output(file pgs.File, ext string) string {
 func (fns CCFuncs) Type(f pgs.Field) pgsgo.TypeName {
 	typ := fns.Context.Type(f)
 
-	if f.Type().IsEnum() {
+	// Adaptation of repeated types
+	if f.Type().ProtoType() == pgs.EnumT {
 		parts := strings.Split(typ.String(), ".")
 		typ = pgsgo.TypeName(parts[len(parts)-1])
 	}
