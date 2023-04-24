@@ -1,12 +1,12 @@
 ![The Buf logo](./.github/buf-logo.svg)
 
-[Announcing protoc-gen-validate v1.0 and our plans for v2.0](https://buf.build/blog/protoc-gen-validate-v1-and-v2/)
-
 # protoc-gen-validate (PGV)
 
 ![License](https://img.shields.io/github/license/bufbuild/protoc-gen-validate?color=blue)
 ![Release](https://img.shields.io/github/v/release/bufbuild/protoc-gen-validate?include_prereleases)
 ![Slack](https://img.shields.io/badge/slack-buf-%23e01563)
+
+***New: we're hard at work on v2.0 of protoc-gen-validate, you can read all about it [here!](https://buf.build/blog/protoc-gen-validate-v1-and-v2/) We'd love your feedback, reach out to us on our [Slack](https://buf.build/links/slack) to get in touch.***
 
 PGV is a protoc plugin to generate polyglot message validators. While protocol
 buffers effectively guarantee the types of structured data, they cannot enforce
@@ -125,7 +125,7 @@ into `../generated/example.pb.validate.go`:
 ```sh
 protoc \
   -I . \
-  -I path/to/validate/ \ 
+  -I path/to/validate/ \
   --go_out=":../generated" \
   --validate_out="lang=go:../generated" \
   example.proto
@@ -425,7 +425,7 @@ language-specific constraint capabilities.
 
   // x must contain "baz" anywhere inside it
   string x = 1 [(validate.rules).string.contains = "baz"];
-  
+
   // x cannot contain "baz" anywhere inside it
   string x = 1 [(validate.rules).string.not_contains = "baz"];
 
@@ -490,13 +490,13 @@ language-specific constraint capabilities.
 
   // x must be a valid UUID (via RFC 4122)
   string x = 1 [(validate.rules).string.uuid = true];
-  
+
   // x must conform to a well known regex for HTTP header names (via RFC 7230)
   string x = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_NAME]
-  
-  // x must conform to a well known regex for HTTP header values (via RFC 7230) 
+
+  // x must conform to a well known regex for HTTP header values (via RFC 7230)
   string x = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_VALUE];
-  
+
   // x must conform to a well known regex for headers, disallowing \r\n\0 characters.
   string x = 1 [(validate.rules).string {well_known_regex: HTTP_HEADER_VALUE, strict: false}];
   ```
@@ -1042,10 +1042,10 @@ docker run --rm \
 # executes the 'build' & 'testcases' make targets
 docker run --rm \
   bufbuild/protoc-gen-validate build testcases
-  
+
 # override the entrypoint and interact with the container directly
-# this can be useful when wanting to run bazel commands without 
-# bazel installed locally. 
+# this can be useful when wanting to run bazel commands without
+# bazel installed locally.
 docker run --rm \
  -it --entrypoint=/bin/bash \
  bufbuild/protoc-gen-validate
