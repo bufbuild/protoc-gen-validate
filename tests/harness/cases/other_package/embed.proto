@@ -14,4 +14,10 @@ message Embed {
     int64 val = 1 [(validate.rules).int64.gt = 0];
 
     enum Enumerated { VALUE = 0; }
+
+    enum FooNumber {
+        ZERO = 0;
+        ONE  = 1;
+        TWO  = 2;
+    }
 }
