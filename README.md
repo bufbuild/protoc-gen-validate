@@ -6,9 +6,6 @@
 ![Release](https://img.shields.io/github/v/release/bufbuild/protoc-gen-validate?include_prereleases)
 ![Slack](https://img.shields.io/badge/slack-buf-%23e01563)
 
-*This project is currently in **alpha**. The API should be considered unstable
-and likely to change*
-
 PGV is a protoc plugin to generate polyglot message validators. While protocol
 buffers effectively guarantee the types of structured data, they cannot enforce
 semantic rules for values. This plugin adds support to protoc-generated code to
