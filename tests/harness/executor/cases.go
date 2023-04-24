@@ -1184,8 +1184,12 @@ var mapCases = []TestCase{
 	{"map - keys - valid", &cases.MapKeys{Val: map[int64]string{-1: "a", -2: "b"}}, 0},
 	{"map - keys - valid (empty)", &cases.MapKeys{Val: map[int64]string{}}, 0},
 	{"map - keys - valid (pattern)", &cases.MapKeysPattern{Val: map[string]string{"A": "a"}}, 0},
+	{"map - keys - valid (in)", &cases.MapKeysIn{Val: map[string]string{"foo": "value"}}, 0},
+	{"map - keys - valid (not_in)", &cases.MapKeysNotIn{Val: map[string]string{"baz": "value"}}, 0},
 	{"map - keys - invalid", &cases.MapKeys{Val: map[int64]string{1: "a"}}, 1},
 	{"map - keys - invalid (pattern)", &cases.MapKeysPattern{Val: map[string]string{"A": "a", "!@#$%^&*()": "b"}}, 1},
+	{"map - keys - invalid (in)", &cases.MapKeysIn{Val: map[string]string{"baz": "value"}}, 1},
+	{"map - keys - invalid (not_in)", &cases.MapKeysNotIn{Val: map[string]string{"foo": "value"}}, 1},
 
 	{"map - values - valid", &cases.MapValues{Val: map[string]string{"a": "Alpha", "b": "Beta"}}, 0},
 	{"map - values - valid (empty)", &cases.MapValues{Val: map[string]string{}}, 0},
