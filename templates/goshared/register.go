@@ -367,7 +367,21 @@ type NormalizedEnum struct {
 func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]NormalizedEnum {
 	out := make(map[pgs.Name]NormalizedEnum, len(enums))
 
-	nameCollision := make(map[pgs.Name]int)
+	// Start point from ./templates/go/file.go
+	nameCollision := map[pgs.Name]int{
+		"bytes":   0,
+		"errors":  0,
+		"fmt":     0,
+		"net":     0,
+		"mail":    0,
+		"url":     0,
+		"regexp":  0,
+		"sort":    0,
+		"strings": 0,
+		"time":    0,
+		"utf8":    0,
+		"anypb":   0,
+	}
 	nameNormalized := make(map[pgs.FilePath]struct{})
 
 	for _, en := range enums {
@@ -378,11 +392,11 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]NormalizedE
 
 		pkgName := fns.PackageName(en)
 
-		if normalized, ok := out[pkgName]; ok {
-			if normalized.FilePath != enImportPath {
-				nameCollision[pkgName] = nameCollision[pkgName] + 1
-				pkgName = pkgName + pgs.Name(strconv.Itoa(nameCollision[pkgName]))
-			}
+		if collision, ok := nameCollision[pkgName]; ok {
+			nameCollision[pkgName] = collision + 1
+			pkgName = pkgName + pgs.Name(strconv.Itoa(nameCollision[pkgName]))
+		} else {
+			nameCollision[pkgName] = 0
 		}
 
 		nameNormalized[enImportPath] = struct{}{}
