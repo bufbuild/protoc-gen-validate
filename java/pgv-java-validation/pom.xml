@@ -66,6 +66,7 @@
                                 <include>tests/harness/cases/*.proto</include>
                                 <include>tests/harness/cases/other_package/*.proto</include>
                                 <include>tests/harness/cases/yet_another_package/*.proto</include>
+                                <include>tests/harness/cases/sort/*.proto</include>
                             </includes>
                         </configuration>
                     </execution>

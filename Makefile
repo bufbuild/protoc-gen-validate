@@ -78,6 +78,8 @@ testcases: bin/protoc-gen-go ## generate the test harness case protos
 	mkdir tests/harness/cases/other_package/go
 	rm -r tests/harness/cases/yet_another_package/go || true
 	mkdir tests/harness/cases/yet_another_package/go
+	rm -r tests/harness/cases/sort/go || true
+	mkdir tests/harness/cases/sort/go
 	# protoc-gen-go makes us go a package at a time
 	cd tests/harness/cases/other_package && \
 	protoc \
@@ -94,6 +96,14 @@ testcases: bin/protoc-gen-go ## generate the test harness case protos
 		--go_out="module=${PACKAGE}/tests/harness/cases/yet_another_package/go,${GO_IMPORT}:./go" \
 		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
 		--validate_out="module=${PACKAGE}/tests/harness/cases/yet_another_package/go,lang=go:./go" \
+		./*.proto
+	cd tests/harness/cases/sort && \
+	protoc \
+		-I . \
+		-I ../../../.. \
+		--go_out="module=${PACKAGE}/tests/harness/cases/sort/go,${GO_IMPORT}:./go" \
+		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
+		--validate_out="module=${PACKAGE}/tests/harness/cases/sort/go,lang=go:./go" \
 		./*.proto
 	cd tests/harness/cases && \
 	protoc \
