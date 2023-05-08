@@ -352,7 +352,7 @@ language-specific constraint capabilities.
   for optional fields where switching to WKTs is not feasible.
 
   ```protobuf
-  unint32 x = 1 [(validate.rules).uint32 = {ignore_empty: true, gte: 200}];
+  uint32 x = 1 [(validate.rules).uint32 = {ignore_empty: true, gte: 200}];
   ```
 
 ### Bools
