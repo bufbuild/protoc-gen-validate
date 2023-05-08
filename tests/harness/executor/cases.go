@@ -6,6 +6,7 @@ import (
 
 	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
 	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
+	sort "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/sort/go"
 	yet_another_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/yet_another_package/go"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
@@ -1025,6 +1026,8 @@ var enumCases = []TestCase{
 	{"enum external - in - invalid", &cases.EnumExternal3{Foo: other_package.Embed_ONE}, 1},
 	{"enum external - not in - valid", &cases.EnumExternal3{Bar: yet_another_package.Embed_ZERO}, 0},
 	{"enum external - not in - invalid", &cases.EnumExternal3{Bar: yet_another_package.Embed_ONE}, 1},
+	{"enum external - const - valid", &cases.EnumExternal4{SortDirection: sort.Direction_ASC}, 0},
+	{"enum external - const - invalid", &cases.EnumExternal4{SortDirection: sort.Direction_DESC}, 1},
 
 	{"enum repeated - defined_only - valid", &cases.RepeatedEnumDefined{Val: []cases.TestEnum{cases.TestEnum_ONE, cases.TestEnum_TWO}}, 0},
 	{"enum repeated - defined_only - invalid", &cases.RepeatedEnumDefined{Val: []cases.TestEnum{cases.TestEnum_ONE, math.MaxInt32}}, 1},

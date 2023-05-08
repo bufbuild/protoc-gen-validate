@@ -5,6 +5,7 @@ option go_package = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cas
 import "validate/validate.proto";
 import "tests/harness/cases/other_package/embed.proto";
 import "tests/harness/cases/yet_another_package/embed.proto";
+import "tests/harness/cases/sort/sort.proto";
 
 enum TestEnum {
     ZERO = 0;
@@ -43,6 +44,9 @@ message EnumExternal2 { other_package.Embed.DoubleEmbed.DoubleEnumerated val = 1
 message EnumExternal3 {
     other_package.Embed.FooNumber foo = 1 [(validate.rules).enum = { in: [0, 2] }];
     yet_another_package.Embed.BarNumber bar = 2 [(validate.rules).enum = { not_in: [1] }];
+}
+message EnumExternal4 {
+    sort.Direction sort_direction = 1 [(validate.rules).enum.const = 1];
 }
 
 message RepeatedEnumDefined { repeated TestEnum val = 1 [(validate.rules).repeated.items.enum.defined_only = true]; }
