@@ -63,3 +63,12 @@ const uuidTpl = `
 		return nil
 	}
 `
+
+const jsonTpl = `
+	func (m {{ (msgTyp .).Pointer }}) _validateJson(j string) error {
+		if !json.Valid([]byte(j)) {
+			return errors.New("json string invalid")
+		}
+		return nil
+	}
+`

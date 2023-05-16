@@ -173,6 +173,12 @@ const strTpl = `
 			if !all { return err }
 			errors = append(errors, err)
 		}
+	{{ else if $r.GetJson }}
+		if err := m._validateJson({{ accessor . }}); err != nil {
+			err = {{ errCause . "err" "value must be a valid json" }}
+			if !all { return err }
+			errors = append(errors,err)
+		}
 	{{ end }}
 
 	{{ if $r.Pattern }}

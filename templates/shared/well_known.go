@@ -11,6 +11,7 @@ const (
 	Email    WellKnown = "email"
 	Hostname WellKnown = "hostname"
 	UUID     WellKnown = "uuid"
+	JSON     WellKnown = "json"
 )
 
 func FileNeeds(f pgs.File, wk WellKnown) bool {
@@ -74,6 +75,10 @@ func strRulesNeeds(rules *validate.StringRules, wk WellKnown) bool {
 		}
 	case UUID:
 		if rules.GetUuid() {
+			return true
+		}
+	case JSON:
+		if rules.GetJson() {
 			return true
 		}
 	}

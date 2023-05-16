@@ -605,6 +605,9 @@ message StringRules {
 
         // WellKnownRegex specifies a common well known pattern defined as a regex.
         KnownRegex well_known_regex = 24;
+
+        // Json specifies that the field must be a valid json as defined by RFC 7159
+        bool json  = 28;
     }
 
   // This applies to regexes HTTP_HEADER_NAME and HTTP_HEADER_VALUE to enable
