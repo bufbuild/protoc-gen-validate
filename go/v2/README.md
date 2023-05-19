@@ -145,7 +145,7 @@ validator, err := protovalidate.New(
 `legacy` package assumes the `protoc-gen-validate` extensions are imported into
 the `protoc-gen-go` generated code via `github.com/envoyproxy/protoc-gen-validate/validate`.
 
-A [migration tool](../../tools/migrate/README.md) is also available to incrementally upgrade legacy constraints 
+A [migration tool](/tools/protovalidate-migrate) is also available to incrementally upgrade legacy constraints 
 in `.proto` files.
 
 ## Performance
