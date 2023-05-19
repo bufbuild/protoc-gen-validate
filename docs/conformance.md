@@ -65,7 +65,7 @@ It is recommended that the executor should be as type-agnostic as possible,
 preferably constructing the descriptors at runtime from the provided 
 `FileDescriptorSet` instead of using a local resolver.
 
-For a reference implementation, see [Go's conformance test executor](/go/internal/cmd/protovalidate-conformance-go/).
+For a reference implementation, see [Go's conformance test executor](/go/v2/internal/cmd/protovalidate-conformance-go/).
 
 ### Test suites & cases
 
