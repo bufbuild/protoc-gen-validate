@@ -20,6 +20,12 @@ rules. The primary goal of `protovalidate` is to help developers ensure data
 consistency and integrity across the network without requiring generated code.
 
 > ❓ Looking for `protoc-gen-validate`? It's been moved to the [v1 branch][pgv].
+> 
+> `protoc-gen-validate` v1 continues to support:
+>  - Go
+>  - C++
+>  - Java
+>  - Python
 
 ## Usage
 
