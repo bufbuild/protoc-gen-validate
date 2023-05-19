@@ -17,13 +17,13 @@ consistency and integrity across the network without requiring generated code.
 To install the package, use the `go get` command from within your Go module:
 
 ```shell
-go get github.com/bufbuild/protovalidate/go
+go get github.com/bufbuild/protovalidate/go/v2
 ```
 
 Import the package into your Go project:
 
 ```go
-import "github.com/bufbuild/protovalidate/go"
+import "github.com/bufbuild/protovalidate/go/v2"
 ```
 
 Remember to always check for the latest version of `protovalidate` on the
@@ -145,7 +145,7 @@ validator, err := protovalidate.New(
 `legacy` package assumes the `protoc-gen-validate` extensions are imported into
 the `protoc-gen-go` generated code via `github.com/envoyproxy/protoc-gen-validate/validate`.
 
-A [migration tool](../tools/migrate/README.md) is also available to incrementally upgrade legacy constraints 
+A [migration tool](../../tools/migrate/README.md) is also available to incrementally upgrade legacy constraints 
 in `.proto` files.
 
 ## Performance
@@ -158,7 +158,7 @@ and only allocates in the event of a validation error.
 [circa 15 May 2023]
 goos: darwin
 goarch: arm64
-pkg: github.com/bufbuild/protovalidate/go
+pkg: github.com/bufbuild/protovalidate/go/v2
 BenchmarkValidator
 BenchmarkValidator/ColdStart
 BenchmarkValidator/ColdStart-10         	    4372	    276457 ns/op	  470780 B/op	    9255 allocs/op
