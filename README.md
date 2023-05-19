@@ -191,7 +191,7 @@ The key components include:
 ### Language-specific support & documentation
 
 - [x] [Go](go/v2/) (Beta Release)
-- [ ] Typescript (In development)
+- [ ] Typescript (coming soon)
 - [ ] C++ (coming soon)
 - [ ] Java (coming soon)
 - [ ] Python (coming soon)
