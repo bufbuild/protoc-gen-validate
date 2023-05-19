@@ -1,0 +1,90 @@
+// Copyright 2023 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package buf.validate.conformance.cases;
+
+import "buf/validate/validate.proto";
+
+message BytesNone {
+  bytes val = 1;
+}
+message BytesConst {
+  bytes val = 1 [(buf.validate.field).bytes.const = "foo"];
+}
+message BytesIn {
+  bytes val = 1 [(buf.validate.field).bytes = {
+    in: [
+      "bar",
+      "baz"
+    ]
+  }];
+}
+message BytesNotIn {
+  bytes val = 1 [(buf.validate.field).bytes = {
+    not_in: [
+      "fizz",
+      "buzz"
+    ]
+  }];
+}
+message BytesLen {
+  bytes val = 1 [(buf.validate.field).bytes.len = 3];
+}
+message BytesMinLen {
+  bytes val = 1 [(buf.validate.field).bytes.min_len = 3];
+}
+message BytesMaxLen {
+  bytes val = 1 [(buf.validate.field).bytes.max_len = 5];
+}
+message BytesMinMaxLen {
+  bytes val = 1 [(buf.validate.field).bytes = {
+    min_len: 3,
+    max_len: 5
+  }];
+}
+message BytesEqualMinMaxLen {
+  bytes val = 1 [(buf.validate.field).bytes = {
+    min_len: 5,
+    max_len: 5
+  }];
+}
+message BytesPattern {
+  bytes val = 1 [(buf.validate.field).bytes.pattern = "^[\x00-\x7F]+$"];
+}
+message BytesPrefix {
+  bytes val = 1 [(buf.validate.field).bytes.prefix = "\x99"];
+}
+message BytesContains {
+  bytes val = 1 [(buf.validate.field).bytes.contains = "bar"];
+}
+message BytesSuffix {
+  bytes val = 1 [(buf.validate.field).bytes.suffix = "buz\x7a"];
+}
+message BytesIP {
+  bytes val = 1 [(buf.validate.field).bytes.ip = true];
+}
+message BytesIPv4 {
+  bytes val = 1 [(buf.validate.field).bytes.ipv4 = true];
+}
+message BytesIPv6 {
+  bytes val = 1 [(buf.validate.field).bytes.ipv6 = true];
+}
+message BytesIPv6Ignore {
+  bytes val = 1 [
+    (buf.validate.field).bytes.ipv6 = true,
+    (buf.validate.field).ignore_empty = true
+  ];
+}

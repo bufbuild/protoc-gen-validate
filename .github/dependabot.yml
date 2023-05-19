@@ -1,16 +1,24 @@
 version: 2
 updates:
-  - package-ecosystem: "gomod" 
-    directory: "/" 
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "gomod" 
-    directory: "/tests" 
+  # duplicated gomod checks for each module pending:
+  # https://github.com/dependabot/dependabot-core/issues/6012
+  - package-ecosystem: "gomod"
+    directory: "/go"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "maven" 
-    directory: "/java" 
+  - package-ecosystem: "gomod"
+    directory: "/tools/conformance"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 40
-
+  - package-ecosystem: "gomod"
+    directory: "/tools/migrate"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "gomod"
+    directory: "/go/internal/gen"
+    schedule:
+      interval: "weekly"

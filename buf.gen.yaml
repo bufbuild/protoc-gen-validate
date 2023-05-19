@@ -1,0 +1,11 @@
+version: v1
+managed:
+  enabled: true
+  go_package_prefix:
+    default: buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go
+    except:
+      - buf.build/envoyproxy/protoc-gen-validate
+plugins:
+  - plugin: buf.build/protocolbuffers/go
+    out: go/v2/internal/gen
+    opt: paths=source_relative

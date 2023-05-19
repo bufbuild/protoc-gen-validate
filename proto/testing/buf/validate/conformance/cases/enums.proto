@@ -1,0 +1,123 @@
+// Copyright 2023 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package buf.validate.conformance.cases;
+
+import "buf/validate/conformance/cases/other_package/embed.proto";
+import "buf/validate/conformance/cases/yet_another_package/embed2.proto";
+import "buf/validate/validate.proto";
+
+enum TestEnum {
+  TEST_ENUM_UNSPECIFIED = 0;
+  TEST_ENUM_ONE = 1;
+  TEST_ENUM_TWO = 2;
+}
+
+enum TestEnumAlias {
+  option allow_alias = true;
+
+  TEST_ENUM_ALIAS_UNSPECIFIED = 0;
+  TEST_ENUM_ALIAS_A = 1;
+  TEST_ENUM_ALIAS_B = 2;
+  TEST_ENUM_ALIAS_C = 3;
+
+  TEST_ENUM_ALIAS_ALPHA = 1;
+  TEST_ENUM_ALIAS_BETA = 2;
+  TEST_ENUM_ALIAS_GAMMA = 3;
+}
+
+message EnumNone {
+  TestEnum val = 1;
+}
+
+message EnumConst {
+  TestEnum val = 1 [(buf.validate.field).enum.const = 2];
+}
+message EnumAliasConst {
+  TestEnumAlias val = 1 [(buf.validate.field).enum.const = 2];
+}
+
+message EnumDefined {
+  TestEnum val = 1 [(buf.validate.field).enum.defined_only = true];
+}
+message EnumAliasDefined {
+  TestEnumAlias val = 1 [(buf.validate.field).enum.defined_only = true];
+}
+
+message EnumIn {
+  TestEnum val = 1 [(buf.validate.field).enum = {
+    in: [
+      0,
+      2
+    ]
+  }];
+}
+message EnumAliasIn {
+  TestEnumAlias val = 1 [(buf.validate.field).enum = {
+    in: [
+      0,
+      2
+    ]
+  }];
+}
+
+message EnumNotIn {
+  TestEnum val = 1 [(buf.validate.field).enum = {
+    not_in: [1]
+  }];
+}
+message EnumAliasNotIn {
+  TestEnumAlias val = 1 [(buf.validate.field).enum = {
+    not_in: [1]
+  }];
+}
+
+message EnumExternal {
+  other_package.Embed.Enumerated val = 1 [(buf.validate.field).enum.defined_only = true];
+}
+message EnumExternal2 {
+  other_package.Embed.DoubleEmbed.DoubleEnumerated val = 1 [(buf.validate.field).enum.defined_only = true];
+}
+
+message RepeatedEnumDefined {
+  repeated TestEnum val = 1 [(buf.validate.field).repeated.items.enum.defined_only = true];
+}
+message RepeatedExternalEnumDefined {
+  repeated other_package.Embed.Enumerated val = 1 [(buf.validate.field).repeated.items.enum.defined_only = true];
+}
+message RepeatedYetAnotherExternalEnumDefined {
+  repeated yet_another_package.Embed.Enumerated val = 1 [(buf.validate.field).repeated.items.enum.defined_only = true];
+}
+
+message MapEnumDefined {
+  map<string, TestEnum> val = 1 [(buf.validate.field).map.values.enum.defined_only = true];
+}
+message MapExternalEnumDefined {
+  map<string, other_package.Embed.Enumerated> val = 1 [(buf.validate.field).map.values.enum.defined_only = true];
+}
+
+message EnumInsideOneof {
+  oneof foo {
+    TestEnum val = 1 [(buf.validate.field).enum.defined_only = true];
+  }
+
+  oneof bar {
+    TestEnum val2 = 2 [(buf.validate.field).enum = {
+      defined_only: true
+      not_in: 0
+    }];
+  }
+}

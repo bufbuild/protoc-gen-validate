@@ -1,0 +1,40 @@
+// Copyright 2023 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package buf.validate.conformance.harness;
+
+import "buf/validate/expression.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/descriptor.proto";
+
+message TestConformanceRequest {
+  google.protobuf.FileDescriptorSet fdset = 2;
+  map<string, google.protobuf.Any> cases = 3;
+}
+
+message TestConformanceResponse {
+  map<string, TestResult> results = 1;
+}
+
+message TestResult {
+  oneof result {
+    bool success = 1;
+    Violations validation_error = 2;
+    string compilation_error = 3;
+    string runtime_error = 4;
+    string unexpected_error = 5;
+  }
+}

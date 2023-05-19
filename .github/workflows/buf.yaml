@@ -1,0 +1,91 @@
+name: Buf
+on:
+  pull_request:
+    paths:
+      - 'proto/**'
+  push:
+    paths:
+      - 'proto/**'
+  delete:
+    paths:
+      - 'proto/**'
+
+env:
+  BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
+
+jobs:
+  validate-protos:
+    name: Validate protos
+    if: ${{ github.event_name == 'pull_request'}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Install buf
+        uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ github.token }}
+      - name: Buf format
+        run: buf format -d --exit-code
+      - name: Buf lint
+        uses: bufbuild/buf-lint-action@v1
+      - name: Buf breaking change detection
+        uses: bufbuild/buf-breaking-action@v1
+        with:
+          against: https://github.com/bufbuild/protovalidate.git#branch=main
+      - name: Buf generate
+        run: |
+          mkdir -p .tmp/bin
+          cp $(which buf) .tmp/bin/buf
+          make checkgenerate
+  publish-draft:
+    name: Publish draft
+    if: ${{ github.event_name == 'push' && github.ref_type == 'branch' && github.ref_name != 'main'}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Install buf
+        uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ github.token }}
+      - name: Publish draft
+        uses: bufbuild/buf-push-action@v1
+        with:
+          input: proto/validate
+          buf_token: ${{ secrets.BUF_TOKEN }}
+          draft: true
+  publish-tag:
+    name: Publish tag
+    if: ${{ github.ref_type == 'tag' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Install buf
+        uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ github.token }}
+      - name: Publish tag
+        run: buf push proto/validate --tag ${{ github.ref_name }}
+  delete-draft:
+    name: Delete draft
+    if: ${{ github.event_name == 'delete' && github.ref_type == 'branch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install buf
+        uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ github.token }}
+      - name: Delete draft
+        run: |
+          REF=${{github.event.ref}}
+          REPLACE=refs\/heads\/
+          BRANCH="${REF//$REPLACE/}"
+          buf beta registry draft delete --force buf.build/bufbuild/protovalidate:$BRANCH

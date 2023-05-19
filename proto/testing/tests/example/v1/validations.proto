@@ -1,0 +1,126 @@
+// Copyright 2023 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package tests.example.v1;
+
+import "buf/validate/validate.proto";
+
+message HasMsgExprs {
+  option (buf.validate.message).cel = {
+    id: "x_lt_y",
+    message: "x must be less than y",
+    expression: "this.x < this.y",
+  };
+
+  option (buf.validate.message).cel = {
+    id: "y_gt_42",
+    expression:
+      "this.y > 42 ? ''"
+      ": 'y must be greater than 42'",
+  };
+
+  int32 x = 1 [
+    (buf.validate.field).cel = {
+      id: "x_even",
+      message: "x must be even",
+      expression: "this % 2 == 0"
+    },
+    (buf.validate.field).cel = {
+      id: "x_coprime_3",
+      expression:
+        "this % 3 != 0 ? ''"
+        ": 'x must not be divisible by 3'",
+    }
+  ];
+  int32 y = 2;
+}
+
+message SelfRecursive {
+  option (buf.validate.message).cel = {
+    id: "unique_turtles",
+    message: "adjacent turtles must be unique",
+    expression: "this.x != this.turtle.x",
+  };
+
+  int32 x = 1;
+  SelfRecursive turtle = 2 [(buf.validate.field).cel = {
+    id: "non_zero_baby_turtle",
+    message: "embedded turtle's x value must not be zero",
+    expression: "this.x > 0",
+  }];
+}
+
+message LoopRecursiveA {
+  LoopRecursiveB b = 1;
+}
+
+message LoopRecursiveB {
+  LoopRecursiveA a = 1;
+}
+
+message MsgHasOneof {
+  option (buf.validate.message).cel = {
+    id: "test x",
+    expression:
+      "this.x == '' ? '' : \n"
+      "!this.x.startsWith('foo') ? 'does not have prefix `foo`' : ''",
+  };
+
+  option (buf.validate.message).cel = {
+    id: "text y",
+    expression: "this.y >= 0",
+  };
+
+  oneof o {
+    option (buf.validate.oneof).required = true;
+    string x = 1 [(buf.validate.field).string.prefix = "foo"];
+    int32 y = 2 [(buf.validate.field).int32.gt = 0];
+    HasMsgExprs msg = 3;
+  }
+}
+
+message MsgHasRepeated {
+  repeated float x = 1 [(buf.validate.field).repeated = {
+    max_items: 3,
+    min_items: 1,
+    items: {
+      cel: {
+        expression: "true",
+        message: "intentional false"
+      }
+      float: {gt: 0}
+    }
+    unique: true,
+  }];
+  repeated string y = 2 [(buf.validate.field).repeated = {
+    //    unique: true,
+  }];
+  repeated HasMsgExprs z = 3 [(buf.validate.field).repeated = {max_items: 2}];
+}
+
+message MsgHasMap {
+  map<int32, int32> int32map = 1 [(buf.validate.field).map = {
+    min_pairs: 3,
+    keys: {
+      int32: {gt: 0}
+    },
+    values: {
+      int32: {lt: 0}
+    }
+  }];
+  map<string, string> string_map = 2 [(buf.validate.field).map = {max_pairs: 1}];
+  map<int64, LoopRecursiveA> message_map = 3 [(buf.validate.field).map = {min_pairs: 2}];
+}

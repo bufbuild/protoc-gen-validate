@@ -1,0 +1,5 @@
+use (
+	go/v2
+	go/v2/internal/gen
+	tools
+)

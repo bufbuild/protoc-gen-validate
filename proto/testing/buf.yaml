@@ -1,0 +1,23 @@
+version: v1
+deps:
+  - buf.build/bufbuild/protovalidate
+  - buf.build/envoyproxy/protoc-gen-validate
+build:
+  excludes:
+    - tests/migrate
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - DEFAULT
+  ignore_only:
+    ENUM_NO_ALLOW_ALIAS:
+      - buf/validate/conformance/cases/enums.proto
+    FILE_LOWER_SNAKE_CASE:
+      - buf/validate/conformance/cases/filename-with-dash.proto
+    IMPORT_USED:
+      - buf/validate/conformance/cases/subdirectory/in_subdirectory.proto
+      - buf/validate/conformance/cases/filename-with-dash.proto
+    PACKAGE_VERSION_SUFFIX:
+      - buf/validate/conformance

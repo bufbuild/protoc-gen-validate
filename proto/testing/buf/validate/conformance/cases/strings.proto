@@ -1,0 +1,164 @@
+// Copyright 2023 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package buf.validate.conformance.cases;
+
+import "buf/validate/validate.proto";
+
+message StringNone {
+  string val = 1;
+}
+message StringConst {
+  string val = 1 [(buf.validate.field).string.const = "foo"];
+}
+message StringIn {
+  string val = 1 [(buf.validate.field).string = {
+    in: [
+      "bar",
+      "baz"
+    ]
+  }];
+}
+message StringNotIn {
+  string val = 1 [(buf.validate.field).string = {
+    not_in: [
+      "fizz",
+      "buzz"
+    ]
+  }];
+}
+message StringLen {
+  string val = 1 [(buf.validate.field).string.len = 3];
+}
+message StringMinLen {
+  string val = 1 [(buf.validate.field).string.min_len = 3];
+}
+message StringMaxLen {
+  string val = 1 [(buf.validate.field).string.max_len = 5];
+}
+message StringMinMaxLen {
+  string val = 1 [(buf.validate.field).string = {
+    min_len: 3,
+    max_len: 5
+  }];
+}
+message StringEqualMinMaxLen {
+  string val = 1 [(buf.validate.field).string = {
+    min_len: 5,
+    max_len: 5
+  }];
+}
+message StringLenBytes {
+  string val = 1 [(buf.validate.field).string.len_bytes = 4];
+}
+message StringMinBytes {
+  string val = 1 [(buf.validate.field).string.min_bytes = 4];
+}
+message StringMaxBytes {
+  string val = 1 [(buf.validate.field).string.max_bytes = 8];
+}
+message StringMinMaxBytes {
+  string val = 1 [(buf.validate.field).string = {
+    min_bytes: 4,
+    max_bytes: 8
+  }];
+}
+message StringEqualMinMaxBytes {
+  string val = 1 [(buf.validate.field).string = {
+    min_bytes: 4,
+    max_bytes: 4,
+  }];
+}
+message StringPattern {
+  string val = 1 [(buf.validate.field).string.pattern = "(?i)^[a-z0-9]+$"];
+}
+message StringPatternEscapes {
+  string val = 1 [(buf.validate.field).string.pattern = "\\* \\\\ \\w"];
+}
+message StringPrefix {
+  string val = 1 [(buf.validate.field).string.prefix = "foo"];
+}
+message StringContains {
+  string val = 1 [(buf.validate.field).string.contains = "bar"];
+}
+message StringNotContains {
+  string val = 1 [(buf.validate.field).string.not_contains = "bar"];
+}
+message StringSuffix {
+  string val = 1 [(buf.validate.field).string.suffix = "baz"];
+}
+message StringEmail {
+  string val = 1 [(buf.validate.field).string.email = true];
+}
+message StringAddress {
+  string val = 1 [(buf.validate.field).string.address = true];
+}
+message StringHostname {
+  string val = 1 [(buf.validate.field).string.hostname = true];
+}
+message StringIP {
+  string val = 1 [(buf.validate.field).string.ip = true];
+}
+message StringIPv4 {
+  string val = 1 [(buf.validate.field).string.ipv4 = true];
+}
+message StringIPv6 {
+  string val = 1 [(buf.validate.field).string.ipv6 = true];
+}
+message StringURI {
+  string val = 1 [(buf.validate.field).string.uri = true];
+}
+message StringURIRef {
+  string val = 1 [(buf.validate.field).string.uri_ref = true];
+}
+message StringUUID {
+  string val = 1 [(buf.validate.field).string.uuid = true];
+}
+message StringHttpHeaderName {
+  string val = 1 [(buf.validate.field).string.well_known_regex = KNOWN_REGEX_HTTP_HEADER_NAME];
+}
+message StringHttpHeaderValue {
+  string val = 1 [(buf.validate.field).string.well_known_regex = KNOWN_REGEX_HTTP_HEADER_VALUE];
+}
+
+message StringHttpHeaderNameLoose {
+  string val = 1 [(buf.validate.field).string = {
+    well_known_regex: KNOWN_REGEX_HTTP_HEADER_NAME
+    strict: false,
+  }];
+}
+
+message StringHttpHeaderValueLoose {
+  string val = 1 [(buf.validate.field).string = {
+    well_known_regex: KNOWN_REGEX_HTTP_HEADER_VALUE,
+    strict: false
+  }];
+}
+
+message StringUUIDIgnore {
+  string val = 1 [
+    (buf.validate.field).string = {uuid: true},
+    (buf.validate.field).ignore_empty = true
+  ];
+}
+message StringInOneof {
+  oneof foo {
+    string bar = 1 [(buf.validate.field).string = {
+      in: "a"
+      in: "b"
+    }];
+  }
+}
