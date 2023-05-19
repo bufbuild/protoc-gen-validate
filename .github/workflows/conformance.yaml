@@ -1,0 +1,69 @@
+name: Conformance
+on:
+  pull_request:
+  push:
+    tags:
+      - 'v*.*.*'
+    branches:
+      - 'main'
+
+permissions:
+  contents: read
+
+env:
+  HARNESS_PATH: ./harness
+  HARNESS_TARBALL: harness.tar
+
+jobs:
+  harness:
+    name: Harness
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Install go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 'stable'
+          cache-dependency-path: tools/go.sum
+      - name: Build harness
+        run: |
+          go build -o $HARNESS_PATH ./tools/protovalidate-conformance
+          tar -cvf $HARNESS_TARBALL $HARNESS_PATH
+      - name: Upload harness
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.HARNESS_TARBALL }}
+          path: ${{ env.HARNESS_TARBALL }}
+          retention-days: 1
+          if-no-files-found: error
+
+  go:
+    name: Go
+    needs: harness
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        go-version: ['stable', 'oldstable']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Install go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+          cache-dependency-path: go.work.sum
+      - name: Download Harness
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.HARNESS_TARBALL }}
+      - name: Test conformance
+        run: |
+          tar -xvf $HARNESS_TARBALL
+          go build -o ./executor ./go/v2/internal/cmd/protovalidate-conformance-go
+          $HARNESS_PATH --strict --timeout 30s -v ./executor

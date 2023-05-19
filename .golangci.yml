@@ -1,0 +1,90 @@
+run:
+  skip-dirs-use-default: false
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+  forbidigo:
+    forbid:
+      - '^fmt\.Print'
+      - '^log\.'
+      - '^print$'
+      - '^println$'
+      - '^panic$'
+  godox:
+    # TODO, OPT, etc. comments are fine to commit. Use FIXME comments for
+    # temporary hacks, and use godox to prevent committing them.
+    keywords: [FIXME]
+  varnamelen:
+    ignore-decls:
+      - T any
+      - i int
+      - wg sync.WaitGroup
+      - ok bool
+      - w io.Writer
+linters:
+  enable-all: true
+  disable:
+    - cyclop            # covered by gocyclo
+    - deadcode          # abandoned
+    - exhaustivestruct  # replaced by exhaustruct
+    - exhaustruct       # don't _always_ need to exhaustively create struct
+    - funlen            # rely on code review to limit function length
+    - gocognit          # dubious "cognitive overhead" quantification
+    - gofumpt           # prefer standard gofmt
+    - goerr113          # internal error causes may be dynamic
+    - goimports         # rely on gci instead
+    - golint            # deprecated by Go team
+    - gomnd             # some unnamed constants are okay
+    - gomoddirectives   # we use go modules replacements intentionally
+    - gomodguard        # not compatible with go workspaces
+    - ifshort           # deprecated by author
+    - interfacer        # deprecated by author
+    - ireturn           # "accept interfaces, return structs" isn't ironclad
+    - lll               # don't want hard limits for line length
+    - maintidx          # covered by gocyclo
+    - maligned          # readability trumps efficient struct packing
+    - nlreturn          # generous whitespace violates house style
+    - nonamedreturns    # usage of named returns should be selective
+    - nosnakecase       # deprecated in https://github.com/golangci/golangci-lint/pull/3065
+    - scopelint         # deprecated by author
+    - structcheck       # abandoned
+    - testpackage       # internal tests are fine
+    - varcheck          # abandoned
+    - wrapcheck         # don't _always_ need to wrap errors
+    - wsl               # over-generous whitespace violates house style
+issues:
+  exclude-rules:
+    # Loosen requirements on test harness
+    - path: go/v2/internal/cmd/
+      linters:
+        - forbidigo
+        - errorlint
+    # Loosen requirements on tools
+    - path: tools/
+      linters:
+        - gosec
+        - forbidigo
+    # Building the conformance test suites
+    - path: tools/protovalidate-conformance/internal/cases/
+      linters:
+        - funlen
+        - maintidx
+        - dupl
+    # Loosen requirements on tests
+    - path: _test.go
+      linters:
+        - funlen
+        - varnamelen
+        - unparam
+        - gosec
+    - path: go/v2/internal/celext/lib.go
+      linters:
+        # setting up custom functions/overloads appears duplicative (false positive)
+        - dupl
+        # Types are checked internally within CEL. There are bigger issues if its
+        # type analysis is wrong
+        - forcetypeassert
+    # static unexported lookup tables
+    - path: go/v2/internal/constraints/lookups.go
+      linters:
+        - gochecknoglobals

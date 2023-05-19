@@ -3,7 +3,7 @@
 set -o pipefail
 
 # config
-default_semvar_bump=${DEFAULT_BUMP:-patch}
+default_semvar_bump=${DEFAULT_BUMP:-minor}
 with_v=${WITH_V:-true}
 release_branches=${RELEASE_BRANCHES:-}
 custom_tag=${CUSTOM_TAG:-}
@@ -12,7 +12,7 @@ dryrun=${DRY_RUN:-false}
 initial_version=${INITIAL_VERSION:-0.0.0}
 tag_context=${TAG_CONTEXT:-repo}
 prerelease=${PRERELEASE:-true}
-suffix=${PRERELEASE_SUFFIX:-SNAPSHOT}
+suffix=${PRERELEASE_SUFFIX:-rc}
 verbose=${VERBOSE:-false}
 major_string_token=${MAJOR_STRING_TOKEN:-#major}
 minor_string_token=${MINOR_STRING_TOKEN:-#minor}

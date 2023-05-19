@@ -1,0 +1,159 @@
+// Copyright 2023 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package buf.validate.conformance.cases;
+
+import "buf/validate/conformance/cases/other_package/embed.proto";
+import "buf/validate/validate.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/duration.proto";
+
+message Embed {
+  int64 val = 1 [(buf.validate.field).int64.gt = 0];
+}
+enum AnEnum {
+  AN_ENUM_UNSPECIFIED = 0;
+  AN_ENUM_X = 1;
+  AN_ENUM_Y = 2;
+}
+
+message RepeatedNone {
+  repeated int64 val = 1;
+}
+message RepeatedEmbedNone {
+  repeated Embed val = 1;
+}
+message RepeatedEmbedCrossPackageNone {
+  repeated other_package.Embed val = 1;
+}
+message RepeatedMin {
+  repeated Embed val = 1 [(buf.validate.field).repeated.min_items = 2];
+}
+message RepeatedMax {
+  repeated double val = 1 [(buf.validate.field).repeated.max_items = 3];
+}
+message RepeatedMinMax {
+  repeated sfixed32 val = 1 [(buf.validate.field).repeated = {
+    min_items: 2,
+    max_items: 4
+  }];
+}
+message RepeatedExact {
+  repeated uint32 val = 1 [(buf.validate.field).repeated = {
+    min_items: 3,
+    max_items: 3
+  }];
+}
+message RepeatedUnique {
+  repeated string val = 1 [(buf.validate.field).repeated.unique = true];
+}
+message RepeatedItemRule {
+  repeated float val = 1 [(buf.validate.field).repeated.items.float.gt = 0];
+}
+message RepeatedItemPattern {
+  repeated string val = 1 [(buf.validate.field).repeated.items.string.pattern = "(?i)^[a-z0-9]+$"];
+}
+message RepeatedEmbedSkip {
+  repeated Embed val = 1 [(buf.validate.field).repeated.items.skipped = true];
+}
+message RepeatedItemIn {
+  repeated string val = 1 [(buf.validate.field).repeated.items.string = {
+    in: [
+      "foo",
+      "bar"
+    ]
+  }];
+}
+message RepeatedItemNotIn {
+  repeated string val = 1 [(buf.validate.field).repeated.items.string = {
+    not_in: [
+      "foo",
+      "bar"
+    ]
+  }];
+}
+message RepeatedEnumIn {
+  repeated AnEnum val = 1 [(buf.validate.field).repeated.items.enum = {
+    in: [0]
+  }];
+}
+message RepeatedEnumNotIn {
+  repeated AnEnum val = 1 [(buf.validate.field).repeated.items.enum = {
+    not_in: [0]
+  }];
+}
+message RepeatedEmbeddedEnumIn {
+  repeated AnotherInEnum val = 1 [(buf.validate.field).repeated.items.enum = {
+    in: [0]
+  }];
+  enum AnotherInEnum {
+    ANOTHER_IN_ENUM_UNSPECIFIED = 0;
+    ANOTHER_IN_ENUM_A = 1;
+    ANOTHER_IN_ENUM_B = 2;
+  }
+}
+message RepeatedEmbeddedEnumNotIn {
+  repeated AnotherNotInEnum val = 1 [(buf.validate.field).repeated.items.enum = {
+    not_in: [0]
+  }];
+  enum AnotherNotInEnum {
+    ANOTHER_NOT_IN_ENUM_UNSPECIFIED = 0;
+    ANOTHER_NOT_IN_ENUM_A = 1;
+    ANOTHER_NOT_IN_ENUM_B = 2;
+  }
+}
+message RepeatedAnyIn {
+  repeated google.protobuf.Any val = 1 [(buf.validate.field).repeated.items.any = {
+    in: ["type.googleapis.com/google.protobuf.Duration"]
+  }];
+}
+message RepeatedAnyNotIn {
+  repeated google.protobuf.Any val = 1 [(buf.validate.field).repeated.items.any = {
+    not_in: ["type.googleapis.com/google.protobuf.Timestamp"]
+  }];
+}
+message RepeatedMinAndItemLen {
+  repeated string val = 1 [(buf.validate.field).repeated = {
+    items {
+      string {len: 3}
+    },
+    min_items: 1
+  }];
+}
+message RepeatedMinAndMaxItemLen {
+  repeated string val = 1 [
+    (buf.validate.field).repeated.min_items = 1,
+    (buf.validate.field).repeated.max_items = 3
+  ];
+}
+message RepeatedDuration {
+  repeated google.protobuf.Duration val = 1 [(buf.validate.field).repeated = {
+    items {
+      duration {
+        gte {nanos: 1000000}
+      }
+    }
+  }];
+}
+message RepeatedExactIgnore {
+  repeated uint32 val = 1 [
+    (buf.validate.field).repeated = {
+      min_items: 3,
+      max_items: 3,
+    },
+    (buf.validate.field).ignore_empty = true
+  ];
+}

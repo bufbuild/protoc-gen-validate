@@ -1,0 +1,91 @@
+// Copyright 2023 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package buf.validate.conformance.cases;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/duration.proto";
+
+message DurationNone {
+  google.protobuf.Duration val = 1;
+}
+
+message DurationRequired {
+  google.protobuf.Duration val = 1 [(buf.validate.field).required = true];
+}
+
+message DurationConst {
+  google.protobuf.Duration val = 1 [(buf.validate.field).duration.const = {seconds: 3}];
+}
+
+message DurationIn {
+  google.protobuf.Duration val = 1 [(buf.validate.field).duration = {
+    in: [
+      {seconds: 1},
+      {nanos: 1000}]
+  }];
+}
+message DurationNotIn {
+  google.protobuf.Duration val = 1 [(buf.validate.field).duration = {
+    not_in: [
+{}
+    ]
+  }];
+}
+
+message DurationLT {
+  google.protobuf.Duration val = 1 [(buf.validate.field).duration.lt = {}];
+}
+message DurationLTE {
+  google.protobuf.Duration val = 1 [(buf.validate.field).duration.lte = {seconds: 1}];
+}
+message DurationGT {
+  google.protobuf.Duration val = 1 [(buf.validate.field).duration.gt = {nanos: 1000}];
+}
+message DurationGTE {
+  google.protobuf.Duration val = 1 [(buf.validate.field).duration.gte = {nanos: 1000000}];
+}
+message DurationGTLT {
+  google.protobuf.Duration val = 1 [(buf.validate.field).duration = {
+    gt: {},
+    lt: {seconds: 1}
+  }];
+}
+message DurationExLTGT {
+  google.protobuf.Duration val = 1 [(buf.validate.field).duration = {
+    lt: {},
+    gt: {seconds: 1}
+  }];
+}
+message DurationGTELTE {
+  google.protobuf.Duration val = 1 [(buf.validate.field).duration = {
+    gte: {seconds: 60},
+    lte: {seconds: 3600}
+  }];
+}
+message DurationExGTELTE {
+  google.protobuf.Duration val = 1 [(buf.validate.field).duration = {
+    lte: {seconds: 60},
+    gte: {seconds: 3600}
+  }];
+}
+
+// Regression for earlier bug where missing Duration field would short circuit
+// evaluation in C++.
+message DurationFieldWithOtherFields {
+  google.protobuf.Duration duration_val = 1 [(buf.validate.field).duration.lte = {seconds: 1}];
+  int32 int_val = 2 [(buf.validate.field).int32.gt = 16];
+}
