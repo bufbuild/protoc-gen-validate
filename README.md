@@ -1,12 +1,14 @@
-![The Buf logo](./.github/buf-logo.svg)
-
-# protoc-gen-validate (PGV)
+# [![](./.github/buf-logo.svg)][buf] protoc-gen-validate (PGV)
 
 ![License](https://img.shields.io/github/license/bufbuild/protoc-gen-validate?color=blue)
 ![Release](https://img.shields.io/github/v/release/bufbuild/protoc-gen-validate?include_prereleases)
 ![Slack](https://img.shields.io/badge/slack-buf-%23e01563)
 
-***New: we're hard at work on v2.0 of protoc-gen-validate, you can read all about it [here!](https://buf.build/blog/protoc-gen-validate-v1-and-v2/) We'd love your feedback, reach out to us on our [Slack](https://buf.build/links/slack) to get in touch.***
+**_New: The next generation of PGV, called [`protovalidate`][pv],
+is now available with a [beta release for Go][pv-go]! We're hard at work on C++,
+Java, TypeScript, and Python implementations as well. To learn more, check out 
+our [blog post][pv-announce]. We value your input in refining our products, so 
+don't hesitate to share your feedback on [`protovalidate`][pv]._**
 
 PGV is a protoc plugin to generate polyglot message validators. While protocol
 buffers effectively guarantee the types of structured data, they cannot enforce
@@ -1051,12 +1053,12 @@ docker run --rm \
  bufbuild/protoc-gen-validate
 ```
 
+[buf]:             https://buf.build
 [protoc-source]:   https://github.com/google/protobuf
-
 [protoc-releases]: https://github.com/google/protobuf/releases
-
 [pg*]:             https://github.com/bufbuild/protoc-gen-star
-
 [re2]:             https://github.com/google/re2/wiki/Syntax
-
 [wkts]:            https://developers.google.com/protocol-buffers/docs/reference/google.protobuf
+[pv]:              https://github.com/bufbuild/protovalidate
+[pv-go]:           https://github.com/bufbuild/protovalidate-go
+[pv-announce]:     https://buf.build/blog/protoc-gen-validate-v1-and-v2/
