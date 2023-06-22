@@ -218,7 +218,7 @@ def go_third_party():
     )
 
     go_repository(
-        name = "com_github_lyft_protoc_gen_star",
+        name = "com_github_lyft_protoc_gen_star_v2",
         importpath = "github.com/lyft/protoc-gen-star/v2",
         sum = "h1:erE0rdztuaDq3bpGifD95wfoPrSZc95nGA6tbiNYh6M=",
         version = "v0.6.1",
