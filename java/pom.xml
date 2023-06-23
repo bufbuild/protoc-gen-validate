@@ -39,17 +39,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <protoc.version>3.22.2</protoc.version>
-        <google.protobuf.version>3.23.1</google.protobuf.version>
+        <google.protobuf.version>3.23.3</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
         <re2j.version>1.7</re2j.version>
         <commons.validator.version>1.7</commons.validator.version>
-        <grpc.version>1.55.1</grpc.version>
+        <grpc.version>1.56.0</grpc.version>
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.24.2</assertj.version>
         <java.release>8</java.release>
         <java.version>1.8</java.version>
-        <proto-google-common-protos.version>2.18.0</proto-google-common-protos.version>
+        <proto-google-common-protos.version>2.20.0</proto-google-common-protos.version>
     </properties>
 
     <dependencies>
@@ -84,7 +84,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.1.2</version>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
@@ -136,7 +136,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-release-plugin</artifactId>
-                        <version>3.0.0</version>
+                        <version>3.0.1</version>
                         <configuration>
                             <autoVersionSubmodules>true</autoVersionSubmodules>
                             <tagNameFormat>v@{project.version}-java</tagNameFormat>
@@ -151,7 +151,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>versions-maven-plugin</artifactId>
-                        <version>2.15.0</version>
+                        <version>2.16.0</version>
                     </plugin>
 
                     <plugin>
