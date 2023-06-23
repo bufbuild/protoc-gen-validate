@@ -47,9 +47,8 @@ def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
     if not native.existing_rule("bazel_skylib"):
         http_archive(
             name = "bazel_skylib",
-            sha256 = "e5d90f0ec952883d56747b7604e2a15ee36e288bb556c3d0ed33e818a4d971f2",
-            strip_prefix = "bazel-skylib-1.0.2",
-            urls = ["https://github.com/bazelbuild/bazel-skylib/archive/1.0.2.tar.gz"],
+            sha256 = "66ffd9315665bfaafc96b52278f57c7e2dd09f5ede279ea6d39b2be471e7e3aa",
+            urls = ["https://github.com/bazelbuild/bazel-skylib/releases/download/1.4.2/bazel-skylib-1.4.2.tar.gz"],
         )
 
     if not native.existing_rule("six"):
