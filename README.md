@@ -160,6 +160,12 @@ With newer Buf CLI versions (>v1.9.0), you can use the new plugin key instead of
 # buf.gen.yaml
 
 version: v1
+managed:
+  enabled: true
+  go_package_prefix:
+    ...
+    except:
+      - buf.build/envoyproxy/protoc-gen-validate
 plugins:
   - plugin: buf.build/bufbuild/validate-go
     out: gen
