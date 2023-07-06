@@ -1,16 +1,27 @@
 version: 2
 updates:
-  - package-ecosystem: "gomod" 
-    directory: "/" 
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: "weekly"
-  - package-ecosystem: "gomod" 
-    directory: "/tests" 
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /
     schedule:
-      interval: "weekly"
-  - package-ecosystem: "maven" 
-    directory: "/java" 
+      interval: weekly
+  - package-ecosystem: gomod
+    directory: /tests
     schedule:
-      interval: "weekly"
+      interval: weekly
+  - package-ecosystem: maven
+    directory: /java
+    schedule:
+      interval: weekly
     open-pull-requests-limit: 40
-
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: pip
+    directory: /python
+    schedule:
+      interval: weekly
