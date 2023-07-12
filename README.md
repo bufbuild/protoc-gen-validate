@@ -5,10 +5,11 @@
 ![Slack](https://img.shields.io/badge/slack-buf-%23e01563)
 
 **_New: The next generation of PGV, called [`protovalidate`][pv],
-is now available with a [beta release for Go][pv-go]! We're hard at work on C++,
-Java, TypeScript, and Python implementations as well. To learn more, check out 
-our [blog post][pv-announce]. We value your input in refining our products, so 
-don't hesitate to share your feedback on [`protovalidate`][pv]._**
+is now available with a [beta release for Go, C++, and Python][pv]!
+We're hard at work on Java and TypeScript implementations as well.
+To learn more, check out  our [blog post][pv-announce]. We value
+your input in refining our products, so  don't hesitate to share
+your feedback on [`protovalidate`][pv]._**
 
 PGV is a protoc plugin to generate polyglot message validators. While protocol
 buffers effectively guarantee the types of structured data, they cannot enforce
