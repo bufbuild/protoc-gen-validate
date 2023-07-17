@@ -3,7 +3,7 @@ module github.com/envoyproxy/protoc-gen-validate
 go 1.19
 
 require (
-	github.com/iancoleman/strcase v0.2.0
+	github.com/iancoleman/strcase v0.3.0
 	github.com/lyft/protoc-gen-star/v2 v2.0.3
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616
 	golang.org/x/net v0.11.0
