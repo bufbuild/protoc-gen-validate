@@ -35,6 +35,7 @@ Runtime implementations of `protovalidate` can be found in their own repositorie
 [wkts]:            https://developers.google.com/protocol-buffers/docs/reference/google.protobuf
 [pv]:              https://github.com/bufbuild/protovalidate
 [pv-go]:           https://github.com/bufbuild/protovalidate-go
+[pv-java]:           https://github.com/bufbuild/protovalidate-java
 [pv-cc]:           https://github.com/bufbuild/protovalidate-cc
 [pv-python]:       https://github.com/bufbuild/protovalidate-python
 [pv-announce]:     https://buf.build/blog/protoc-gen-validate-v1-and-v2/
