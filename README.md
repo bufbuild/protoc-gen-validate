@@ -10,7 +10,7 @@ We're hard at work on a TypeScript implementations as well. To learn more, check
 our [blog post][pv-announce]. We value your input in refining our products, so
 don't hesitate to share your feedback on `protovalidate`._**
 
-❓ Looking for protoc-gen-validate docs? Go [here](docs.md).
+> ❓ Looking for protoc-gen-validate docs? Go [here](docs.md).
 
 `protovalidate` is a series of libraries designed to validate Protobuf messages at
 runtime based on user-defined validation rules. Powered by Google's Common
