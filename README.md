@@ -5,7 +5,7 @@
 ![Slack](https://img.shields.io/badge/slack-buf-%23e01563)
 
 📣**_Update: The next generation of `protoc-gen-validate`, now called
-`protovalidate`, is available in beta for Golang, Python, Java, and C++!
+[`protovalidate`](https://github.com/bufbuild/protovalidate), is available in beta for Golang, Python, Java, and C++!
 We're hard at work on a TypeScript implementations as well. To learn more, check out
 our [blog post][pv-announce]. We value your input in refining our products, so
 don't hesitate to share your feedback on `protovalidate`._**
@@ -19,7 +19,7 @@ flexible and efficient foundation for defining and evaluating custom validation
 rules. The primary goal of `protovalidate` is to help developers ensure data
 consistency and integrity across the network without requiring generated code.
 
-Runtime implementations of `protovalidate` can be found in their own repositories:
+Runtime implementations of [`protovalidate`](https://github.com/bufbuild/protovalidate) can be found in their own repositories:
 
 - Go: [`protovalidate-go`][pv-go] (beta release)
 - C++: [`protovalidate-cc`][pv-cc] (beta release)
