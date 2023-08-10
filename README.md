@@ -7,7 +7,7 @@
 📣**_Update: The next generation of `protoc-gen-validate`, now called
 `protovalidate`, is available in beta for Golang, Python, Java, and C++!
 We're hard at work on a TypeScript implementations as well. To learn more, check out
-our [blog post][announce]. We value your input in refining our products, so
+our [blog post][pv-announce]. We value your input in refining our products, so
 don't hesitate to share your feedback on `protovalidate`._**
 
 ❓ Looking for protoc-gen-validate docs? Go [here](docs.md).
