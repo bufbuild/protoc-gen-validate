@@ -5,10 +5,7 @@
 ![Slack](https://img.shields.io/badge/slack-buf-%23e01563)
 
 **_New: The next generation of PGV, called [`protovalidate`][pv],
-is now available with a [beta release for Go][pv-go]! We're hard at work on C++,
-Java, TypeScript, and Python implementations as well. To learn more, check out 
-our [blog post][pv-announce]. We value your input in refining our products, so 
-don't hesitate to share your feedback on [`protovalidate`][pv]._**
+is now available with beta releases for [Go][pv-go], [C++][pv-cc], and [Python][pv-python]! We're hard at work on Java, which will be coming soon. Additionally, we're actively developing implementations for TypeScript. To learn more, check out our [blog post][pv-announce]. We value your input in refining our products, so don't hesitate to share your feedback on [`protovalidate`][pv]._**
 
 PGV is a protoc plugin to generate polyglot message validators. While protocol
 buffers effectively guarantee the types of structured data, they cannot enforce
@@ -1061,4 +1058,6 @@ docker run --rm \
 [wkts]:            https://developers.google.com/protocol-buffers/docs/reference/google.protobuf
 [pv]:              https://github.com/bufbuild/protovalidate
 [pv-go]:           https://github.com/bufbuild/protovalidate-go
+[pv-cc]:           https://github.com/bufbuild/protovalidate-cc
+[pv-python]:       https://github.com/bufbuild/protovalidate-python
 [pv-announce]:     https://buf.build/blog/protoc-gen-validate-v1-and-v2/
