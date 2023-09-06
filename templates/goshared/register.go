@@ -20,36 +20,37 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	fns := goSharedFuncs{pgsgo.InitContext(params)}
 
 	tpl.Funcs(map[string]interface{}{
-		"accessor":      fns.accessor,
-		"byteStr":       fns.byteStr,
-		"cmt":           pgs.C80,
-		"durGt":         fns.durGt,
-		"durLit":        fns.durLit,
-		"durStr":        fns.durStr,
-		"err":           fns.err,
-		"errCause":      fns.errCause,
-		"errIdx":        fns.errIdx,
-		"errIdxCause":   fns.errIdxCause,
-		"errname":       fns.errName,
-		"multierrname":  fns.multiErrName,
-		"inKey":         fns.inKey,
-		"inType":        fns.inType,
-		"isBytes":       fns.isBytes,
-		"lit":           fns.lit,
-		"lookup":        fns.lookup,
-		"msgTyp":        fns.msgTyp,
-		"name":          fns.Name,
-		"oneof":         fns.oneofTypeName,
-		"pkg":           fns.PackageName,
-		"snakeCase":     fns.snakeCase,
-		"tsGt":          fns.tsGt,
-		"tsLit":         fns.tsLit,
-		"tsStr":         fns.tsStr,
-		"typ":           fns.Type,
-		"unwrap":        fns.unwrap,
-		"externalEnums": fns.externalEnums,
-		"enumName":      fns.enumName,
-		"enumPackages":  fns.enumPackages,
+		"accessor":          fns.accessor,
+		"byteStr":           fns.byteStr,
+		"cmt":               pgs.C80,
+		"durGt":             fns.durGt,
+		"durLit":            fns.durLit,
+		"durStr":            fns.durStr,
+		"err":               fns.err,
+		"errCause":          fns.errCause,
+		"errIdxCauseReason": fns.errIdxCauseReason,
+		"errIdx":            fns.errIdx,
+		"errIdxCause":       fns.errIdxCause,
+		"errname":           fns.errName,
+		"multierrname":      fns.multiErrName,
+		"inKey":             fns.inKey,
+		"inType":            fns.inType,
+		"isBytes":           fns.isBytes,
+		"lit":               fns.lit,
+		"lookup":            fns.lookup,
+		"msgTyp":            fns.msgTyp,
+		"name":              fns.Name,
+		"oneof":             fns.oneofTypeName,
+		"pkg":               fns.PackageName,
+		"snakeCase":         fns.snakeCase,
+		"tsGt":              fns.tsGt,
+		"tsLit":             fns.tsLit,
+		"tsStr":             fns.tsStr,
+		"typ":               fns.Type,
+		"unwrap":            fns.unwrap,
+		"externalEnums":     fns.externalEnums,
+		"enumName":          fns.enumName,
+		"enumPackages":      fns.enumPackages,
 	})
 
 	template.Must(tpl.New("msg").Parse(msgTpl))
@@ -110,6 +111,10 @@ func (fns goSharedFuncs) multiErrName(m pgs.Message) pgs.Name {
 }
 
 func (fns goSharedFuncs) errIdxCause(ctx shared.RuleContext, idx, cause string, reason ...interface{}) string {
+	return fns.errIdxCauseReason(ctx, idx, cause, fmt.Sprintf("%q", fmt.Sprint(reason...)))
+}
+
+func (fns goSharedFuncs) errIdxCauseReason(ctx shared.RuleContext, idx string, cause string, reason string) string {
 	f := ctx.Field
 	n := fns.Name(f)
 
@@ -134,12 +139,12 @@ func (fns goSharedFuncs) errIdxCause(ctx shared.RuleContext, idx, cause string, 
 
 	return fmt.Sprintf(`%s{
 		field: %s,
-		reason: %q,
+		reason: %s,
 		%s%s
 	}`,
 		fns.errName(f.Message()),
 		fld,
-		fmt.Sprint(reason...),
+		reason,
 		causeFld,
 		keyFld)
 }
