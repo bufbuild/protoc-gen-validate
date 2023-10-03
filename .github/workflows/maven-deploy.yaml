@@ -21,7 +21,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
+      - uses: actions/setup-go@v4
+        with:
+          go-version: 'stable'
       - name: Set VERSION variable from tag
         run: |
           VERSION=${{ env.REF_NAME }}
