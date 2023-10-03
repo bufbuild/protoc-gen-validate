@@ -8,12 +8,12 @@ import (
 	"text/template"
 
 	"github.com/iancoleman/strcase"
+	pgs "github.com/lyft/protoc-gen-star/v2"
+	pgsgo "github.com/lyft/protoc-gen-star/v2/lang/go"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
-	pgs "github.com/lyft/protoc-gen-star/v2"
-	pgsgo "github.com/lyft/protoc-gen-star/v2/lang/go"
 )
 
 func Register(tpl *template.Template, params pgs.Parameters) {
@@ -194,7 +194,8 @@ func (fns goSharedFuncs) lit(x interface{}) string {
 
 func (fns goSharedFuncs) isBytes(f interface {
 	ProtoType() pgs.ProtoType
-}) bool {
+},
+) bool {
 	return f.ProtoType() == pgs.BytesT
 }
 
@@ -226,7 +227,7 @@ func (fns goSharedFuncs) inType(f pgs.Field, x interface{}) string {
 		ens := fns.enumPackages(fns.externalEnums(f.File()))
 		// Check if the imported name of the enum has collided and been renamed
 		if len(ens) != 0 {
-			var enType = f.Type().Enum()
+			enType := f.Type().Enum()
 			if f.Type().IsRepeated() {
 				enType = f.Type().Element().Enum()
 			}

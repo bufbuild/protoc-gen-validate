@@ -1,19 +1,22 @@
 package templates
 
 import (
-	"github.com/envoyproxy/protoc-gen-validate/templates/cc"
-	pgs "github.com/lyft/protoc-gen-star/v2"
-	pgsgo "github.com/lyft/protoc-gen-star/v2/lang/go"
 	"text/template"
 
+	pgs "github.com/lyft/protoc-gen-star/v2"
+	pgsgo "github.com/lyft/protoc-gen-star/v2/lang/go"
+
+	"github.com/envoyproxy/protoc-gen-validate/templates/cc"
 	"github.com/envoyproxy/protoc-gen-validate/templates/ccnop"
 	"github.com/envoyproxy/protoc-gen-validate/templates/go"
 	"github.com/envoyproxy/protoc-gen-validate/templates/java"
 	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 )
 
-type RegisterFn func(tpl *template.Template, params pgs.Parameters)
-type FilePathFn func(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.FilePath
+type (
+	RegisterFn func(tpl *template.Template, params pgs.Parameters)
+	FilePathFn func(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.FilePath
+)
 
 func makeTemplate(ext string, fn RegisterFn, params pgs.Parameters) *template.Template {
 	tpl := template.New(ext)

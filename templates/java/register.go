@@ -8,12 +8,13 @@ import (
 	"text/template"
 	"unicode"
 
-	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 	"github.com/iancoleman/strcase"
 	pgs "github.com/lyft/protoc-gen-star/v2"
 	pgsgo "github.com/lyft/protoc-gen-star/v2/lang/go"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
+
+	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 )
 
 func RegisterIndex(tpl *template.Template, params pgs.Parameters) {
@@ -377,7 +378,6 @@ func (fns javaFuncs) javaTypeFor(ctx shared.RuleContext) string {
 }
 
 func (fns javaFuncs) javaTypeForProtoType(t pgs.ProtoType) string {
-
 	switch t {
 	case pgs.Int32T, pgs.UInt32T, pgs.SInt32, pgs.Fixed32T, pgs.SFixed32:
 		return "Integer"
