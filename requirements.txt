@@ -4,7 +4,7 @@ flake8==6.1.0
 isort==5.7.0
 build==1.0.3
 twine==3.3.0
-wheel==0.42.2
+wheel==0.41.2
 setuptools==68.2.2
 protobuf==4.24.3
 setuptools_scm[toml]>=6.2
