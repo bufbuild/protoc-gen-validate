@@ -44,12 +44,12 @@
 
         <re2j.version>1.7</re2j.version>
         <commons.validator.version>1.7</commons.validator.version>
-        <grpc.version>1.56.0</grpc.version>
+        <grpc.version>1.58.0</grpc.version>
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.24.2</assertj.version>
         <java.release>8</java.release>
         <java.version>1.8</java.version>
-        <proto-google-common-protos.version>2.21.0</proto-google-common-protos.version>
+        <proto-google-common-protos.version>2.25.1</proto-google-common-protos.version>
     </properties>
 
     <dependencies>
@@ -93,7 +93,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.6.0</version>
                 <configuration>
                     <author>false</author>
                     <breakiterator>true</breakiterator>
@@ -151,7 +151,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>versions-maven-plugin</artifactId>
-                        <version>2.16.0</version>
+                        <version>2.16.1</version>
                     </plugin>
 
                     <plugin>
