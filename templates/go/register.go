@@ -1,8 +1,9 @@
 package golang
 
 import (
-	pgs "github.com/lyft/protoc-gen-star/v2"
 	"text/template"
+
+	pgs "github.com/lyft/protoc-gen-star/v2"
 
 	"github.com/envoyproxy/protoc-gen-validate/templates/goshared"
 )
