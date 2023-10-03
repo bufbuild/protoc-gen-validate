@@ -20,6 +20,10 @@ load("@com_envoyproxy_protoc_gen_validate//bazel:dependency_imports.bzl", "pgv_d
 
 pgv_dependency_imports()
 
+# initialize python deps
+load("@pgv_pip_deps//:requirements.bzl", "install_deps")
+install_deps()
+
 load("@com_envoyproxy_protoc_gen_validate//:dependencies.bzl", "go_third_party")
 
 # gazelle:repository_macro dependencies.bzl%go_third_party
