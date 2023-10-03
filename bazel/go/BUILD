@@ -8,13 +8,14 @@ See https://github.com/bazelbuild/bazel-gazelle#directives
 For example, in some/BUILD.bazel:
 # gazelle:go_grpc_compilers @com_envoyproxy_protoc_gen_validate//bazel/go:pgv_plugin_go, @io_bazel_rules_go//proto:go_grpc
 """
+
 load("@io_bazel_rules_go//proto:compiler.bzl", "go_proto_compiler")
 
 go_proto_compiler(
     name = "pgv_plugin_go",
+    options = ["lang=go"],
+    plugin = "@com_envoyproxy_protoc_gen_validate//:protoc-gen-validate",
     suffix = ".pb.validate.go",
     valid_archive = False,
-    plugin = "@com_envoyproxy_protoc_gen_validate//:protoc-gen-validate",
-    options = ["lang=go"],
     visibility = ["//visibility:public"],
 )

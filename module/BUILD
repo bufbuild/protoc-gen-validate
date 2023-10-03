@@ -11,7 +11,6 @@ go_library(
     deps = [
         "//templates",
         "//templates/java",
-        "//validate:validate_go",
         "@com_github_lyft_protoc_gen_star_v2//:protoc-gen-star",
         "@com_github_lyft_protoc_gen_star_v2//lang/go",
         "@org_golang_google_protobuf//proto",
