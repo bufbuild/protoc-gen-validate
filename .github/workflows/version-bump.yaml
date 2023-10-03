@@ -34,7 +34,7 @@ jobs:
           private_key: ${{ secrets.TOKEN_EXCHANGE_GH_APP_PRIVATE_KEY }}
           permissions: >-
             {"contents": "write"}
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: "0"
       - uses: actions/setup-node@v3
