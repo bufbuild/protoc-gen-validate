@@ -38,7 +38,7 @@ gazelle: ## runs gazelle against the codebase to generate Bazel BUILD files
 
 .PHONY: lint
 lint: bin/golangci-lint ## lints the package for common code smells
-	golangci-lint run ./...
+	$(shell pwd)/bin/golangci-lint run ./...
 	# lints the python code for style enforcement
 	flake8 --config=python/setup.cfg python/protoc_gen_validate/validator.py
 	isort --check-only python/protoc_gen_validate/validator.py
