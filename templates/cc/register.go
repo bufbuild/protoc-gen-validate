@@ -7,12 +7,13 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 	"github.com/iancoleman/strcase"
 	pgs "github.com/lyft/protoc-gen-star/v2"
 	pgsgo "github.com/lyft/protoc-gen-star/v2/lang/go"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
+
+	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
 )
 
 func RegisterModule(tpl *template.Template, params pgs.Parameters) {
@@ -167,7 +168,8 @@ func (fns CCFuncs) packageName(msg pgs.Entity) string {
 
 func (fns CCFuncs) quote(s interface {
 	String() string
-}) string {
+},
+) string {
 	return strconv.Quote(s.String())
 }
 
@@ -262,7 +264,8 @@ func (fns CCFuncs) lit(x interface{}) string {
 
 func (fns CCFuncs) isBytes(f interface {
 	ProtoType() pgs.ProtoType
-}) bool {
+},
+) bool {
 	return f.ProtoType() == pgs.BytesT
 }
 
@@ -296,7 +299,7 @@ func (fns CCFuncs) inType(f pgs.Field, x interface{}) string {
 			return fns.className(f.Type().Element().Embed())
 		}
 	case pgs.EnumT:
-		var fldEn = f.Type().Enum()
+		fldEn := f.Type().Enum()
 		if f.Type().IsRepeated() {
 			fldEn = f.Type().Element().Enum()
 		}
