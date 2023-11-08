@@ -4,7 +4,7 @@
 ![Release](https://img.shields.io/github/v/release/bufbuild/protoc-gen-validate?include_prereleases)
 ![Slack](https://img.shields.io/badge/slack-buf-%23e01563)
 
-> [!NOTE]
+> [!IMPORTANT]
 > protoc-gen-validate (PGV) has reached a stable state and is in maintenance mode.
 >
 > We recommend that new and existing projects transition to using [`protovalidate`][pv].
