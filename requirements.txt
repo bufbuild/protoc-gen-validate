@@ -2,7 +2,7 @@
 # The package's own requirements are in python/setup.cfg (and also in python/requirements.in).
 flake8==3.8.4
 isort==5.7.0
-build==0.3.0
+build==1.0.3
 twine==3.3.0
 wheel==0.38.1
 setuptools==68.2.2
