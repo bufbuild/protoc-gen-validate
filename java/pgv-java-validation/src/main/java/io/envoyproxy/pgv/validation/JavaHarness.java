@@ -71,7 +71,7 @@ public class JavaHarness {
             result.writeTo(System.out);
         } catch (IOException ex) {
             ex.printStackTrace();
-            System.exit(1)
+            System.exit(1);
         }
     }
 }
