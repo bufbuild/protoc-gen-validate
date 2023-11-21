@@ -18,8 +18,8 @@ updates:
     directory: /tests
     schedule:
       interval: weekly
-    go-tests:
-      github-actions:
+    groups:
+      go-tests:
         patterns: ["*"]
   - package-ecosystem: maven
     directory: /java
