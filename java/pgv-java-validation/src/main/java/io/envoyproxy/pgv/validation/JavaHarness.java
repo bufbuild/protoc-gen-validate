@@ -67,8 +67,10 @@ public class JavaHarness {
     }
 
     private static void writeResult(Harness.TestResult result) {
+
         try {
             result.writeTo(System.out);
+            System.out.flush();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
