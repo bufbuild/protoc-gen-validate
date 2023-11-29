@@ -114,11 +114,12 @@ func (fns goSharedFuncs) errIdxCause(ctx shared.RuleContext, idx, cause string, 
 	n := fns.Name(f)
 
 	var fld string
-	if idx != "" {
+	switch {
+	case idx != "":
 		fld = fmt.Sprintf(`fmt.Sprintf("%s[%%v]", %s)`, n, idx)
-	} else if ctx.Index != "" {
+	case ctx.Index != "":
 		fld = fmt.Sprintf(`fmt.Sprintf("%s[%%v]", %s)`, n, ctx.Index)
-	} else {
+	default:
 		fld = fmt.Sprintf("%q", n)
 	}
 
@@ -395,7 +396,7 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]NormalizedE
 
 		if collision, ok := nameCollision[pkgName]; ok {
 			nameCollision[pkgName] = collision + 1
-			pkgName = pkgName + pgs.Name(strconv.Itoa(nameCollision[pkgName]))
+			pkgName += pgs.Name(strconv.Itoa(nameCollision[pkgName]))
 		} else {
 			nameCollision[pkgName] = 0
 		}

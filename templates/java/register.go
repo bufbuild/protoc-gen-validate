@@ -124,14 +124,14 @@ func JavaFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.Fi
 		return nil
 	}
 
-	fullPath := strings.Replace(javaPackage(f), ".", string(os.PathSeparator), -1)
+	fullPath := strings.ReplaceAll(javaPackage(f), ".", string(os.PathSeparator))
 	fileName := classNameFile(f) + "Validator.java"
 	filePath := pgs.JoinPaths(fullPath, fileName)
 	return &filePath
 }
 
 func JavaMultiFilePath(f pgs.File, m pgs.Message) pgs.FilePath {
-	fullPath := strings.Replace(javaPackage(f), ".", string(os.PathSeparator), -1)
+	fullPath := strings.ReplaceAll(javaPackage(f), ".", string(os.PathSeparator))
 	fileName := classNameMessage(m) + "Validator.java"
 	filePath := pgs.JoinPaths(fullPath, fileName)
 	return filePath
@@ -167,9 +167,9 @@ func classNameMessage(m pgs.Message) string {
 	// When multiple files is false, underscores are stripped. Short of rewriting all the name sanitization
 	// logic for java, using "UnderscoreUnderscoreUnderscore" is an escape sequence seems to work with an extremely
 	// small likelihood of name conflict.
-	className = strings.Replace(className, "_", "UnderscoreUnderscoreUnderscore", -1)
+	className = strings.ReplaceAll(className, "_", "UnderscoreUnderscoreUnderscore")
 	className = sanitizeClassName(className)
-	className = strings.Replace(className, "UnderscoreUnderscoreUnderscore", "_", -1)
+	className = strings.ReplaceAll(className, "UnderscoreUnderscoreUnderscore", "_")
 	return className
 }
 
@@ -442,10 +442,10 @@ func (fns javaFuncs) javaTypeLiteralSuffixForPrototype(t pgs.ProtoType) string {
 func (fns javaFuncs) javaStringEscape(s string) string {
 	s = fmt.Sprintf("%q", s)
 	s = s[1 : len(s)-1]
-	s = strings.Replace(s, `\u00`, `\x`, -1)
-	s = strings.Replace(s, `\x`, `\\x`, -1)
-	// s = strings.Replace(s, `\`, `\\`, -1)
-	s = strings.Replace(s, `"`, `\"`, -1)
+	s = strings.ReplaceAll(s, `\u00`, `\x`)
+	s = strings.ReplaceAll(s, `\x`, `\\x`)
+	// s = strings.ReplaceAll(s, `\`, `\\`)
+	s = strings.ReplaceAll(s, `"`, `\"`)
 	return `"` + s + `"`
 }
 

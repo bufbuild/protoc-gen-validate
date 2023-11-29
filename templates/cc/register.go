@@ -436,7 +436,7 @@ func (fns CCFuncs) failUnimplemented(message string) string {
 }
 
 func (fns CCFuncs) staticVarName(msg pgs.Message) string {
-	return "validator_" + strings.Replace(fns.className(msg), ":", "_", -1)
+	return "validator_" + strings.ReplaceAll(fns.className(msg), ":", "_")
 }
 
 func (fns CCFuncs) output(file pgs.File, ext string) string {

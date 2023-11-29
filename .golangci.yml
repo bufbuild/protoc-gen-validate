@@ -3,6 +3,7 @@ linters:
     - unused
   enable:
     - gci
+    - gocritic
     - gofumpt
     - govet
     - misspell
