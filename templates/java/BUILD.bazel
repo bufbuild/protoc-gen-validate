@@ -20,7 +20,6 @@ go_library(
         "required.go",
         "string.go",
         "timestamp.go",
-        "unimplemented.go",
         "wrapper.go",
     ],
     importpath = "github.com/envoyproxy/protoc-gen-validate/templates/java",

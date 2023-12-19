@@ -4,24 +4,42 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    groups:
+      github-actions:
+        patterns: ["*"]
   - package-ecosystem: gomod
     directory: /
     schedule:
       interval: weekly
+    groups:
+      go:
+        patterns: ["*"]
   - package-ecosystem: gomod
     directory: /tests
     schedule:
       interval: weekly
+    groups:
+      go-tests:
+        patterns: ["*"]
   - package-ecosystem: maven
     directory: /java
     schedule:
       interval: weekly
     open-pull-requests-limit: 40
+    groups:
+      java:
+        patterns: ["*"]
   - package-ecosystem: pip
     directory: /
     schedule:
       interval: weekly
+    groups:
+      python-root:
+        patterns: ["*"]
   - package-ecosystem: pip
     directory: /python
     schedule:
       interval: weekly
+    groups:
+      python:
+        patterns: ["*"]
