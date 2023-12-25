@@ -6,7 +6,7 @@ require (
 	github.com/iancoleman/strcase v0.3.0
 	github.com/lyft/protoc-gen-star/v2 v2.0.3
 	golang.org/x/net v0.19.0
-	google.golang.org/protobuf v1.31.0
+	google.golang.org/protobuf v1.32.0
 )
 
 require (
