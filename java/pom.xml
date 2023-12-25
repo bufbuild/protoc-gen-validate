@@ -44,7 +44,7 @@
 
         <re2j.version>1.7</re2j.version>
         <commons.validator.version>1.8.0</commons.validator.version>
-        <grpc.version>1.60.0</grpc.version>
+        <grpc.version>1.60.1</grpc.version>
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.24.2</assertj.version>
         <java.release>8</java.release>
@@ -72,7 +72,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.12.1</version>
                 <configuration>
                     <release>${java.release}</release>
                     <source>${java.version}</source>
