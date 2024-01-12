@@ -2,6 +2,8 @@ builds:
   - main: .
     id: "protoc-gen-validate"
     binary: "protoc-gen-validate"
+    env:
+      - CGO_ENABLED=0
   - main: ./cmd/protoc-gen-validate-cpp
     id: "protoc-gen-validate-cpp"
     binary: "protoc-gen-validate-cpp"
