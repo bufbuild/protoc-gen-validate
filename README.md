@@ -103,7 +103,7 @@ go get -d github.com/envoyproxy/protoc-gen-validate
 > continue to use the `envoyproxy` module path.
 
 ```
-git clone github.com/bufbuild/protoc-gen-validate
+git clone https://github.com/bufbuild/protoc-gen-validate.git
 # installs PGV into $GOPATH/bin
 cd protoc-gen-validate && make build
 ```
