@@ -39,12 +39,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <protoc.version>3.22.2</protoc.version>
-        <google.protobuf.version>3.25.1</google.protobuf.version>
+        <google.protobuf.version>3.25.2</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
         <re2j.version>1.7</re2j.version>
         <commons.validator.version>1.8.0</commons.validator.version>
-        <grpc.version>1.60.1</grpc.version>
+        <grpc.version>1.61.0</grpc.version>
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.25.1</assertj.version>
         <java.release>8</java.release>
@@ -84,7 +84,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.3</version>
+                <version>3.2.5</version>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
