@@ -1,13 +1,16 @@
-![The Buf logo](./.github/buf-logo.svg)
-
-# protoc-gen-validate (PGV)
+# [![](./.github/buf-logo.svg)][buf] protoc-gen-validate (PGV)
 
 ![License](https://img.shields.io/github/license/bufbuild/protoc-gen-validate?color=blue)
 ![Release](https://img.shields.io/github/v/release/bufbuild/protoc-gen-validate?include_prereleases)
 ![Slack](https://img.shields.io/badge/slack-buf-%23e01563)
 
-*This project is currently in **alpha**. The API should be considered unstable
-and likely to change*
+> [!IMPORTANT]
+> protoc-gen-validate (PGV) has reached a stable state and is in maintenance mode.
+>
+> We recommend that new and existing projects transition to using [`protovalidate`][pv].
+> 
+> Read [our blog post][pv-announce] if you want to learn more about the limitations of protoc-gen-validate and
+> how we have designed [`protovalidate`][pv] to be better.
 
 PGV is a protoc plugin to generate polyglot message validators. While protocol
 buffers effectively guarantee the types of structured data, they cannot enforce
@@ -100,7 +103,7 @@ go get -d github.com/envoyproxy/protoc-gen-validate
 > continue to use the `envoyproxy` module path.
 
 ```
-git clone github.com/bufbuild/protoc-gen-validate
+git clone https://github.com/bufbuild/protoc-gen-validate.git
 # installs PGV into $GOPATH/bin
 cd protoc-gen-validate && make build
 ```
@@ -126,7 +129,7 @@ into `../generated/example.pb.validate.go`:
 ```sh
 protoc \
   -I . \
-  -I path/to/validate/ \ 
+  -I path/to/validate/ \
   --go_out=":../generated" \
   --validate_out="lang=go:../generated" \
   example.proto
@@ -353,7 +356,7 @@ language-specific constraint capabilities.
   for optional fields where switching to WKTs is not feasible.
 
   ```protobuf
-  unint32 x = 1 [(validate.rules).uint32 = {ignore_empty: true, gte: 200}];
+  uint32 x = 1 [(validate.rules).uint32 = {ignore_empty: true, gte: 200}];
   ```
 
 ### Bools
@@ -426,7 +429,7 @@ language-specific constraint capabilities.
 
   // x must contain "baz" anywhere inside it
   string x = 1 [(validate.rules).string.contains = "baz"];
-  
+
   // x cannot contain "baz" anywhere inside it
   string x = 1 [(validate.rules).string.not_contains = "baz"];
 
@@ -491,13 +494,13 @@ language-specific constraint capabilities.
 
   // x must be a valid UUID (via RFC 4122)
   string x = 1 [(validate.rules).string.uuid = true];
-  
+
   // x must conform to a well known regex for HTTP header names (via RFC 7230)
   string x = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_NAME]
-  
-  // x must conform to a well known regex for HTTP header values (via RFC 7230) 
+
+  // x must conform to a well known regex for HTTP header values (via RFC 7230)
   string x = 1 [(validate.rules).string.well_known_regex = HTTP_HEADER_VALUE];
-  
+
   // x must conform to a well known regex for headers, disallowing \r\n\0 characters.
   string x = 1 [(validate.rules).string {well_known_regex: HTTP_HEADER_VALUE, strict: false}];
   ```
@@ -1043,21 +1046,20 @@ docker run --rm \
 # executes the 'build' & 'testcases' make targets
 docker run --rm \
   bufbuild/protoc-gen-validate build testcases
-  
+
 # override the entrypoint and interact with the container directly
-# this can be useful when wanting to run bazel commands without 
-# bazel installed locally. 
+# this can be useful when wanting to run bazel commands without
+# bazel installed locally.
 docker run --rm \
  -it --entrypoint=/bin/bash \
  bufbuild/protoc-gen-validate
 ```
 
+[buf]:             https://buf.build
 [protoc-source]:   https://github.com/google/protobuf
-
 [protoc-releases]: https://github.com/google/protobuf/releases
-
 [pg*]:             https://github.com/bufbuild/protoc-gen-star
-
 [re2]:             https://github.com/google/re2/wiki/Syntax
-
 [wkts]:            https://developers.google.com/protocol-buffers/docs/reference/google.protobuf
+[pv]:              https://github.com/bufbuild/protovalidate
+[pv-announce]:     https://buf.build/blog/protoc-gen-validate-v1-and-v2/

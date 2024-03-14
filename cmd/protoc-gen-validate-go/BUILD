@@ -10,7 +10,7 @@ gazelle(name = "gazelle")
 
 go_binary(
     name = "protoc-gen-validate-go",
-    embed = [":protoc-gen-validate-go_lib"],
+    embed = [":protoc-gen-validate_lib"],
     importpath = "github.com/envoyproxy/protoc-gen-validate/cmd/protoc-gen-validate-go",
     visibility = ["//visibility:public"],
 )
@@ -22,8 +22,21 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//module",
-        "@com_github_lyft_protoc_gen_star//:protoc-gen-star",
-        "@com_github_lyft_protoc_gen_star//lang/go",
+        "@com_github_lyft_protoc_gen_star_v2//:protoc-gen-star",
+        "@com_github_lyft_protoc_gen_star_v2//lang/go",
+        "@org_golang_google_protobuf//types/pluginpb",
+    ],
+)
+
+go_library(
+    name = "protoc-gen-validate_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/envoyproxy/protoc-gen-validate",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//module",
+        "@com_github_lyft_protoc_gen_star_v2//:protoc-gen-star",
+        "@com_github_lyft_protoc_gen_star_v2//lang/go",
         "@org_golang_google_protobuf//types/pluginpb",
     ],
 )

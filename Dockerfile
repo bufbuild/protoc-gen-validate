@@ -31,7 +31,7 @@ RUN wget -q -O bazel https://github.com/bazelbuild/bazel/releases/download/${BAZ
   && mv bazel usr/local/bin/bazel
 
 # protoc
-ENV PROTOC_VER=22.2
+ENV PROTOC_VER=24.3
 RUN export PROTOC_REL=protoc-${PROTOC_VER}-linux-$([ $(uname -m) = "aarch64" ] && echo "aarch" || echo "x86")_64.zip \
   && wget -q https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VER}/${PROTOC_REL} \
   && unzip ${PROTOC_REL} -d protoc \
@@ -43,14 +43,14 @@ RUN export PROTOC_REL=protoc-${PROTOC_VER}-linux-$([ $(uname -m) = "aarch64" ] &
 ENV GOROOT /usr/local/go
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
-RUN export GORELEASE=go1.19.7.linux-$([ $(uname -m) = "aarch64" ] && echo "arm64" || echo "amd64").tar.gz \
+RUN export GORELEASE=go1.21.1.linux-$([ $(uname -m) = "aarch64" ] && echo "arm64" || echo "amd64").tar.gz \
   && wget -q https://dl.google.com/go/$GORELEASE \
   && tar -C $(dirname $GOROOT) -xzf $GORELEASE \
   && rm $GORELEASE \
   && mkdir -p $GOPATH/{src,bin,pkg}
 
 # protoc-gen-go
-ENV PGG_VER=v1.30.0
+ENV PGG_VER=v1.31.0
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@${PGG_VER} \
   && rm -rf $(go env GOCACHE) \
   && rm -rf $(go env GOMODCACHE)

@@ -91,7 +91,21 @@ const msgTpl = `
 	{{ end }}{{ end }}
         {{ end }}{{ end }}
 
-        {{ if has .Rules "Keys"}}{{ if .Rules.Keys }}
+	{{ if has .Rules "Keys"}}{{ if .Rules.Keys }}
+	{{ if has .Rules.Keys.GetString_ "In" }} {{ if .Rules.Keys.GetString_.In }}
+	const std::set<string> {{ lookup .Field "InLookup" }} = {
+			{{- range .Rules.Keys.GetString_.In }}
+				{{ inKey $f . }},
+			{{- end }}
+		};
+	{{ end }}{{ end }}
+	{{ if has .Rules.Keys.GetString_ "NotIn" }} {{ if .Rules.Keys.GetString_.NotIn }}
+	const std::set<string> {{ lookup .Field "NotInLookup" }} = {
+			{{- range .Rules.Keys.GetString_.NotIn }}
+				{{ inKey $f . }},
+			{{- end }}
+		};
+	{{ end }}{{ end }}
 	{{ if has .Rules.Keys.GetString_ "Pattern" }} {{ if .Rules.Keys.GetString_.Pattern }}
 		const re2::RE2 {{ lookup .Field "Pattern" }}(re2::StringPiece({{ lit .Rules.Keys.GetString_.GetPattern }},
                                               sizeof({{ lit .Rules.Keys.GetString_.GetPattern }}) - 1));

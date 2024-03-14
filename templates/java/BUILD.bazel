@@ -20,7 +20,6 @@ go_library(
         "required.go",
         "string.go",
         "timestamp.go",
-        "unimplemented.go",
         "wrapper.go",
     ],
     importpath = "github.com/envoyproxy/protoc-gen-validate/templates/java",
@@ -28,8 +27,8 @@ go_library(
     deps = [
         "//templates/shared",
         "@com_github_iancoleman_strcase//:strcase",
-        "@com_github_lyft_protoc_gen_star//:protoc-gen-star",
-        "@com_github_lyft_protoc_gen_star//lang/go",
+        "@com_github_lyft_protoc_gen_star_v2//:protoc-gen-star",
+        "@com_github_lyft_protoc_gen_star_v2//lang/go",
         "@org_golang_google_protobuf//types/known/durationpb",
         "@org_golang_google_protobuf//types/known/timestamppb",
     ],

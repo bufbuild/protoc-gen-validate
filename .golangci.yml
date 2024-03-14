@@ -1,0 +1,27 @@
+linters:
+  enable:
+    - gci
+    - gocritic
+    - gofumpt
+    - govet
+    - misspell
+    - unused
+
+linters-settings:
+  gci:
+    sections:
+      - standard
+      - default
+      - prefix(github.com/envoyproxy)
+  govet:
+    check-shadowing: true
+    # Settings per analyzer.
+    settings:
+      shadow:
+        # Whether to be strict about shadowing; can be noisy.
+        strict: true
+    enable:
+      - shadow
+
+run:
+  timeout: 5m

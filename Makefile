@@ -37,20 +37,14 @@ gazelle: ## runs gazelle against the codebase to generate Bazel BUILD files
 	bazel run //:gazelle
 
 .PHONY: lint
-lint: bin/golint bin/shadow ## lints the package for common code smells
-	test -z "$(shell gofmt -d -s ./*.go)" || (gofmt -d -s ./*.go && exit 1)
-	# golint -set_exit_status
-	# check for variable shadowing
-	go vet -vettool=$(shell pwd)/bin/shadow ./...
+lint: bin/golangci-lint ## lints the package for common code smells
+	$(shell pwd)/bin/golangci-lint run ./...
 	# lints the python code for style enforcement
 	flake8 --config=python/setup.cfg python/protoc_gen_validate/validator.py
 	isort --check-only python/protoc_gen_validate/validator.py
 
-bin/shadow:
-	GOBIN=$(shell pwd)/bin go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
-
-bin/golint:
-	GOBIN=$(shell pwd)/bin go install golang.org/x/lint/golint
+bin/golangci-lint:
+	GOBIN=$(shell pwd)/bin go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.54.2
 
 bin/protoc-gen-go:
 	GOBIN=$(shell pwd)/bin go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.30.0
@@ -78,6 +72,8 @@ testcases: bin/protoc-gen-go ## generate the test harness case protos
 	mkdir tests/harness/cases/other_package/go
 	rm -r tests/harness/cases/yet_another_package/go || true
 	mkdir tests/harness/cases/yet_another_package/go
+	rm -r tests/harness/cases/sort/go || true
+	mkdir tests/harness/cases/sort/go
 	# protoc-gen-go makes us go a package at a time
 	cd tests/harness/cases/other_package && \
 	protoc \
@@ -94,6 +90,14 @@ testcases: bin/protoc-gen-go ## generate the test harness case protos
 		--go_out="module=${PACKAGE}/tests/harness/cases/yet_another_package/go,${GO_IMPORT}:./go" \
 		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
 		--validate_out="module=${PACKAGE}/tests/harness/cases/yet_another_package/go,lang=go:./go" \
+		./*.proto
+	cd tests/harness/cases/sort && \
+	protoc \
+		-I . \
+		-I ../../../.. \
+		--go_out="module=${PACKAGE}/tests/harness/cases/sort/go,${GO_IMPORT}:./go" \
+		--plugin=protoc-gen-go=$(shell pwd)/bin/protoc-gen-go \
+		--validate_out="module=${PACKAGE}/tests/harness/cases/sort/go,lang=go:./go" \
 		./*.proto
 	cd tests/harness/cases && \
 	protoc \

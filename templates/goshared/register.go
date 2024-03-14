@@ -8,12 +8,12 @@ import (
 	"text/template"
 
 	"github.com/iancoleman/strcase"
+	pgs "github.com/lyft/protoc-gen-star/v2"
+	pgsgo "github.com/lyft/protoc-gen-star/v2/lang/go"
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
-	pgs "github.com/lyft/protoc-gen-star/v2"
-	pgsgo "github.com/lyft/protoc-gen-star/v2/lang/go"
 )
 
 func Register(tpl *template.Template, params pgs.Parameters) {
@@ -114,11 +114,12 @@ func (fns goSharedFuncs) errIdxCause(ctx shared.RuleContext, idx, cause string, 
 	n := fns.Name(f)
 
 	var fld string
-	if idx != "" {
+	switch {
+	case idx != "":
 		fld = fmt.Sprintf(`fmt.Sprintf("%s[%%v]", %s)`, n, idx)
-	} else if ctx.Index != "" {
+	case ctx.Index != "":
 		fld = fmt.Sprintf(`fmt.Sprintf("%s[%%v]", %s)`, n, ctx.Index)
-	} else {
+	default:
 		fld = fmt.Sprintf("%q", n)
 	}
 
@@ -194,7 +195,8 @@ func (fns goSharedFuncs) lit(x interface{}) string {
 
 func (fns goSharedFuncs) isBytes(f interface {
 	ProtoType() pgs.ProtoType
-}) bool {
+},
+) bool {
 	return f.ProtoType() == pgs.BytesT
 }
 
@@ -223,6 +225,22 @@ func (fns goSharedFuncs) inType(f pgs.Field, x interface{}) string {
 			return pgsgo.TypeName(fmt.Sprintf("%T", x)).Element().String()
 		}
 	case pgs.EnumT:
+		ens := fns.enumPackages(fns.externalEnums(f.File()))
+		// Check if the imported name of the enum has collided and been renamed
+		if len(ens) != 0 {
+			enType := f.Type().Enum()
+			if f.Type().IsRepeated() {
+				enType = f.Type().Element().Enum()
+			}
+
+			enImportPath := fns.ImportPath(enType)
+			for pkg, en := range ens {
+				if en.FilePath == enImportPath {
+					return pkg.String() + "." + fns.enumName(enType)
+				}
+			}
+		}
+
 		if f.Type().IsRepeated() {
 			return strings.TrimLeft(fns.Type(f).String(), "[]")
 		} else {
@@ -320,7 +338,7 @@ func (fns goSharedFuncs) externalEnums(file pgs.File) []pgs.Enum {
 				en = fld.Type().Element().Enum()
 			}
 
-			if en != nil && en.Package().ProtoName() != fld.Package().ProtoName() && fns.PackageName(en) != fns.PackageName(fld) {
+			if en != nil && en.File().Package().ProtoName() != msg.File().Package().ProtoName() {
 				out = append(out, en)
 			}
 		}
@@ -351,22 +369,42 @@ type NormalizedEnum struct {
 func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]NormalizedEnum {
 	out := make(map[pgs.Name]NormalizedEnum, len(enums))
 
-	nameCollision := make(map[pgs.Name]int)
+	// Start point from ./templates/go/file.go
+	nameCollision := map[pgs.Name]int{
+		"bytes":   0,
+		"errors":  0,
+		"fmt":     0,
+		"net":     0,
+		"mail":    0,
+		"url":     0,
+		"regexp":  0,
+		"sort":    0,
+		"strings": 0,
+		"time":    0,
+		"utf8":    0,
+		"anypb":   0,
+	}
+	nameNormalized := make(map[pgs.FilePath]struct{})
 
 	for _, en := range enums {
+		enImportPath := fns.ImportPath(en)
+		if _, ok := nameNormalized[enImportPath]; ok {
+			continue
+		}
 
 		pkgName := fns.PackageName(en)
 
-		if normalized, ok := out[pkgName]; ok {
-			if normalized.FilePath != fns.ImportPath(en) {
-				nameCollision[pkgName] = nameCollision[pkgName] + 1
-				pkgName = pkgName + pgs.Name(strconv.Itoa(nameCollision[pkgName]))
-			}
+		if collision, ok := nameCollision[pkgName]; ok {
+			nameCollision[pkgName] = collision + 1
+			pkgName += pgs.Name(strconv.Itoa(nameCollision[pkgName]))
+		} else {
+			nameCollision[pkgName] = 0
 		}
 
+		nameNormalized[enImportPath] = struct{}{}
 		out[pkgName] = NormalizedEnum{
 			Name:     fns.enumName(en),
-			FilePath: fns.ImportPath(en),
+			FilePath: enImportPath,
 		}
 
 	}
