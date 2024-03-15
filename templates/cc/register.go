@@ -163,7 +163,7 @@ func (fns CCFuncs) className(ent childEntity) string {
 }
 
 func (fns CCFuncs) packageName(msg pgs.Entity) string {
-	return "::" + strings.Join(msg.Package().ProtoName().Split(), "::")
+	return "::" + strings.Join(msg.Package().ProtoName().SplitOnDot(), "::")
 }
 
 func (fns CCFuncs) quote(s interface {
