@@ -3,6 +3,7 @@ load("@pgv_pip_deps//:requirements.bzl", "all_requirements")
 
 exports_files([
     "requirements.in",
+    "requirements.txt",
     "setup.cfg",
 ])
 

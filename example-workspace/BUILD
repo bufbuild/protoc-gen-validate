@@ -38,25 +38,28 @@ py_binary(
     main = "example.py",
     srcs_version = "PY3",
     deps = [
-        "@com_google_protobuf//:protobuf_python",
-        "@com_envoyproxy_protoc_gen_validate//python:validator_py",
         "//foo:bar_py_proto",
+        "@com_envoyproxy_protoc_gen_validate//python:validator_py",
+        "@com_google_protobuf//:protobuf_python",
     ],
 )
 
 # Test that the example textproto inputs evoke the right responses.
 [
     sh_test(
-        name = "example_{lang}_test_{which}".format(lang=lang, which=which),
+        name = "example_{lang}_test_{which}".format(
+            lang = lang,
+            which = which,
+        ),
         srcs = ["example_test.sh"],
         args = [
-            "$(location :example_{lang})".format(lang=lang),
+            "$(location :example_{lang})".format(lang = lang),
             str(code),
-            "$(location :{which})".format(which=which),
+            "$(location :{which})".format(which = which),
         ],
         data = [
             which,
-            ":example_{lang}".format(lang=lang),
+            ":example_{lang}".format(lang = lang),
         ],
     )
     for lang in (

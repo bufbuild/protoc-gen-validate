@@ -5,6 +5,10 @@ load("@bazel_tools//tools/build_defs/repo:jvm.bzl", "jvm_maven_import_external")
 _DEFAULT_REPOSITORIES = ["https://repo.maven.apache.org/maven2"]
 
 def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
+    _pgv_deps(maven_repos = maven_repos)
+    _pgv_bindings()
+
+def _pgv_deps(maven_repos = _DEFAULT_REPOSITORIES):
     if not native.existing_rule("io_bazel_rules_go"):
         http_archive(
             name = "io_bazel_rules_go",
@@ -28,9 +32,9 @@ def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
     if not native.existing_rule("com_google_protobuf"):
         http_archive(
             name = "com_google_protobuf",
-            url = "https://github.com/protocolbuffers/protobuf/archive/v3.15.3.tar.gz",
-            sha256 = "b10bf4e2d1a7586f54e64a5d9e7837e5188fc75ae69e36f215eb01def4f9721b",
-            strip_prefix = "protobuf-3.15.3",
+            url = "https://github.com/protocolbuffers/protobuf/archive/v3.19.0.tar.gz",
+            sha256 = "4a045294ec76cb6eae990a21adb5d8b3c78be486f1507faa601541d1ccefbd6b",
+            strip_prefix = "protobuf-3.19.0",
         )
 
     # TODO(akonradi): This shouldn't be necessary since the same http_archive block is imported by
@@ -82,13 +86,6 @@ def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
             artifact_sha256 = "63b09db6861011e7fb2481be7790c7fd4b03f0bb884b3de2ecba8823ad19bf3f",
             server_urls = maven_repos,
         )
-
-    if not native.existing_rule("guava"):
-        native.bind(
-            name = "guava",
-            actual = "@com_google_guava//jar",
-        )
-
     if not native.existing_rule("com_google_gson"):
         jvm_maven_import_external(
             name = "com_google_gson",
@@ -97,24 +94,12 @@ def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
             server_urls = maven_repos,
         )
 
-    if not native.existing_rule("gson"):
-        native.bind(
-            name = "gson",
-            actual = "@com_google_gson//jar",
-        )
-
     if not native.existing_rule("error_prone_annotations_maven"):
         jvm_maven_import_external(
             name = "error_prone_annotations_maven",
             artifact = "com.google.errorprone:error_prone_annotations:2.3.2",
             artifact_sha256 = "357cd6cfb067c969226c442451502aee13800a24e950fdfde77bcdb4565a668d",
             server_urls = maven_repos,
-        )
-
-    if not native.existing_rule("error_prone_annotations"):
-        native.bind(
-            name = "error_prone_annotations",
-            actual = "@error_prone_annotations_maven//jar",
         )
 
     if not native.existing_rule("org_apache_commons_validator"):
@@ -140,3 +125,24 @@ def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
             strip_prefix = "rules_proto-218ffa7dfa5408492dc86c01ee637614f8695c45",
             urls = ["https://github.com/bazelbuild/rules_proto/archive/218ffa7dfa5408492dc86c01ee637614f8695c45.tar.gz"],
         )
+
+def _pgv_bindings():
+    if not native.existing_rule("guava"):
+        native.bind(
+            name = "guava",
+            actual = "@com_google_guava//jar",
+        )
+
+    if not native.existing_rule("error_prone_annotations"):
+        native.bind(
+            name = "error_prone_annotations",
+            actual = "@error_prone_annotations_maven//jar",
+        )
+
+    if not native.existing_rule("gson"):
+        native.bind(
+            name = "gson",
+            actual = "@com_google_gson//jar",
+        )
+
+pgv_deps_ext = module_extension(implementation = lambda x: _pgv_deps())

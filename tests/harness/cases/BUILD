@@ -34,8 +34,8 @@ proto_library(
     visibility = ["//visibility:public"],
     deps = [
         "//tests/harness/cases/other_package:embed_proto",
-        "//tests/harness/cases/yet_another_package:embed_proto",
         "//tests/harness/cases/sort:sort_proto",
+        "//tests/harness/cases/yet_another_package:embed_proto",
         "//validate:validate_proto",
         "@com_google_protobuf//:any_proto",
         "@com_google_protobuf//:duration_proto",
@@ -50,8 +50,8 @@ pgv_go_proto_library(
     proto = ":cases_proto",
     deps = [
         "//tests/harness/cases/other_package:go",
-        "//tests/harness/cases/yet_another_package:go",
         "//tests/harness/cases/sort:go",
+        "//tests/harness/cases/yet_another_package:go",
         "@org_golang_google_protobuf//types/known/anypb:go_default_library",
         "@org_golang_google_protobuf//types/known/durationpb:go_default_library",
         "@org_golang_google_protobuf//types/known/timestamppb:go_default_library",
@@ -63,8 +63,8 @@ pgv_cc_proto_library(
     name = "cc",
     cc_deps = [
         "//tests/harness/cases/other_package:cc",
-        "//tests/harness/cases/yet_another_package:cc",
         "//tests/harness/cases/sort:cc",
+        "//tests/harness/cases/yet_another_package:cc",
     ],
     visibility = ["//tests:__subpackages__"],
     deps = [":cases_proto"],
@@ -112,10 +112,9 @@ py_proto_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//validate:validate_py",
         "//tests/harness/cases/other_package:embed_python_proto",
-        "//tests/harness/cases/yet_another_package:embed_python_proto",
         "//tests/harness/cases/sort:sort_python_proto",
-        "@com_google_protobuf//:protobuf_python",
+        "//tests/harness/cases/yet_another_package:embed_python_proto",
+        "//validate:validate_py",
     ],
 )

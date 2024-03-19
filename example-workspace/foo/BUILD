@@ -38,6 +38,5 @@ py_proto_library(
     srcs = ["bar.proto"],
     deps = [
         "@com_envoyproxy_protoc_gen_validate//validate:validate_py",
-        "@com_google_protobuf//:protobuf_python",
     ],
 )
