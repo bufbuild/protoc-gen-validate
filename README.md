@@ -33,7 +33,7 @@ message Person {
   string email = 2 [(validate.rules).string.email = true];
 
   string name = 3 [(validate.rules).string = {
-    pattern:   "^[^[0-9]A-Za-z]+( [^[0-9]A-Za-z]+)*$",
+    pattern:   "^[A-Za-z]+( [A-Za-z]+)*$",
     max_bytes: 256,
   }];
 
