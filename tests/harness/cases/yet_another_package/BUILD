@@ -75,6 +75,5 @@ py_proto_library(
     visibility = ["//visibility:public"],
     deps = [
         "//validate:validate_py",
-        "@com_google_protobuf//:protobuf_python",
     ],
 )

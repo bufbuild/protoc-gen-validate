@@ -28,7 +28,6 @@ cc_proto_library(
 py_proto_library(
     name = "validate_py",
     srcs = ["validate.proto"],
-    deps = ["@com_google_protobuf//:protobuf_python"],
 )
 
 go_proto_library(
