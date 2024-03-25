@@ -22,7 +22,7 @@ except ValidationFailed as err:
     print(err)  
     # p.id is not greater than 999
     # p.email is not a valid email
-    # p.name pattern does not match ^[^[0-9]A-Za-z]+( [^[0-9]A-Za-z]+)*$
+    # p.name pattern does not match ^[A-Za-z]+( [A-Za-z]+)*$
     # home is required.
 ```
 

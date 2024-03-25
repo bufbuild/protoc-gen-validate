@@ -58,7 +58,7 @@ p.Id = 1000
 err = p.Validate() // err: Email must be a valid email address
 p.Email = "example@bufbuild.com"
 
-err = p.Validate() // err: Name must match pattern '^[^\d\s]+( [^\d\s]+)*$'
+err = p.Validate() // err: Name must match pattern '^[A-Za-z]+( [A-Za-z]+)*$'
 p.Name = "Protocol Buffer"
 
 err = p.Validate() // err: Home is required
