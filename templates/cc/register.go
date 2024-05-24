@@ -117,6 +117,10 @@ func CcFilePath(f pgs.File, ctx pgsgo.Context, tpl *template.Template) *pgs.File
 func (fns CCFuncs) methodName(name interface{}) string {
 	nameStr := fmt.Sprintf("%s", name)
 	switch nameStr {
+	case "concept":
+		return "concept_"
+	case "requires":
+		return "requires_"
 	case "const":
 		return "const_"
 	case "inline":
