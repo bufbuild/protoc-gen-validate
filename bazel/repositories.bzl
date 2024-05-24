@@ -79,38 +79,12 @@ def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
             server_urls = maven_repos,
         )
 
-    if not native.existing_rule("guava"):
-        native.bind(
-            name = "guava",
-            actual = "@com_google_guava//jar",
-        )
-
     if not native.existing_rule("com_google_gson"):
         jvm_maven_import_external(
             name = "com_google_gson",
             artifact = "com.google.code.gson:gson:2.8.5",
             artifact_sha256 = "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81",
             server_urls = maven_repos,
-        )
-
-    if not native.existing_rule("gson"):
-        native.bind(
-            name = "gson",
-            actual = "@com_google_gson//jar",
-        )
-
-    if not native.existing_rule("error_prone_annotations_maven"):
-        jvm_maven_import_external(
-            name = "error_prone_annotations_maven",
-            artifact = "com.google.errorprone:error_prone_annotations:2.3.2",
-            artifact_sha256 = "357cd6cfb067c969226c442451502aee13800a24e950fdfde77bcdb4565a668d",
-            server_urls = maven_repos,
-        )
-
-    if not native.existing_rule("error_prone_annotations"):
-        native.bind(
-            name = "error_prone_annotations",
-            actual = "@error_prone_annotations_maven//jar",
         )
 
     if not native.existing_rule("org_apache_commons_validator"):
