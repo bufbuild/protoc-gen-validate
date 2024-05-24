@@ -238,4 +238,5 @@ java_proto_gen_validate = rule(
         "srcjar": "lib%{name}-src.jar",
     },
     implementation = _java_proto_gen_validate_impl,
+    toolchains = ["@bazel_tools//tools/jdk:toolchain_type"],
 )

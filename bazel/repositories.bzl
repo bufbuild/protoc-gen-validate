@@ -1,4 +1,3 @@
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:jvm.bzl", "jvm_maven_import_external")
 
@@ -8,29 +7,26 @@ def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
     if not native.existing_rule("io_bazel_rules_go"):
         http_archive(
             name = "io_bazel_rules_go",
-            sha256 = "91585017debb61982f7054c9688857a2ad1fd823fc3f9cb05048b0025c47d023",
+            sha256 = "33acc4ae0f70502db4b893c9fc1dd7a9bf998c23e7ff2c4517741d4049a976f8",
             urls = [
-                "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.42.0/rules_go-v0.42.0.zip",
-                "https://github.com/bazelbuild/rules_go/releases/download/v0.42.0/rules_go-v0.42.0.zip",
+                "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.48.0/rules_go-v0.48.0.zip",
+                "https://github.com/bazelbuild/rules_go/releases/download/v0.48.0/rules_go-v0.48.0.zip",
             ],
         )
 
     if not native.existing_rule("bazel_gazelle"):
         http_archive(
             name = "bazel_gazelle",
-            sha256 = "d3fa66a39028e97d76f9e2db8f1b0c11c099e8e01bf363a923074784e451f809",
-            urls = [
-                "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.33.0/bazel-gazelle-v0.33.0.tar.gz",
-                "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.33.0/bazel-gazelle-v0.33.0.tar.gz",
-            ],
+            sha256 = "d76bf7a60fd8b050444090dfa2837a4eaf9829e1165618ee35dceca5cbdf58d5",
+            url = "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.37.0/bazel-gazelle-v0.37.0.tar.gz",
         )
 
     if not native.existing_rule("com_google_protobuf"):
         http_archive(
             name = "com_google_protobuf",
-            url = "https://github.com/protocolbuffers/protobuf/archive/v3.15.3.tar.gz",
-            sha256 = "b10bf4e2d1a7586f54e64a5d9e7837e5188fc75ae69e36f215eb01def4f9721b",
-            strip_prefix = "protobuf-3.15.3",
+            url = "https://github.com/protocolbuffers/protobuf/releases/download/v27.0/protobuf-27.0.tar.gz",
+            sha256 = "da288bf1daa6c04d03a9051781caa52aceb9163586bff9aa6cfb12f69b9395aa",
+            strip_prefix = "protobuf-27.0",
         )
 
     # TODO(akonradi): This shouldn't be necessary since the same http_archive block is imported by
@@ -128,15 +124,23 @@ def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
     if not native.existing_rule("rules_python"):
         http_archive(
             name = "rules_python",
-            sha256 = "b593d13bb43c94ce94b483c2858e53a9b811f6f10e1e0eedc61073bd90e58d9c",
-            strip_prefix = "rules_python-0.12.0",
-            url = "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.12.0.tar.gz",
+            sha256 = "4912ced70dc1a2a8e4b86cec233b192ca053e82bc72d877b98e126156e8f228d",
+            strip_prefix = "rules_python-0.32.2",
+            url = "https://github.com/bazelbuild/rules_python/releases/download/0.32.2/rules_python-0.32.2.tar.gz",
         )
 
     if not native.existing_rule("rules_proto"):
         http_archive(
             name = "rules_proto",
-            sha256 = "2490dca4f249b8a9a3ab07bd1ba6eca085aaf8e45a734af92aad0c42d9dc7aaf",
-            strip_prefix = "rules_proto-218ffa7dfa5408492dc86c01ee637614f8695c45",
-            urls = ["https://github.com/bazelbuild/rules_proto/archive/218ffa7dfa5408492dc86c01ee637614f8695c45.tar.gz"],
+            sha256 = "303e86e722a520f6f326a50b41cfc16b98fe6d1955ce46642a5b7a67c11c0f5d",
+            strip_prefix = "rules_proto-6.0.0",
+            url = "https://github.com/bazelbuild/rules_proto/releases/download/6.0.0/rules_proto-6.0.0.tar.gz",
+        )
+
+    if not native.existing_rule("rules_cc"):
+        http_archive(
+            name = "rules_cc",
+            sha256 = "2037875b9a4456dce4a79d112a8ae885bbc4aad968e6587dca6e64f3a0900cdf",
+            strip_prefix = "rules_cc-0.0.9",
+            url = "https://github.com/bazelbuild/rules_cc/releases/download/0.0.9/rules_cc-0.0.9.tar.gz",
         )
