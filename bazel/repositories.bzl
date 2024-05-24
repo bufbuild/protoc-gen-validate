@@ -79,14 +79,6 @@ def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
             server_urls = maven_repos,
         )
 
-    if not native.existing_rule("com_google_gson"):
-        jvm_maven_import_external(
-            name = "com_google_gson",
-            artifact = "com.google.code.gson:gson:2.8.5",
-            artifact_sha256 = "233a0149fc365c9f6edbd683cfe266b19bdc773be98eabdaf6b3c924b48e7d81",
-            server_urls = maven_repos,
-        )
-
     if not native.existing_rule("org_apache_commons_validator"):
         jvm_maven_import_external(
             name = "org_apache_commons_validator",
