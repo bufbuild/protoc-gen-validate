@@ -3,6 +3,31 @@ load("@bazel_tools//tools/build_defs/repo:jvm.bzl", "jvm_maven_import_external")
 
 _DEFAULT_REPOSITORIES = ["https://repo.maven.apache.org/maven2"]
 
+def _non_module_deps(maven_repos = _DEFAULT_REPOSITORIES):
+    if not native.existing_rule("com_google_re2j"):
+        jvm_maven_import_external(
+            name = "com_google_re2j",
+            artifact = "com.google.re2j:re2j:1.2",
+            artifact_sha256 = "e9dc705fd4c570344b54a7146b2e3a819cdc271a29793f4acc1a93b56a388e59",
+            server_urls = maven_repos,
+        )
+
+    if not native.existing_rule("com_google_guava"):
+        jvm_maven_import_external(
+            name = "com_google_guava",
+            artifact = "com.google.guava:guava:27.0-jre",
+            artifact_sha256 = "63b09db6861011e7fb2481be7790c7fd4b03f0bb884b3de2ecba8823ad19bf3f",
+            server_urls = maven_repos,
+        )
+
+    if not native.existing_rule("org_apache_commons_validator"):
+        jvm_maven_import_external(
+            name = "org_apache_commons_validator",
+            artifact = "commons-validator:commons-validator:1.6",
+            artifact_sha256 = "bd62795d7068a69cbea333f6dbf9c9c1a6ad7521443fb57202a44874f240ba25",
+            server_urls = maven_repos,
+        )
+
 def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
     if not native.existing_rule("io_bazel_rules_go"):
         http_archive(
@@ -47,36 +72,12 @@ def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
             urls = ["https://github.com/bazelbuild/bazel-skylib/releases/download/1.4.2/bazel-skylib-1.4.2.tar.gz"],
         )
 
-    if not native.existing_rule("com_google_re2j"):
-        jvm_maven_import_external(
-            name = "com_google_re2j",
-            artifact = "com.google.re2j:re2j:1.2",
-            artifact_sha256 = "e9dc705fd4c570344b54a7146b2e3a819cdc271a29793f4acc1a93b56a388e59",
-            server_urls = maven_repos,
-        )
-
     if not native.existing_rule("com_googlesource_code_re2"):
         http_archive(
             name = "com_googlesource_code_re2",
             sha256 = "2e9489a31ae007c81e90e8ec8a15d62d58a9c18d4fd1603f6441ef248556b41f",
             strip_prefix = "re2-2020-07-06",
             urls = ["https://github.com/google/re2/archive/2020-07-06.tar.gz"],
-        )
-
-    if not native.existing_rule("com_google_guava"):
-        jvm_maven_import_external(
-            name = "com_google_guava",
-            artifact = "com.google.guava:guava:27.0-jre",
-            artifact_sha256 = "63b09db6861011e7fb2481be7790c7fd4b03f0bb884b3de2ecba8823ad19bf3f",
-            server_urls = maven_repos,
-        )
-
-    if not native.existing_rule("org_apache_commons_validator"):
-        jvm_maven_import_external(
-            name = "org_apache_commons_validator",
-            artifact = "commons-validator:commons-validator:1.6",
-            artifact_sha256 = "bd62795d7068a69cbea333f6dbf9c9c1a6ad7521443fb57202a44874f240ba25",
-            server_urls = maven_repos,
         )
 
     if not native.existing_rule("rules_python"):
@@ -102,3 +103,7 @@ def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
             strip_prefix = "rules_cc-0.0.9",
             url = "https://github.com/bazelbuild/rules_cc/releases/download/0.0.9/rules_cc-0.0.9.tar.gz",
         )
+
+    _non_module_deps(maven_repos)
+
+non_module_deps = module_extension(implementation = lambda _: _non_module_deps())

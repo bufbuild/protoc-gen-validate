@@ -17,5 +17,6 @@ py_library(
     name = "validator_py",
     srcs = glob(["**/*.py"]),
     visibility = ["//visibility:public"],
+    imports = ["."],
     deps = all_requirements,
 )
