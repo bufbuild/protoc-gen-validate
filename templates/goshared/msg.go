@@ -200,6 +200,20 @@ var _ interface{
 			{{- end }}
 		}
 	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetInt64 "In" }} {{ if .Rules.Items.GetInt64.In }}
+		var {{ lookup .Field "InLookup" }} = map[int64]struct{}{
+			{{- range .Rules.Items.GetInt64.In }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetInt64 "NotIn" }} {{ if .Rules.Items.GetInt64.NotIn }}
+		var {{ lookup .Field "NotInLookup" }} = map[int64]struct{}{
+			{{- range .Rules.Items.GetInt64.NotIn }}
+				{{ inKey $f . }}: {},
+			{{- end }}
+		}
+	{{ end }}{{ end }}
 	{{ if has .Rules.Items.GetAny "In" }} {{ if .Rules.Items.GetAny.In }}
 		var {{ lookup .Field "InLookup" }} = map[string]struct{}{
 			{{- range .Rules.Items.GetAny.In }}
