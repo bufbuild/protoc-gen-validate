@@ -4,11 +4,18 @@ load("//bazel:repositories.bzl", "pgv_dependencies")
 
 pgv_dependencies()
 
+load("@rules_python//python:repositories.bzl", "py_repositories")
+
+py_repositories()
+
 load("//bazel:dependency_imports.bzl", "pgv_dependency_imports")
 
 pgv_dependency_imports()
 
-load("//:dependencies.bzl", "go_third_party")
+load("//bazel:extra_dependency_imports.bzl", "pgv_extra_dependency_imports")
 
-# gazelle:repository_macro dependencies.bzl%go_third_party
-go_third_party()
+pgv_extra_dependency_imports()
+
+load("@maven//:defs.bzl", "pinned_maven_install")
+
+pinned_maven_install()
