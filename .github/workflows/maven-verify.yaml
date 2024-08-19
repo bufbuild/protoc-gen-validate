@@ -22,4 +22,4 @@ jobs:
           cache: "maven"
       - name: Verify with Maven
         working-directory: ${{ github.workspace }}/java
-        run: mvn -B verify
+        run: ./mvnw -B verify
