@@ -18,19 +18,6 @@
     </servers>
     <profiles>
         <profile>
-            <id>ci</id>
-            <repositories>
-                <repository>
-                    <id>sonatype-staging</id>
-                    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                    <layout>default</layout>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                </repository>
-            </repositories>
-        </profile>
-        <profile>
             <id>signing</id>
             <properties>
                 <gpg.executable>gpg</gpg.executable>
@@ -40,7 +27,6 @@
         </profile>
     </profiles>
     <activeProfiles>
-        <activeProfile>ci</activeProfile>
         <activeProfile>signing</activeProfile>
     </activeProfiles>
 </settings>
