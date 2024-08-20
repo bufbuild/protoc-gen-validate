@@ -1,4 +1,5 @@
 bazel-*
+MODULE.bazel.lock
 **/.DS_Store
 !vendor/*
 
