@@ -1,0 +1,11 @@
+module(name = "pgv_example")
+
+bazel_dep(name = "protoc-gen-validate", repo_name = "com_envoyproxy_protoc_gen_validate")
+local_path_override(
+    module_name = "protoc-gen-validate",
+    path = "..",
+)
+
+bazel_dep(name = "protobuf", version = "27.0-rc2", repo_name = "com_google_protobuf")
+bazel_dep(name = "rules_python", version = "0.32.2")
+bazel_dep(name = "re2", version = "2021-09-01", repo_name = "com_googlesource_code_re2")
