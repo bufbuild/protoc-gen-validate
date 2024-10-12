@@ -15,12 +15,15 @@ load("@com_envoyproxy_protoc_gen_validate//bazel:repositories.bzl", "pgv_depende
 
 pgv_dependencies()
 
+load("@rules_python//python:repositories.bzl", "py_repositories")
+
+py_repositories()
+
 # Perform any necessary actions to initialize dependencies.
 load("@com_envoyproxy_protoc_gen_validate//bazel:dependency_imports.bzl", "pgv_dependency_imports")
 
 pgv_dependency_imports()
 
-load("@com_envoyproxy_protoc_gen_validate//:dependencies.bzl", "go_third_party")
+load("@com_envoyproxy_protoc_gen_validate//bazel:extra_dependency_imports.bzl", "pgv_extra_dependency_imports")
 
-# gazelle:repository_macro dependencies.bzl%go_third_party
-go_third_party()
+pgv_extra_dependency_imports()
