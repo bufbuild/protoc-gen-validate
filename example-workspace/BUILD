@@ -1,3 +1,10 @@
+load("@rules_python//python:defs.bzl", "py_binary")
+# Example python binary that uses the dynamic python validation code.
+#
+# Exactly as example_cc above except different label. Example:
+#
+# bazel run //:example_py -- $(pwd)/valid.textproto
+
 # Example C++ binary that uses the generated validation code.
 #
 # This binary attempts to read files named on the command line as binary protos.
@@ -26,37 +33,33 @@ cc_binary(
     deps = ["//foo:bar_cc_proto"],
 )
 
-# Example python binary that uses the dynamic python validation code.
-#
-# Exactly as example_cc above except different label. Example:
-#
-# bazel run //:example_py -- $(pwd)/valid.textproto
-
 py_binary(
     name = "example_py",
     srcs = ["example.py"],
     main = "example.py",
     srcs_version = "PY3",
     deps = [
-        "@com_google_protobuf//:protobuf_python",
-        "@com_envoyproxy_protoc_gen_validate//python:validator_py",
         "//foo:bar_py_proto",
+        "@com_envoyproxy_protoc_gen_validate//python:validator_py",
     ],
 )
 
 # Test that the example textproto inputs evoke the right responses.
 [
     sh_test(
-        name = "example_{lang}_test_{which}".format(lang=lang, which=which),
+        name = "example_{lang}_test_{which}".format(
+            lang = lang,
+            which = which,
+        ),
         srcs = ["example_test.sh"],
         args = [
-            "$(location :example_{lang})".format(lang=lang),
+            "$(location :example_{lang})".format(lang = lang),
             str(code),
-            "$(location :{which})".format(which=which),
+            "$(location :{which})".format(which = which),
         ],
         data = [
             which,
-            ":example_{lang}".format(lang=lang),
+            ":example_{lang}".format(lang = lang),
         ],
     )
     for lang in (
