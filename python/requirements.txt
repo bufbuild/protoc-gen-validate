@@ -7,11 +7,11 @@
 astunparse==1.6.3 \
     --hash=sha256:5ad93a8456f0d084c3456d059fd9a92cce667963232cbf763eac3bc5b7940872 \
     --hash=sha256:c2652417f2c8b5bb325c885ae329bdf3f86424075c4fd1a128674bc6fba4b8e8
-    # via -r python/requirements.in
+    # via -r requirements.in
 jinja2==3.1.4 \
     --hash=sha256:4a3aee7acbbe7303aede8e9648d13b8bf88a429282aa6122a993f0ac800cb369 \
     --hash=sha256:bc5dd2abb727a5319567b7a813e6a2e7318c39f4f487cfe6c89c6f9c7d25197d
-    # via -r python/requirements.in
+    # via -r requirements.in
 markupsafe==2.1.5 \
     --hash=sha256:00e046b6dd71aa03a41079792f8473dc494d564611a8f89bbbd7cb93295ebdcf \
     --hash=sha256:075202fa5b72c86ad32dc7d0b56024ebdbcf2048c0ba09f1cde31bfdd57bcfff \
@@ -74,27 +74,27 @@ markupsafe==2.1.5 \
     --hash=sha256:fce659a462a1be54d2ffcacea5e3ba2d74daa74f30f5f143fe0c58636e355fdd \
     --hash=sha256:ffee1f21e5ef0d712f9033568f8344d5da8cc2869dbd08d87c84656e6a2d2f68
     # via jinja2
-protobuf==5.27.0 \
-    --hash=sha256:07f2b9a15255e3cf3f137d884af7972407b556a7a220912b252f26dc3121e6bf \
-    --hash=sha256:2f83bf341d925650d550b8932b71763321d782529ac0eaf278f5242f513cc04e \
-    --hash=sha256:56937f97ae0dcf4e220ff2abb1456c51a334144c9960b23597f044ce99c29c89 \
-    --hash=sha256:587be23f1212da7a14a6c65fd61995f8ef35779d4aea9e36aad81f5f3b80aec5 \
-    --hash=sha256:673ad60f1536b394b4fa0bcd3146a4130fcad85bfe3b60eaa86d6a0ace0fa374 \
-    --hash=sha256:744489f77c29174328d32f8921566fb0f7080a2f064c5137b9d6f4b790f9e0c1 \
-    --hash=sha256:7cb65fc8fba680b27cf7a07678084c6e68ee13cab7cace734954c25a43da6d0f \
-    --hash=sha256:a17f4d664ea868102feaa30a674542255f9f4bf835d943d588440d1f49a3ed15 \
-    --hash=sha256:aabbbcf794fbb4c692ff14ce06780a66d04758435717107c387f12fb477bf0d8 \
-    --hash=sha256:b276e3f477ea1eebff3c2e1515136cfcff5ac14519c45f9b4aa2f6a87ea627c4 \
-    --hash=sha256:f51f33d305e18646f03acfdb343aac15b8115235af98bc9f844bf9446573827b
-    # via -r python/requirements.in
+protobuf==5.29.0 \
+    --hash=sha256:0cd67a1e5c2d88930aa767f702773b2d054e29957432d7c6a18f8be02a07719a \
+    --hash=sha256:0d10091d6d03537c3f902279fcf11e95372bdd36a79556311da0487455791b20 \
+    --hash=sha256:17d128eebbd5d8aee80300aed7a43a48a25170af3337f6f1333d1fac2c6839ac \
+    --hash=sha256:34a90cf30c908f47f40ebea7811f743d360e202b6f10d40c02529ebd84afc069 \
+    --hash=sha256:445a0c02483869ed8513a585d80020d012c6dc60075f96fa0563a724987b1001 \
+    --hash=sha256:6c3009e22717c6cc9e6594bb11ef9f15f669b19957ad4087214d69e08a213368 \
+    --hash=sha256:85286a47caf63b34fa92fdc1fd98b649a8895db595cfa746c5286eeae890a0b1 \
+    --hash=sha256:88c4af76a73183e21061881360240c0cdd3c39d263b4e8fb570aaf83348d608f \
+    --hash=sha256:c931c61d0cc143a2e756b1e7f8197a508de5365efd40f83c907a9febf36e6b43 \
+    --hash=sha256:e467f81fdd12ded9655cea3e9b83dc319d93b394ce810b556fb0f421d8613e86 \
+    --hash=sha256:ea7fb379b257911c8c020688d455e8f74efd2f734b72dc1ea4b4d7e9fd1326f2
+    # via -r requirements.in
 six==1.16.0 \
     --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926 \
     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254
     # via astunparse
 validate-email==1.3 \
     --hash=sha256:784719dc5f780be319cdd185dc85dd93afebdb6ebb943811bc4c7c5f9c72aeaf
-    # via -r python/requirements.in
-wheel==0.43.0 \
-    --hash=sha256:465ef92c69fa5c5da2d1cf8ac40559a8c940886afcef87dcf14b9470862f1d85 \
-    --hash=sha256:55c570405f142630c6b9f72fe09d9b67cf1477fcf543ae5b8dcb1f5b7377da81
+    # via -r requirements.in
+wheel==0.45.1 \
+    --hash=sha256:661e1abd9198507b1409a20c02106d9670b2576e916d58f520316666abca6729 \
+    --hash=sha256:708e7481cc80179af0e556bbf0cc00b8444c7321e2700b8d8580231d13017248
     # via astunparse
