@@ -15,10 +15,10 @@ import configparser
 
 with open('python/requirements.in', 'r') as reqs:
     lines = reqs.readlines()
-    requirements_dot_in_set = {line.strip() for line in lines if line.strip() and not line.startswith("#")}
+    requirements_dot_in_set = {line.strip('\n') for line in lines if line.strip() and not line.startswith("#")}
 
 config = configparser.ConfigParser()
 config.read('python/setup.cfg')
-setup_dot_cfg_set = {line for line in config['options']['install_requires'].split() if not line.startswith("#")}
+setup_dot_cfg_set = {line for line in config['options']['install_requires'].split('\n') if line and not line.startswith("#")}
 
 assert requirements_dot_in_set == setup_dot_cfg_set
