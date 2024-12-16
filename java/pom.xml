@@ -39,17 +39,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <protoc.version>3.22.2</protoc.version>
-        <google.protobuf.version>4.28.3</google.protobuf.version>
+        <google.protobuf.version>4.29.1</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
         <re2j.version>1.7</re2j.version>
         <commons.validator.version>1.9.0</commons.validator.version>
-        <grpc.version>1.68.1</grpc.version>
+        <grpc.version>1.69.0</grpc.version>
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.26.3</assertj.version>
         <java.release>8</java.release>
         <java.version>1.8</java.version>
-        <proto-google-common-protos.version>2.49.0</proto-google-common-protos.version>
+        <proto-google-common-protos.version>2.50.0</proto-google-common-protos.version>
     </properties>
 
     <dependencies>
@@ -93,7 +93,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.11.1</version>
+                <version>3.11.2</version>
                 <configuration>
                     <author>false</author>
                     <breakiterator>true</breakiterator>
