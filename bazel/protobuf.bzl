@@ -96,7 +96,7 @@ def _protoc_gen_validate_impl(ctx, lang, protos, out_files, protoc_args, package
         use_default_shell_env = True,
     )
 
-    return struct(
+    return DefaultInfo(
         files = depset(out_files),
     )
 
