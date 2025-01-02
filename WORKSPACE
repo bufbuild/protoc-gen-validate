@@ -16,6 +16,6 @@ load("//bazel:extra_dependency_imports.bzl", "pgv_extra_dependency_imports")
 
 pgv_extra_dependency_imports()
 
-load("@maven//:defs.bzl", "pinned_maven_install")
+load("@protobuf_maven//:defs.bzl", "pinned_maven_install")
 
 pinned_maven_install()

@@ -3,5 +3,5 @@
 # See requirements_test.py for more context.
 validate-email>=1.3
 Jinja2>=2.11.1
-protobuf>=5.27.0
+protobuf>=5.29.2
 astunparse>=1.6.3; python_version<"3.10"
