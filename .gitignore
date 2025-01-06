@@ -39,10 +39,11 @@ __pycache__/
 /tests/harness/cases/**/*.h
 
 /java/.idea
-/java/**/.project
-/java/**/*.iml
-/java/**/target
 /java/**/*.class
+/java/**/*.iml
+/java/**/.project
+/java/**/dependency-reduced-pom.xml
+/java/**/target
 .vscode
 .project
 .classpath

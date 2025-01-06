@@ -22,9 +22,20 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>${google.protobuf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.re2j</groupId>
+            <artifactId>re2j</artifactId>
         </dependency>
 
         <!-- Depend on artifacts to ensure they are built before this module -->
@@ -32,7 +43,19 @@
             <groupId>build.buf.protoc-gen-validate</groupId>
             <artifactId>protoc-gen-validate</artifactId>
             <version>${project.version}</version>
-            <type>pom</type>
+            <classifier>${os.detected.classifier}</classifier>
+            <scope>test</scope>
+            <type>exe</type>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
