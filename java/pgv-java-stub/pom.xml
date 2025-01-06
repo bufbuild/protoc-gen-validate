@@ -12,9 +12,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.re2j</groupId>
             <artifactId>re2j</artifactId>
-            <version>${re2j.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-validator</groupId>
@@ -30,19 +33,27 @@
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>${google.protobuf.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
-            <version>${google.protobuf.version}</version>
         </dependency>
-        <!-- Depend on artifacts to ensure they are built before this module -->
         <dependency>
             <groupId>build.buf.protoc-gen-validate</groupId>
             <artifactId>protoc-gen-validate</artifactId>
             <version>${project.version}</version>
-            <type>pom</type>
+            <classifier>${os.detected.classifier}</classifier>
+            <type>exe</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
