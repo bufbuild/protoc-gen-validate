@@ -31,7 +31,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <protoc.version>3.22.2</protoc.version>
-        <google.guava.version>33.3.1-android</google.guava.version>
+        <google.guava.version>33.4.0-android</google.guava.version>
         <google.protobuf.version>4.29.2</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
