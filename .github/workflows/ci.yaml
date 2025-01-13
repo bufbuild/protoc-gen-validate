@@ -13,7 +13,7 @@ env:
   GO_VER: '1.21.x'
   PGG_VER: 'v1.31.0'
   PROTOC_VER: '24.3'
-  PYTHON_VER: '3.8'
+  PYTHON_VER: '3.9'
   TEST_TAG: protoc-gen-validate:${{ github.sha }}
 
 jobs:
