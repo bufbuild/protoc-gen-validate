@@ -1,3 +1,4 @@
+load("@com_google_protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 load("@rules_cc//cc:defs.bzl", "cc_library")
 load(":protobuf.bzl", "cc_proto_gen_validate", "java_proto_gen_validate")
@@ -30,7 +31,7 @@ def pgv_cc_proto_library(
       **kargs: other keyword arguments that are passed to cc_library.
     """
 
-    native.cc_proto_library(
+    cc_proto_library(
         name = name + "_cc_proto",
         deps = deps,
     )
