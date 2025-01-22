@@ -13,6 +13,7 @@ ENV INSTALL_DEPS \
   maven \
   patch \
   python3.9 \
+  python3.9-venv \
   python3-pip \
   apt-transport-https \
   curl \
@@ -68,7 +69,7 @@ WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
 
 # python tooling for linting and uploading to PyPI
 COPY requirements.txt .
-RUN pip3 install -r requirements.txt
+RUN python3.9 -m pip install -r requirements.txt
 
 COPY . .
 
