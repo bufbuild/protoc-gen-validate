@@ -78,8 +78,7 @@ err = p.Validate() // err: nil
 - `protoc` compiler in `$PATH`
 - `protoc-gen-validate` in `$PATH`
 - official language-specific plugin for target language(s)
-- **Only `proto3` syntax is currently supported.** `proto2` syntax support is
-  planned.
+- **Only `proto3` syntax is currently supported.**
 
 ### Installation
 
