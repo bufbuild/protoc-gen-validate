@@ -27,6 +27,17 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <id>bufbuild</id>
+            <name>Buf</name>
+            <email>dev@buf.build</email>
+            <url>https://buf.build/</url>
+            <organization>Buf Technologies, Inc.</organization>
+            <organizationUrl>https://buf.build/</organizationUrl>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
