@@ -1127,6 +1127,11 @@ var repeatedCases = []TestCase{
 	{"repeated - items - invalid (not_in)", &cases.RepeatedItemNotIn{Val: []string{"foo"}}, 1},
 	{"repeated - items - valid (not_in)", &cases.RepeatedItemNotIn{Val: []string{"baz"}}, 0},
 
+	{"repeated - items - invalid (int32 in)", &cases.RepeatedItemInt32In{Val: []int32{3}}, 1},
+	{"repeated - items - valid (int32 in)", &cases.RepeatedItemInt32In{Val: []int32{1}}, 0},
+	{"repeated - items - invalid (int32 not_in)", &cases.RepeatedItemInt32NotIn{Val: []int32{3}}, 1},
+	{"repeated - items - valid (int32 not_in)", &cases.RepeatedItemInt32NotIn{Val: []int32{1}}, 0},
+
 	{"repeated - items - invalid (enum in)", &cases.RepeatedEnumIn{Val: []cases.AnEnum{1}}, 1},
 	{"repeated - items - valid (enum in)", &cases.RepeatedEnumIn{Val: []cases.AnEnum{0}}, 0},
 	{"repeated - items - invalid (enum not_in)", &cases.RepeatedEnumNotIn{Val: []cases.AnEnum{0}}, 1},
