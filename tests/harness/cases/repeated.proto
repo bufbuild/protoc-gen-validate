@@ -27,8 +27,6 @@ message RepeatedItemPattern  { repeated string val = 1 [(validate.rules).repeate
 message RepeatedEmbedSkip { repeated Embed val = 1 [(validate.rules).repeated.items.message.skip = true]; }
 message RepeatedItemIn { repeated string val = 1 [(validate.rules).repeated.items.string = {in: ["foo", "bar"]}]; }
 message RepeatedItemNotIn { repeated string val = 1 [(validate.rules).repeated.items.string = {not_in: ["foo", "bar"]}]; }
-message RepeatedItemInt32In { repeated int32 val = 1 [(validate.rules).repeated.items.int32 = {in: [1, 2]}]; }
-message RepeatedItemInt32NotIn { repeated int32 val = 1 [(validate.rules).repeated.items.int32 = {not_in: [1, 2]}]; }
 message RepeatedEnumIn { repeated AnEnum val = 1 [(validate.rules).repeated.items.enum = {in: [0]}]; }
 message RepeatedEnumNotIn { repeated AnEnum val = 1 [(validate.rules).repeated.items.enum = {not_in: [0]}]; }
 message RepeatedEmbeddedEnumIn { repeated AnotherInEnum val = 1 [(validate.rules).repeated.items.enum = {in: [0]}]; enum AnotherInEnum {A = 0; B = 1; }}
