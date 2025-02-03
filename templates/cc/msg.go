@@ -39,6 +39,20 @@ const msgTpl = `
 			{{- end }}
 		};
 	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetInt64 "In" }} {{ if .Rules.Items.GetInt64.In }}
+	const std::set<int64_t> {{ lookup .Field "InLookup" }} = {
+			{{- range .Rules.Items.GetInt64.In }}
+				{{ inKey $f . }},
+			{{- end }}
+		};
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetInt32 "In" }} {{ if .Rules.Items.GetInt32.In }}
+	const std::set<int32_t> {{ lookup .Field "InLookup" }} = {
+			{{- range .Rules.Items.GetInt32.In }}
+				{{ inKey $f . }},
+			{{- end }}
+		};
+	{{ end }}{{ end }}
 	{{ if has .Rules.Items.GetEnum "In" }} {{ if .Rules.Items.GetEnum.In }}
 	const std::set<{{ inType .Field .Rules.Items.GetEnum.In }}> {{ lookup .Field "InLookup" }} = {
 			{{- range .Rules.Items.GetEnum.In }}
@@ -59,6 +73,20 @@ const msgTpl = `
 	{{ if has .Rules.Items.GetString_ "NotIn" }} {{ if .Rules.Items.GetString_.NotIn }}
 	const std::set<string> {{ lookup .Field "NotInLookup" }} = {
 			{{- range .Rules.Items.GetString_.NotIn }}
+				{{ inKey $f . }},
+			{{- end }}
+		};
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetInt64 "NotIn" }} {{ if .Rules.Items.GetInt64.NotIn }}
+	const std::set<int64_t> {{ lookup .Field "NotInLookup" }} = {
+			{{- range .Rules.Items.GetInt64.NotIn }}
+				{{ inKey $f . }},
+			{{- end }}
+		};
+	{{ end }}{{ end }}
+	{{ if has .Rules.Items.GetInt32 "NotIn" }} {{ if .Rules.Items.GetInt32.NotIn }}
+	const std::set<int32_t> {{ lookup .Field "NotInLookup" }} = {
+			{{- range .Rules.Items.GetInt32.NotIn }}
 				{{ inKey $f . }},
 			{{- end }}
 		};
