@@ -8,6 +8,7 @@
 > protoc-gen-validate (PGV) has reached a stable state and is in maintenance mode.
 >
 > We recommend that new and existing projects transition to using [`protovalidate`][pv].
+> Our [migration guide][migration-guide] walks you through the process.
 > 
 > Read [our blog post][pv-announce] if you want to learn more about the limitations of protoc-gen-validate and
 > how we have designed [`protovalidate`][pv] to be better.
@@ -1062,3 +1063,4 @@ docker run --rm \
 [wkts]:            https://developers.google.com/protocol-buffers/docs/reference/google.protobuf
 [pv]:              https://github.com/bufbuild/protovalidate
 [pv-announce]:     https://buf.build/blog/protoc-gen-validate-v1-and-v2/
+[migration-guide]: https://buf.build/docs/migration-guides/migrate-from-protoc-gen-validate/
