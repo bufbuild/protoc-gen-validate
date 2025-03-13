@@ -1,11 +1,12 @@
 module github.com/envoyproxy/protoc-gen-validate
 
 go 1.21.1
+toolchain go1.23.7
 
 require (
 	github.com/iancoleman/strcase v0.3.0
 	github.com/lyft/protoc-gen-star/v2 v2.0.4-0.20230330145011-496ad1ac90a4
-	golang.org/x/net v0.35.0
+	golang.org/x/net v0.36.0
 	google.golang.org/protobuf v1.36.5
 )
 
