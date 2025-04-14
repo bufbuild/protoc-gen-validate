@@ -42,8 +42,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <protoc.version>3.22.2</protoc.version>
-        <google.guava.version>33.4.0-android</google.guava.version>
-        <google.protobuf.version>4.30.0</google.protobuf.version>
+        <google.guava.version>33.4.6-android</google.guava.version>
+        <google.protobuf.version>4.30.2</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
         <re2j.version>1.8</re2j.version>
@@ -53,7 +53,7 @@
         <assertj.version>3.27.3</assertj.version>
         <java.release>8</java.release>
         <java.version>1.8</java.version>
-        <proto-google-common-protos.version>2.53.0</proto-google-common-protos.version>
+        <proto-google-common-protos.version>2.54.1</proto-google-common-protos.version>
     </properties>
 
     <dependencyManagement>
@@ -141,7 +141,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.2</version>
+                <version>3.5.3</version>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
