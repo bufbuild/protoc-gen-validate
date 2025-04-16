@@ -1,9 +1,9 @@
 module github.com/envoyproxy/protoc-gen-validate/tests
 
-go 1.24.1
+go 1.24
 
 require (
-	golang.org/x/net v0.37.0
+	golang.org/x/net v0.39.0
 	google.golang.org/protobuf v1.36.5
 )
 
