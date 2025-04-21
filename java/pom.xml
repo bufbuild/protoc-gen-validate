@@ -42,18 +42,18 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <protoc.version>3.22.2</protoc.version>
-        <google.guava.version>33.4.6-android</google.guava.version>
+        <google.guava.version>33.4.8-android</google.guava.version>
         <google.protobuf.version>4.30.2</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
         <re2j.version>1.8</re2j.version>
         <commons.validator.version>1.9.0</commons.validator.version>
-        <grpc.version>1.71.0</grpc.version>
+        <grpc.version>1.72.0</grpc.version>
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.27.3</assertj.version>
         <java.release>8</java.release>
         <java.version>1.8</java.version>
-        <proto-google-common-protos.version>2.54.1</proto-google-common-protos.version>
+        <proto-google-common-protos.version>2.55.0</proto-google-common-protos.version>
     </properties>
 
     <dependencyManagement>
