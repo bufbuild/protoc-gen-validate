@@ -5,6 +5,6 @@ isort==6.0.1
 build==1.2.2.post1
 twine==6.1.0
 wheel==0.45.1
-setuptools==80.8.0
-protobuf==6.30.2
+setuptools==80.9.0
+protobuf==6.31.1
 setuptools_scm[toml]>=6.2
