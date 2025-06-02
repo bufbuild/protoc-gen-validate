@@ -43,12 +43,12 @@
 
         <protoc.version>3.22.2</protoc.version>
         <google.guava.version>33.4.8-android</google.guava.version>
-        <google.protobuf.version>4.31.0</google.protobuf.version>
+        <google.protobuf.version>4.31.1</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
         <re2j.version>1.8</re2j.version>
         <commons.validator.version>1.9.0</commons.validator.version>
-        <grpc.version>1.72.0</grpc.version>
+        <grpc.version>1.73.0</grpc.version>
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.27.3</assertj.version>
         <java.release>8</java.release>
