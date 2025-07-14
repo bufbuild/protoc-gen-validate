@@ -47,13 +47,13 @@
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
         <re2j.version>1.8</re2j.version>
-        <commons.validator.version>1.9.0</commons.validator.version>
+        <commons.validator.version>1.10.0</commons.validator.version>
         <grpc.version>1.73.0</grpc.version>
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.27.3</assertj.version>
         <java.release>8</java.release>
         <java.version>1.8</java.version>
-        <proto-google-common-protos.version>2.57.0</proto-google-common-protos.version>
+        <proto-google-common-protos.version>2.59.1</proto-google-common-protos.version>
     </properties>
 
     <dependencyManagement>
@@ -214,7 +214,7 @@
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>0.7.0</version>
+                        <version>0.8.0</version>
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
@@ -233,7 +233,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.2.7</version>
+                        <version>3.2.8</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
