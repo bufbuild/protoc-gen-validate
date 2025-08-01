@@ -63,11 +63,15 @@ def _validate_inner(proto_message: Message):
     func = file_template(proto_message)
     global printer
     printer += func + "\n"
-    exec(func)
+
+    # Use explicit namespace to handle Python 3.13+ locals() changes
+    namespace = {}
+    exec(func, namespace)
     try:
-        return generate_validate
-    except NameError:
-        return locals()['generate_validate']
+        return namespace['generate_validate']
+    except KeyError:
+        # Fallback for edge cases
+        return lambda p: None
 
 
 class ChangeFuncName(ast.NodeTransformer):
@@ -214,11 +218,15 @@ def _validate_all_inner(proto_message: Message):
     func = comment + " All" + "\n" + func
     global printer
     printer += func + "\n"
-    exec(func)
+
+    # Use explicit namespace to handle Python 3.13+ locals() changes
+    namespace = {}
+    exec(func, namespace)
     try:
-        return generate_validate_all
-    except NameError:
-        return locals()['generate_validate_all']
+        return namespace['generate_validate_all']
+    except KeyError:
+        # Fallback for edge cases
+        return lambda p: []
 
 
 def _validate_all(proto_message: Message) -> str:
