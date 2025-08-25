@@ -28,7 +28,7 @@ jobs:
       REF_NAME: ${{ inputs.ref }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ inputs.ref }}
       - uses: actions/setup-go@v5
@@ -59,7 +59,7 @@ jobs:
           git config --global user.name "envoy-bot"
 
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
