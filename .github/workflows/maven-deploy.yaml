@@ -20,7 +20,7 @@ jobs:
       REF_NAME: ${{ github.ref_name }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-go@v5
         with:
           go-version: 'stable'
@@ -50,7 +50,7 @@ jobs:
           git config --global user.name "envoy-bot"
 
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
