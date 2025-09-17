@@ -43,7 +43,7 @@
 
         <protoc.version>3.22.2</protoc.version>
         <google.guava.version>33.4.8-android</google.guava.version>
-        <google.protobuf.version>4.32.0</google.protobuf.version>
+        <google.protobuf.version>4.32.1</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
         <re2j.version>1.8</re2j.version>
@@ -141,7 +141,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.3</version>
+                <version>3.5.4</version>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
