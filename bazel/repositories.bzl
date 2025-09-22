@@ -87,14 +87,6 @@ def pgv_dependencies(maven_repos = _DEFAULT_REPOSITORIES):
             url = "https://github.com/bazelbuild/rules_python/releases/download/0.32.2/rules_python-0.32.2.tar.gz",
         )
 
-    if not native.existing_rule("rules_proto"):
-        http_archive(
-            name = "rules_proto",
-            sha256 = "303e86e722a520f6f326a50b41cfc16b98fe6d1955ce46642a5b7a67c11c0f5d",
-            strip_prefix = "rules_proto-6.0.0",
-            url = "https://github.com/bazelbuild/rules_proto/releases/download/6.0.0/rules_proto-6.0.0.tar.gz",
-        )
-
     if not native.existing_rule("rules_cc"):
         http_archive(
             name = "rules_cc",

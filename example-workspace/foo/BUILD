@@ -1,5 +1,5 @@
 load("@com_envoyproxy_protoc_gen_validate//bazel:pgv_proto_library.bzl", "pgv_cc_proto_library")
-load("@rules_python//python:proto.bzl", "py_proto_library")
+load("@com_google_protobuf//bazel:py_proto_library.bzl", "py_proto_library")
 
 package(
     default_visibility = ["//visibility:public"],

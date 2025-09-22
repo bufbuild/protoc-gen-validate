@@ -1,5 +1,5 @@
+load("@com_google_protobuf//bazel:proto_library.bzl", "proto_library")
 load("@rules_cc//cc:defs.bzl", "cc_binary")
-load("@rules_proto//proto:defs.bzl", "proto_library")
 load(
     "//bazel:pgv_proto_library.bzl",
     "pgv_cc_proto_library",
