@@ -50,7 +50,7 @@
         <commons.validator.version>1.10.0</commons.validator.version>
         <grpc.version>1.75.0</grpc.version>
         <junit.version>4.13.2</junit.version>
-        <assertj.version>3.27.5</assertj.version>
+        <assertj.version>3.27.6</assertj.version>
         <java.release>8</java.release>
         <java.version>1.8</java.version>
         <proto-google-common-protos.version>2.61.2</proto-google-common-protos.version>
@@ -214,7 +214,7 @@
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>0.8.0</version>
+                        <version>0.9.0</version>
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
