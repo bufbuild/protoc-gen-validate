@@ -1,6 +1,5 @@
 module(
     name = "protoc-gen-validate",
-    version = "1.2.1.bcr.1",
     compatibility_level = 1,
     repo_name = "com_envoyproxy_protoc_gen_validate",
 )
