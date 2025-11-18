@@ -6,6 +6,7 @@ import time
 import uuid
 from functools import lru_cache
 from ipaddress import IPv4Address, IPv6Address, ip_address
+from typing import Any
 from urllib import parse as urlparse
 
 from google.protobuf.message import Message
@@ -63,11 +64,9 @@ def _validate_inner(proto_message: Message):
     func = file_template(proto_message)
     global printer
     printer += func + "\n"
-    exec(func)
-    try:
-        return generate_validate
-    except NameError:
-        return locals()['generate_validate']
+    local_vars: dict[str, Any] = {}
+    exec(func, globals(), local_vars)
+    return local_vars['generate_validate']
 
 
 class ChangeFuncName(ast.NodeTransformer):
@@ -158,7 +157,7 @@ class ChangeEmbedded(ast.NodeTransformer):
     def visit_If(self, node: ast.If):
         self.generic_visit(node)
         for child in ast.iter_child_nodes(node):
-            if self._is_embedded_node(child):
+            if isinstance(child, ast.Assign) and self._is_embedded_node(child):
                 new_node = ast.AugAssign(
                     target=ast.Name(id="err", ctx=ast.Store()), op=ast.Add(), value=child.value
                 )  # err += _validate_all(p.{{ name }}
@@ -214,11 +213,9 @@ def _validate_all_inner(proto_message: Message):
     func = comment + " All" + "\n" + func
     global printer
     printer += func + "\n"
-    exec(func)
-    try:
-        return generate_validate_all
-    except NameError:
-        return locals()['generate_validate_all']
+    local_vars: dict[str, Any] = {}
+    exec(func, globals(), local_vars)
+    return local_vars['generate_validate_all']
 
 
 def _validate_all(proto_message: Message) -> str:
