@@ -28,7 +28,7 @@ jobs:
       REF_NAME: ${{ inputs.ref }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ inputs.ref }}
       - uses: actions/setup-go@v6
