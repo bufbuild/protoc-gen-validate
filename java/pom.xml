@@ -47,8 +47,8 @@
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
         <re2j.version>1.8</re2j.version>
-        <commons.validator.version>1.10.0</commons.validator.version>
-        <grpc.version>1.76.0</grpc.version>
+        <commons.validator.version>1.10.1</commons.validator.version>
+        <grpc.version>1.77.0</grpc.version>
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.27.6</assertj.version>
         <java.release>8</java.release>
@@ -172,7 +172,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -208,7 +208,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>versions-maven-plugin</artifactId>
-                        <version>2.19.1</version>
+                        <version>2.20.1</version>
                     </plugin>
 
                     <plugin>
