@@ -20,10 +20,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      SONATYPE_USER: ${{secrets.SONATYPE_USER}}
-      SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
-      GPG_KEY_NAME: ${{secrets.GPG_KEY_NAME}}
-      GPG_PASSPHRASE: ${{secrets.GPG_PASSPHRASE}}
       MAVEN_OPTS: "--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED"
       REF_NAME: ${{ inputs.ref }}
 
@@ -38,21 +34,6 @@ jobs:
         run: |
           echo "VERSION=${{ inputs.VERSION }}" >> $GITHUB_ENV
 
-      - name: 'Configure GPG signing'
-        env:
-          GPG_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: |
-          # https://github.com/keybase/keybase-issues/issues/2798
-          export GPG_TTY=$(tty)
-          # Import gpg keys and warm the passphrase to avoid the gpg
-          # passphrase prompt when initating a deploy
-          # `--pinentry-mode=loopback` could be needed to ensure we
-          # suppress the gpg prompt
-          echo $GPG_KEY | base64 --decode > signing-key
-          gpg --passphrase $GPG_PASSPHRASE --batch --import signing-key
-          shred signing-key
-
       - name: Configure GIT
         run: |
           git config --global user.email "envoy-bot@users.noreply.github.com"
@@ -62,13 +43,11 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
           cache: 'maven'
-          server-id: ossrh
-          server-username: ${ env.SONATYPE_USER }
-          server-password: ${ env.SONATYPE_PASSWORD }
-          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
-          gpg-passphrase: ${ env.GPG_PASSPHRASE }
+          server-id: central
+          server-username: SONATYPE_USERNAME
+          server-password: SONATYPE_PASSWORD
 
       - name: Update version in pom
         working-directory: ${{ github.workspace }}/java
@@ -80,9 +59,9 @@ jobs:
           ./mvnw -B -s settings.xml ${{ inputs.deployArgs }} clean deploy \
           -Darguments="-s settings.xml" \
           -DreleaseVersion=${{ env.VERSION }} \
-          -DdevelopmentVersion=${{ env.VERSION }}-SNAPSHOT \
-          -DscmCommentPrefix="java release: "
+          -DdevelopmentVersion=${{ env.VERSION }}-SNAPSHOT
         env:
-          MAVEN_USERNAME: ${{ env.SONATYPE_USER }}
-          MAVEN_CENTRAL_TOKEN: ${{ env.SONATYPE_PASSWORD }}
+          MAVEN_GPG_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USER }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
