@@ -48,6 +48,7 @@ jobs:
         working-directory: ${{ github.workspace }}/java
         run: |
           ./mvnw -B -s settings.xml clean deploy \
+          -P release \
           -Darguments="-s settings.xml" \
           -DreleaseVersion=${{ env.VERSION }} \
           -DdevelopmentVersion=${{ env.VERSION }}-SNAPSHOT
