@@ -11,22 +11,5 @@
             <username>${env.GITHUB_ACTOR}</username>
             <password>${env.GITHUB_TOKEN}</password>
         </server>
-        <server>
-            <id>gpg.passphrase</id>
-            <passphrase>${env.GPG_PASSPHRASE}</passphrase>
-        </server>
     </servers>
-    <profiles>
-        <profile>
-            <id>signing</id>
-            <properties>
-                <gpg.executable>gpg</gpg.executable>
-                <gpg.keyname>${env.GPG_KEY_NAME}</gpg.keyname>
-                <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
-            </properties>
-        </profile>
-    </profiles>
-    <activeProfiles>
-        <activeProfile>signing</activeProfile>
-    </activeProfiles>
 </settings>

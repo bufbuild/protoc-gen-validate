@@ -50,8 +50,7 @@ jobs:
           ./mvnw -B -s settings.xml clean deploy \
           -Darguments="-s settings.xml" \
           -DreleaseVersion=${{ env.VERSION }} \
-          -DdevelopmentVersion=${{ env.VERSION }}-SNAPSHOT \
-          -DscmCommentPrefix="java release: "
+          -DdevelopmentVersion=${{ env.VERSION }}-SNAPSHOT
         env:
           MAVEN_GPG_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
