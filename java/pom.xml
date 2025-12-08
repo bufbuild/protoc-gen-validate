@@ -43,7 +43,7 @@
 
         <protoc.version>3.22.2</protoc.version>
         <google.guava.version>33.5.0-android</google.guava.version>
-        <google.protobuf.version>4.33.1</google.protobuf.version>
+        <google.protobuf.version>4.33.2</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
         <re2j.version>1.8</re2j.version>
@@ -186,7 +186,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.0</version>
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <releaseProfiles>release</releaseProfiles>
