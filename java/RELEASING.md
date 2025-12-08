@@ -16,24 +16,3 @@ then run the following to kick off a release build:
 
 The [`Maven Deploy`](../.github/workflows/maven-publish.yaml) CI flow will use the version number from the tag to deploy
 to the Maven repository.
-
-## Manually releasing from git history
-
-Manually releasing from git history is a more involved process, but allows you
-to release from any point in the history.
-
-1. Create a new `release/x.y.z` branch at the point you want to release.
-1. Copy `java/settings.xml` to a scratch location.
-1. Fill out the parameters in `settings.xml`. You will need a published GPG key
-   for code signing and the EnvoyReleaseBot sonatype username and password.
-1. Execute the release command, substituting the path to `settings.xml`, the
-   `releaseVersion`, and the next `developmentVersion` (-SNAPSHOT).
-1. Merge the release branch back into master.
-
-```shell
-mvn -B -s /path/to/settings.xml clean release:prepare release:perform \
-  -Darguments="-s /path/to/settings.xml" \
-  -DreleaseVersion=x.y.z \
-  -DdevelopmentVersion=x.y.z-SNAPSHOT \
-  -DscmCommentPrefix="java release: "
-```

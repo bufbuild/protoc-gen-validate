@@ -47,9 +47,8 @@ jobs:
       - name: Publish to Maven Packages Apache Maven
         working-directory: ${{ github.workspace }}/java
         run: |
-          ./mvnw -B -s settings.xml clean deploy \
+          ./mvnw -B clean deploy \
           -P release \
-          -Darguments="-s settings.xml" \
           -DreleaseVersion=${{ env.VERSION }} \
           -DdevelopmentVersion=${{ env.VERSION }}-SNAPSHOT
         env:
