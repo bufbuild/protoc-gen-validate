@@ -30,4 +30,4 @@ jobs:
           docker run --rm \
           --env PYPI_REPO=pypi \
           --env PGV_PYPI_TOKEN="${{ secrets.PGV_PYPI_TOKEN }}" \
-          ${{ env.IMAGE_TAG }} SETUPTOOLS_SCM_PRETEND_VERSION=${{ env.REF_NAME }} python-release
+          ${{ env.IMAGE_TAG }} SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PROTOC_GEN_VALIDATE=${{ env.REF_NAME }} python-release
