@@ -444,7 +444,7 @@ func (fns javaFuncs) javaStringEscape(s string) string {
 	s = s[1 : len(s)-1]
 	s = strings.ReplaceAll(s, `\u00`, `\x`)
 	s = strings.ReplaceAll(s, `\x`, `\\x`)
-	// s = strings.ReplaceAll(s, `\`, `\\`)
+	s = strings.ReplaceAll(s, `\`, `\\`)
 	s = strings.ReplaceAll(s, `"`, `\"`)
 	return `"` + s + `"`
 }
