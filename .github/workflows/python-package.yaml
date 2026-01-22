@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -30,4 +30,4 @@ jobs:
           docker run --rm \
           --env PYPI_REPO=pypi \
           --env PGV_PYPI_TOKEN="${{ secrets.PGV_PYPI_TOKEN }}" \
-          ${{ env.IMAGE_TAG }} SETUPTOOLS_SCM_PRETEND_VERSION=${{ env.REF_NAME }} python-release
+          ${{ env.IMAGE_TAG }} SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PROTOC_GEN_VALIDATE=${{ env.REF_NAME }} python-release

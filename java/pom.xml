@@ -43,17 +43,17 @@
 
         <protoc.version>3.22.2</protoc.version>
         <google.guava.version>33.5.0-android</google.guava.version>
-        <google.protobuf.version>4.33.1</google.protobuf.version>
+        <google.protobuf.version>4.33.4</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
         <re2j.version>1.8</re2j.version>
-        <commons.validator.version>1.10.0</commons.validator.version>
-        <grpc.version>1.76.0</grpc.version>
+        <commons.validator.version>1.10.1</commons.validator.version>
+        <grpc.version>1.78.0</grpc.version>
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.27.6</assertj.version>
         <java.release>8</java.release>
         <java.version>1.8</java.version>
-        <proto-google-common-protos.version>2.63.1</proto-google-common-protos.version>
+        <proto-google-common-protos.version>2.64.1</proto-google-common-protos.version>
     </properties>
 
     <dependencyManagement>
@@ -172,7 +172,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -182,52 +182,46 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <releaseProfiles>release</releaseProfiles>
+                    <tagNameFormat>v@{project.version}-java</tagNameFormat>
+                    <scmCommentPrefix>java release: </scmCommentPrefix>
+                    <checkModificationExcludes>
+                        <checkModificationExclude>java/pom.xml</checkModificationExclude>
+                    </checkModificationExcludes>
+                </configuration>
+                <!-- No executions -->
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.21.0</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.10.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                    <waitUntil>published</waitUntil>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
     <profiles>
         <profile>
-            <id>ci</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                        <version>3.2.0</version>
-                        <configuration>
-                            <autoVersionSubmodules>true</autoVersionSubmodules>
-                            <tagNameFormat>v@{project.version}-java</tagNameFormat>
-                            <scmCommentPrefix>java release: </scmCommentPrefix>
-                            <checkModificationExcludes>
-                                <checkModificationExclude>java/pom.xml</checkModificationExclude>
-                            </checkModificationExcludes>
-                        </configuration>
-                        <!-- No executions -->
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>versions-maven-plugin</artifactId>
-                        <version>2.19.1</version>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>0.9.0</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <publishingServerId>central</publishingServerId>
-                            <autoPublish>true</autoPublish>
-                            <waitUntil>published</waitUntil>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>signing</id>
+            <id>release</id>
             <build>
                 <plugins>
                     <plugin>
@@ -242,10 +236,7 @@
                                     <goal>sign</goal>
                                 </goals>
                                 <configuration>
-                                    <gpgArguments>
-                                        <arg>--pinentry-mode</arg>
-                                        <arg>loopback</arg>
-                                    </gpgArguments>
+                                    <signer>bc</signer>
                                 </configuration>
                             </execution>
                         </executions>
