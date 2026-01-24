@@ -44,7 +44,7 @@ lint: bin/golangci-lint ## lints the package for common code smells
 	isort --check-only python/protoc_gen_validate/validator.py
 
 bin/golangci-lint:
-	GOBIN=$(shell pwd)/bin go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.54.2
+	GOBIN=$(shell pwd)/bin go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.5
 
 bin/protoc-gen-go:
 	GOBIN=$(shell pwd)/bin go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.30.0
