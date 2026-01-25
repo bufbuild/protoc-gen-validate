@@ -14,7 +14,7 @@ def _pgv_pip_dependencies():
 def _pgv_go_dependencies():
     go_rules_dependencies()
     go_register_toolchains(
-        version = "1.21.1",
+        version = "1.24.1",
     )
     gazelle_dependencies()
 

@@ -10,7 +10,7 @@ on:
 env:
   # Keep these versions in sync with the Dockerfile
   BDR_VER: '6.0.1'
-  GO_VER: '1.21.x'
+  GO_VER: '1.24.x'
   PGG_VER: 'v1.31.0'
   PROTOC_VER: '24.3'
   PYTHON_VER: '3.9'
