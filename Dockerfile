@@ -12,8 +12,8 @@ ENV INSTALL_DEPS \
   wget \
   maven \
   patch \
-  python3.9 \
-  python3.9-venv \
+  python3.10 \
+  python3.10-venv \
   python3-pip \
   apt-transport-https \
   curl \
@@ -63,13 +63,13 @@ RUN go install github.com/bazelbuild/buildtools/buildozer@${BDR_VER} \
 
 # python must be on PATH for the execution of py_binary bazel targets, but
 # the distribution we installed doesn't provide this alias
-RUN ln -s /usr/bin/python3.9 /usr/bin/python
+RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
 WORKDIR ${GOPATH}/src/github.com/envoyproxy/protoc-gen-validate
 
 # python tooling for linting and uploading to PyPI
 COPY requirements.txt .
-RUN python3.9 -m pip install -r requirements.txt
+RUN python3.10 -m pip install -r requirements.txt
 
 COPY . .
 
