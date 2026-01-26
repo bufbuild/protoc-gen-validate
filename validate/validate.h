@@ -152,27 +152,70 @@ static inline bool IsHostname(const string& to_validate) {
 
 namespace {
 
-inline int OneCharLen(const char* src) {
-  return "\1\1\1\1\1\1\1\1\1\1\1\1\2\2\3\4"[(*src & 0xFF) >> 4];
-}
+// Secure UTF-8 validation - returns actual byte length or 0 for invalid sequences
+inline int ValidateUtf8Char(const char* str, ptrdiff_t remaining) {
+  if (remaining <= 0) return 0;
 
-inline int UTF8FirstLetterNumBytes(const char *utf8_str, int str_len) {
-  if (str_len == 0)
-    return 0;
-  return OneCharLen(utf8_str);
+  unsigned char byte0 = static_cast<unsigned char>(str[0]);
+
+  // Single-byte ASCII
+  if (byte0 <= 0x7F) return 1;
+
+  // Two-byte sequence
+  if ((byte0 & 0xE0) == 0xC0) {
+    if (remaining < 2) return 0;
+    unsigned char byte1 = static_cast<unsigned char>(str[1]);
+    if ((byte1 & 0xC0) != 0x80) return 0;
+    // Check for overlong encoding
+    if (byte0 < 0xC2) return 0;
+    return 2;
+  }
+
+  // Three-byte sequence
+  if ((byte0 & 0xF0) == 0xE0) {
+    if (remaining < 3) return 0;
+    unsigned char byte1 = static_cast<unsigned char>(str[1]);
+    unsigned char byte2 = static_cast<unsigned char>(str[2]);
+    if ((byte1 & 0xC0) != 0x80 || (byte2 & 0xC0) != 0x80) return 0;
+    // Check for overlong encoding and surrogates
+    if (byte0 == 0xE0 && byte1 < 0xA0) return 0;
+    if (byte0 == 0xED && byte1 >= 0xA0) return 0;
+    return 3;
+  }
+
+  // Four-byte sequence
+  if ((byte0 & 0xF8) == 0xF0) {
+    if (remaining < 4) return 0;
+    unsigned char byte1 = static_cast<unsigned char>(str[1]);
+    unsigned char byte2 = static_cast<unsigned char>(str[2]);
+    unsigned char byte3 = static_cast<unsigned char>(str[3]);
+    if ((byte1 & 0xC0) != 0x80 || (byte2 & 0xC0) != 0x80 || (byte3 & 0xC0) != 0x80) return 0;
+    // Check for overlong encoding and out-of-range code points
+    if (byte0 == 0xF0 && byte1 < 0x90) return 0;
+    if (byte0 >= 0xF4 && (byte0 > 0xF4 || byte1 >= 0x90)) return 0;
+    return 4;
+  }
+
+  // Invalid UTF-8 start byte
+  return 0;
 }
 
 inline size_t Utf8Len(const string& narrow_string) {
   const char* str_char = narrow_string.c_str();
   ptrdiff_t byte_len = narrow_string.length();
   size_t unicode_len = 0;
-  int char_len = 1;
-  while (byte_len > 0 && char_len > 0) {
-    char_len = UTF8FirstLetterNumBytes(str_char, byte_len);
+
+  while (byte_len > 0) {
+    int char_len = ValidateUtf8Char(str_char, byte_len);
+    if (char_len == 0) {
+      // Invalid UTF-8 sequence detected - return 0 to signal error
+      return 0;
+    }
     str_char += char_len;
     byte_len -= char_len;
     ++unicode_len;
   }
+
   return unicode_len;
 }
 
