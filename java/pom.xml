@@ -43,7 +43,7 @@
 
         <protoc.version>3.22.2</protoc.version>
         <google.guava.version>33.5.0-android</google.guava.version>
-        <google.protobuf.version>4.33.4</google.protobuf.version>
+        <google.protobuf.version>4.33.5</google.protobuf.version>
         <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
 
         <re2j.version>1.8</re2j.version>
@@ -109,7 +109,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.1</version>
+                <version>3.15.0</version>
                 <configuration>
                     <release>${java.release}</release>
                     <source>${java.version}</source>
