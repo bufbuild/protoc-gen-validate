@@ -34,6 +34,7 @@ proto_library(
     visibility = ["//visibility:public"],
     deps = [
         "//tests/harness/cases/other_package:embed_proto",
+        "//tests/harness/cases/other_package/nested:enum_proto",
         "//tests/harness/cases/sort:sort_proto",
         "//tests/harness/cases/yet_another_package:embed_proto",
         "//validate:validate_proto",
@@ -50,6 +51,7 @@ pgv_go_proto_library(
     proto = ":cases_proto",
     deps = [
         "//tests/harness/cases/other_package:go",
+        "//tests/harness/cases/other_package/nested:go",
         "//tests/harness/cases/sort:go",
         "//tests/harness/cases/yet_another_package:go",
         "@org_golang_google_protobuf//types/known/anypb:go_default_library",
@@ -63,6 +65,7 @@ pgv_cc_proto_library(
     name = "cc",
     cc_deps = [
         "//tests/harness/cases/other_package:cc",
+        "//tests/harness/cases/other_package/nested:cc",
         "//tests/harness/cases/sort:cc",
         "//tests/harness/cases/yet_another_package:cc",
     ],
@@ -81,6 +84,7 @@ pgv_java_proto_library(
     java_deps = [
         ":cases_java_proto",
         "//tests/harness/cases/other_package:java",
+        "//tests/harness/cases/other_package/nested:java",
         "//tests/harness/cases/yet_another_package:java",
         "//tests/harness/cases/sort:java",
     ],

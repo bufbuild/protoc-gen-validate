@@ -19,6 +19,7 @@ go_library(
         "//tests/harness:harness_go_proto",
         "//tests/harness/cases:go",
         "//tests/harness/cases/other_package:go",
+        "//tests/harness/cases/other_package/nested:go",
         "//tests/harness/cases/sort:go",
         "//tests/harness/cases/yet_another_package:go",
         "@org_golang_google_protobuf//proto:go_default_library",

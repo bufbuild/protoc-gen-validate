@@ -26,6 +26,9 @@ const repTpl = `
 	{{ end }}
 
 	{{ if $r.GetUnique }}
+	{{ if isRepeatedEnum $f }}
+	std::unordered_set<int> {{ lookup $f "Unique" }};
+	{{ else }}
 	// Implement comparison for wrapped reference types
 	struct cmp {
 		bool operator() (const std::reference_wrapper<{{ $typ }}> lhs, const std::reference_wrapper<{{ $typ }}> rhs) const {
@@ -44,6 +47,7 @@ const repTpl = `
 	// Save a set of references to avoid copying overhead
 	std::unordered_set<std::reference_wrapper<{{ $typ }}>, hash, cmp> {{ lookup $f "Unique" }};
 	{{ end }}
+	{{ end }}
 
 	{{ if or $r.GetUnique (ne (.Elem "" "").Typ "none") }}
 		for (int i = 0; i < {{ accessor . }}.size(); i++) {
@@ -51,7 +55,11 @@ const repTpl = `
 			(void)item;
 
 			{{ if $r.GetUnique }}
+				{{ if isRepeatedEnum $f }}
+				auto p = {{ lookup $f "Unique" }}.emplace(item);
+				{{ else }}
 				auto p = {{ lookup $f "Unique" }}.emplace(const_cast<{{ $typ }}&>(item));
+				{{ end }}
 				if (p.second == false) {
 					{{ errIdx . "i" "repeated value must contain unique items" }}
 				}
