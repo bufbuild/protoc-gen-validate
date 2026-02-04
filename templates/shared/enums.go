@@ -11,6 +11,10 @@ func isEnum(f pgs.Field) bool {
 	return f.Type().IsEnum()
 }
 
+func isRepeatedEnum(f pgs.Field) bool {
+	return f.Type().IsRepeated() && f.Type().Element().IsEnum()
+}
+
 func enumNamesMap(values []pgs.EnumValue) (m map[int32]string) {
 	m = make(map[int32]string)
 	for _, v := range values {

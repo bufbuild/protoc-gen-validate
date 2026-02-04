@@ -6,6 +6,7 @@ import (
 
 	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
 	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
+	nested "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/nested/go"
 	sort "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/sort/go"
 	yet_another_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/yet_another_package/go"
 	"google.golang.org/protobuf/proto"
@@ -1035,12 +1036,19 @@ var enumCases = []TestCase{
 	{"enum repeated (external) - defined_only - valid", &cases.RepeatedExternalEnumDefined{Val: []other_package.Embed_Enumerated{other_package.Embed_VALUE}}, 0},
 	{"enum repeated (external) - defined_only - invalid", &cases.RepeatedExternalEnumDefined{Val: []other_package.Embed_Enumerated{math.MaxInt32}}, 1},
 
+	{"enum repeated (external multilevel) - defined_only - valid", &cases.RepeatedExternalEnumMultiLevelDefined{Val: []nested.DeepEnum{nested.DeepEnum_DEEP_ONE}}, 0},
+	{"enum repeated (external multilevel) - defined_only - invalid", &cases.RepeatedExternalEnumMultiLevelDefined{Val: []nested.DeepEnum{math.MaxInt32}}, 1},
+
 	{"enum repeated (another external) - defined_only - valid", &cases.RepeatedYetAnotherExternalEnumDefined{Val: []yet_another_package.Embed_Enumerated{yet_another_package.Embed_VALUE}}, 0},
 
 	{"enum repeated (external) - in - valid", &cases.RepeatedEnumExternal{Foo: []other_package.Embed_FooNumber{other_package.Embed_ZERO, other_package.Embed_TWO}}, 0},
 	{"enum repeated (external) - in - invalid", &cases.RepeatedEnumExternal{Foo: []other_package.Embed_FooNumber{other_package.Embed_ONE}}, 1},
 	{"enum repeated (external) - not in - valid", &cases.RepeatedEnumExternal{Bar: []yet_another_package.Embed_BarNumber{yet_another_package.Embed_ZERO, yet_another_package.Embed_TWO}}, 0},
 	{"enum repeated (external) - not in - invalid", &cases.RepeatedEnumExternal{Bar: []yet_another_package.Embed_BarNumber{yet_another_package.Embed_ONE}}, 1},
+	{"enum repeated (external multilevel) - in - valid", &cases.RepeatedExternalEnumMultiLevel{Foo: []nested.DeepEnum{nested.DeepEnum_DEEP_ONE}}, 0},
+	{"enum repeated (external multilevel) - in - invalid", &cases.RepeatedExternalEnumMultiLevel{Foo: []nested.DeepEnum{nested.DeepEnum_DEEP_UNSPECIFIED}}, 1},
+	{"enum repeated (external multilevel) - not in - valid", &cases.RepeatedExternalEnumMultiLevel{Bar: []nested.DeepEnum{nested.DeepEnum_DEEP_UNSPECIFIED}}, 0},
+	{"enum repeated (external multilevel) - not in - invalid", &cases.RepeatedExternalEnumMultiLevel{Bar: []nested.DeepEnum{nested.DeepEnum_DEEP_ONE}}, 1},
 
 	{"enum map - defined_only - valid", &cases.MapEnumDefined{Val: map[string]cases.TestEnum{"foo": cases.TestEnum_TWO}}, 0},
 	{"enum map - defined_only - invalid", &cases.MapEnumDefined{Val: map[string]cases.TestEnum{"foo": math.MaxInt32}}, 1},
@@ -1116,6 +1124,9 @@ var repeatedCases = []TestCase{
 	{"repeated - unique - valid (empty)", &cases.RepeatedUnique{}, 0},
 	{"repeated - unique - valid (case sensitivity)", &cases.RepeatedUnique{Val: []string{"foo", "Foo"}}, 0},
 	{"repeated - unique - invalid", &cases.RepeatedUnique{Val: []string{"foo", "bar", "foo", "baz"}}, 1},
+	{"repeated - unique enum - valid", &cases.RepeatedUniqueEnum{Val: []cases.AnEnum{cases.AnEnum_X, cases.AnEnum_Y}}, 0},
+	{"repeated - unique enum - valid (empty)", &cases.RepeatedUniqueEnum{}, 0},
+	{"repeated - unique enum - invalid", &cases.RepeatedUniqueEnum{Val: []cases.AnEnum{cases.AnEnum_X, cases.AnEnum_X}}, 1},
 
 	{"repeated - items - valid", &cases.RepeatedItemRule{Val: []float32{1, 2, 3}}, 0},
 	{"repeated - items - valid (empty)", &cases.RepeatedItemRule{Val: []float32{}}, 0},
