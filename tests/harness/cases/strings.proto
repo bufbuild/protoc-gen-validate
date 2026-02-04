@@ -20,6 +20,8 @@ message StringMinMaxBytes    { string val = 1 [(validate.rules).string = {min_by
 message StringEqualMinMaxBytes    { string val = 1 [(validate.rules).string = {min_bytes: 4, max_bytes: 8}]; }
 message StringPattern        { string val = 1 [(validate.rules).string.pattern = "(?i)^[a-z0-9]+$"]; }
 message StringPatternEscapes { string val = 1 [(validate.rules).string.pattern = "\\* \\\\ \\w"]; }
+message StringPatternQuote   { string val = 1 [(validate.rules).string.pattern = "^[^\"]*$"]; }
+message StringPatternHex     { string val = 1 [(validate.rules).string.pattern = "^\\x41+$"]; }
 message StringPrefix         { string val = 1 [(validate.rules).string.prefix = "foo"]; }
 message StringContains       { string val = 1 [(validate.rules).string.contains = "bar"]; }
 message StringNotContains    { string val = 1 [(validate.rules).string.not_contains = "bar"]; }

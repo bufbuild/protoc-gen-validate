@@ -377,7 +377,7 @@ def string_template(option_value, name):
     {%- endif -%}
     {%- if s['pattern'] %}
     if re.search(r\'{{ s['pattern'] }}\', {{ name }}) is None:
-        raise ValidationFailed(\"{{ name }} pattern does not match {{ s['pattern'] }}\")
+        raise ValidationFailed(\"{{ name }} pattern does not match \" + r\'{{ s['pattern'] }}\')
     {%- endif -%}
     {%- if s['prefix'] %}
     if not {{ name }}.startswith(\"{{ s['prefix'] }}\"):
