@@ -143,14 +143,14 @@ prepare-python-release:
 .PHONY: python-release
 python-release: prepare-python-release
 	rm -rf python/dist
-	python3.9 -m build --no-isolation --sdist python
-	# the below command should be identical to `python3.9 -m build --wheel`
+	python3.10 -m build --no-isolation --sdist python
+	# the below command should be identical to `python3.10 -m build --wheel`
 	# however that returns mysterious `error: could not create 'build': File exists`.
 	# setuptools copies source and data files to a temporary build directory,
 	# but why there's a collision or why setuptools stopped respecting the `build_lib` flag is unclear.
 	# As a workaround, we build a source distribution and then separately build a wheel from it.
-	python3.9 -m pip wheel --wheel-dir python/dist --no-deps python/dist/*
-	python3.9 -m twine upload --verbose --skip-existing --repository ${PYPI_REPO} --username "__token__" --password ${PGV_PYPI_TOKEN} python/dist/*
+	python3.10 -m pip wheel --wheel-dir python/dist --no-deps python/dist/*
+	python3.10 -m twine upload --verbose --skip-existing --repository ${PYPI_REPO} --username "__token__" --password ${PGV_PYPI_TOKEN} python/dist/*
 
 .PHONY: check-generated
 check-generated: ## run during CI; this checks that the checked-in generated code matches the generated version.
