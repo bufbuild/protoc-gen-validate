@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM ubuntu:jammy
 
 ENV DEBIAN_FRONTEND=noninteractive
 # apt packages
@@ -17,7 +17,7 @@ ENV INSTALL_DEPS \
   python3-pip \
   apt-transport-https \
   curl \
-  openjdk-8-jdk \
+  openjdk-11-jdk \
   gnupg
 
 RUN apt update \
