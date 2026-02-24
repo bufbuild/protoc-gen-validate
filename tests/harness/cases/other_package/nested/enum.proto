@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package tests.harness.cases.other_package.nested;
+option go_package = "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/nested/go;nested";
+
+enum DeepEnum {
+    DEEP_UNSPECIFIED = 0;
+    DEEP_ONE = 1;
+}

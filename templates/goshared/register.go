@@ -415,3 +415,29 @@ func (fns goSharedFuncs) enumPackages(enums []pgs.Enum) map[pgs.Name]NormalizedE
 func (fns goSharedFuncs) snakeCase(name string) string {
 	return strcase.ToSnake(name)
 }
+
+func (fns goSharedFuncs) Type(f pgs.Field) pgsgo.TypeName {
+	if f.Type().ProtoType() == pgs.EnumT {
+		ens := fns.enumPackages(fns.externalEnums(f.File()))
+		// Check if the imported name of the enum has collided and been renamed
+		if len(ens) != 0 {
+			enType := f.Type().Enum()
+			if f.Type().IsRepeated() {
+				enType = f.Type().Element().Enum()
+			}
+
+			enImportPath := fns.ImportPath(enType)
+			for pkg, en := range ens {
+				if en.FilePath == enImportPath {
+					name := fns.enumName(enType)
+					if f.Type().IsRepeated() {
+						return pgsgo.TypeName("[]" + pkg.String() + "." + name)
+					}
+					return pgsgo.TypeName(pkg.String() + "." + name)
+				}
+			}
+		}
+	}
+
+	return fns.Context.Type(f)
+}

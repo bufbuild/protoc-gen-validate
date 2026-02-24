@@ -315,7 +315,7 @@ func (fns CCFuncs) inType(f pgs.Field, x interface{}) string {
 			return fns.cTypeOfString(fns.Type(f).Value().String())
 		}
 
-		return fns.PackageName(fldEn).String() + "::" + fns.Type(f).Value().String()
+		return fns.packageName(fldEn) + "::" + fns.Type(f).Value().String()
 	default:
 		return fns.cType(f.Type())
 	}
