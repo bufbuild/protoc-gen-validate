@@ -326,6 +326,8 @@ func (fns goSharedFuncs) msgTyp(message pgs.Message) pgsgo.TypeName {
 func (fns goSharedFuncs) externalEnums(file pgs.File) []pgs.Enum {
 	var out []pgs.Enum
 
+	fileImportPath := fns.ImportPath(file)
+
 	for _, msg := range file.AllMessages() {
 		for _, fld := range msg.Fields() {
 			var en pgs.Enum
@@ -338,7 +340,7 @@ func (fns goSharedFuncs) externalEnums(file pgs.File) []pgs.Enum {
 				en = fld.Type().Element().Enum()
 			}
 
-			if en != nil && en.File().Package().ProtoName() != msg.File().Package().ProtoName() {
+			if en != nil && fns.ImportPath(en) != fileImportPath {
 				out = append(out, en)
 			}
 		}
