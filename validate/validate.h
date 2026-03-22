@@ -156,10 +156,20 @@ inline int OneCharLen(const char* src) {
   return "\1\1\1\1\1\1\1\1\1\1\1\1\2\2\3\4"[(*src & 0xFF) >> 4];
 }
 
-inline int UTF8FirstLetterNumBytes(const char *utf8_str, int str_len) {
+inline int UTF8FirstLetterNumBytes(const char *utf8_str, ptrdiff_t str_len) {
   if (str_len == 0)
     return 0;
-  return OneCharLen(utf8_str);
+  int char_len = OneCharLen(utf8_str);
+  // Clamp to remaining bytes: a truncated multi-byte sequence
+  // counts as a single (invalid) character.
+  if (char_len > str_len)
+    return 1;
+  // Validate continuation bytes (must have 10xxxxxx pattern).
+  for (int i = 1; i < char_len; i++) {
+    if ((static_cast<unsigned char>(utf8_str[i]) & 0xC0) != 0x80)
+      return 1;  // Invalid continuation: count leader as single char.
+  }
+  return char_len;
 }
 
 inline size_t Utf8Len(const string& narrow_string) {
