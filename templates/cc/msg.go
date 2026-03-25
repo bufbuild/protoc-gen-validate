@@ -2,6 +2,7 @@ package cc
 
 const declTpl = `
 {{ if not (ignored .) -}}
+{{ if markDeprecated }}[[deprecated("Use github.com/bufbuild/protovalidate instead.")]] {{ end -}}
 extern bool Validate(const {{ class . }}& m, pgv::ValidationMsg* err);
 {{- end -}}
 `
@@ -149,6 +150,8 @@ const msgTpl = `
 
 {{ end }}{{ end }}
 
+{{ if markDeprecated }}[[deprecated("Use github.com/bufbuild/protovalidate instead.")]]
+{{ end -}}
 bool Validate(const {{ class . }}& m, pgv::ValidationMsg* err) {
 	(void)m;
 	(void)err;

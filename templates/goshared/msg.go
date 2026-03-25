@@ -7,6 +7,9 @@ const msgTpl = `
 {{- else -}}
 	{{ cmt "Validate checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, the first error encountered is returned, or nil if there are no violations." }}
 {{- end -}}
+{{ if markDeprecated }}//
+// Deprecated: Use github.com/bufbuild/protovalidate instead.
+{{ end -}}
 func (m {{ (msgTyp .).Pointer }}) Validate() error {
 	return m.validate(false)
 }
@@ -16,6 +19,9 @@ func (m {{ (msgTyp .).Pointer }}) Validate() error {
 {{- else -}}
 	{{ cmt "ValidateAll checks the field values on " (msgTyp .) " with the rules defined in the proto definition for this message. If any rules are violated, the result is a list of violation errors wrapped in " (multierrname .) ", or nil if none found." }}
 {{- end -}}
+{{ if markDeprecated }}//
+// Deprecated: Use github.com/bufbuild/protovalidate instead.
+{{ end -}}
 func (m {{ (msgTyp .).Pointer }}) ValidateAll() error {
 	return m.validate(true)
 }

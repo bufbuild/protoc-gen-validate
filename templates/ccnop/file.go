@@ -18,6 +18,7 @@ namespace {{ . }} {
 using std::string;
 
 {{ range .AllMessages }}
+	{{ if markDeprecated }}[[deprecated("Use github.com/bufbuild/protovalidate instead.")]] {{ end -}}
 	extern inline bool Validate(__attribute__((unused)) const {{ class . }}& m, __attribute__((unused)) pgv::ValidationMsg* err) { return true; }
 {{ end }}
 

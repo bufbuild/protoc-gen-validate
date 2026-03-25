@@ -4,7 +4,12 @@ const msgTpl = `
 {{ if not (ignored .) -}}
 	/**
 	 * Validates {@code {{ simpleName . }}} protobuf objects.
+	 {{ if markDeprecated -}}*
+	 * @deprecated Use github.com/bufbuild/protovalidate instead.
+	 {{ end -}}
 	 */
+	{{ if markDeprecated }}@Deprecated
+	{{ end -}}
 	public static class {{ simpleName . }}Validator implements io.envoyproxy.pgv.ValidatorImpl<{{ qualifiedName . }}> {
 		{{- template "msgInner" . -}}
 	}
