@@ -1,0 +1,13 @@
+syntax = "proto3";
+package io.envoyproxy.pgv.grpc;
+
+option java_multiple_files = true;
+option java_package = "io.envoyproxy.pgv.validate";
+import "validate/validate.proto";
+
+message PatternMessage {
+    // https://github.com/envoyproxy/envoy/blob/0baaeb4a832cd5683b221cea98b05ed139b3e332/api/envoy/extensions/filters/http/oauth2/v3/oauth.proto#L148-L149
+    string message1 = 1 [(validate.rules).string = {pattern: "^$|^[^\\x00-\\x1f\\x7f \",;<>\\\\]+$"}];
+    // https://github.com/envoyproxy/envoy/blob/0baaeb4a832cd5683b221cea98b05ed139b3e332/api/envoy/extensions/filters/http/oauth2/v3/oauth.proto#L49
+    string message2 = 2 [(validate.rules).string = {pattern: "^$|^/[^\\x00-\\x1f\\x7f \",;<>\\\\]*$"}];
+}
