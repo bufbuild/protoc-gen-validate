@@ -315,7 +315,7 @@ def const_template(option_value, name):
         {% endif %}
     {%- endif -%}
     """
-    return Template(const_tmpl).render(sys=sys, o=option_value, name=name, str=str)
+    return Template(const_tmpl, autoescape=True).render(sys=sys, o=option_value, name=name, str=str)
 
 
 def in_template(value, name):
@@ -329,7 +329,7 @@ def in_template(value, name):
         raise ValidationFailed(\"{{ name }} in {{ value['not_in'] }}\")
     {%- endif -%}
     """
-    return Template(in_tmpl).render(value=value, name=name)
+    return Template(in_tmpl, autoescape=True).render(value=value, name=name)
 
 
 def string_template(option_value, name):
@@ -446,7 +446,7 @@ def string_template(option_value, name):
     {%- endif -%}
     {% endfilter %}
     """
-    return Template(str_templ).render(o=option_value, name=name, const_template=const_template, in_template=in_template)
+    return Template(str_templ, autoescape=True).render(o=option_value, name=name, const_template=const_template, in_template=in_template)
 
 
 def required_template(value, name):
@@ -455,7 +455,7 @@ def required_template(value, name):
         raise ValidationFailed(\"{{ name }} is required.\")
     {%- endif -%}
     """
-    return Template(req_tmpl).render(value=value, name=name)
+    return Template(req_tmpl, autoescape=True).render(value=value, name=name)
 
 
 def message_template(option_value, name, repeated=False):
@@ -475,7 +475,7 @@ def message_template(option_value, name, repeated=False):
             return embedded
     {%- endif -%}
     """
-    return Template(message_tmpl).render(
+    return Template(message_tmpl, autoescape=True).render(
         m=option_value, name=name, required_template=required_template, repeated=repeated)
 
 
@@ -483,7 +483,7 @@ def bool_template(option_value, name):
     bool_tmpl = """
     {{ const_template(o, name) -}}
     """
-    return Template(bool_tmpl).render(o=option_value, name=name, const_template=const_template)
+    return Template(bool_tmpl, autoescape=True).render(o=option_value, name=name, const_template=const_template)
 
 
 def num_template(option_value, name, num):
@@ -510,7 +510,7 @@ def num_template(option_value, name, num):
         raise ValidationFailed(\"{{ name }} is not in range {{ num['lt'], num['gt'] }}\")
             {%- else %}
     if {{ name }} >= {{ num['lt'] }} and {{ name }} <= {{ num['gt'] }}:
-        raise ValidationFailed(\"{{ name }} is not in range {{ num['gt'], num['lt'] }}\")
+        raise ValidationFailed(\"{{ name }} is not in range {{ num['gh'], num['lt'] }}\")
             {%- endif -%}
         {%- elif num.HasField('gte') %}
             {%- if num['lt'] > num['gte'] %}
@@ -554,7 +554,7 @@ def num_template(option_value, name, num):
     {%- endif -%}
     {% endfilter %}
     """
-    return Template(num_tmpl).render(o=option_value, name=name, num=num, in_template=in_template, str=str)
+    return Template(num_tmpl, autoescape=True).render(o=option_value, name=name, num=num, in_template=in_template, str=str)
 
 
 def dur_arr(dur):
@@ -657,7 +657,7 @@ def duration_template(option_value, name, repeated=False):
             raise ValidationFailed(\"{{ name }} is not greater than or equal to {{ dur_lit(dur['gte']) }}\")
         {%- endif -%}
     """
-    return Template(dur_tmpl).render(o=option_value, name=name, required_template=required_template,
+    return Template(dur_tmpl, autoescape=True).render(o=option_value, name=name, required_template=required_template,
                                      dur_lit=dur_lit, dur_arr=dur_arr, repeated=repeated)
 
 
@@ -770,7 +770,7 @@ def timestamp_template(option_value, name, repeated=False):
              raise ValidationFailed(\"{{ name }} is not within range {{ dur_lit(ts['within']) }}\")
         {%- endif -%}
     """
-    return Template(timestamp_tmpl).render(o=option_value, name=name, required_template=required_template,
+    return Template(timestamp_tmpl, autoescape=True).render(o=option_value, name=name, required_template=required_template,
                                            dur_lit=dur_lit, dur_arr=dur_arr, repeated=repeated)
 
 
@@ -813,7 +813,7 @@ def wrapper_template(option_value, name, repeated=False):
         raise ValidationFailed(\"{{ name }} is required.\")
     {%- endif %}
     """
-    return Template(wrapper_tmpl).render(option_value=option_value, name=name, str=str, num_template=num_template,
+    return Template(wrapper_tmpl, autoescape=True).render(option_value=option_value, name=name, str=str, num_template=num_template,
                                          bool_template=bool_template, string_template=string_template,
                                          bytes_template=bytes_template, repeated=repeated)
 
@@ -840,7 +840,7 @@ def enum_const_template(value, name, field):
         raise ValidationFailed(\"{{ name }} not equal to {{ enum_name(field, value['const']) }}\")
     {%- endif -%}
     """
-    return Template(const_tmpl).render(value=value, name=name, field=field, enum_name=enum_name, str=str)
+    return Template(const_tmpl, autoescape=True).render(value=value, name=name, field=field, enum_name=enum_name, str=str)
 
 
 def enum_in_template(value, name, field):
@@ -854,7 +854,7 @@ def enum_in_template(value, name, field):
         raise ValidationFailed(\"{{ name }} in {{ enum_names(field, value['not_in']) }}\")
     {%- endif -%}
     """
-    return Template(in_tmpl).render(value=value, name=name, field=field, enum_names=enum_names)
+    return Template(in_tmpl, autoescape=True).render(value=value, name=name, field=field, enum_names=enum_names)
 
 
 def enum_template(option_value, name, field):
@@ -866,8 +866,8 @@ def enum_template(option_value, name, field):
         raise ValidationFailed(\"{{ name }} is not defined\")
     {% endif %}
     """
-    return Template(enum_tmpl).render(option_value=option_value, name=name, enum_const_template=enum_const_template,
-                                      enum_in_template=enum_in_template, field=field, enum_values=enum_values)
+    return Template(enum_tmpl, autoescape=True).render(option_value=option_value, name=name, enum_const_template=enum_const_template,
+                                       enum_in_template=enum_in_template, field=field, enum_values=enum_values)
 
 
 def any_template(option_value, name, repeated=False):
@@ -892,7 +892,7 @@ def any_template(option_value, name, repeated=False):
             raise ValidationFailed(\"{{ name }} in {{ o['not_in'] }}\")
     {%- endif %}
     """
-    return Template(any_tmpl).render(
+    return Template(any_tmpl, autoescape=True).render(
         o=option_value.any, name=name, required_template=required_template, repeated=repeated)
 
 
@@ -974,7 +974,7 @@ def bytes_template(option_value, name):
     {% endif %}
     {% endfilter %}
     """
-    return Template(bytes_tmpl).render(sys=sys, o=option_value, name=name,
+    return Template(bytes_tmpl, autoescape=True).render(sys=sys, o=option_value, name=name,
                                        const_template=const_template, in_template=in_template, b=option_value.bytes)
 
 
@@ -1024,11 +1024,11 @@ def switcher_template(accessor, name, field, map=False):
     {{- message_template(accessor, name, True)|indent(4,True) -}}
     {%- endif %}
     """
-    return Template(switcher_tmpl).render(accessor=accessor, name=name, str=str, num_template=num_template,
-                                          bool_template=bool_template, string_template=string_template,
-                                          enum_template=enum_template, duration_template=duration_template,
-                                          timestamp_template=timestamp_template, any_template=any_template,
-                                          message_template=message_template, field=field, map=map)
+    return Template(switcher_tmpl, autoescape=True).render(accessor=accessor, name=name, str=str, num_template=num_template,
+                                           bool_template=bool_template, string_template=string_template,
+                                           enum_template=enum_template, duration_template=duration_template,
+                                           timestamp_template=timestamp_template, any_template=any_template,
+                                           message_template=message_template, field=field, map=map)
 
 
 def repeated_template(option_value, name, field):
@@ -1071,8 +1071,8 @@ def repeated_template(option_value, name, field):
     {%- endif %}
     {% endfilter %}
     """
-    return Template(rep_tmpl).render(o=option_value, name=name, message_type=field.message_type,
-                                     str=str, field=field, switcher_template=switcher_template)
+    return Template(rep_tmpl, autoescape=True).render(o=option_value, name=name, message_type=field.message_type,
+                                      str=str, field=field, switcher_template=switcher_template)
 
 
 def is_map(field):
@@ -1136,9 +1136,9 @@ def map_template(option_value, name, field):
     {%- endif %}
     {% endfilter %}
     """
-    return Template(map_tmpl).render(o=option_value, name=name, message_type=field.message_type, str=str,
-                                     field=field, switcher_template=switcher_template, num_template=num_template,
-                                     string_template=string_template, bool_template=bool_template)
+    return Template(map_tmpl, autoescape=True).render(o=option_value, name=name, message_type=field.message_type, str=str,
+                                      field=field, switcher_template=switcher_template, num_template=num_template,
+                                      string_template=string_template, bool_template=bool_template)
 
 
 def rule_type(field):
@@ -1249,4 +1249,4 @@ def generate_validate(p):
         {%- endif %}
     {%- endfor %}
     return None"""
-    return Template(file_tmp).render(rule_type=rule_type, p=proto_message)
+    return Template(file_tmp, autoescape=True).render(rule_type=rule_type, p=proto_message)
