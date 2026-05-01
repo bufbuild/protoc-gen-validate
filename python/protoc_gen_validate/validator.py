@@ -510,7 +510,7 @@ def num_template(option_value, name, num):
         raise ValidationFailed(\"{{ name }} is not in range {{ num['lt'], num['gt'] }}\")
             {%- else %}
     if {{ name }} >= {{ num['lt'] }} and {{ name }} <= {{ num['gt'] }}:
-        raise ValidationFailed(\"{{ name }} is not in range {{ num['gh'], num['lt'] }}\")
+        raise ValidationFailed(\"{{ name }} is not in range {{ num['gt'], num['lt'] }}\")
             {%- endif -%}
         {%- elif num.HasField('gte') %}
             {%- if num['lt'] > num['gte'] %}
