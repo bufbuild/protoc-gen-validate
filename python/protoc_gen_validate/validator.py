@@ -21,6 +21,21 @@ else:
 
 printer = ""
 
+
+def _pyrepr(value):
+    """Return a Python source literal that safely embeds `value` inside
+    generated validator code.
+
+    Validation rules from `.proto` files are rendered into Python source via
+    Jinja2 templates and then exec()'d.  Embedding a string between literal
+    Python quotes (e.g. ``"{{ s['contains'] }}"``) lets a crafted rule value
+    escape the literal and inject arbitrary Python.  Use this helper for
+    every rule value that appears in generated source so that the resulting
+    token is a single, properly-escaped Python literal.
+    """
+    return repr(value)
+
+
 # Well known regex mapping.
 regex_map = {
     "UNKNOWN": "",
@@ -300,36 +315,36 @@ def _has_field(message_pb, property_name):
 
 def const_template(option_value, name):
     const_tmpl = """{%- if str(o.string) and o.string.HasField('const') -%}
-    if {{ name }} != \"{{ o.string['const'] }}\":
-        raise ValidationFailed(\"{{ name }} not equal to {{ o.string['const'] }}\")
+    if {{ name }} != {{ repr(o.string['const']) }}:
+        raise ValidationFailed({{ repr(name + " not equal to " + str(o.string['const'])) }})
     {%- elif str(o.bool) and o.bool['const'] != "" -%}
     if {{ name }} != {{ o.bool['const'] }}:
-        raise ValidationFailed(\"{{ name }} not equal to {{ o.bool['const'] }}\")
+        raise ValidationFailed({{ repr(name + " not equal to " + str(o.bool['const'])) }})
     {%- elif str(o.bytes) and o.bytes.HasField('const') -%}
         {% if sys.version_info[0] >= 3 %}
-    if {{ name }} != {{ o.bytes['const'] }}:
-        raise ValidationFailed(\"{{ name }} not equal to {{ o.bytes['const'] }}\")
+    if {{ name }} != {{ repr(o.bytes['const']) }}:
+        raise ValidationFailed({{ repr(name + " not equal to " + str(o.bytes['const'])) }})
         {% else %}
-    if {{ name }} != b\"{{ o.bytes['const'].encode('string_escape') }}\":
-        raise ValidationFailed(\"{{ name }} not equal to {{ o.bytes['const'].encode('string_escape') }}\")
+    if {{ name }} != {{ repr(o.bytes['const']) }}:
+        raise ValidationFailed({{ repr(name + " not equal to " + str(o.bytes['const'])) }})
         {% endif %}
     {%- endif -%}
     """
-    return Template(const_tmpl).render(sys=sys, o=option_value, name=name, str=str)
+    return Template(const_tmpl).render(sys=sys, o=option_value, name=name, str=str, repr=_pyrepr)
 
 
 def in_template(value, name):
     in_tmpl = """
     {%- if value['in'] %}
-    if {{ name }} not in {{ value['in'] }}:
-        raise ValidationFailed(\"{{ name }} not in {{ value['in'] }}\")
+    if {{ name }} not in {{ repr(list(value['in'])) }}:
+        raise ValidationFailed({{ repr(name + " not in " + str(list(value['in']))) }})
     {%- endif -%}
     {%- if value['not_in'] %}
-    if {{ name }} in {{ value['not_in'] }}:
-        raise ValidationFailed(\"{{ name }} in {{ value['not_in'] }}\")
+    if {{ name }} in {{ repr(list(value['not_in'])) }}:
+        raise ValidationFailed({{ repr(name + " in " + str(list(value['not_in']))) }})
     {%- endif -%}
     """
-    return Template(in_tmpl).render(value=value, name=name)
+    return Template(in_tmpl).render(value=value, name=name, repr=_pyrepr, list=list, str=str)
 
 
 def string_template(option_value, name):
@@ -376,24 +391,24 @@ def string_template(option_value, name):
         raise ValidationFailed(\"{{ name }} length is greater than {{ s['max_bytes'] }}\")
     {%- endif -%}
     {%- if s['pattern'] %}
-    if re.search(r\'{{ s['pattern'] }}\', {{ name }}) is None:
-        raise ValidationFailed(\"{{ name }} pattern does not match {{ s['pattern'] }}\")
+    if re.search({{ repr(s['pattern']) }}, {{ name }}) is None:
+        raise ValidationFailed({{ repr(name + " pattern does not match " + str(s['pattern'])) }})
     {%- endif -%}
     {%- if s['prefix'] %}
-    if not {{ name }}.startswith(\"{{ s['prefix'] }}\"):
-        raise ValidationFailed(\"{{ name }} does not start with prefix {{ s['prefix'] }}\")
+    if not {{ name }}.startswith({{ repr(s['prefix']) }}):
+        raise ValidationFailed({{ repr(name + " does not start with prefix " + str(s['prefix'])) }})
     {%- endif -%}
     {%- if s['suffix'] %}
-    if not {{ name }}.endswith(\"{{ s['suffix'] }}\"):
-        raise ValidationFailed(\"{{ name }} does not end with suffix {{ s['suffix'] }}\")
+    if not {{ name }}.endswith({{ repr(s['suffix']) }}):
+        raise ValidationFailed({{ repr(name + " does not end with suffix " + str(s['suffix'])) }})
     {%- endif -%}
     {%- if s['contains'] %}
-    if not \"{{ s['contains'] }}\" in {{ name }}:
-        raise ValidationFailed(\"{{ name }} does not contain {{ s['contains'] }}\")
+    if {{ repr(s['contains']) }} not in {{ name }}:
+        raise ValidationFailed({{ repr(name + " does not contain " + str(s['contains'])) }})
     {%- endif -%}
     {%- if s['not_contains'] %}
-    if \"{{ s['not_contains'] }}\" in {{ name }}:
-        raise ValidationFailed(\"{{ name }} contains {{ s['not_contains'] }}\")
+    if {{ repr(s['not_contains']) }} in {{ name }}:
+        raise ValidationFailed({{ repr(name + " contains " + str(s['not_contains'])) }})
     {%- endif -%}
     {%- if s['email'] %}
     if not _validateEmail({{ name }}):
@@ -446,7 +461,10 @@ def string_template(option_value, name):
     {%- endif -%}
     {% endfilter %}
     """
-    return Template(str_templ).render(o=option_value, name=name, const_template=const_template, in_template=in_template)
+    return Template(str_templ).render(
+        o=option_value, name=name,
+        const_template=const_template, in_template=in_template,
+        repr=_pyrepr, str=str)
 
 
 def required_template(value, name):
