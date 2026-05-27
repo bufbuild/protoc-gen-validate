@@ -442,10 +442,8 @@ func (fns javaFuncs) javaTypeLiteralSuffixForPrototype(t pgs.ProtoType) string {
 func (fns javaFuncs) javaStringEscape(s string) string {
 	s = fmt.Sprintf("%q", s)
 	s = s[1 : len(s)-1]
-	s = strings.ReplaceAll(s, `\u00`, `\x`)
-	s = strings.ReplaceAll(s, `\x`, `\\x`)
+	s = strings.NewReplacer(`\\x`, `\\x`, `\x`, `\\x`).Replace(s)
 	// s = strings.ReplaceAll(s, `\`, `\\`)
-	s = strings.ReplaceAll(s, `"`, `\"`)
 	return `"` + s + `"`
 }
 

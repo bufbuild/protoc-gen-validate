@@ -7,6 +7,8 @@ import static io.envoyproxy.pgv.Assertions.assertValidationException;
 import static io.envoyproxy.pgv.StringValidation.uuid;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import io.envoyproxy.pgv.validate.PatternMessage;
+
 public class StringValidationTest {
     private static String repeat(final char c, final int n) {
         return new String(new char[n]).replace('\0', c);
@@ -106,6 +108,15 @@ public class StringValidationTest {
         Pattern p = Pattern.compile("\\* \\\\ \\w");
         // Match
         StringValidation.pattern("x", "* \\ x", p);
+    }
+
+    @Test
+    public void patternWorks3() throws ValidationException {
+        ReflectiveValidatorIndex index = new ReflectiveValidatorIndex();
+        index.validatorFor(PatternMessage.class)
+             .assertValid(PatternMessage.newBuilder().setMessage1("validtoken").build());
+        index.validatorFor(PatternMessage.class)
+             .assertValid(PatternMessage.newBuilder().setMessage2("/validpath").build());
     }
 
     @Test
