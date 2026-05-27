@@ -439,14 +439,45 @@ func (fns javaFuncs) javaTypeLiteralSuffixForPrototype(t pgs.ProtoType) string {
 	}
 }
 
+// javaStringEscape returns a Java source string literal (including surrounding
+// double quotes) for s. It must not be wrapped in extra quotes in templates.
 func (fns javaFuncs) javaStringEscape(s string) string {
-	s = fmt.Sprintf("%q", s)
-	s = s[1 : len(s)-1]
-	s = strings.ReplaceAll(s, `\u00`, `\x`)
-	s = strings.ReplaceAll(s, `\x`, `\\x`)
-	// s = strings.ReplaceAll(s, `\`, `\\`)
-	s = strings.ReplaceAll(s, `"`, `\"`)
-	return `"` + s + `"`
+	var b strings.Builder
+	b.Grow(len(s) + 8)
+	b.WriteByte('"')
+	for _, r := range s {
+		switch r {
+		case '\\':
+			b.WriteString(`\\`)
+		case '"':
+			b.WriteString(`\"`)
+		case '\n':
+			b.WriteString(`\n`)
+		case '\r':
+			b.WriteString(`\r`)
+		case '\t':
+			b.WriteString(`\t`)
+		case '\b':
+			b.WriteString(`\b`)
+		case '\f':
+			b.WriteString(`\f`)
+		default:
+			if r < 0x20 || r == 0x7f {
+				fmt.Fprintf(&b, `\u%04x`, r)
+			} else if r <= 0x7e {
+				b.WriteRune(r)
+			} else if r <= 0xffff {
+				fmt.Fprintf(&b, `\u%04x`, r)
+			} else {
+				r -= 0x10000
+				high := 0xd800 + (r >> 10)
+				low := 0xdc00 + (r & 0x3ff)
+				fmt.Fprintf(&b, `\u%04x\u%04x`, high, low)
+			}
+		}
+	}
+	b.WriteByte('"')
+	return b.String()
 }
 
 func (fns javaFuncs) camelCase(name pgs.Name) string {

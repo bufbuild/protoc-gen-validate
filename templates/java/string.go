@@ -4,14 +4,14 @@ const stringConstTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 {{- if $r.In }}
 		private final {{ javaTypeFor . }}[] {{ constantName . "In" }} = new {{ javaTypeFor . }}[]{
 			{{- range $r.In -}}
-				"{{- sprintf "%v" . -}}",
+				{{ javaStringEscape (sprintf "%v" .) }},
 			{{- end -}}
 		};
 {{- end -}}
 {{- if $r.NotIn }}
 		private final {{ javaTypeFor . }}[] {{ constantName . "NotIn" }} = new {{ javaTypeFor . }}[]{
 			{{- range $r.NotIn -}}
-				"{{- sprintf "%v" . -}}",
+				{{ javaStringEscape (sprintf "%v" .) }},
 			{{- end -}}
 		};
 {{- end -}}
@@ -24,7 +24,7 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			if ( !{{ accessor . }}.isEmpty() ) {
 {{- end -}}
 {{- if $r.Const }}
-			io.envoyproxy.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", {{ accessor . }}, "{{ $r.GetConst }}");
+			io.envoyproxy.pgv.ConstantValidation.constant("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ javaStringEscape $r.GetConst }});
 {{- end -}}
 {{- if $r.In }}
 			io.envoyproxy.pgv.CollectiveValidation.in("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "In" }});
@@ -54,16 +54,16 @@ const stringTpl = `{{ $f := .Field }}{{ $r := .Rules -}}
 			io.envoyproxy.pgv.StringValidation.pattern("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ constantName . "Pattern" }});
 {{- end -}}
 {{- if $r.Prefix }}
-			io.envoyproxy.pgv.StringValidation.prefix("{{ $f.FullyQualifiedName }}", {{ accessor . }}, "{{ $r.GetPrefix }}");
+			io.envoyproxy.pgv.StringValidation.prefix("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ javaStringEscape $r.GetPrefix }});
 {{- end -}}
 {{- if $r.Contains }}
-			io.envoyproxy.pgv.StringValidation.contains("{{ $f.FullyQualifiedName }}", {{ accessor . }}, "{{ $r.GetContains }}");
+			io.envoyproxy.pgv.StringValidation.contains("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ javaStringEscape $r.GetContains }});
 {{- end -}}
 {{- if $r.NotContains }}
-			io.envoyproxy.pgv.StringValidation.notContains("{{ $f.FullyQualifiedName }}", {{ accessor . }}, "{{ $r.GetNotContains }}");
+			io.envoyproxy.pgv.StringValidation.notContains("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ javaStringEscape $r.GetNotContains }});
 {{- end -}}
 {{- if $r.Suffix }}
-			io.envoyproxy.pgv.StringValidation.suffix("{{ $f.FullyQualifiedName }}", {{ accessor . }}, "{{ $r.GetSuffix }}");
+			io.envoyproxy.pgv.StringValidation.suffix("{{ $f.FullyQualifiedName }}", {{ accessor . }}, {{ javaStringEscape $r.GetSuffix }});
 {{- end -}}
 {{- if $r.GetEmail }}
 			io.envoyproxy.pgv.StringValidation.email("{{ $f.FullyQualifiedName }}", {{ accessor . }});
