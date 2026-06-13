@@ -2,6 +2,12 @@ empty :=
 space := $(empty) $(empty)
 PACKAGE := github.com/envoyproxy/protoc-gen-validate
 
+# Version information
+VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
+COMMIT := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+BUILD_DATE := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+LDFLAGS := -X $(PACKAGE)/version.Version=$(VERSION) -X $(PACKAGE)/version.Commit=$(COMMIT) -X $(PACKAGE)/version.BuildDate=$(BUILD_DATE)
+
 # protoc-gen-go parameters for properly generating the import path for PGV
 VALIDATE_IMPORT := Mvalidate/validate.proto=${PACKAGE}/validate
 GO_IMPORT_SPACES := ${VALIDATE_IMPORT},\
@@ -21,7 +27,7 @@ help: Makefile
 
 .PHONY: build
 build: validate/validate.pb.go ## generates the PGV binary and installs it into $$GOPATH/bin
-	go install .
+	go install -ldflags "$(LDFLAGS)" .
 
 .PHONY: bazel
 bazel: ## generate the PGV plugin with Bazel
